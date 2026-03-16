@@ -1012,7 +1012,7 @@ ${ndaModal}
 <!-- ══ HERO BANNER (Special featured mandates) ════════════════════════ -->
 ${l.id === 'prism-tower-gurgaon' ? `
 <div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/gallery/img-00.jpg" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1034,7 +1034,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   </div>
 </div>` : l.id === 'belcibo-hospitality-platform' ? `
 <div style="position:relative;background:#0a0a0a;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560" alt="Khubani at Hyatt Andaz Delhi — Belcibo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/gallery/img-03.jpg" alt="Khubani at Hyatt Andaz Delhi — Belcibo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1059,7 +1059,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   </div>
 </div>` : l.id === 'sawasdee-jlg-noida' ? `
 <div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560" alt="Sawasdee JLG Galleria Noida" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/gallery/img-13.jpg" alt="Sawasdee JLG Galleria Noida" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1241,9 +1241,9 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <!-- Row 1: 3 cards -->
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);">
             ${[
-              {brand:'Imperfecto Shor', sub:'Café & Club · Golf Course Road, Gurugram', img:'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560'},
-              {brand:'Imperfecto Patio', sub:'Open-Air Dining · Gurgaon Sector 51', img:'https://sspark.genspark.ai/cfimages?u1=EDO3q9fGisTV8hsein%2B3Y474MwAp7uJfE8uN28zPeKyybyoeo78X8HeXiKGy5oCN251FaU4b7cX1nO140GrCS2vA5Q25vFU9s%2Fos1CvkNfd95MBJkqEqzAUq0e4%2BHBc%2B0645lEkEcyZ3BbIcX5OJsk4bpOPbYy9NObhXMVakZHL5OGrZeSfgqD3cxCr7DlCUwhdhdeKWKr1jIBCT&u2=vj5WFpb%2BoeJIZtv2&width=2560'},
-              {brand:'Imperfecto Boutique', sub:'Premium Dining · Dwarka, New Delhi', img:'https://sspark.genspark.ai/cfimages?u1=7hVDmvPjH%2FqUTHzsLIETISv9j2bybCS1yCiFjf0wcmBUyFSEELV347cgn%2Be%2Fka2YmonBD5OzYu8KBF8e7l%2Bojv1P%2BaONpuIICYNfiS3DEnkr7vPj8M3Bu9nKJIGL2qKSw4M%3D&u2=UTsLO4u4LxV6f2Ka&width=2560'},
+              {brand:'Imperfecto Shor', sub:'Café & Club · Golf Course Road, Gurugram', img:'/static/mandates/gallery/img-14.jpg'},
+              {brand:'Imperfecto Patio', sub:'Open-Air Dining · Gurgaon Sector 51', img:'/static/mandates/gallery/img-15.jpg'},
+              {brand:'Imperfecto Boutique', sub:'Premium Dining · Dwarka, New Delhi', img:'/static/mandates/gallery/img-16.jpg'},
             ].map((b,i) => `
             <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
               <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1257,9 +1257,9 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <!-- Row 2: 3 cards -->
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);">
             ${[
-              {brand:'Noor by Khubani', sub:'Fine Dining · Sector 38, Noida', img:'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560'},
-              {brand:'Begam', sub:'Experiential F&B · Delhi NCR', img:'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560'},
-              {brand:'Khybani', sub:'Pan-Asian · Aerocity, Delhi', img:'https://sspark.genspark.ai/cfimages?u1=cbpOV8dZBBbfRgUonfsVjfKmSPk5O3UhiRBgrsaA2kuOj7pC7ZsA1RnVF6c6xvsLlEnyLzjf7qdbM5OkRB6auNZSyjtAYznngx9WxNpLPTg1EhG9gDPSvSEBm60LbpJBkZQ%3D&u2=qc5jDRC%2B7dYAurj3&width=2560'},
+              {brand:'Noor by Khubani', sub:'Fine Dining · Sector 38, Noida', img:'/static/mandates/gallery/img-17.jpg'},
+              {brand:'Begam', sub:'Experiential F&B · Delhi NCR', img:'/static/mandates/gallery/img-18.jpg'},
+              {brand:'Khybani', sub:'Pan-Asian · Aerocity, Delhi', img:'/static/mandates/gallery/img-19.jpg'},
             ].map((b,i) => `
             <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
               <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
@@ -1273,9 +1273,9 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <!-- Row 3: 3 cards -->
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
             ${[
-              {brand:'Informal', sub:'Casual Dining · Delhi NCR', img:'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560'},
-              {brand:'Ruin Pub', sub:'Bar & Lounge · South Delhi', img:'https://sspark.genspark.ai/cfimages?u1=NfraJ2NdyeYb3OVOR37DdxRbaYc%2BN2jkpLSbyVPiP53CECYrq1t85qqORy3Og%2FvY7qlQvMKuhy8SirxvUVornh3aqI6O8kq5NVKuUTA61Q%2Fe%2Fs66jZgQCRnAoecnFGgj0QQauEYBapH8aEWGh3LchaA%3D&u2=tcK7qZkt78Y26ej6&width=2560'},
-              {brand:'Imperfecto (Original)', sub:'Flagship · Janpath, New Delhi', img:'https://sspark.genspark.ai/cfimages?u1=SCTSJ3oy5X2N4PKeuD9IhoL%2BFq96YGbhI5pORQAU4GQRCMXWny6Ctd065%2F1PshUnpkgs4o9Xto3A3vatwf8JFZOntUhgVJkdDm0OlwiZwH7vzYaoeEUkgkl3auBUKEKNp%2FZ6O%2BzOa9my5gatASDTnM3QbMbN%2FA%3D%3D&u2=7dMBfFutmUjpxE3b&width=2560'},
+              {brand:'Informal', sub:'Casual Dining · Delhi NCR', img:'/static/mandates/gallery/img-20.jpg'},
+              {brand:'Ruin Pub', sub:'Bar & Lounge · South Delhi', img:'/static/mandates/gallery/img-21.jpg'},
+              {brand:'Imperfecto (Original)', sub:'Flagship · Janpath, New Delhi', img:'/static/mandates/gallery/img-22.jpg'},
             ].map((b,i) => `
             <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
               <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">

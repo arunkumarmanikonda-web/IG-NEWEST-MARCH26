@@ -8,15 +8,15 @@ const app = new Hono()
 // No generic stock / Unsplash images used.
 const CAT_IMAGES: Record<string, string> = {
   // Hotel Rajshree & Spa, Chandigarh — Real Estate / Commercial article header
-  'Real Estate':             'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
+  'Real Estate':             '/static/mandates/chandigarh/chandigarh-img2.webp',
   // WelcomHeritage Santa Roza, Kasauli — Heritage & Entertainment context
   'Entertainment':           'https://www.welcomheritagehotels.in/wp-content/uploads/2024/09/santa-roza-overview.jpg',
   // Hotel Rajshree interior — HORECA / F&B procurement context
-  'HORECA':                  'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
+  'HORECA':                  '/static/mandates/chandigarh/chandigarh-img1.webp',
   // Maple Resort Chail — mountain asset, suitable for Debt / Special Situations
-  'Debt & Special Situations':'https://www.mapleresorts.in/images/slider/maple-resort-chail-1.jpg',
+  'Debt & Special Situations':'/static/mandates/chail/chail-slider1.jpg',
   // Maple Resort exterior — Retail / leasing context
-  'Retail':                  'https://www.mapleresorts.in/images/slider/maple-resort-chail-2.jpg',
+  'Retail':                  '/static/mandates/chail/chail-slider2.jpg',
   // WelcomHeritage Santa Roza — Hospitality article header
   'Hospitality':             'https://www.welcomheritagehotels.in/wp-content/uploads/2024/09/santa-roza-room.jpg',
 }
@@ -1227,7 +1227,7 @@ app.get('/', (c) => {
          onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.boxShadow='none'">
       <!-- Image side -->
       <div style="position:relative;min-height:380px;overflow:hidden;background:#111;">
-        <img src="${CAT_IMAGES[featured.category] || 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp'}"
+        <img src="${CAT_IMAGES[featured.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
              alt="${featured.title}"
              style="width:100%;height:100%;object-fit:cover;transition:transform 8s cubic-bezier(.4,0,.2,1);" loading="eager"
              onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
@@ -1258,7 +1258,7 @@ app.get('/', (c) => {
       ${rest.map((a, i) => `
       <article class="ins-card" data-cat="${a.category}" style="animation:fadeUp .5s ease ${i * 0.06}s both;">
         <div class="ins-card__img">
-          <img src="${CAT_IMAGES[a.category] || 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp'}"
+          <img src="${CAT_IMAGES[a.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
                alt="${a.title}" loading="lazy">
           <div class="ins-card__overlay"></div>
           <div style="position:absolute;top:.875rem;left:.875rem;">${catBadge(a.category)}</div>
@@ -1397,7 +1397,7 @@ app.get('/:id', (c) => {
   if (!article) return c.redirect('/insights')
 
   const relatedArticles = ARTICLES.filter(a => a.id !== id && (a.category === article.category || a.tags.some((t: string) => article.tags.includes(t)))).slice(0, 3)
-  const catImg = CAT_IMAGES[article.category] || 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp'
+  const catImg = CAT_IMAGES[article.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'
 
   const content = `
 <!-- Phase 11D: Reading progress bar -->

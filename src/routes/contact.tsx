@@ -356,7 +356,7 @@ function igContactAjax() {
     </div>
     <div class="tel-grid" style="--bg:var(--ink);">
       <div class="tel-card">
-        <img src="https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp"
+        <img src="/static/mandates/chandigarh/chandigarh-img1.webp"
           alt="Arun Manikonda" class="tel-avatar"
           onerror="this.style.display='none';this.nextSibling.style.display='flex'">
         <div style="width:48px;height:48px;border-radius:50%;background:rgba(212,174,42,.15);display:none;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:2px solid rgba(212,174,42,.3);">👔</div>

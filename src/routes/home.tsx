@@ -51,7 +51,7 @@ const SLIDES = [
     sub: 'Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, part of a 4-star hotel complex. 312 keys. REIT listing potential. India Gully advising on acquisition & due diligence.',
     cta1: { text: 'View Mandate & Sign NDA', href: '/listings/prism-tower-gurgaon' },
     cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20I%20am%20interested%20in%20Prism%20Tower%20Gurgaon%20mandate' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=4WNYrFkcWUUc%2BfSa9VyzmkWTj9lbeSgPAFgvgvrkvFWW704bPiwWI4bBYe3mEWcy4YT7EvFdwuJw5bhnCG7I37iukX2xIUJCIZL5jLR7JA0Ld7X0JLfap05hYd66dxxSEXqc0Epg%2BRSHCjrFLviYJaz6qncXim3ylKCiNoem%2BnGm1A%3D%3D&u2=A7dGGdYGuI%2FvKMXa&width=2560',
+    img: '/static/mandates/gallery/img-23.jpg',
     label: 'REIT-Grade · ₹400 Cr',
     spoc: 'Arun Manikonda',
     value: '₹400 Cr',
@@ -67,7 +67,7 @@ const SLIDES = [
     sub: 'Scalable multi-brand F&B platform — Imperfecto, Noor, Begam, Khybani, Informal, RuinPub, Patio & more. Seeking strategic growth equity partner for pan-India expansion. Exclusive advisory mandate with India Gully.',
     cta1: { text: 'View Mandate & Sign NDA', href: '/listings/belcibo-hospitality-platform' },
     cta2: { text: 'Express Interest', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Belcibo%20growth%20equity%20mandate' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560',
+    img: '/static/mandates/gallery/img-03.jpg',
     label: 'Growth Equity · ₹100 Cr',
     spoc: 'Arun Manikonda',
     value: '₹100 Cr',
@@ -83,7 +83,7 @@ const SLIDES = [
     sub: 'Structure-ready 114-key hotel with integrated retail mall in Sector 63, Noida. Independent hotel access, possession-ready. India Gully holds the exclusive sale mandate. Outright sale — negotiation ready.',
     cta1: { text: 'View Mandate & Sign NDA', href: '/listings/sawasdee-jlg-noida' },
     cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Sawasdee%20JLG%20Galleria%20Noida%20mandate' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=oMHrMKXCRzbu7CZFFKWnRarcMj%2FQdMza%2BcnOV7FWAUGgn3Ft86zKEcPMOKepepEfsgRrQfMhUoLrkaw%2BfEdrrNcZrfjCIc7mcISWKEcy%2FtV1tYpC5LJl1Tg%3D&u2=f6JAmD0cUFuyjIPo&width=2560',
+    img: '/static/mandates/gallery/img-10.jpg',
     label: 'Hotel + Mall · ₹150 Cr',
     spoc: 'Arun Manikonda',
     value: '₹150 Cr',
@@ -99,7 +99,7 @@ const SLIDES = [
     sub: "India's premier multi-vertical advisory — Real Estate acquisitions, Hospitality asset sales, Retail leasing, Entertainment divestments and Debt solutions. EY & CBRE co-advisory credentials. NDA-governed mandates.",
     cta1: { text: 'View Active Mandates', href: '/listings' },
     cta2: { text: 'Submit Your Mandate', href: '/contact' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=j1KmZXDKMpP0riEv8OShNqg%2BzXW3Mg%2BXalutWUoAMqCcQLDBGt4jA8u3DRfmNb82IJ3BsxtlnZwhmEZyY5b9lYniODF1wUB96Z6vaaVP2tKEtc6YWvHY%2F%2FSMHaBUVWOLrEVMblh1mPM58Yi3OT6uiUCaVn%2FsvPvqjHk6WkSPT16OwQTZyTHXj5%2B7UV%2BEeZHblojO19O3A5%2Bx30lyxj34r2%2FckBOdcSud56EXE9WxiX94LMyHg%2BAowzxthXR6XQ4IJuw9hMHjL7reAyD48aeHrkSSdHjJVvSkm1ryJ9GM&u2=sg3J1BnjQXVMo2Vf&width=2560',
+    img: '/static/mandates/gallery/img-24.jpg',
     label: 'Transaction Advisory',
     type: 'advisory',
   },
@@ -113,7 +113,7 @@ const SLIDES = [
     sub: "India Gully structures and executes growth equity rounds for India's most exciting F&B platforms and hospitality brands. Proprietary deal flow. Institutional-grade information memoranda. NDA-protected pipeline.",
     cta1: { text: 'Explore Advisory Services', href: '/services' },
     cta2: { text: 'Discuss Your Mandate', href: '/contact' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=NO6WJwz0zBnHkE9uaUuChcYcVKW%2BjKuHweYmbRA0FIZsjuUgoBKiTw6vdezZa0NQFN0LF4YLN7mWxGG3zNzkfb2cQHVbIwv3Q9%2BO8bN6aABn6RbHVH3JASjvY01ijiUeRZqAQRPzheHowuSpwqk%2BQ1JD7KV%2B%2F98M&u2=G4eRtqUbRQd0xAK1&width=2560',
+    img: '/static/mandates/gallery/img-04.jpg',
     label: 'Growth Equity · F&B',
     type: 'advisory',
   },
@@ -127,7 +127,7 @@ const SLIDES = [
     sub: "India Gully's HORECA division is the complete hospitality supply partner — FF&E, OS&E, kitchen equipment, linen, uniforms and guest amenities delivered on spec and on schedule across India.",
     cta1: { text: 'Explore HORECA Services', href: '/horeca' },
     cta2: { text: 'Request a Quote', href: '/horeca#enquiry' },
-    img: 'https://sspark.genspark.ai/cfimages?u1=grcy7aIn5CXDrmhWDcNNdWgGs%2FTIg6rBTMxkWGJEEdLOnMlVe7C6ld4t%2BI3GLH0iy5TLC20eoD4N77nOLkBB33bAqLCLRvsgEoUuMKHEyMBD9sjmEjgqQWs%2B3nqoKeBC1PTxQsUC&u2=%2BzRKv5Tq%2FYgVM5Pd&width=2560',
+    img: '/static/mandates/gallery/img-25.jpg',
     label: 'HORECA Procurement',
     type: 'advisory',
   },
@@ -477,7 +477,7 @@ app.get('/', (c) => {
       <div style="position:relative;" id="indiaMapWrap" class="india-map-wrap">
         <div class="india-map-box" style="border:1px solid var(--border);padding:1.25rem 1rem 1rem;position:relative;overflow:hidden;border-radius:3px;">
           <!-- India SVG map — geographically accurate, viewBox 520×600 -->
-          <svg id="igIndiaMap" viewBox="0 0 400 510" width="100%" style="display:block;max-width:440px;margin:0 auto;" aria-label="India map showing active mandate locations">
+          <svg id="igIndiaMap" viewBox="0 0 440 500" width="100%" style="display:block;max-width:440px;margin:0 auto;" aria-label="India map showing active mandate locations">
             <defs>
               <filter id="mapPinGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
@@ -1292,7 +1292,7 @@ function filterRB(cat){
     description: "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
     canonical: 'https://india-gully.pages.dev/',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
-    heroPreload: 'https://www.mapleresorts.in/img/about/new-left1.jpg',
+    heroPreload: '/static/mandates/chail/chail-img1.jpg',
     jsonLd: JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [

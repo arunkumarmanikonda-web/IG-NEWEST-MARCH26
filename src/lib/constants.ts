@@ -671,11 +671,11 @@ export const LISTINGS = [
     longDesc: `100% Asset Acquisition Opportunity — Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, forming part of a 4-star hotel property complex in Gwalpahari, Gurugram.\n\nThe asset is located within 10 km of Sikanderpur Metro Station with excellent road connectivity to all major Gurugram micro-markets. 5-star hotels, hospitals, and malls are within a 2 km radius. The property offers multiple exit strategies including REIT listing potential or a strata sale model.\n\nIdeal for institutional investors seeking core+ returns. India Gully is advising on the acquisition process and due diligence. Currently at the reference transaction – due diligence stage.`,
     images: [
       // Source: JLL Listing / MagicBricks / CityInfo — Prism Tower, Gurgaon-Faridabad Road
-      'https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=aLf4SClMkiiLVFca%2Fwo8AzjbKl7LJoHmbr%2FtfsEwy4X5OWciJBaYx5oVwD2EaAI8HggvuTvRnPQ0yjgyXqK2wVY5lUqvmli5aLFvgcKopmEp8OG964p9WgrYpPlEKO8EQifzT6moeDNjruN3NTJBznBNefvnm9O0l%2BHqaUmRMjBfsg3MaA1ZbxJ1&u2=%2FktRtb6I%2BlMTDYAI&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=B5%2BARNIAIUk%2FqARLq2cohFB91eqinKjr6Oh3TEqfC%2FWKCap6YLmx0mJ5HUiX9OrmtDFAZO2vdUDVIrNhCGWE7CM1kCxAGzHpJ19%2B6N2WjtyFN2cJfeTPxK5Z&u2=PXJ4tFTOsSzQ%2B3sW&width=2560',
+      '/static/mandates/gallery/img-00.jpg',
+      '/static/mandates/gallery/img-01.jpg',
+      '/static/mandates/gallery/img-02.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560',
+    coverImage: '/static/mandates/gallery/img-00.jpg',
     specs: {
       'Entity': 'Confidential (JLL Listed)',
       'Location': 'Gurgaon-Faridabad Road, Gwalpahari, Gurugram',
@@ -722,12 +722,12 @@ export const LISTINGS = [
     longDesc: `Growth Equity Investment Opportunity — Belcibo Hospitality is a scalable multi-brand F&B platform operating across Delhi NCR and Goa markets. The group operates 15+ outlets across its branded portfolio.\n\nBrands include: Informal, Imperfecto, Imperfecto Boutique, Khubani, Habibi, Begum, and Noor — covering the full spectrum from casual dining to premium experiential F&B.\n\nThe platform is seeking a strategic capital partner to accelerate brand portfolio expansion. Strong unit economics with a proven operational playbook ready for pan-India rollout. India Gully is the exclusive growth equity advisor.`,
     images: [
       // Source: Khubani at Hyatt Andaz Delhi (Belcibo / Noor), India luxury dining
-      'https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=NO6WJwz0zBnHkE9uaUuChcYcVKW%2BjKuHweYmbRA0FIZsjuUgoBKiTw6vdezZa0NQFN0LF4YLN7mWxGG3zNzkfb2cQHVbIwv3Q9%2BO8bN6aABn6RbHVH3JASjvY01ijiUeRZqAQRPzheHowuSpwqk%2BQ1JD7KV%2B%2F98M&u2=G4eRtqUbRQd0xAK1&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=Kotd9I2EW8wspNxnOnqJVuZFKezujBOHi91EvtXVlDCUQQWUmOcprjZJgWXayZfpgCeVNOjU8kW6rKEGyy8IUEeJs%2B0GJWdPhoshu5Wr%2BzSR3Jb%2FTTtQvFqG1wO7CT5P2m2XvoGHpSSxn5v44TDkfEpZfA%3D%3D&u2=%2BCuaMNeb%2FssIvMmU&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=9Y0dbMcddVo72b3Wkg8lgta9NLMHgREDQUgGQscCaq0n389cPi8z%2FD0Wtf29gG2rwdCwnmdQRZOWVCgo0Hl4e4kM%2FvKJsPsfOHzloM3NCRRSgwdKlnhbxH3JZiuyNCT3%2FfwNM6SZjHp2GDWVtDwt&u2=eup4cYVj675FHRv1&width=2560',
+      '/static/mandates/gallery/img-03.jpg',
+      '/static/mandates/gallery/img-04.jpg',
+      '/static/mandates/gallery/img-05.jpg',
+      '/static/mandates/gallery/img-06.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560',
+    coverImage: '/static/mandates/gallery/img-03.jpg',
     specs: {
       'Platform': 'Belcibo Hospitality',
       'Markets': 'Delhi NCR & Goa',
@@ -773,15 +773,15 @@ export const LISTINGS = [
     longDesc: `Stabilised Asset Sale — Rajshree Hotels Pvt. Ltd. is offering this fully operational boutique hotel and spa in Chandigarh's prime Industrial Area Phase I, conveniently located near Tribune Chowk.\n\nThe property features 41 well-appointed rooms including Super Deluxe, Family Suites, and Honeymoon Suites. Full amenities include a premium spa, in-house restaurant, bar, conference facilities, free WiFi, and complimentary parking.\n\nThe hotel demonstrates strong RevPAR performance with significant potential for brand affiliation upgrade. Attractive entry point for investors seeking cash-yielding hospitality assets with wellness positioning. India Gully holds the seller mandate and is actively marketing to qualified buyers.`,
     images: [
       // Source: hotelrajshreechandigarh.com — official hotel website images
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/facade-1024x585.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2026/01/IMG_6649-Copy-1024x768.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/super-deluxe-room-768x1024.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Family-Suite-768x1024.webp',
-      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_6565-1-1024x768.webp',
+      '/static/mandates/chandigarh/chandigarh-img1.webp',
+      '/static/mandates/chandigarh/chandigarh-img2.webp',
+      '/static/mandates/chandigarh/chandigarh-hero.webp',
+      '/static/mandates/chandigarh/chandigarh-img4.webp',
+      '/static/mandates/chandigarh/chandigarh-room1.webp',
+      '/static/mandates/chandigarh/chandigarh-suite.webp',
+      '/static/mandates/chandigarh/chandigarh-img7.webp',
     ],
-    coverImage: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/facade-1024x585.webp',
+    coverImage: '/static/mandates/chandigarh/chandigarh-hero.webp',
     specs: {
       'Entity': 'Rajshree Hotels Pvt. Ltd.',
       'Location': 'Industrial Area Phase I, Chandigarh',
@@ -827,14 +827,14 @@ export const LISTINGS = [
     longDesc: `Heritage Asset Divestiture — WelcomHeritage Santa Roza is an established luxury heritage resort under the ITC WelcomHeritage brand, sprawled across 2 acres in scenic Kasauli at pine forest elevation with Victorian-themed architecture and British-era charm.\n\nRoom categories include Deluxe (280 sq.ft.), Suites (340 sq.ft.), Cottages (420 sq.ft.), and Family Suites (1,180 sq.ft.). Premium amenities include Nirvana multi-cuisine restaurant, Aviary bar with woodland views, Milo's garden café, state-of-the-art fitness centre, spa, and plunge pool.\n\nBenefits from Himachal Pradesh tourism incentives and tax subsidies. Located 15–16 km from Mall Road and local attractions. India Gully holds the seller mandate on behalf of ITC WelcomHeritage.`,
     images: [
       // Source: sspark CDN — WelcomHeritage Santa Roza, Kasauli (India Gully seller mandate)
-      'https://sspark.genspark.ai/cfimages?u1=xQO3jnDZKfqUHXUSq7PqsAoADizR%2F8XpA2%2BEKe11Jp2sNp8i2bZk8EAMEM73Iz6KqN%2FIZOUgB5R6bkW3hd%2BDekUhlF4B4UxPiVMDr5wkw%2BonnLawiY%2BSvRn9tV4oF4U%2BpbF%2Fr4c0fAuIqQNt6VxBm3E1OMzAvEWvWUOvo4S4HKK7ljfx9XNYPaUvG%2Fp5HCLrpahvn8%2BFapIoAqbF1Qgx&u2=ub2yp216PTBOwANw&width=2560',
+      '/static/mandates/gallery/img-07.jpg',
       // Heritage resort imagery — Kasauli hill station environment
-      'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1400&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1400&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1400&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1400&auto=format&fit=crop&q=80',
+      '/static/mandates/kasauli/kasauli-img1.jpg',
+      '/static/mandates/kasauli/kasauli-img2.jpg',
+      '/static/mandates/kasauli/kasauli-img3.jpg',
+      '/static/mandates/kasauli/kasauli-img4.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=xQO3jnDZKfqUHXUSq7PqsAoADizR%2F8XpA2%2BEKe11Jp2sNp8i2bZk8EAMEM73Iz6KqN%2FIZOUgB5R6bkW3hd%2BDekUhlF4B4UxPiVMDr5wkw%2BonnLawiY%2BSvRn9tV4oF4U%2BpbF%2Fr4c0fAuIqQNt6VxBm3E1OMzAvEWvWUOvo4S4HKK7ljfx9XNYPaUvG%2Fp5HCLrpahvn8%2BFapIoAqbF1Qgx&u2=ub2yp216PTBOwANw&width=2560',
+    coverImage: '/static/mandates/gallery/img-07.jpg',
     specs: {
       'Entity': 'ITC WelcomHeritage – Santa Roza',
       'Location': 'Mauza Kot, Kasauli, Himachal Pradesh',
@@ -941,15 +941,15 @@ export const LISTINGS = [
     longDesc: `Operational Leisure Asset — Maple Resort Chail is a premium boutique mountain resort with 30 keys (Suites, Executive, and Super Deluxe rooms) perched at 2,515 metres in the Himalayas. Surrounded by pine and maple forests with panoramic mountain views.\n\nFull amenities include a multi-cuisine restaurant, private balconies, free WiFi, parking, elevator, mini bar, AC/heating, and a pet-friendly policy. Strategically located near Chail Palace (4 km), the historic Chail Cricket Ground (highest in the world), and Kali Ka Tibba temple.\n\nThe property has an established guest base with strong leisure and wellness tourism demand. Offers immediate cash flows with upside potential from brand affiliation or digital OTA growth. India Gully advises on behalf of the owner.`,
     images: [
       // Source: mapleresorts.in — official Maple Resort Chail website images
-      'https://www.mapleresorts.in/img/about/new-left1.jpg',
-      'https://www.mapleresorts.in/img/about/new-right1.jpg',
-      'https://www.mapleresorts.in/img/about/Refined-left1.jpg',
-      'https://www.mapleresorts.in/img/about/Refined-left2.jpg',
-      'https://www.mapleresorts.in/img/family-1-new.jpg',
-      'https://www.mapleresorts.in/img/executive-new.jpg',
-      'https://www.mapleresorts.in/img/deluxe-1-new.jpg',
+      '/static/mandates/chail/chail-img1.jpg',
+      '/static/mandates/chail/chail-img2.jpg',
+      '/static/mandates/chail/chail-img3.jpg',
+      '/static/mandates/chail/chail-img4.jpg',
+      '/static/mandates/chail/chail-img5.jpg',
+      '/static/mandates/chail/chail-img6.jpg',
+      '/static/mandates/chail/chail-img7.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=ZaMk%2F1QD6zCCuTG8sYSUUAW83%2Fn5QTDAPkuvILLzs%2FfWLfK915IXSJrNDy6770UZOopJuj74LRvAR9FoaeWLNaVUnQ%3D%3D&u2=0B97E3QeYEFoUscx&width=2560',
+    coverImage: '/static/mandates/gallery/img-08.jpg',
     specs: {
       'Entity': 'Mapple Resorts Pvt. Ltd.',
       'Location': 'Chail, Himachal Pradesh',
@@ -997,9 +997,9 @@ export const LISTINGS = [
     longDesc: `Adaptive Reuse Opportunity — Ambience Tower is a Grade-A commercial tower developed by Ambience Pvt Ltd in Rohini, North Delhi. With excellent metro connectivity at just 0.6 km from Rohini West Metro Station, the asset enjoys strong accessibility to all major Delhi NCR micro-markets.\n\n5-star hotels, hospitals, and malls are within a 2–5 km radius. The asset is conversion-ready for hospitality or hybrid hotel-office use, with technical feasibility already completed.\n\nIdeal for developers or hotel operators seeking a value-add repositioning play in an established North Delhi location. India Gully advises on behalf of the vendor (JLL co-listed mandate).`,
     images: [
       // Source: JLL Listed Property — Ambience Tower, Shalimar Bagh, Rohini, North Delhi
-      'https://sspark.genspark.ai/cfimages?u1=K8Dt8buSww5YR3eFnn8IyIKv3NyOGyciYPShVrUmBJxTl%2BkEX4QhpuKUovQQlxq0f%2F0Bjej%2FkzvqV5KQ1HwhUciW3B7RJqASSUbwixjL9AgKKWkZ0NwFR7c7I1lHkusZZ8IpHeE1zVHoGG7GC4ybVs3ZGtXEWKlMhF2cEYxx4O0NvHKjR6hgBTrKZ%2FMSkSRdopme8nAm4K5EoPR3%2FU4%3D&u2=z49hXMcXDeu8mSey&width=2560',
+      '/static/mandates/gallery/img-09.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=K8Dt8buSww5YR3eFnn8IyIKv3NyOGyciYPShVrUmBJxTl%2BkEX4QhpuKUovQQlxq0f%2F0Bjej%2FkzvqV5KQ1HwhUciW3B7RJqASSUbwixjL9AgKKWkZ0NwFR7c7I1lHkusZZ8IpHeE1zVHoGG7GC4ybVs3ZGtXEWKlMhF2cEYxx4O0NvHKjR6hgBTrKZ%2FMSkSRdopme8nAm4K5EoPR3%2FU4%3D&u2=z49hXMcXDeu8mSey&width=2560',
+    coverImage: '/static/mandates/gallery/img-09.jpg',
     specs: {
       'Entity': 'Ambience Group (JLL Listed)',
       'Location': 'Shalimar Bagh, Rohini, North Delhi',
@@ -1046,11 +1046,11 @@ export const LISTINGS = [
     longDesc: `Mixed-Use Development Opportunity — Sawasdee JLG Galleria is a structure-ready 114-key hotel integrated with a retail mall in Noida's commercial corridor. The development offers independent access and operational flexibility for the hotel component.\n\nThe asset represents an attractive entry for investors seeking integrated hospitality-retail assets with multiple revenue streams. The hotel and mall components are separately operable, providing flexibility in operation or management of each vertical.\n\nProprietary sourcing by India Gully. The asset is negotiation-ready for qualified buyers. Suitable for hospitality operators, retail developers, or institutional investors seeking mixed-use integrated assets in NCR.`,
     images: [
       // Source: Hyatt Noida / India hospitality hotel — Sawasdee JLG Galleria, Noida
-      'https://sspark.genspark.ai/cfimages?u1=oMHrMKXCRzbu7CZFFKWnRarcMj%2FQdMza%2BcnOV7FWAUGgn3Ft86zKEcPMOKepepEfsgRrQfMhUoLrkaw%2BfEdrrNcZrfjCIc7mcISWKEcy%2FtV1tYpC5LJl1Tg%3D&u2=f6JAmD0cUFuyjIPo&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=eVkBdWAZws91FtPF57uJn8bPkA%2BnveJEDsD2P4Q0Du5DFIhoemTlSiP9p%2FURRxpOm8qnBtP6ZpslMFTfer0gw3drVeRXwmStqI9XiPV3rkM%2FOeNXjLgCwxbvDW1zO7WW%2BIguh%2FP7XfarLProOlOTfjU2V9X5&u2=xHnLVl1xfK%2BCwenC&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=wo4kZ2acHdPzCubtb8gUyeO%2F1MVRtp2i9rBM%2F1W5PlnyWFVbVhqe6s3mUTfpUm98fl0N2ocbosor4YTsaUpn%2FCQIyDP075hGBe%2FGt18APbceew%3D%3D&u2=rQg0AcJer2O%2Bu0Xq&width=2560',
+      '/static/mandates/gallery/img-10.jpg',
+      '/static/mandates/gallery/img-11.jpg',
+      '/static/mandates/gallery/img-12.jpg',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=oMHrMKXCRzbu7CZFFKWnRarcMj%2FQdMza%2BcnOV7FWAUGgn3Ft86zKEcPMOKepepEfsgRrQfMhUoLrkaw%2BfEdrrNcZrfjCIc7mcISWKEcy%2FtV1tYpC5LJl1Tg%3D&u2=f6JAmD0cUFuyjIPo&width=2560',
+    coverImage: '/static/mandates/gallery/img-10.jpg',
     specs: {
       'Entity': 'Sawasdee JLG Galleria',
       'Location': 'Noida, Uttar Pradesh',

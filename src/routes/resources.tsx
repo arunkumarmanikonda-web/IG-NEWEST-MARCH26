@@ -29,7 +29,7 @@ const RESOURCES = [
     updated:  'February 2026',
     access:   'Free — Email Required',
     icon:     'clipboard-list',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img1.webp',
   },
   {
     id:       'horeca-vendor-rfq-template',
@@ -44,7 +44,7 @@ const RESOURCES = [
     updated:  'January 2026',
     access:   'Free — Email Required',
     icon:     'file-contract',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img2.webp',
   },
   {
     id:       'tier2-hotel-procurement-case-study',
@@ -59,7 +59,7 @@ const RESOURCES = [
     updated:  'December 2025',
     access:   'Free — Email Required',
     icon:     'building',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img1.webp',
   },
   {
     id:       'horeca-cost-benchmarks-2026',
@@ -74,7 +74,7 @@ const RESOURCES = [
     updated:  'March 2026',
     access:   'Submit EOI — Advisory Clients',
     icon:     'chart-line',
-    img:      'https://www.mapleresorts.in/images/slider/maple-resort-chail-1.jpg',
+    img:      '/static/mandates/chail/chail-slider1.jpg',
   },
   // Real Estate
   {
@@ -90,7 +90,7 @@ const RESOURCES = [
     updated:  'February 2026',
     access:   'Free — Email Required',
     icon:     'calculator',
-    img:      'https://www.mapleresorts.in/images/slider/maple-resort-chail-2.jpg',
+    img:      '/static/mandates/chail/chail-slider2.jpg',
   },
   {
     id:       'mixed-use-development-checklist',
@@ -120,7 +120,7 @@ const RESOURCES = [
     updated:  'March 2026',
     access:   'Submit EOI — Qualified Investors',
     icon:     'presentation',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img2.webp',
   },
   // Hospitality
   {
@@ -136,7 +136,7 @@ const RESOURCES = [
     updated:  'December 2025',
     access:   'Free — Email Required',
     icon:     'hotel',
-    img:      'https://www.mapleresorts.in/img/about/new-right1.jpg',
+    img:      '/static/mandates/chail/chail-img2.jpg',
   },
   {
     id:       'hotel-management-contract-guide',
@@ -167,7 +167,7 @@ const RESOURCES = [
     updated:  'March 2026',
     access:   'Publicly Available',
     icon:     'handshake',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img2.webp',
   },
   {
     id:       'distressed-asset-acquisition-playbook',
@@ -182,7 +182,7 @@ const RESOURCES = [
     updated:  'February 2026',
     access:   'Submit EOI — Advisory Clients',
     icon:     'chess-rook',
-    img:      'https://www.mapleresorts.in/images/slider/maple-resort-chail-1.jpg',
+    img:      '/static/mandates/chail/chail-slider1.jpg',
   },
   // Legal
   {
@@ -198,7 +198,7 @@ const RESOURCES = [
     updated:  'January 2026',
     access:   'Free — Email Required',
     icon:     'clipboard-check',
-    img:      'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
+    img:      '/static/mandates/chandigarh/chandigarh-img1.webp',
   },
 ]
 
