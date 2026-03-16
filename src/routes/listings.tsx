@@ -102,20 +102,32 @@ app.get('/', (c) => {
     <div id="mandatesGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
       ${LISTINGS.map((l: any, idx: number) => {
         const ss = statusStyle(l.statusType)
-        const hasImages = l.images && l.images.length > 0
+        const coverImg = l.coverImage || (l.images && l.images.length > 0 ? l.images[0] : null)
+        const hasImages = !!(coverImg)
+        const spocInitial = (l.contactName||'').charAt(0)
+        const isArun = l.contactName && l.contactName.toLowerCase().includes('arun')
+        const spocEmail = l.contact || 'akm@indiagully.com'
+        const spocPhone = l.contactPhone || '+91 98108 89134'
         return `
       <!-- MANDATE CARD: ${l.id} -->
       <a href="/listings/${l.id}" data-sector="${l.sector}" data-idx="${idx}" data-value="${parseFloat((l.value||'0').replace(/[^0-9.]/g,''))||0}" class="mandate-card ed-card"
-         style="display:block;text-decoration:none;animation:fadeUp .6s cubic-bezier(.4,0,.2,1) ${idx * 0.07}s both;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+         style="display:block;text-decoration:none;animation:fadeUp .6s cubic-bezier(.4,0,.2,1) ${idx * 0.07}s both;box-shadow:0 2px 16px rgba(0,0,0,.08);">
 
         <!-- IMAGE / NDA PLACEHOLDER -->
-        <div class="ed-card-img" style="position:relative;height:240px;background:#0a0a14;">
+        <div class="ed-card-img" style="position:relative;height:240px;background:#0a0a14;overflow:hidden;">
           ${hasImages
-            ? `<img src="${l.images[0]}" alt="${l.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">`
+            ? `<img src="${coverImg}" alt="${l.title}" style="width:100%;height:100%;object-fit:cover;transition:transform .6s ease;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            : ``
+          }
+          ${hasImages ? `<div style="display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#090912 0%,#0f0f1e 50%,#111128 100%);position:absolute;inset:0;">
+                <div style="position:relative;text-align:center;z-index:1;">
+                  <div style="width:64px;height:64px;background:rgba(184,150,12,.1);border:1.5px solid rgba(184,150,12,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border-radius:2px;"><i class="fas fa-lock" style="color:var(--gold);font-size:1.35rem;"></i></div>
+                  <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.55rem;color:#fff;line-height:1;margin-bottom:.3rem;">${l.value}</div>
+                  <div style="font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(184,150,12,.7);">Confidential · NDA Required</div>
+                </div>
+              </div>` 
             : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#090912 0%,#0f0f1e 50%,#111128 100%);position:relative;overflow:hidden;">
-                <!-- subtle grid pattern -->
                 <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(184,150,12,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,150,12,.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;"></div>
-                <!-- gold radial glow -->
                 <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(184,150,12,.06) 0%,transparent 70%);pointer-events:none;"></div>
                 <div style="position:relative;text-align:center;">
                   <div style="width:64px;height:64px;background:rgba(184,150,12,.1);border:1.5px solid rgba(184,150,12,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border-radius:2px;">
@@ -147,7 +159,7 @@ app.get('/', (c) => {
             </div>
             <div style="background:rgba(0,0,0,.4);backdrop-filter:blur(6px);padding:.2rem .55rem;display:flex;align-items:center;gap:.3rem;border:1px solid rgba(255,255,255,.15);">
               <i class="fas fa-images" style="font-size:.48rem;color:rgba(255,255,255,.5);"></i>
-              <span style="font-size:.56rem;color:rgba(255,255,255,.6);letter-spacing:.06em;">${l.images.length} photos · NDA required</span>
+              <span style="font-size:.56rem;color:rgba(255,255,255,.6);letter-spacing:.06em;">${(l.images||[]).length} photos</span>
             </div>
           </div>` : ''}
         </div>
@@ -174,6 +186,17 @@ app.get('/', (c) => {
               <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--gold);line-height:1;">${h.value}</div>
             </div>`).join('')}
           </div>
+          <!-- SPOC row -->
+          <div style="display:flex;align-items:center;gap:.625rem;padding:.625rem .875rem;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.12);margin-bottom:1.25rem;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8rem;font-weight:700;color:#fff;">${spocInitial}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.15rem;">SPOC · India Gully</div>
+              <div style="font-size:.8rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${l.contactName || 'Arun Manikonda'}</div>
+            </div>
+            <a href="https://wa.me/${spocPhone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Hi, I am interested in the ' + l.title + ' mandate — please share details / IM.')}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="WhatsApp ${l.contactName}" style="width:32px;height:32px;background:#25D366;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+              <i class="fab fa-whatsapp" style="color:#fff;font-size:.85rem;"></i>
+            </a>
+          </div>
           <!-- Tags -->
           <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.25rem;">
             ${l.tags.slice(0,3).map((t: string) => `<span style="background:rgba(10,10,10,.04);color:var(--ink-soft);border:1px solid var(--border);font-size:.58rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.17rem .5rem;">${t}</span>`).join('')}
@@ -181,7 +204,7 @@ app.get('/', (c) => {
           <!-- CTA row -->
           <div style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border-lt);gap:.5rem;flex-wrap:wrap;">
             <span style="font-size:.67rem;color:var(--gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;">
-              <i class="fas fa-file-signature" style="font-size:.6rem;"></i>View Mandate
+              <i class="fas fa-file-signature" style="font-size:.6rem;"></i>View &amp; Sign NDA
             </span>
             <div style="display:flex;align-items:center;gap:.5rem;">
               <!-- Bookmark / Save button -->
@@ -190,13 +213,8 @@ app.get('/', (c) => {
                 style="width:28px;height:28px;background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.25);color:rgba(184,150,12,.55);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;">
                 <i class="fas fa-bookmark" style="font-size:.58rem;"></i>
               </button>
-              <a href="https://wa.me/918988988988?text=${encodeURIComponent('Hi, I am interested in ' + l.title + ' — please share details / Information Memorandum.')}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
-                style="display:inline-flex;align-items:center;gap:.3rem;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#25D366;color:#fff;padding:.28rem .65rem;text-decoration:none;transition:opacity .2s;"
-                onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-                <i class="fab fa-whatsapp" style="font-size:.68rem;"></i>Enquire
-              </a>
               <div style="display:flex;align-items:center;gap:.3rem;font-size:.6rem;color:var(--ink-faint);">
-                ${l.nda ? `<i class="fas fa-lock" style="font-size:.52rem;color:var(--gold);"></i><span style="color:var(--gold);font-weight:600;">NDA</span>` : `<i class="fas fa-unlock" style="font-size:.52rem;"></i><span>Open</span>`}
+                ${l.nda ? `<i class="fas fa-lock" style="font-size:.52rem;color:var(--gold);"></i><span style="color:var(--gold);font-weight:600;">NDA Required</span>` : `<i class="fas fa-unlock" style="font-size:.52rem;"></i><span>Open</span>`}
               </div>
             </div>
           </div>
@@ -214,16 +232,322 @@ app.get('/', (c) => {
   </div>
 </div>
 
+<!-- ══ SPOC PROFILES ═════════════════════════════════════════════════════ -->
+<div style="background:var(--ink);padding:5rem 0;">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div style="display:inline-flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
+        <div style="width:32px;height:1px;background:var(--gold);"></div>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(184,150,12,.75);">Your Advisors</span>
+        <div style="width:32px;height:1px;background:var(--gold);"></div>
+      </div>
+      <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:#fff;margin-bottom:.75rem;">Meet Your <em style="color:var(--gold);font-style:italic;">SPOCs</em></h2>
+      <p style="font-size:.88rem;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto;line-height:1.75;">Each mandate is managed by a dedicated Single Point of Contact. Reach them directly to discuss the opportunity.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:820px;margin:0 auto;">
+
+      <!-- SPOC: Arun Manikonda -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:2rem;position:relative;overflow:hidden;transition:border-color .25s;" onmouseover="this.style.borderColor='rgba(184,150,12,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
+        <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;font-weight:400;color:#fff;flex-shrink:0;border:2px solid rgba(184,150,12,.4);">A</div>
+          <div>
+            <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.3rem;color:#fff;margin-bottom:.2rem;">Arun Manikonda</h3>
+            <p style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem;">Founder & Managing Director</p>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.4);">India Gully · New Delhi</p>
+          </div>
+        </div>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:1.5rem;">Expert in large-format institutional transactions — Prism Tower (₹400 Cr), Belcibo Growth Equity (₹100 Cr), Ambience Tower Adaptive Reuse (₹350 Cr), Sawasdee Noida Hotel (₹150 Cr). 15+ years in hospitality, real estate & structured finance.</p>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.35);margin-bottom:1rem;"><strong style="color:rgba(255,255,255,.6);">Active Mandates:</strong> Prism Tower · Belcibo Platform · Ambience Tower · Sawasdee Noida</div>
+        <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+          <a href="tel:+919810889134" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);font-size:.68rem;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.65)'">
+            <i class="fas fa-phone" style="font-size:.6rem;"></i>+91 98108 89134
+          </a>
+          <a href="https://wa.me/919810889134?text=${encodeURIComponent('Hi Arun, I am interested in discussing an India Gully mandate.')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;background:#25D366;color:#fff;font-size:.68rem;font-weight:600;text-decoration:none;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-whatsapp" style="font-size:.7rem;"></i>WhatsApp
+          </a>
+          <a href="mailto:akm@indiagully.com" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);font-size:.68rem;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.65)'">
+            <i class="fas fa-envelope" style="font-size:.6rem;"></i>Email
+          </a>
+        </div>
+      </div>
+
+      <!-- SPOC: Amit Jhingan -->
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:2rem;position:relative;overflow:hidden;transition:border-color .25s;" onmouseover="this.style.borderColor='rgba(184,150,12,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold));"></div>
+        <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem;">
+          <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#065F46,#047857);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;font-weight:400;color:#fff;flex-shrink:0;border:2px solid rgba(6,95,70,.6);">A</div>
+          <div>
+            <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.3rem;color:#fff;margin-bottom:.2rem;">Amit Jhingan</h3>
+            <p style="font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem;">Senior Advisor — Hospitality</p>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.4);">India Gully · New Delhi</p>
+          </div>
+        </div>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:1.5rem;">Specialist in hospitality asset transactions — Hotel Rajshree Chandigarh (₹70 Cr), WelcomHeritage Kasauli (₹45 Cr), Jaipur Heritage Hotel (₹20 Cr), Maple Resort Chail (₹30 Cr). Deep expertise in boutique hotels, heritage assets & wellness resorts.</p>
+        <div style="font-size:.7rem;color:rgba(255,255,255,.35);margin-bottom:1rem;"><strong style="color:rgba(255,255,255,.6);">Active Mandates:</strong> Hotel Rajshree · WelcomHeritage · Jaipur Structure · Maple Resort Chail</div>
+        <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+          <a href="tel:+919899993543" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);font-size:.68rem;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.65)'">
+            <i class="fas fa-phone" style="font-size:.6rem;"></i>+91 98999 93543
+          </a>
+          <a href="https://wa.me/919899993543?text=${encodeURIComponent('Hi Amit, I am interested in discussing an India Gully hospitality mandate.')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;background:#25D366;color:#fff;font-size:.68rem;font-weight:600;text-decoration:none;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-whatsapp" style="font-size:.7rem;"></i>WhatsApp
+          </a>
+          <a href="mailto:amit.jhingan@indiagully.com" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .875rem;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.65);font-size:.68rem;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.65)'">
+            <i class="fas fa-envelope" style="font-size:.6rem;"></i>Email
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ JAIPUR HERITAGE HOTEL — VIDEO FEATURE ════════════════════════════ -->
+<div style="background:var(--parch-dk);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 0;">
+  <div class="wrap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;">
+      <div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
+          <div style="width:32px;height:1px;background:var(--gold);"></div>
+          <span style="font-size:.6rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);">Featured Opportunity</span>
+        </div>
+        <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--ink);line-height:1.15;margin-bottom:1rem;">Heritage Hotel Structure<br><em style="color:var(--gold);font-style:italic;">Jaipur, Rajasthan</em></h2>
+        <p style="font-size:.9rem;color:var(--ink-muted);line-height:1.85;margin-bottom:1.5rem;">A construction-complete 43-key hospitality structure in Jaipur's premium tourism corridor — ready for interior fit-out. Significant cost savings vs greenfield. Ideal for boutique hotel operators seeking quick market entry in Rajasthan's heritage tourism belt.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">
+          <div style="padding:1rem;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.15);">
+            <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.35rem;">Asking Price</div>
+            <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:var(--gold);">₹20 Cr</div>
+          </div>
+          <div style="padding:1rem;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.15);">
+            <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.35rem;">Room Inventory</div>
+            <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:var(--ink);">43 Keys</div>
+          </div>
+          <div style="padding:1rem;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.15);">
+            <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.35rem;">Status</div>
+            <div style="font-size:.8rem;font-weight:600;color:var(--ink);">Structure Complete · Fit-Out Ready</div>
+          </div>
+          <div style="padding:1rem;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.15);">
+            <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.35rem;">SPOC</div>
+            <div style="font-size:.8rem;font-weight:600;color:var(--ink);">Amit Jhingan</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.875rem;flex-wrap:wrap;">
+          <a href="/listings/heritage-hotel-jaipur" class="btn btn-g" style="font-size:.72rem;">
+            <i class="fas fa-file-signature" style="margin-right:.4rem;"></i>Sign NDA & View Details
+          </a>
+          <a href="https://wa.me/919899993543?text=${encodeURIComponent('Hi Amit, I am interested in the Jaipur Heritage Hotel Structure — please share more details.')}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.4rem;padding:.75rem 1.25rem;background:#25D366;color:#fff;font-size:.72rem;font-weight:700;text-decoration:none;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-whatsapp"></i>WhatsApp Amit
+          </a>
+        </div>
+      </div>
+      <!-- Video embed -->
+      <div style="position:relative;overflow:hidden;background:#0a0a14;">
+        <video controls muted playsinline loop preload="metadata"
+               style="width:100%;height:380px;object-fit:cover;display:block;"
+               poster="/static/mandates/jaipur/jaipur-hero-shot.jpg">
+          <source src="/static/videos/jaipur-hotel.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div style="position:absolute;top:.875rem;left:.875rem;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);padding:.25rem .65rem;display:flex;align-items:center;gap:.35rem;border:1px solid rgba(184,150,12,.4);">
+          <i class="fas fa-video" style="font-size:.5rem;color:var(--gold);"></i>
+          <span style="font-size:.58rem;color:rgba(255,255,255,.85);letter-spacing:.08em;font-weight:700;text-transform:uppercase;">Project Walkthrough</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMPLETED MANDATES / TRACK RECORD ════════════════════════════════ -->
+<div style="background:var(--parch);padding:5rem 0;" id="track-record">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div style="display:inline-flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
+        <div style="width:32px;height:1px;background:var(--gold);"></div>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);">Executed Mandates</span>
+        <div style="width:32px;height:1px;background:var(--gold);"></div>
+      </div>
+      <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--ink);margin-bottom:.75rem;">Completed Transactions<br><em style="color:var(--gold);font-style:italic;">Track Record</em></h2>
+      <p style="font-size:.88rem;color:var(--ink-muted);max-width:560px;margin:0 auto;line-height:1.75;">Our executed mandate portfolio — a testament to deep expertise across Real Estate, Hospitality, Retail Leasing, Entertainment and HORECA verticals.</p>
+    </div>
+
+    <!-- Vertical tabs for completed mandates -->
+    <div style="display:flex;gap:2rem;align-items:flex-start;">
+      <!-- Tab nav -->
+      <div style="flex-shrink:0;width:200px;">
+        ${['Real Estate','Retail & Leasing','Hospitality PMC','Entertainment','HORECA'].map((tab, ti) => `
+        <button onclick="igTrackTab('${ti}')" id="tracktab-${ti}" class="track-tab${ti===0?' tt-active':''}"
+                style="display:block;width:100%;text-align:left;padding:.75rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:none;border-left:2px solid ${ti===0?'var(--gold)':'var(--border)'};background:${ti===0?'rgba(184,150,12,.06)':'transparent'};color:${ti===0?'var(--gold)':'var(--ink-muted)'};cursor:pointer;transition:all .2s;margin-bottom:.25rem;"
+                onmouseover="if(!this.classList.contains('tt-active')){this.style.borderColor='rgba(184,150,12,.4)';this.style.color='var(--ink)'}"
+                onmouseout="if(!this.classList.contains('tt-active')){this.style.borderColor='var(--border)';this.style.color='var(--ink-muted)'}">
+          ${tab}
+        </button>`).join('')}
+      </div>
+
+      <!-- Tab panels -->
+      <div style="flex:1;min-width:0;">
+
+        <!-- Real Estate Panel -->
+        <div id="trackpanel-0" class="track-panel">
+          ${[
+            {title:'800 Sq. Yard Asset Takeover & Strata Sale — Anand Lok, New Delhi', val:'₹65 Cr+', type:'Asset Acquisition & Strata Sale', desc:'Strategic acquisition of prime South Delhi property, complete takeover valued at ₹50+ Cr. Delivered ₹65+ Cr exit within 6-month turnaround.', location:'Anand Lok, South Delhi', highlight:true},
+            {title:"Lutyens' Delhi — Ultra-Premium 1,600 Sq. Yd. Property", val:'₹100 Cr+', type:'Residential Advisory', desc:"Facilitated acquisition of exclusive 1,600 Sq. Yard property in Lutyens' Delhi, India's most prestigious residential enclave.", location:"Lutyens' Delhi, New Delhi"},
+            {title:'Greater Kailash-1 Premium Asset', val:'₹60 Cr+', type:'Residential Advisory', desc:"1,000 Sq. Yard property in South Delhi's GK-1 locality. Transaction value exceeded ₹60+ Cr.", location:'GK-1, South Delhi'},
+            {title:'Entertainment City Limited — Landmark Divestment (Joint with EY)', val:'₹1,350 Cr+', type:'Joint Transaction Advisory', desc:'100% divestment of Entertainment City Limited. Managed complex stakeholder negotiations & multi-party due diligence.', location:'Entertainment City, Noida', highlight:true},
+            {title:'Jaipur Resort Mandate — Premium Leisure Asset Sale', val:'₹20 Cr+', type:'Transaction Advisory', desc:"Successful divestment of a well-positioned resort in Jaipur's hospitality corridor through targeted investor outreach.", location:'Jaipur, Rajasthan'},
+          ].map((item, i) => `
+          <div style="padding:1.25rem 1.5rem;border:1px solid var(--border);margin-bottom:.875rem;background:#fff;position:relative;${item.highlight?'border-left:3px solid var(--gold);background:#fffdf4;':''}">
+            ${item.highlight ? `<div style="position:absolute;top:.625rem;right:.625rem;font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--gold);color:#fff;padding:.18rem .5rem;">Featured</div>` : ''}
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;">
+              <h4 style="font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35;">${item.title}</h4>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.15rem;color:var(--gold);flex-shrink:0;">${item.val}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(26,58,107,.1);color:#1A3A6B;padding:.15rem .5rem;">${item.type}</span>
+              <span style="font-size:.67rem;color:var(--ink-muted);"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.2rem;font-size:.52rem;"></i>${item.location}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.7;">${item.desc}</p>
+          </div>`).join('')}
+        </div>
+
+        <!-- Retail & Leasing Panel -->
+        <div id="trackpanel-1" class="track-panel" style="display:none;">
+          ${[
+            {title:'Khubani at Hyatt Andaz Delhi — 42,000 Sq. Ft. Premium Dining', val:'42,000 Sq. Ft.', type:'Hospitality Leasing', desc:'Negotiated and executed leasing for signature 27,000 + 15,000 Sq. Ft. restaurant space within Hyatt Andaz, positioning Khubani as a landmark culinary destination.', location:'Hyatt Andaz, New Delhi', highlight:true},
+            {title:'Imperfecto Shor — Golf Course Road, Gurugram', val:'Prime F&B Space', type:'Retail Leasing', desc:"Secured prime F&B retail space for Imperfecto Shor on Gurugram's prestigious Golf Course Road.", location:'Golf Course Road, Gurugram'},
+            {title:'Begum & Noor at Entertainment City — 22,000 Sq. Ft.', val:'22,000 Sq. Ft.', type:'Entertainment Leasing', desc:'Facilitated leasing for premium dining and entertainment concept within Entertainment City, Noida.', location:'Entertainment City, Noida'},
+            {title:'Sutra at Entertainment City — 15,000 Sq. Ft. Experiential Dining', val:'15,000 Sq. Ft.', type:'Entertainment Leasing', desc:"Secured 15,000 Sq. Ft. for Sutra's immersive dining experience.", location:'Entertainment City, Noida'},
+            {title:'Impulse at Gardens Galleria — 9,000 Sq. Ft.', val:'9,000 Sq. Ft.', type:'Mall Leasing', desc:'Executed leasing for premium lounge — key anchor in Gardens Galleria mall.', location:'Gardens Galleria, Noida'},
+            {title:'Dearie at Gardens Galleria — 9,000 Sq. Ft.', val:'9,000 Sq. Ft.', type:'Mall Leasing', desc:'Favorable lease for Dearie café concept at Gardens Galleria.', location:'Gardens Galleria, Noida'},
+            {title:'Maricham at Gardens Galleria — 7,000 Sq. Ft.', val:'7,000 Sq. Ft.', type:'Mall Leasing', desc:"Kebab and grill specialty restaurant in mall's premium dining zone.", location:'Gardens Galleria, Noida'},
+            {title:'Rosia at AIPL Joy Street, Gurugram', val:'Prime Retail', type:'Retail Leasing', desc:'Prime retail frontage at AIPL Joy Street, Gurugram.', location:'AIPL Joy Street, Gurugram'},
+            {title:'Turnkey — Peach Tree, Faridabad', val:'Turnkey Advisory', type:'Leasing & Fit-Out', desc:'Comprehensive turnkey leasing and fit-out advisory, managing complete retail establishment.', location:'Faridabad, Haryana'},
+          ].map((item, i) => `
+          <div style="padding:1.25rem 1.5rem;border:1px solid var(--border);margin-bottom:.875rem;background:#fff;${item.highlight?'border-left:3px solid var(--gold);background:#fffdf4;':''}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;">
+              <h4 style="font-size:.9rem;font-weight:700;color:var(--ink);line-height:1.35;">${item.title}</h4>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--gold);flex-shrink:0;">${item.val}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(184,150,12,.1);color:#B8960C;padding:.15rem .5rem;">${item.type}</span>
+              <span style="font-size:.67rem;color:var(--ink-muted);"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.2rem;font-size:.52rem;"></i>${item.location}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.7;">${item.desc}</p>
+          </div>`).join('')}
+        </div>
+
+        <!-- Hospitality PMC Panel -->
+        <div id="trackpanel-2" class="track-panel" style="display:none;">
+          ${[
+            {title:'PMC — Fern Residency, Noida', val:'Turnkey PMC', type:'Project Management', desc:'End-to-end PMC for turnkey development of Fern Residency Noida — design, construction, brand compliance & operational handover.', location:'Noida, Delhi NCR', highlight:true},
+            {title:'PMC — Regenta Central, Noida', val:'Turnkey PMC', type:'Project Management', desc:'Comprehensive PMC for Regenta Central Noida — fit-out, MEP coordination & pre-opening preparation.', location:'Noida, Delhi NCR'},
+            {title:'PMC — Cygnett Inn, Jim Corbett National Park', val:'Turnkey PMC', type:'Project Management', desc:'Eco-sensitive project management for wilderness retreat — coordinated wildlife zone compliance & resort amenity development.', location:'Jim Corbett, Uttarakhand'},
+            {title:'PMC — Maricham Kabab Estate', val:'Turnkey PMC', type:'Project Management', desc:'Turnkey development: kitchen design, interiors, MEP, operational set-up for specialty dining destination.', location:'Delhi NCR'},
+            {title:'Internal Signage & Design — Grand Hyatt, Gurugram', val:'Signage & Design', type:'Brand & Design', desc:'Comprehensive internal signage and wayfinding for Grand Hyatt Gurugram — luxury aesthetic with functional navigation.', location:'Grand Hyatt, Gurugram'},
+            {title:'PMC — Habibi at Andaz Aerocity, Delhi', val:'F&B PMC', type:'Restaurant PMC', desc:'Specialized PMC for Habibi restaurant at Andaz Aerocity — fit-out coordination, compliance & operational readiness.', location:'Andaz Aerocity, Delhi'},
+            {title:'PMC — Yella Hills Resort, Yelagiri', val:'Resort PMC', type:'Project Management', desc:'End-to-end PMC for Yella Hills Resort — eco-sensitive construction, sustainable resort development.', location:'Yelagiri Hills, Tamil Nadu'},
+          ].map((item, i) => `
+          <div style="padding:1.25rem 1.5rem;border:1px solid var(--border);margin-bottom:.875rem;background:#fff;${item.highlight?'border-left:3px solid var(--gold);background:#fffdf4;':''}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;">
+              <h4 style="font-size:.9rem;font-weight:700;color:var(--ink);">${item.title}</h4>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--gold);flex-shrink:0;">${item.val}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(6,95,70,.1);color:#065F46;padding:.15rem .5rem;">${item.type}</span>
+              <span style="font-size:.67rem;color:var(--ink-muted);"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.2rem;font-size:.52rem;"></i>${item.location}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.7;">${item.desc}</p>
+          </div>`).join('')}
+        </div>
+
+        <!-- Entertainment Panel -->
+        <div id="trackpanel-3" class="track-panel" style="display:none;">
+          ${[
+            {title:'Entertainment City Limited — 100% Divestment (Joint with EY)', val:'₹1,350 Cr+', type:'Joint Transaction Advisory', desc:'Partnered with EY as Joint Transaction Advisors for 100% divestment of Entertainment City Limited — one of India\'s largest entertainment sector transactions.', location:'Entertainment City, Noida', highlight:true},
+            {title:'Due Diligence SPOC — Entertainment City for Adlabs Imagica', val:'₹500 Cr Deal', type:'Client-Side Due Diligence', desc:"Client-Side SPOC for Entertainment City's evaluation of Adlabs Imagica — coordinated financial, legal, operational & technical due diligence.", location:'Noida / Khopoli'},
+            {title:'Worlds of Wonder Park — Post-COVID Re-opening & Lease', val:'10-Acre Waterpark', type:'Re-opening & Lease', desc:"Orchestrated strategic re-opening of India's premier waterpark post-COVID — managed lease negotiations and operational revival.", location:'Entertainment City, Noida'},
+          ].map((item, i) => `
+          <div style="padding:1.25rem 1.5rem;border:1px solid var(--border);margin-bottom:.875rem;background:#fff;${item.highlight?'border-left:3px solid var(--gold);background:#fffdf4;':''}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;">
+              <h4 style="font-size:.9rem;font-weight:700;color:var(--ink);">${item.title}</h4>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--gold);flex-shrink:0;">${item.val}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(124,58,237,.1);color:#7C3AED;padding:.15rem .5rem;">${item.type}</span>
+              <span style="font-size:.67rem;color:var(--ink-muted);"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.2rem;font-size:.52rem;"></i>${item.location}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.7;">${item.desc}</p>
+          </div>`).join('')}
+        </div>
+
+        <!-- HORECA Panel -->
+        <div id="trackpanel-4" class="track-panel" style="display:none;">
+          ${[
+            {title:'HORECA Supplies — Mahindra Holidays & Resorts India Ltd.', val:'Pan-India', type:'HORECA Supply', desc:'Strategic HORECA supply partnership with Mahindra Holidays — F&B equipment, kitchen solutions & operational supplies across pan-India resort network.', location:'Multiple Locations', highlight:true},
+            {title:'HORECA Supplies — Sterling Holidays & Resorts Ltd.', val:'Multi-Location', type:'HORECA Supply', desc:'Multi-location HORECA supply contract — hospitality equipment & consumables across leisure destinations.', location:'Multiple Locations'},
+            {title:'HORECA Supplies — CGH Earth Hotels (Kerala)', val:'Eco-Luxury', type:'HORECA Supply', desc:'Premium HORECA products aligned with CGH Earth sustainability ethos — eco-luxury hospitality across Kerala properties.', location:'Kerala, South India'},
+            {title:'HORECA Supplies — Accor Hotels (Novotel), Bengaluru', val:'International Standard', type:'HORECA Supply', desc:"International-standard kitchen equipment, tableware & F&B service supplies meeting Accor's brand specifications.", location:'Novotel Bengaluru'},
+            {title:'HORECA Supplies — Regenta Hotels, Multiple Locations', val:'Pan-India', type:'HORECA Supply', desc:'Pan-India HORECA supply framework with Regenta Hotels — standardized hospitality equipment across expanding portfolio.', location:'Multiple Locations'},
+            {title:'HORECA Supplies — Park Inn by Radisson, Delhi', val:'Full Kit-Out', type:'HORECA Supply', desc:"Complete kitchen & F&B service equipment for Park Inn Delhi meeting Radisson's procurement standards.", location:'Park Inn Delhi'},
+          ].map((item, i) => `
+          <div style="padding:1.25rem 1.5rem;border:1px solid var(--border);margin-bottom:.875rem;background:#fff;${item.highlight?'border-left:3px solid var(--gold);background:#fffdf4;':''}">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;">
+              <h4 style="font-size:.9rem;font-weight:700;color:var(--ink);">${item.title}</h4>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--gold);flex-shrink:0;">${item.val}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(146,64,14,.1);color:#92400E;padding:.15rem .5rem;">${item.type}</span>
+              <span style="font-size:.67rem;color:var(--ink-muted);"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.2rem;font-size:.52rem;"></i>${item.location}</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.7;">${item.desc}</p>
+          </div>`).join('')}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
 @media(max-width:900px){#mandatesGrid{grid-template-columns:repeat(2,1fr)!important;}}
 @media(max-width:560px){#mandatesGrid{grid-template-columns:1fr!important;}#pipelineStats{grid-template-columns:repeat(2,1fr)!important;}}
 /* Filter active state */
 .filter-btn.active{border-color:var(--gold)!important;background:var(--gold)!important;color:#fff!important;}
+/* Hover zoom on cards */
+.mandate-card:hover .ed-card-img img{transform:scale(1.05)!important;}
+/* Track record responsive */
+@media(max-width:760px){
+  div[style*="grid-template-columns:200px"]{flex-direction:column!important;}
+  div[id^="trackpanel"]{padding:.5rem 0!important;}
+}
+/* Jaipur section responsive */
+@media(max-width:820px){
+  div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  div[style*="grid-template-columns:1fr 1fr"]~div{margin-top:2rem!important;}
+}
+/* SPOC grid responsive */
+@media(max-width:680px){
+  div[style*="grid-template-columns:1fr 1fr;gap:2rem;max-width:820px"]{grid-template-columns:1fr!important;}
+}
 </style>
 
 <script>
 var _currentSector = 'All Mandates';
 var _showingOnlySaved = false;
+
+/* ── TRACK RECORD TABS ──────────────────────────────────────────────── */
+function igTrackTab(idx) {
+  document.querySelectorAll('.track-panel').forEach(function(p){ p.style.display = 'none'; });
+  document.querySelectorAll('.track-tab').forEach(function(b,i){
+    var active = String(i) === String(idx);
+    b.classList.toggle('tt-active', active);
+    b.style.borderLeftColor = active ? 'var(--gold)' : 'var(--border)';
+    b.style.background      = active ? 'rgba(184,150,12,.06)' : 'transparent';
+    b.style.color           = active ? 'var(--gold)' : 'var(--ink-muted)';
+  });
+  var panel = document.getElementById('trackpanel-' + idx);
+  if (panel) panel.style.display = 'block';
+}
+
 
 /* ── BOOKMARK / SAVE ────────────────────────────────────────────────── */
 var IG_SAVED_KEY = 'ig_saved_mandates';
@@ -684,6 +1008,78 @@ function igUnlockContent(name, email, phone, org) {
 
 ${ndaModal}
 
+<!-- ══ HERO BANNER (Special featured mandates) ════════════════════════ -->
+${l.id === 'prism-tower-gurgaon' ? `
+<div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
+  <img src="https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
+  <div class="wrap" style="position:relative;z-index:2;">
+    <div style="max-width:640px;">
+      <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(26,58,107,.85);border:1px solid rgba(26,58,107,.6);padding:.3rem .875rem;margin-bottom:1.25rem;">
+        <i class="fas fa-building" style="color:#93c5fd;font-size:.65rem;"></i>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#93c5fd;">Reference Transaction · Due Diligence Stage</span>
+      </div>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.5rem,4vw,2.75rem);color:#fff;line-height:1.15;margin-bottom:.875rem;">Prism Tower<br><em style="color:var(--gold);font-style:italic;">Mixed-Use Hospitality & Commercial</em></h1>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Asset Value</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--gold);">₹400 Cr</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Room Inventory</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;">312 Keys</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Location</div><div style="font-size:.9rem;color:#fff;font-weight:600;margin-top:.4rem;">Gwalpahari, Gurugram</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0;">A</div>
+        <span style="font-size:.75rem;color:rgba(255,255,255,.65);">SPOC: <strong style="color:#fff;">Arun Manikonda</strong> · <a href="tel:+919810889134" style="color:var(--gold);text-decoration:none;">+91 98108 89134</a></span>
+      </div>
+    </div>
+  </div>
+</div>` : l.id === 'belcibo-hospitality-platform' ? `
+<div style="position:relative;background:#0a0a0a;overflow:hidden;min-height:320px;display:flex;align-items:center;">
+  <img src="https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560" alt="Belcibo Imperfecto Shor" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 100%);"></div>
+  <div class="wrap" style="position:relative;z-index:2;">
+    <div style="max-width:640px;">
+      <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(184,150,12,.2);border:1px solid rgba(184,150,12,.4);padding:.3rem .875rem;margin-bottom:1.25rem;">
+        <i class="fas fa-utensils" style="color:var(--gold);font-size:.65rem;"></i>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);">Growth Equity · Active Fundraise</span>
+      </div>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.5rem,4vw,2.75rem);color:#fff;line-height:1.15;margin-bottom:.875rem;">Belcibo<br><em style="color:var(--gold);font-style:italic;">Multi-Brand F&B Platform</em></h1>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;">
+        ${['Imperfecto', 'Imperfecto Shor', 'Informal', 'Khubani', 'Begum', 'Noor', 'Habibi', 'RuinPub', 'Patio', 'Boutique'].map(b => `<span style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.58rem;font-weight:600;padding:.2rem .55rem;">${b}</span>`).join('')}
+      </div>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Growth Capital</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--gold);">₹100 Cr</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Operating Outlets</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;">15+</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Markets</div><div style="font-size:.9rem;color:#fff;font-weight:600;margin-top:.4rem;">Delhi NCR & Goa</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0;">A</div>
+        <span style="font-size:.75rem;color:rgba(255,255,255,.65);">SPOC: <strong style="color:#fff;">Arun Manikonda</strong> · <a href="tel:+919810889134" style="color:var(--gold);text-decoration:none;">+91 98108 89134</a></span>
+      </div>
+    </div>
+  </div>
+</div>` : l.id === 'sawasdee-jlg-noida' ? `
+<div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
+  <img src="https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560" alt="Sawasdee JLG Galleria Noida" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
+  <div class="wrap" style="position:relative;z-index:2;">
+    <div style="max-width:640px;">
+      <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(124,58,237,.25);border:1px solid rgba(124,58,237,.5);padding:.3rem .875rem;margin-bottom:1.25rem;">
+        <i class="fas fa-store" style="color:#c4b5fd;font-size:.65rem;"></i>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c4b5fd;">Outright Sale · Negotiation Ready</span>
+      </div>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.5rem,4vw,2.75rem);color:#fff;line-height:1.15;margin-bottom:.875rem;">Sawasdee JLG Galleria<br><em style="color:var(--gold);font-style:italic;">Hotel & Mall — Noida</em></h1>
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Asset Value</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--gold);">₹150 Cr</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Hotel Inventory</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;">114 Keys</div></div>
+        <div><div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.25rem;">Components</div><div style="font-size:.9rem;color:#fff;font-weight:600;margin-top:.4rem;">Hotel + Retail Mall</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem;flex-shrink:0;">A</div>
+        <span style="font-size:.75rem;color:rgba(255,255,255,.65);">SPOC: <strong style="color:#fff;">Arun Manikonda</strong> · <a href="tel:+919810889134" style="color:var(--gold);text-decoration:none;">+91 98108 89134</a></span>
+      </div>
+    </div>
+  </div>
+</div>` : ''}
+
 <!-- ══ DETAIL HERO ══════════════════════════════════════════════════════ -->
 <div style="background:var(--ink);position:relative;overflow:hidden;">
   <!-- Full-bleed image carousel or NDA placeholder -->
@@ -814,6 +1210,48 @@ ${ndaModal}
             <div style="font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);">${h.label}</div>
           </div>`).join('')}
         </div>
+
+        ${l.id === 'heritage-hotel-jaipur' ? `
+        <!-- ── Jaipur Video Walkthrough ─────────────────── -->
+        <div style="margin-bottom:2.5rem;border:1px solid var(--border);overflow:hidden;background:var(--ink);">
+          <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);display:flex;align-items:center;gap:.625rem;">
+            <i class="fas fa-video" style="color:var(--gold);font-size:.85rem;"></i>
+            <p style="font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin:0;">Project Video Walkthrough</p>
+            <span style="font-size:.6rem;color:rgba(255,255,255,.45);margin-left:.5rem;">Jaipur Heritage Structure · Interior & Exterior</span>
+          </div>
+          <video controls muted playsinline preload="metadata"
+                 style="width:100%;display:block;max-height:420px;object-fit:cover;"
+                 poster="/static/mandates/jaipur/jaipur-hero-shot.jpg">
+            <source src="/static/videos/jaipur-hotel.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>` : ''}
+
+        ${l.id === 'belcibo-hospitality-platform' ? `
+        <!-- ── Belcibo Brand Portfolio Gallery ─────────── -->
+        <div style="margin-bottom:2.5rem;border:1px solid var(--border);overflow:hidden;">
+          <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;gap:.625rem;">
+            <i class="fas fa-store" style="color:var(--gold);font-size:.85rem;"></i>
+            <p style="font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0;">Brand Portfolio</p>
+            <span style="font-size:.6rem;color:var(--ink-muted);margin-left:.5rem;">10+ Belcibo outlets shown</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;">
+            ${[
+              {brand:'Imperfecto Shor', img:'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560'},
+              {brand:'Begam', img:'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560'},
+              {brand:'Noor by Khubani', img:'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560'},
+              {brand:'Informal', img:'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560'},
+            ].map(b => `
+            <div style="position:relative;height:200px;overflow:hidden;">
+              <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%);"></div>
+              <div style="position:absolute;bottom:.75rem;left:.875rem;font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:#fff;">${b.brand}</div>
+            </div>`).join('')}
+          </div>
+          <div style="padding:.875rem 1.25rem;background:rgba(184,150,12,.04);border-top:1px solid var(--border);">
+            <p style="font-size:.75rem;color:var(--ink-muted);margin:0;"><i class="fas fa-info-circle" style="color:var(--gold);margin-right:.4rem;"></i>Full brand portfolio deck available post-NDA. Additional brands include Patio, Boutique, RuinPub, Shor, Khybani & more.</p>
+          </div>
+        </div>` : ''}
 
         <!-- ── Phase 11A: Investment Snapshot ─────────────────────────── -->
         <div style="margin-bottom:2.5rem;border:1px solid var(--border);background:var(--parch);overflow:hidden;">

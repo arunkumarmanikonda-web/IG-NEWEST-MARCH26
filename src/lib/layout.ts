@@ -199,6 +199,15 @@ html[data-theme="dark"]{
 [data-theme="dark"] .home-stat-cell{background:#141420!important;border-color:rgba(255,255,255,.06)!important;}
 /* Dark mode: filter buttons (inline bg) */
 [data-theme="dark"] [data-hbcat],[data-theme="dark"] [data-rbcat]{background:transparent!important;border-color:rgba(255,255,255,.12)!important;color:rgba(255,255,255,.5)!important;}
+/* Dark mode: track record panels */
+[data-theme="dark"] .track-panel>div{background:#141420!important;border-color:rgba(255,255,255,.07)!important;}
+[data-theme="dark"] .track-panel>div h4{color:rgba(255,255,255,.88)!important;}
+[data-theme="dark"] .track-panel>div p{color:rgba(255,255,255,.5)!important;}
+[data-theme="dark"] .track-panel>div[style*="background:#fffdf4"]{background:#16140a!important;border-left-color:var(--gold)!important;}
+[data-theme="dark"] .track-tab{color:rgba(255,255,255,.45)!important;}
+[data-theme="dark"] .track-tab.tt-active{color:var(--gold)!important;background:rgba(184,150,12,.08)!important;}
+/* Dark mode: mandate highlight cells */
+[data-theme="dark"] .mandate-highlight{background:#141420!important;border-color:rgba(255,255,255,.06)!important;}
 
 /* ── FOCUS VISIBLE (ARIA) ──────────────────────────────────────────────── */
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}

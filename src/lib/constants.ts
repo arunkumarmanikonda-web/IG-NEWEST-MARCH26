@@ -670,11 +670,12 @@ export const LISTINGS = [
     desc: 'Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, part of a 4-star hotel property. 312 keys. Located within 10 km of Sikanderpur Metro with excellent road connectivity. REIT-listing potential.',
     longDesc: `100% Asset Acquisition Opportunity — Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, forming part of a 4-star hotel property complex in Gwalpahari, Gurugram.\n\nThe asset is located within 10 km of Sikanderpur Metro Station with excellent road connectivity to all major Gurugram micro-markets. 5-star hotels, hospitals, and malls are within a 2 km radius. The property offers multiple exit strategies including REIT listing potential or a strata sale model.\n\nIdeal for institutional investors seeking core+ returns. India Gully is advising on the acquisition process and due diligence. Currently at the reference transaction – due diligence stage.`,
     images: [
-      // Source: JLL Listing — property.jll.co.in (Prism Tower, Gurgaon-Faridabad Road)
-      // Images served via Akamai-protected JLL CDN — available only after NDA execution
-      // No images shown publicly; full gallery accessible post-NDA
+      // Source: JLL Listing / MagicBricks / CityInfo — Prism Tower, Gurgaon-Faridabad Road
+      'https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=aLf4SClMkiiLVFca%2Fwo8AzjbKl7LJoHmbr%2FtfsEwy4X5OWciJBaYx5oVwD2EaAI8HggvuTvRnPQ0yjgyXqK2wVY5lUqvmli5aLFvgcKopmEp8OG964p9WgrYpPlEKO8EQifzT6moeDNjruN3NTJBznBNefvnm9O0l%2BHqaUmRMjBfsg3MaA1ZbxJ1&u2=%2FktRtb6I%2BlMTDYAI&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=B5%2BARNIAIUk%2FqARLq2cohFB91eqinKjr6Oh3TEqfC%2FWKCap6YLmx0mJ5HUiX9OrmtDFAZO2vdUDVIrNhCGWE7CM1kCxAGzHpJ19%2B6N2WjtyFN2cJfeTPxK5Z&u2=PXJ4tFTOsSzQ%2B3sW&width=2560',
     ],
-    coverImage: null,
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560',
     specs: {
       'Entity': 'Confidential (JLL Listed)',
       'Location': 'Gurgaon-Faridabad Road, Gwalpahari, Gurugram',
@@ -720,10 +721,15 @@ export const LISTINGS = [
     desc: 'Scalable multi-brand F&B platform operating across Delhi NCR and Goa. Growth equity mandate seeking strategic capital partner for pan-India rollout. Brands include Informal, Imperfecto, Khubani, Habibi, Begum, Noor, Imperfecto Boutique.',
     longDesc: `Growth Equity Investment Opportunity — Belcibo Hospitality is a scalable multi-brand F&B platform operating across Delhi NCR and Goa markets. The group operates 15+ outlets across its branded portfolio.\n\nBrands include: Informal, Imperfecto, Imperfecto Boutique, Khubani, Habibi, Begum, and Noor — covering the full spectrum from casual dining to premium experiential F&B.\n\nThe platform is seeking a strategic capital partner to accelerate brand portfolio expansion. Strong unit economics with a proven operational playbook ready for pan-India rollout. India Gully is the exclusive growth equity advisor.`,
     images: [
-      // Source: Belcibo brand portfolio — Imperfecto, Informal, Khubani, Habibi, Begum, Noor
-      // Proprietary brand imagery — shared exclusively under NDA
-      // Full brand gallery and portfolio deck provided post-NDA execution
+      // Source: Belcibo brand portfolio — Imperfecto Shor, Begam, Noor by Khubani, Informal
+      // Images sourced from public restaurant review sites (Zomato, Justdial, Swiggy, Instagram)
+      'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=SCTSJ3oy5X2N4PKeuD9IhoL%2BFq96YGbhI5pORQAU4GQRCMXWny6Ctd065%2F1PshUnpkgs4o9Xto3A3vatwf8JFZOntUhgVJkdDm0OlwiZwH7vzYaoeEUkgkl3auBUKEKNp%2FZ6O%2BzOa9my5gatASDTnM3QbMbN%2FA%3D%3D&u2=7dMBfFutmUjpxE3b&width=2560',
     ],
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560',
     specs: {
       'Platform': 'Belcibo Hospitality',
       'Markets': 'Delhi NCR & Goa',
@@ -777,6 +783,7 @@ export const LISTINGS = [
       'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Family-Suite-768x1024.webp',
       'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_6565-1-1024x768.webp',
     ],
+    coverImage: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/facade-1024x585.webp',
     specs: {
       'Entity': 'Rajshree Hotels Pvt. Ltd.',
       'Location': 'Industrial Area Phase I, Chandigarh',
@@ -828,6 +835,7 @@ export const LISTINGS = [
       'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_room/-Suite%20Bedroom21608.jpg',
       'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_room/-Suite%20Living%20Room34714.jpg',
     ],
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=xQO3jnDZKfqUHXUSq7PqsAoADizR%2F8XpA2%2BEKe11Jp2sNp8i2bZk8EAMEM73Iz6KqN%2FIZOUgB5R6bkW3hd%2BDekUhlF4B4UxPiVMDr5wkw%2BonnLawiY%2BSvRn9tV4oF4U%2BpbF%2Fr4c0fAuIqQNt6VxBm3E1OMzAvEWvWUOvo4S4HKK7ljfx9XNYPaUvG%2Fp5HCLrpahvn8%2BFapIoAqbF1Qgx&u2=ub2yp216PTBOwANw&width=2560',
     specs: {
       'Entity': 'ITC WelcomHeritage – Santa Roza',
       'Location': 'Mauza Kot, Kasauli, Himachal Pradesh',
@@ -875,9 +883,19 @@ export const LISTINGS = [
     desc: "43-key hospitality structure in Jaipur's tourism corridor. Construction-complete and ready for interior fit-out. Significant cost savings versus greenfield development. Quick market entry in Rajasthan's heritage tourism sector.",
     longDesc: `Structure Sale Opportunity — A 43-key hospitality structure in Jaipur's tourism corridor that is construction-complete and ready for interior fit-out. This represents a significant cost-saving entry point versus ground-up development.\n\nThe structure is suitable for operators or investors seeking quick market entry in Rajasthan's heritage tourism market — one of India's most resilient and high-ADR leisure segments.\n\nIndia Gully (represented by Belcibo) holds the sale mandate. Suitable for hospitality operators, boutique hotel brands, or asset-light operators seeking swift fit-out and operations commencement.`,
     images: [
-      // Source: Proprietary — Jaipur hospitality structure (Belcibo portfolio)
-      // Structure images are shared under NDA only — available post-NDA execution
+      // Source: Proprietary — Jaipur Heritage Hotel Structure (Belcibo / India Gully mandate)
+      // Using project render/construction images — shared publicly pre-NDA (structure exterior)
+      '/static/mandates/jaipur/jaipur-hero-shot.jpg',
+      '/static/mandates/jaipur/jaipur-exterior-front.jpg',
+      '/static/mandates/jaipur/jaipur-courtyard-top.jpg',
+      '/static/mandates/jaipur/jaipur-entrance-gate.jpg',
+      '/static/mandates/jaipur/jaipur-interior-arches.jpg',
+      '/static/mandates/jaipur/jaipur-interior-courtyard.jpg',
+      '/static/mandates/jaipur/jaipur-gallery-corridor.jpg',
+      '/static/mandates/jaipur/jaipur-balcony-view.jpg',
+      '/static/mandates/jaipur/jaipur-render-pool.jpg',
     ],
+    coverImage: '/static/mandates/jaipur/jaipur-hero-shot.jpg',
     specs: {
       'Entity': 'Belcibo (Proprietary Sourcing)',
       'Location': 'Jaipur, Rajasthan',
@@ -932,6 +950,7 @@ export const LISTINGS = [
       'https://www.mapleresorts.in/img/executive-new.jpg',
       'https://www.mapleresorts.in/img/deluxe-1-new.jpg',
     ],
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=ZaMk%2F1QD6zCCuTG8sYSUUAW83%2Fn5QTDAPkuvILLzs%2FfWLfK915IXSJrNDy6770UZOopJuj74LRvAR9FoaeWLNaVUnQ%3D%3D&u2=0B97E3QeYEFoUscx&width=2560',
     specs: {
       'Entity': 'Mapple Resorts Pvt. Ltd.',
       'Location': 'Chail, Himachal Pradesh',
@@ -979,8 +998,9 @@ export const LISTINGS = [
     longDesc: `Adaptive Reuse Opportunity — Ambience Tower is a Grade-A commercial tower developed by Ambience Pvt Ltd in Rohini, North Delhi. With excellent metro connectivity at just 0.6 km from Rohini West Metro Station, the asset enjoys strong accessibility to all major Delhi NCR micro-markets.\n\n5-star hotels, hospitals, and malls are within a 2–5 km radius. The asset is conversion-ready for hospitality or hybrid hotel-office use, with technical feasibility already completed.\n\nIdeal for developers or hotel operators seeking a value-add repositioning play in an established North Delhi location. India Gully advises on behalf of the vendor (JLL co-listed mandate).`,
     images: [
       // Source: JLL Listed Property — Ambience Tower, Shalimar Bagh, Rohini, North Delhi
-      // JLL CDN Akamai-protected — images available post-NDA execution only
+      'https://sspark.genspark.ai/cfimages?u1=K8Dt8buSww5YR3eFnn8IyIKv3NyOGyciYPShVrUmBJxTl%2BkEX4QhpuKUovQQlxq0f%2F0Bjej%2FkzvqV5KQ1HwhUciW3B7RJqASSUbwixjL9AgKKWkZ0NwFR7c7I1lHkusZZ8IpHeE1zVHoGG7GC4ybVs3ZGtXEWKlMhF2cEYxx4O0NvHKjR6hgBTrKZ%2FMSkSRdopme8nAm4K5EoPR3%2FU4%3D&u2=z49hXMcXDeu8mSey&width=2560',
     ],
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=K8Dt8buSww5YR3eFnn8IyIKv3NyOGyciYPShVrUmBJxTl%2BkEX4QhpuKUovQQlxq0f%2F0Bjej%2FkzvqV5KQ1HwhUciW3B7RJqASSUbwixjL9AgKKWkZ0NwFR7c7I1lHkusZZ8IpHeE1zVHoGG7GC4ybVs3ZGtXEWKlMhF2cEYxx4O0NvHKjR6hgBTrKZ%2FMSkSRdopme8nAm4K5EoPR3%2FU4%3D&u2=z49hXMcXDeu8mSey&width=2560',
     specs: {
       'Entity': 'Ambience Group (JLL Listed)',
       'Location': 'Shalimar Bagh, Rohini, North Delhi',
@@ -1026,9 +1046,11 @@ export const LISTINGS = [
     desc: "Structure-ready 114-key hotel integrated with retail mall in Noida's commercial corridor. Independent access and operational flexibility. Multiple revenue streams from hospitality-retail integrated development.",
     longDesc: `Mixed-Use Development Opportunity — Sawasdee JLG Galleria is a structure-ready 114-key hotel integrated with a retail mall in Noida's commercial corridor. The development offers independent access and operational flexibility for the hotel component.\n\nThe asset represents an attractive entry for investors seeking integrated hospitality-retail assets with multiple revenue streams. The hotel and mall components are separately operable, providing flexibility in operation or management of each vertical.\n\nProprietary sourcing by India Gully. The asset is negotiation-ready for qualified buyers. Suitable for hospitality operators, retail developers, or institutional investors seeking mixed-use integrated assets in NCR.`,
     images: [
-      // Source: Proprietary — Sawasdee JLG Galleria, Noida (India Gully mandate)
-      // Proprietary project images — shared under NDA only
+      // Source: Square Yards / InvestorMart / Regrob — Sawasdee JLG Galleria, Noida
+      'https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=kGimdoE8Xcgud58iYZA8A9tUNNkWsODJWOPEkq2IypTR1wtAl9tAMb482KFBZ79k8xREFNvvCj%2Be6I3s5AtTWp9xdCBWinJBR0JpSDpbSgWvm%2BQ1Kwyt1r6Y0h9IWrArhRP9I5txW482Qn3fTKjRQwxiMti096yW9Bb3Rv54Hn6PHA%3D%3D&u2=0PIPgO9kRiA8ZGLW&width=2560',
     ],
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560',
     specs: {
       'Entity': 'Sawasdee JLG Galleria',
       'Location': 'Noida, Uttar Pradesh',
