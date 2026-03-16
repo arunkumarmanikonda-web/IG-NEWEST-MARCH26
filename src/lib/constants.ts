@@ -828,12 +828,13 @@ export const LISTINGS = [
     desc: "Established luxury heritage resort under ITC WelcomHeritage brand across 2 acres in scenic Kasauli at pine forest elevation. Victorian-themed architecture. 44 keys. Nirvana restaurant, Aviary bar, spa & plunge pool.",
     longDesc: `Heritage Asset Divestiture — WelcomHeritage Santa Roza is an established luxury heritage resort under the ITC WelcomHeritage brand, sprawled across 2 acres in scenic Kasauli at pine forest elevation with Victorian-themed architecture and British-era charm.\n\nRoom categories include Deluxe (280 sq.ft.), Suites (340 sq.ft.), Cottages (420 sq.ft.), and Family Suites (1,180 sq.ft.). Premium amenities include Nirvana multi-cuisine restaurant, Aviary bar with woodland views, Milo's garden café, state-of-the-art fitness centre, spa, and plunge pool.\n\nBenefits from Himachal Pradesh tourism incentives and tax subsidies. Located 15–16 km from Mall Road and local attractions. India Gully holds the seller mandate on behalf of ITC WelcomHeritage.`,
     images: [
-      // Source: welcomheritagehotels.in — official ITC WelcomHeritage hotel website images
-      'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_gallery/-web%20Banner%20245527.jpg',
-      'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_gallery/-Internal%20banner86510.jpg',
-      'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_room/-Deluxe%20Room30613.jpg',
-      'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_room/-Suite%20Bedroom21608.jpg',
-      'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_room/-Suite%20Living%20Room34714.jpg',
+      // Source: sspark CDN — WelcomHeritage Santa Roza, Kasauli (India Gully seller mandate)
+      'https://sspark.genspark.ai/cfimages?u1=xQO3jnDZKfqUHXUSq7PqsAoADizR%2F8XpA2%2BEKe11Jp2sNp8i2bZk8EAMEM73Iz6KqN%2FIZOUgB5R6bkW3hd%2BDekUhlF4B4UxPiVMDr5wkw%2BonnLawiY%2BSvRn9tV4oF4U%2BpbF%2Fr4c0fAuIqQNt6VxBm3E1OMzAvEWvWUOvo4S4HKK7ljfx9XNYPaUvG%2Fp5HCLrpahvn8%2BFapIoAqbF1Qgx&u2=ub2yp216PTBOwANw&width=2560',
+      // Heritage resort imagery — Kasauli hill station environment
+      'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1400&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1400&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1400&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1400&auto=format&fit=crop&q=80',
     ],
     coverImage: 'https://sspark.genspark.ai/cfimages?u1=xQO3jnDZKfqUHXUSq7PqsAoADizR%2F8XpA2%2BEKe11Jp2sNp8i2bZk8EAMEM73Iz6KqN%2FIZOUgB5R6bkW3hd%2BDekUhlF4B4UxPiVMDr5wkw%2BonnLawiY%2BSvRn9tV4oF4U%2BpbF%2Fr4c0fAuIqQNt6VxBm3E1OMzAvEWvWUOvo4S4HKK7ljfx9XNYPaUvG%2Fp5HCLrpahvn8%2BFapIoAqbF1Qgx&u2=ub2yp216PTBOwANw&width=2560',
     specs: {
