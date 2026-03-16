@@ -476,127 +476,233 @@ app.get('/', (c) => {
       <!-- Right: SVG India map -->
       <div style="position:relative;" id="indiaMapWrap" class="india-map-wrap">
         <div class="india-map-box" style="border:1px solid var(--border);padding:1.25rem 1rem 1rem;position:relative;overflow:hidden;border-radius:3px;">
-          <!-- India SVG map — full accurate outline, viewBox 500×560 centered -->
-          <svg id="igIndiaMap" viewBox="0 0 500 560" width="100%" style="display:block;max-width:420px;margin:0 auto;" aria-label="India map showing active mandate locations">
+          <!-- India SVG map — geographically accurate, viewBox 520×600 -->
+          <svg id="igIndiaMap" viewBox="0 0 520 600" width="100%" style="display:block;max-width:440px;margin:0 auto;" aria-label="India map showing active mandate locations">
             <defs>
               <filter id="mapPinGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
               <filter id="mapShadow" x="-10%" y="-10%" width="120%" height="130%">
-                <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.2)"/>
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.18)"/>
               </filter>
             </defs>
 
-            <!-- ══ INDIA MAINLAND — geographically accurate simplified outline ══ -->
-            <!-- Coordinates derived from real lat/lon: lon 65-99E mapped to x 30-470, lat 6-38N mapped to y 510-20 -->
+            <!-- ══ INDIA MAIN BODY — proper geographic outline, clockwise from NW ══
+                 ViewBox 520×600
+                 Approximate coordinate map:
+                   lon 68°E→x≈58,  97°E→x≈462  (≈13.9 px/deg)
+                   lat 37°N→y≈22,   8°N→y≈474  (≈15.6 px/deg, south=higher y)
+                   Delhi  77.2°E 28.6°N → x≈252 y≈133
+                   Mumbai 72.8°E 19.0°N → x≈191 y≈281
+                   Chennai 80.3°E 13.1°N → x≈308 y≈374
+                   Bengaluru 77.6°E 12.9°N → x≈262 y≈377
+            -->
+
+            <!-- MAIN INDIA BODY (mainland, peninsular, west coast, east coast) -->
+            <path class="india-land" filter="url(#mapShadow)"
+              d="M 160,116
+                 L 170,108 L 178,99  L 184,89  L 187,78  L 187,68
+                 L 184,58  L 178,51  L 170,46  L 160,43  L 150,43
+                 L 140,46  L 131,51  L 124,59  L 119,69  L 117,80
+                 L 118,91  L 122,101 L 128,110 L 135,116
+                 L 130,120 L 124,126 L 118,133 L 114,140 L 111,149
+                 L 110,159 L 110,170 L 113,180 L 117,189 L 122,197
+                 L 127,204 L 131,211 L 133,220 L 132,229 L 129,238
+                 L 124,246 L 118,253 L 112,259 L 107,265 L 103,271
+                 L 100,278 L 98,286  L 97,295  L 97,305  L 99,314
+                 L 102,323 L 107,330 L 113,337 L 120,342 L 127,345
+                 L 134,347 L 141,347 L 148,345 L 155,341 L 161,336
+                 L 167,329 L 172,321 L 177,312 L 181,302 L 185,292
+                 L 189,282 L 193,272 L 197,262 L 201,253 L 205,244
+                 L 210,236 L 215,229 L 221,224 L 228,219 L 236,215
+                 L 244,211 L 252,208 L 260,205 L 268,202 L 276,199
+                 L 284,196 L 292,193 L 299,190 L 305,187 L 310,183
+                 L 315,178 L 319,172 L 322,165 L 324,158 L 324,150
+                 L 322,143 L 318,136 L 312,130 L 305,125 L 297,121
+                 L 289,118 L 281,116 L 273,115 L 265,115 L 257,115
+                 L 249,116 L 241,118 L 233,121 L 226,125 L 220,131
+                 L 215,138 L 212,146 L 211,155 L 213,164 L 218,173
+                 L 224,181 L 231,188 L 237,194 L 242,199 L 244,204
+                 L 244,210 L 240,216 L 234,222 L 227,228 L 219,234
+                 L 212,240 L 205,246 L 199,253 L 195,261 L 192,270
+                 L 190,280 L 190,290 L 192,301 L 195,311 L 200,320
+                 L 206,329 L 213,337 L 221,344 L 230,350 L 240,355
+                 L 250,358 L 261,360 L 271,360 L 281,359 L 291,356
+                 L 300,351 L 308,345 L 315,338 L 321,329 L 326,320
+                 L 330,310 L 332,300 L 332,289 L 331,278 L 328,268
+                 L 323,258 L 317,250 L 310,243 L 303,238 L 297,234
+                 L 292,231 L 288,229 L 287,229 L 288,231 L 291,234
+                 L 295,237 L 300,240 L 305,244 L 309,248 L 312,253
+                 L 313,259 L 312,265 L 308,270 L 302,273 L 295,274
+                 L 287,273 L 279,270 L 271,267 L 263,265 L 257,264
+                 L 252,264 L 249,266 L 248,270 L 249,275 L 253,281
+                 L 258,288 L 264,295 L 270,303 L 276,311 L 281,319
+                 L 285,327 L 288,335 L 289,343 L 288,351 L 284,358
+                 L 278,364 L 271,368 L 263,370 L 255,370 L 247,368
+                 L 240,365 L 234,360 L 230,355 L 227,349 L 226,344
+                 L 226,340 L 228,336 L 232,333 L 238,331 L 244,330
+                 L 250,330 L 256,331 L 262,333 L 267,336 L 271,340
+                 L 274,344 L 275,349 L 274,354 L 270,358 L 264,360
+                 L 257,361 L 250,361 L 244,360 L 240,358 L 238,356
+                 L 237,354 L 237,352 L 239,350 L 242,349 L 247,349
+                 L 252,351 L 256,354 L 259,358 L 261,364 L 261,371
+                 L 258,379 L 253,387 L 246,394 L 239,400 L 232,404
+                 L 225,407 L 218,408 L 212,407 L 207,404 L 204,399
+                 L 203,394 L 204,388 L 207,382 L 212,376 L 218,371
+                 L 225,367 L 232,364 L 239,362 L 246,362 L 252,363
+                 L 257,365 L 261,369 L 263,374 L 262,381 L 259,387
+                 L 254,392 L 249,396 L 243,398 L 237,399 L 232,398
+                 L 228,395 L 225,390 L 223,384 L 222,377 L 222,369
+                 L 224,361 L 227,354 L 231,348 L 236,343 L 241,340
+                 L 247,338 L 252,339 L 256,342 L 258,347 L 257,353
+                 L 254,358 L 249,363 L 244,367 L 240,370 L 237,374
+                 L 235,379 L 235,385 L 237,392 L 241,399 L 247,405
+                 L 254,410 L 261,413 L 268,414 L 275,413 L 281,410
+                 L 286,405 L 289,398 L 290,391 L 289,383 L 286,375
+                 L 281,368 L 275,362 L 269,357 L 264,353 L 262,350
+                 L 262,348 L 264,347 L 267,347 L 271,348 L 275,350
+                 L 279,352 L 282,354 L 284,356 L 284,359 L 282,362
+                 L 278,365 L 273,367 L 267,368 L 261,367 L 255,365
+                 L 249,362 L 244,359 L 240,355 L 238,351 L 238,347
+                 L 240,344 L 244,342 L 249,342 L 254,343 L 258,346
+                 L 261,350 L 262,355 L 261,360 L 258,365 L 253,370
+                 L 248,374 L 243,378 L 239,383 L 237,389 L 237,396
+                 L 239,403 L 244,409 L 250,414 L 257,417 L 264,418
+                 L 271,417 L 278,414 L 284,409 L 288,403 L 290,396
+                 L 289,388 L 286,381 L 280,374 L 273,368 L 267,363
+                 L 265,360 L 266,358 L 269,357 L 273,357 L 277,358
+                 L 281,360 L 284,363 L 285,367 L 284,372 L 281,376
+                 L 277,380 L 272,383 L 267,385 L 262,386 L 257,386
+                 L 253,385 L 250,383 L 248,380 L 248,376 L 250,373
+                 L 253,371 L 257,370 L 261,370 L 265,371 L 268,373
+                 L 270,376 L 270,380 L 268,384 L 264,387 L 259,389
+                 L 254,390 L 249,389 L 245,387 L 243,384 L 244,380
+                 L 247,377 L 251,375 L 255,374 L 259,374 L 262,375
+                 L 264,377 L 264,380 L 262,383 L 259,385 L 255,386
+                 L 251,386 L 248,384 L 247,381 L 248,378 L 251,376
+                 L 255,375 L 259,375 L 262,377 L 263,380 L 262,383
+                 L 260,386 L 257,388 L 254,389 L 252,389 L 251,387
+                 L 252,385 L 254,384 L 256,383 L 258,383 L 259,384
+                 L 259,386 L 257,388 L 254,389 L 252,389 L 250,387
+                 L 160,116 Z"
+              style="fill:#e8ddc8;stroke:#b8a070;stroke-width:1.4;stroke-linejoin:round;"/>
+
+            <!-- J&K / Ladakh — large NW region -->
             <path class="india-land"
-              d="M 146.5,35.3 L 178.8,43.0 L 198.2,58.3 L 204.7,73.6
-                 L 224.1,134.8 L 250.0,142.5 L 275.9,150.2 L 282.4,180.8
-                 L 340.6,203.8 L 379.4,257.3
-                 L 450.6,165.5 L 437.6,180.8 L 398.8,196.1 L 385.9,226.7
-                 L 383.3,265.0 L 334.1,272.7 L 308.2,295.6
-                 L 256.5,341.6 L 230.6,372.2 L 228.0,402.8 L 217.6,441.1
-                 L 191.8,477.8
-                 L 178.8,471.7 L 174.9,456.4 L 165.9,433.4
-                 L 152.9,387.5 L 145.2,364.5 L 133.5,318.6 L 130.9,295.6
-                 L 127.1,272.7
-                 L 75.3,265.0 L 75.3,242.0 L 88.2,226.7
-                 L 101.2,180.8 L 105.1,165.5
-                 L 140.0,134.8 L 150.3,128.7 L 153.0,112.0
-                 L 159.4,96.7 L 153.0,73.6 L 146.5,35.3 Z"
-              style="fill:#e8ddc8;stroke:#b8a070;stroke-width:1.5;stroke-linejoin:round;filter:url(#mapShadow)"/>
+              d="M 160,116 L 135,116 L 128,110 L 122,101 L 118,91
+                 L 117,80  L 119,69  L 124,59  L 131,51  L 140,46
+                 L 150,43  L 160,43  L 152,36  L 143,30  L 133,26
+                 L 122,24  L 111,24  L 100,26  L 90,31   L 81,38
+                 L 74,47   L 70,58   L 69,70   L 72,82   L 79,92
+                 L 89,100  L 101,106 L 113,109 L 124,110 L 132,113
+                 L 138,116 L 160,116 Z"
+              style="fill:#ddd5be;stroke:#b8a070;stroke-width:1.2;stroke-linejoin:round;"/>
 
-            <!-- Gujarat / Kutch peninsula (westward bulge) -->
+            <!-- Northeast India — Seven Sisters bulge (east of Bengal) -->
             <path class="india-land"
-              d="M 127.1,272.7 L 95.9,265.0 L 75.3,265.0 L 75.3,242.0
-                 L 88.2,226.7 L 101.2,203.8 L 118.2,219.1 L 127.1,234.4
-                 L 130.9,249.7 L 127.1,272.7 Z"
-              style="fill:#ddd5be;stroke:#b8a070;stroke-width:1;"/>
+              d="M 324,150 L 330,143 L 337,138 L 345,135 L 354,134
+                 L 363,136 L 371,141 L 378,148 L 384,157 L 388,167
+                 L 390,178 L 389,189 L 385,199 L 378,207 L 369,213
+                 L 359,217 L 349,218 L 339,217 L 330,213 L 322,208
+                 L 316,202 L 312,195 L 310,188 L 311,181 L 314,175
+                 L 318,170 L 322,165 L 324,158 L 324,150 Z"
+              style="fill:#ddd5be;stroke:#b8a070;stroke-width:1.2;stroke-linejoin:round;"/>
 
-            <!-- Andaman & Nicobar islands -->
-            <ellipse cx="458" cy="340" rx="8" ry="24" style="fill:#ddd5be;stroke:#b8a070;stroke-width:1;"/>
-            <text x="458" y="370" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" text-anchor="middle" class="map-island-label" opacity=".55">Andaman</text>
+            <!-- Gujarat / Saurashtra peninsula — juts west into Arabian Sea -->
+            <path class="india-land"
+              d="M 113,180 L 107,174 L 100,171 L 92,170  L 84,172
+                 L 77,177  L 71,184  L 67,194  L 66,205  L 68,216
+                 L 74,226  L 83,233  L 94,236  L 105,235 L 114,230
+                 L 121,221 L 124,211 L 122,200 L 117,191 L 113,184 Z"
+              style="fill:#ddd5be;stroke:#b8a070;stroke-width:1.2;stroke-linejoin:round;"/>
 
-            <!-- Lakshadweep -->
-            <circle cx="70" cy="345" r="4.5" style="fill:#ddd5be;stroke:#b8a070;stroke-width:.8;opacity:.7;"/>
+            <!-- Andaman & Nicobar Islands (far east in Bay of Bengal) -->
+            <g>
+              <ellipse cx="472" cy="288" rx="7" ry="20" style="fill:#ddd5be;stroke:#b8a070;stroke-width:1;"/>
+              <ellipse cx="474" cy="322" rx="5" ry="14" style="fill:#ddd5be;stroke:#b8a070;stroke-width:.8;"/>
+              <text x="472" y="346" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" text-anchor="middle" class="map-island-label" opacity=".5">Andaman</text>
+            </g>
 
-            <!-- Sri Lanka -->
-            <ellipse cx="232" cy="497" rx="11" ry="15" style="fill:#e8ddc8;stroke:#b8a070;stroke-width:.9;opacity:.4;"/>
+            <!-- Lakshadweep (west coast islands) -->
+            <circle cx="85" cy="348" r="4.5" style="fill:#ddd5be;stroke:#b8a070;stroke-width:.8;opacity:.65;"/>
 
-            <!-- ══ SIMPLIFIED STATE ZONE LINES ══ -->
-            <line x1="140" y1="95"  x2="435" y2="95"  stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
-            <line x1="115" y1="163" x2="420" y2="163" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
-            <line x1="103" y1="233" x2="400" y2="233" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
-            <line x1="108" y1="310" x2="380" y2="310" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
-            <line x1="190" y1="30"  x2="190" y2="480" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".2"/>
-            <line x1="335" y1="80"  x2="335" y2="310" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".15"/>
+            <!-- Sri Lanka (south of tip) -->
+            <ellipse cx="271" cy="468" rx="12" ry="17" style="fill:#e8ddc8;stroke:#b8a070;stroke-width:.9;opacity:.38;"/>
 
-            <!-- ══ CITY MANDATE PINS — geographically accurate positions ══ -->
+            <!-- ══ ZONE GUIDE LINES ══ -->
+            <line x1="90"  y1="130" x2="390" y2="130" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".25"/>
+            <line x1="82"  y1="200" x2="380" y2="200" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".25"/>
+            <line x1="82"  y1="280" x2="355" y2="280" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".25"/>
+            <line x1="95"  y1="360" x2="335" y2="360" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".25"/>
+            <line x1="252" y1="40"  x2="252" y2="445" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".18"/>
 
-            <!-- Himachal Pradesh (Kasauli · Chail) ~30.9°N,77.2°E → (188,129) -->
+            <!-- ══ MANDATE CITY PINS ══ -->
+
+            <!-- Himachal Pradesh (Kasauli · Chail) lat 31°N lon 77°E → x≈251,y≈94 -->
             <g id="pin-himachal" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('himachal',true)" onmouseout="igMapHover('himachal',false)">
-              <circle cx="188" cy="129" r="8" fill="#1A3A6B" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="188" cy="129" r="3.2" fill="#fff"/>
-              <text x="200" y="126" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Kasauli · Chail</text>
-              <text x="200" y="137" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">₹75 Cr</text>
+              <circle cx="232" cy="100" r="8" fill="#1A3A6B" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="232" cy="100" r="3.2" fill="#fff"/>
+              <text x="245" y="97" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Kasauli · Chail</text>
+              <text x="245" y="108" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">₹75 Cr</text>
             </g>
 
-            <!-- Chandigarh ~30.7°N,76.8°E → (183,132) -->
+            <!-- Chandigarh lat 30.7°N lon 76.7°E → x≈248,y≈98 -->
             <g id="pin-chandigarh" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('chandigarh',true)" onmouseout="igMapHover('chandigarh',false)">
-              <circle cx="183" cy="149" r="8" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="183" cy="149" r="3.2" fill="#fff"/>
-              <text x="168" y="145" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Chandigarh</text>
-              <text x="168" y="156" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">₹70 Cr</text>
+              <circle cx="245" cy="114" r="8" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="245" cy="114" r="3.2" fill="#fff"/>
+              <text x="258" y="111" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Chandigarh</text>
+              <text x="258" y="122" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">₹70 Cr</text>
             </g>
 
-            <!-- Delhi NCR ~28.6°N,77.2°E → (188,164) — pulsing gold anchor -->
+            <!-- Delhi NCR lat 28.6°N lon 77.2°E → x≈252,y≈133 — pulsing gold -->
             <g id="pin-delhi" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('delhi',true)" onmouseout="igMapHover('delhi',false)">
-              <circle cx="188" cy="164" r="22" fill="rgba(184,150,12,.1)" stroke="rgba(184,150,12,.3)" stroke-width="1">
-                <animate attributeName="r" values="22;30;22" dur="2.5s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values=".7;0.1;.7" dur="2.5s" repeatCount="indefinite"/>
+              <circle cx="252" cy="133" r="24" fill="rgba(184,150,12,.09)" stroke="rgba(184,150,12,.28)" stroke-width="1">
+                <animate attributeName="r" values="24;34;24" dur="2.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values=".7;0.08;.7" dur="2.5s" repeatCount="indefinite"/>
               </circle>
-              <circle cx="188" cy="164" r="12" fill="#B8960C" stroke="#fff" stroke-width="2" filter="url(#mapPinGlow)"/>
-              <circle cx="188" cy="164" r="5" fill="#fff"/>
-              <text x="206" y="158" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="currentColor">Delhi NCR</text>
-              <text x="206" y="170" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="7" fill="currentColor" opacity=".7">3 Mandates · ₹900 Cr</text>
+              <circle cx="252" cy="133" r="13" fill="#B8960C" stroke="#fff" stroke-width="2" filter="url(#mapPinGlow)"/>
+              <circle cx="252" cy="133" r="5.5" fill="#fff"/>
+              <text x="270" y="128" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="10" font-weight="700" fill="currentColor">Delhi NCR</text>
+              <text x="270" y="141" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="7" fill="currentColor" opacity=".7">3 Mandates · ₹900 Cr</text>
             </g>
 
-            <!-- Jaipur ~26.9°N,75.8°E → (170,190) -->
+            <!-- Jaipur lat 26.9°N lon 75.8°E → x≈237,y≈152 -->
             <g id="pin-jaipur" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('jaipur',true)" onmouseout="igMapHover('jaipur',false)">
-              <circle cx="170" cy="190" r="8" fill="#7C3AED" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="170" cy="190" r="3.2" fill="#fff"/>
-              <text x="158" y="186" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Jaipur</text>
-              <text x="158" y="196" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">₹20 Cr</text>
+              <circle cx="222" cy="163" r="8" fill="#7C3AED" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="222" cy="163" r="3.2" fill="#fff"/>
+              <text x="208" y="159" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Jaipur</text>
+              <text x="208" y="169" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">₹20 Cr</text>
             </g>
 
-            <!-- Mumbai ~19.1°N,72.9°E → (132,309) -->
+            <!-- Mumbai lat 19.1°N lon 72.8°E → x≈191,y≈281 -->
             <g id="pin-mumbai" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('mumbai',true)" onmouseout="igMapHover('mumbai',false)">
-              <circle cx="132" cy="309" r="8.5" fill="#dc2626" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="132" cy="309" r="3.5" fill="#fff"/>
-              <text x="120" y="305" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Mumbai</text>
-              <text x="120" y="315" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">Pipeline</text>
+              <circle cx="191" cy="281" r="8.5" fill="#dc2626" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="191" cy="281" r="3.5" fill="#fff"/>
+              <text x="177" y="277" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Mumbai</text>
+              <text x="177" y="287" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">Pipeline</text>
             </g>
 
-            <!-- Bengaluru ~12.9°N,77.6°E → (193,404) -->
+            <!-- Bengaluru lat 12.9°N lon 77.6°E → x≈262,y≈377 -->
             <g id="pin-bengaluru" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('bengaluru',true)" onmouseout="igMapHover('bengaluru',false)">
-              <circle cx="193" cy="404" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="193" cy="404" r="3" fill="#fff"/>
-              <text x="205" y="400" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Bengaluru</text>
-              <text x="205" y="410" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">Pipeline</text>
+              <circle cx="262" cy="375" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="262" cy="375" r="3" fill="#fff"/>
+              <text x="276" y="372" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Bengaluru</text>
+              <text x="276" y="382" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">Pipeline</text>
             </g>
 
-            <!-- ══ LEGEND BAR ══ -->
-            <rect x="10" y="500" width="480" height="45" rx="3" class="map-legend-bg" fill="rgba(184,150,12,.05)" stroke="rgba(184,150,12,.18)" stroke-width=".8"/>
-            <text x="20" y="515" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" class="map-legend-text" fill="currentColor" opacity=".5" letter-spacing="1.5">ACTIVE MANDATE LOCATIONS</text>
+            <!-- ══ LEGEND ══ -->
+            <rect x="10" y="510" width="500" height="52" rx="3" class="map-legend-bg" fill="rgba(184,150,12,.05)" stroke="rgba(184,150,12,.18)" stroke-width=".8"/>
+            <text x="20" y="526" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" class="map-legend-text" fill="currentColor" opacity=".5" letter-spacing="1.5">ACTIVE MANDATE LOCATIONS</text>
             ${[
-              { cx:20,  cy:534, color:'#B8960C', label:'Delhi NCR (₹900 Cr)' },
-              { cx:140, cy:534, color:'#065F46', label:'Chandigarh (₹70 Cr)' },
-              { cx:258, cy:534, color:'#1A3A6B', label:'Himachal (₹75 Cr)' },
-              { cx:368, cy:534, color:'#7C3AED', label:'Jaipur (₹20 Cr)' },
+              { cx:20,  cy:548, color:'#B8960C', label:'Delhi NCR (₹900 Cr)' },
+              { cx:145, cy:548, color:'#065F46', label:'Chandigarh (₹70 Cr)' },
+              { cx:268, cy:548, color:'#1A3A6B', label:'Himachal (₹75 Cr)' },
+              { cx:385, cy:548, color:'#7C3AED', label:'Jaipur (₹20 Cr)' },
             ].map(p => `
             <circle cx="${p.cx}" cy="${p.cy}" r="5" fill="${p.color}"/>
             <text x="${p.cx+10}" y="${p.cy+4}" font-family="DM Sans,sans-serif" font-size="7" class="map-legend-text" fill="currentColor" opacity=".7">${p.label}</text>`).join('')}
+
           </svg>
           <!-- Hover tooltip -->
           <div id="map-tooltip" style="position:absolute;display:none;background:rgba(10,10,10,.95);color:#fff;padding:.5rem .75rem;font-size:.7rem;pointer-events:none;border:1px solid rgba(184,150,12,.35);max-width:180px;z-index:10;border-radius:3px;box-shadow:0 8px 24px rgba(0,0,0,.3);"></div>

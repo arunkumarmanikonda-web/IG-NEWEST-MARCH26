@@ -1282,7 +1282,7 @@ body{overflow-x:hidden;}
 @media(max-width:640px){#pipelineStats{grid-template-columns:repeat(2,1fr);}}
 
 /* ── Mandate grid ────────────────────────────── */
-#mandatesGrid{grid-template-columns:repeat(3,1fr)!important;}
+#mandatesGrid{grid-template-columns:repeat(3,1fr)!important;align-items:start!important;}
 @media(max-width:900px){#mandatesGrid{grid-template-columns:repeat(2,1fr)!important;}}
 @media(max-width:560px){#mandatesGrid{grid-template-columns:1fr!important;}}
 
