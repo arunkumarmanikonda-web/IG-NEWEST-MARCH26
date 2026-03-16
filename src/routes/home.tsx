@@ -39,66 +39,97 @@ const RECENT_INSIGHTS = [
 const app = new Hono()
 
 // ── HERO SLIDES ─────────────────────────────────────────────────────────────
+// 3 Active Mandate slides + 3 Advisory Service slides
 const SLIDES = [
+  // ── MANDATE 1: Prism Tower, Gurgaon ────────────────────────────────────
+  {
+    bg: '#030610',
+    tag: 'Active Mandate · Gurgaon · ₹400 Cr · Due Diligence Stage',
+    h1a: 'Prism Tower',
+    h1b: 'Gurgaon.',
+    h1c: '312 Keys · Mixed-Use · REIT-Grade',
+    sub: 'Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, part of a 4-star hotel complex. 312 keys. REIT listing potential. India Gully advising on acquisition & due diligence.',
+    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/prism-tower-gurgaon' },
+    cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20I%20am%20interested%20in%20Prism%20Tower%20Gurgaon%20mandate' },
+    img: 'https://sspark.genspark.ai/cfimages?u1=ZktQqSJf5dTqAjc%2BBdjN%2B4xc%2FchahjnJjF1MqZbhPO2VZaIV2eQlYCPi3u5LkWAVB2yZU%2FcYQ8UDhwJNQxWeTh4ia5bDEA7B4elZHu6JFrs90MZCdbgBrKubIOSZx9I1QBCttPH9cEMxgJiBDgC5Qx%2FfK5PJ5G%2B27kaz11%2Bh94VPJXE%3D&u2=m1vvXA%2BAJfqSa0Pf&width=2560',
+    label: 'REIT-Grade · ₹400 Cr',
+    spoc: 'Arun Manikonda',
+    value: '₹400 Cr',
+    type: 'mandate',
+  },
+  // ── MANDATE 2: Belcibo Multi-Brand F&B Platform ─────────────────────────
+  {
+    bg: '#0a0008',
+    tag: 'Growth Equity · Delhi NCR & Goa · ₹100 Cr · Active Fundraise',
+    h1a: 'Belcibo',
+    h1b: 'F&B Platform.',
+    h1c: '15+ Outlets · Pan-India Rollout',
+    sub: 'Scalable multi-brand F&B platform — Imperfecto, Noor, Begam, Khybani, Informal, RuinPub, Patio & more. Seeking strategic growth equity partner for pan-India expansion. Exclusive advisory mandate with India Gully.',
+    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/belcibo-hospitality-platform' },
+    cta2: { text: 'Express Interest', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Belcibo%20growth%20equity%20mandate' },
+    img: 'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560',
+    label: 'Growth Equity · ₹100 Cr',
+    spoc: 'Arun Manikonda',
+    value: '₹100 Cr',
+    type: 'mandate',
+  },
+  // ── MANDATE 3: Sawasdee JLG Galleria, Noida ─────────────────────────────
+  {
+    bg: '#020b14',
+    tag: 'Outright Sale · Noida · ₹150 Cr · Negotiation Ready',
+    h1a: 'Sawasdee JLG',
+    h1b: 'Galleria.',
+    h1c: '114 Keys · Hotel + Retail Mall · Noida',
+    sub: 'Structure-ready 114-key hotel with integrated retail mall in Sector 63, Noida. Independent hotel access, possession-ready. India Gully holds the exclusive sale mandate. Outright sale — negotiation ready.',
+    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/sawasdee-jlg-noida' },
+    cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Sawasdee%20JLG%20Galleria%20Noida%20mandate' },
+    img: 'https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560',
+    label: 'Hotel + Mall · ₹150 Cr',
+    spoc: 'Arun Manikonda',
+    value: '₹150 Cr',
+    type: 'mandate',
+  },
+  // ── ADVISORY 1: Transaction Advisory ───────────────────────────────────
   {
     bg: '#040408',
-    tag: 'Transaction Advisory · Pan-India',
-    h1a: 'Celebrating',
-    h1b: 'Desiness',
-    h1c: 'Across Every Vertical',
-    sub: "India Gully is India's premier multi-vertical advisory firm, bringing institutional rigour to Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions.",
+    tag: 'Transaction Advisory · Real Estate · Hospitality · Retail',
+    h1a: 'India Gully',
+    h1b: 'Advisory.',
+    h1c: '₹2,000 Cr+ Transacted Across Verticals',
+    sub: "India's premier multi-vertical advisory — Real Estate acquisitions, Hospitality asset sales, Retail leasing, Entertainment divestments and Debt solutions. EY & CBRE co-advisory credentials. NDA-governed mandates.",
     cta1: { text: 'View Active Mandates', href: '/listings' },
-    cta2: { text: 'Submit Mandate', href: '/contact' },
-    img: 'https://www.mapleresorts.in/img/about/new-left1.jpg',
-    label: 'India Gully Advisory',
+    cta2: { text: 'Submit Your Mandate', href: '/contact' },
+    img: 'https://sspark.genspark.ai/cfimages?u1=aLf4SClMkiiLVFca%2Fwo8AzjbKl7LJoHmbr%2FtfsEwy4X5OWciJBaYx5oVwD2EaAI8HggvuTvRnPQ0yjgyXqK2wVY5lUqvmli5aLFvgcKopmEp8OG964p9WgrYpPlEKO8EQifzT6moeDNjruN3NTJBznBNefvnm9O0l%2BHqaUmRMjBfsg3MaA1ZbxJ1&u2=%2FktRtb6I%2BlMTDYAI&width=2560',
+    label: 'Transaction Advisory',
+    type: 'advisory',
   },
+  // ── ADVISORY 2: Growth Equity & F&B Platform Advisory ──────────────────
   {
-    bg: '#040408',
-    tag: 'Active Mandate · Chandigarh · ₹70 Cr · Seller Mandated',
-    h1a: 'Hotel Rajshree',
-    h1b: '& Spa.',
-    h1c: 'Chandigarh.',
-    sub: '41-key boutique hotel & spa in Chandigarh\'s prime Industrial Area Phase I. Premium spa, restaurant, bar & conference facilities. Strong RevPAR. Active asset sale mandate.',
-    cta1: { text: 'View This Mandate', href: '/listings/hotel-rajshree-chandigarh' },
-    cta2: { text: 'Submit Enquiry', href: '/contact' },
-    img: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
-    label: 'Hospitality Asset Sale',
+    bg: '#050408',
+    tag: 'Growth Equity Advisory · F&B Platforms · HORECA Solutions',
+    h1a: 'Growth Capital',
+    h1b: 'Advisory.',
+    h1c: 'F&B · Hospitality · Entertainment',
+    sub: "India Gully structures and executes growth equity rounds for India's most exciting F&B platforms and hospitality brands. Proprietary deal flow. Institutional-grade information memoranda. NDA-protected pipeline.",
+    cta1: { text: 'Explore Advisory Services', href: '/services' },
+    cta2: { text: 'Discuss Your Mandate', href: '/contact' },
+    img: 'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560',
+    label: 'Growth Equity · F&B',
+    type: 'advisory',
   },
+  // ── ADVISORY 3: HORECA & Procurement ───────────────────────────────────
   {
-    bg: '#040408',
-    tag: 'Heritage Asset · Kasauli · ₹45 Cr · ITC WelcomHeritage',
-    h1a: 'WelcomHeritage',
-    h1b: 'Santa Roza.',
-    h1c: 'Kasauli, Himachal Pradesh.',
-    sub: 'Luxury heritage resort under ITC WelcomHeritage brand. 44 keys across 2 acres at pine forest elevation. Victorian architecture. Nirvana restaurant, Aviary bar, spa & plunge pool.',
-    cta1: { text: 'View This Mandate', href: '/listings/welcomheritage-santa-roza-kasauli' },
-    cta2: { text: 'Submit EOI', href: '/contact' },
-    img: 'https://www.welcomheritagehotels.in/app/uploaded_files/hotel_gallery/-web%20Banner%20245527.jpg',
-    label: 'Heritage Hospitality',
-  },
-  {
-    bg: '#040408',
-    tag: 'Mountain Resort · Chail, HP · ₹30 Cr · Owner Direct',
-    h1a: 'Maple Resort',
-    h1b: 'Chail.',
-    h1c: '2,515 Metres. Himalayas.',
-    sub: 'Premium boutique mountain resort with 30 keys perched at 2,515 metres in the Himalayas. Pine and maple forests, panoramic views. Established guest base. Immediate cash flows.',
-    cta1: { text: 'View This Mandate', href: '/listings/maple-resort-chail' },
-    cta2: { text: 'Submit EOI', href: '/contact' },
-    img: 'https://www.mapleresorts.in/img/about/new-right1.jpg',
-    label: 'Mountain Boutique Resort',
-  },
-  {
-    bg: '#040408',
-    tag: 'HORECA Solutions · Pan-India · 500+ SKUs',
-    h1a: 'Complete Supply',
-    h1b: 'Chain.',
-    h1c: 'Hotels & F&B Operators.',
-    sub: "India Gully's HORECA division delivers FF&E, OS&E, kitchen equipment, linen, uniforms and guest amenities across 15+ hotel properties, on spec and on schedule.",
+    bg: '#050404',
+    tag: 'HORECA Solutions · Procurement · FF&E · OS&E · Pan-India',
+    h1a: 'HORECA',
+    h1b: 'Solutions.',
+    h1c: '500+ SKUs · 15+ Hotel Properties',
+    sub: "India Gully's HORECA division is the complete hospitality supply partner — FF&E, OS&E, kitchen equipment, linen, uniforms and guest amenities delivered on spec and on schedule across India.",
     cta1: { text: 'Explore HORECA Services', href: '/horeca' },
     cta2: { text: 'Request a Quote', href: '/horeca#enquiry' },
-    img: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/IMG_1157-1-scaled-1.webp',
+    img: 'https://sspark.genspark.ai/cfimages?u1=cbpOV8dZBBbfRgUonfsVjfKmSPk5O3UhiRBgrsaA2kuOj7pC7ZsA1RnVF6c6xvsLlEnyLzjf7qdbM5OkRB6auNZSyjtAYznngx9WxNpLPTg1EhG9gDPSvSEBm60LbpJBkZQ%3D&u2=qc5jDRC%2B7dYAurj3&width=2560',
     label: 'HORECA Procurement',
+    type: 'advisory',
   },
 ]
 
@@ -143,8 +174,23 @@ app.get('/', (c) => {
             <!-- CTAs -->
             <div class="s-cta" style="display:flex;flex-wrap:wrap;gap:1rem;align-items:center;">
               <a href="${s.cta1.href}" class="btn btn-g" style="min-width:200px;justify-content:center;">${s.cta1.text}</a>
-              <a href="${s.cta2.href}" class="btn btn-ghost" style="min-width:160px;justify-content:center;">${s.cta2.text}</a>
+              <a href="${s.cta2.href}" ${(s as any).type === 'mandate' && s.cta2.href.startsWith('https://wa.me') ? 'target="_blank" rel="noopener"' : ''} class="btn btn-ghost" style="min-width:160px;justify-content:center;">${s.cta2.text}</a>
             </div>
+
+            ${(s as any).type === 'mandate' && (s as any).spoc ? `
+            <!-- Mandate SPOC strip -->
+            <div style="display:inline-flex;align-items:center;gap:.75rem;margin-top:1.5rem;padding:.5rem 1rem .5rem .5rem;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);border:1px solid rgba(184,150,12,.25);">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.78rem;flex-shrink:0;">A</div>
+              <div>
+                <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.15rem;">SPOC · India Gully</div>
+                <div style="font-size:.78rem;font-weight:600;color:#fff;">${(s as any).spoc}</div>
+              </div>
+              <div style="width:1px;height:28px;background:rgba(255,255,255,.12);margin:0 .25rem;"></div>
+              <div>
+                <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.15rem;">Mandate Value</div>
+                <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--gold);">${(s as any).value}</div>
+              </div>
+            </div>` : ''}
 
           </div>
         </div>
@@ -152,6 +198,7 @@ app.get('/', (c) => {
 
       <!-- Slide label — bottom right -->
       <div style="position:absolute;bottom:3.5rem;right:2.5rem;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;">
+        ${(s as any).type === 'mandate' ? `<div style="background:rgba(184,150,12,.85);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:.25rem;">Active Mandate · NDA Required</div>` : `<div style="background:rgba(26,58,107,.7);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.25rem;">Advisory Services</div>`}
         <div style="width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(184,150,12,.5));margin-left:auto;"></div>
         <span style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);">${s.label}</span>
       </div>
@@ -429,141 +476,127 @@ app.get('/', (c) => {
       <!-- Right: SVG India map -->
       <div style="position:relative;" id="indiaMapWrap" class="india-map-wrap">
         <div class="india-map-box" style="border:1px solid var(--border);padding:1.25rem 1rem 1rem;position:relative;overflow:hidden;border-radius:3px;">
-          <!-- India SVG map — accurate simplified outline, viewBox 340×420 -->
-          <svg id="igIndiaMap" viewBox="0 0 340 420" width="100%" style="display:block;max-width:400px;margin:0 auto;" aria-label="India map showing active mandate locations">
+          <!-- India SVG map — full accurate outline, viewBox 500×560 centered -->
+          <svg id="igIndiaMap" viewBox="0 0 500 560" width="100%" style="display:block;max-width:420px;margin:0 auto;" aria-label="India map showing active mandate locations">
             <defs>
               <filter id="mapPinGlow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
               </filter>
               <filter id="mapShadow" x="-10%" y="-10%" width="120%" height="130%">
-                <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+                <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.2)"/>
               </filter>
             </defs>
 
-            <!-- ══ INDIA OUTLINE — accurate simplified political boundary ══ -->
-            <!-- Main peninsula body -->
+            <!-- ══ INDIA MAINLAND — geographically accurate simplified outline ══ -->
+            <!-- Coordinates derived from real lat/lon: lon 65-99E mapped to x 30-470, lat 6-38N mapped to y 510-20 -->
             <path class="india-land"
-              d="M148,8 L158,6 L170,5 L182,6 L192,9 L200,13 L207,18 L213,23 L218,28
-                 L222,32 L228,34 L236,35 L244,34 L252,32 L258,28 L262,23 L266,18
-                 L270,14 L275,10 L280,8 L286,7 L292,8 L297,11 L300,16 L302,22
-                 L300,28 L296,33 L292,37 L290,43 L292,49 L296,54 L302,58 L308,64
-                 L312,70 L313,77 L311,83 L307,88 L305,94 L308,100 L313,105
-                 L318,112 L321,119 L320,127 L316,134 L312,140 L312,147 L316,154
-                 L320,162 L322,170 L320,178 L315,185 L309,191 L304,197 L302,204
-                 L303,211 L306,218 L309,225 L310,233 L307,241 L301,248 L294,255
-                 L286,261 L276,267 L266,273 L255,279 L244,287 L233,296 L223,305
-                 L213,315 L205,323 L198,330 L192,336 L188,340 L184,342 L180,340
-                 L176,334 L170,326 L163,316 L156,305 L149,294 L142,282 L136,270
-                 L130,258 L125,246 L120,234 L116,222 L112,210 L107,200 L101,192
-                 L96,185 L93,177 L92,168 L94,159 L98,150 L103,141 L107,132
-                 L110,122 L112,112 L112,102 L109,92 L106,82 L105,72 L107,63
-                 L111,54 L117,46 L124,39 L132,33 L141,27 L148,22 L150,14 Z"
-              style="fill:#e8ddc8;stroke:#b8a878;stroke-width:1.2;stroke-linejoin:round;filter:url(#mapShadow)"/>
+              d="M 146.5,35.3 L 178.8,43.0 L 198.2,58.3 L 204.7,73.6
+                 L 224.1,134.8 L 250.0,142.5 L 275.9,150.2 L 282.4,180.8
+                 L 340.6,203.8 L 379.4,257.3
+                 L 450.6,165.5 L 437.6,180.8 L 398.8,196.1 L 385.9,226.7
+                 L 383.3,265.0 L 334.1,272.7 L 308.2,295.6
+                 L 256.5,341.6 L 230.6,372.2 L 228.0,402.8 L 217.6,441.1
+                 L 191.8,477.8
+                 L 178.8,471.7 L 174.9,456.4 L 165.9,433.4
+                 L 152.9,387.5 L 145.2,364.5 L 133.5,318.6 L 130.9,295.6
+                 L 127.1,272.7
+                 L 75.3,265.0 L 75.3,242.0 L 88.2,226.7
+                 L 101.2,180.8 L 105.1,165.5
+                 L 140.0,134.8 L 150.3,128.7 L 153.0,112.0
+                 L 159.4,96.7 L 153.0,73.6 L 146.5,35.3 Z"
+              style="fill:#e8ddc8;stroke:#b8a070;stroke-width:1.5;stroke-linejoin:round;filter:url(#mapShadow)"/>
 
-            <!-- J&K / Ladakh region (northwest) -->
+            <!-- Gujarat / Kutch peninsula (westward bulge) -->
             <path class="india-land"
-              d="M148,8 L144,4 L138,2 L130,2 L122,4 L116,8 L112,13 L110,18
-                 L109,23 L107,27 L103,30 L100,34 L100,39 L103,43 L107,46
-                 L107,54 L111,46 L117,39 L124,32 L132,26 L141,20 L148,14 Z"
-              style="fill:#ddd5be;stroke:#b8a878;stroke-width:.9"/>
+              d="M 127.1,272.7 L 95.9,265.0 L 75.3,265.0 L 75.3,242.0
+                 L 88.2,226.7 L 101.2,203.8 L 118.2,219.1 L 127.1,234.4
+                 L 130.9,249.7 L 127.1,272.7 Z"
+              style="fill:#ddd5be;stroke:#b8a070;stroke-width:1;"/>
 
-            <!-- Northeast states (Assam/Meghalaya bulge) -->
-            <path class="india-land"
-              d="M313,105 L322,100 L332,97 L341,99 L346,105 L344,112 L338,117
-                 L330,119 L322,117 L316,112 L313,105 Z"
-              style="fill:#ddd5be;stroke:#b8a878;stroke-width:.9"/>
+            <!-- Andaman & Nicobar islands -->
+            <ellipse cx="458" cy="340" rx="8" ry="24" style="fill:#ddd5be;stroke:#b8a070;stroke-width:1;"/>
+            <text x="458" y="370" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" text-anchor="middle" class="map-island-label" opacity=".55">Andaman</text>
 
-            <!-- Gujarat peninsula (Saurashtra) -->
-            <path class="india-land"
-              d="M96,185 L88,189 L79,195 L72,204 L68,215 L70,226 L76,234
-                 L84,238 L91,236 L96,228 L99,218 L101,207 L101,196 L96,189 Z"
-              style="fill:#ddd5be;stroke:#b8a878;stroke-width:.9"/>
+            <!-- Lakshadweep -->
+            <circle cx="70" cy="345" r="4.5" style="fill:#ddd5be;stroke:#b8a070;stroke-width:.8;opacity:.7;"/>
 
-            <!-- Andaman & Nicobar (far right, small) -->
-            <ellipse cx="308" cy="310" rx="6" ry="16" style="fill:#ddd5be;stroke:#b8a878;stroke-width:.9"/>
-            <text x="308" y="332" font-family="DM Sans,sans-serif" font-size="5.5" fill="currentColor" text-anchor="middle" class="map-island-label" opacity=".6">Andaman</text>
+            <!-- Sri Lanka -->
+            <ellipse cx="232" cy="497" rx="11" ry="15" style="fill:#e8ddc8;stroke:#b8a070;stroke-width:.9;opacity:.4;"/>
 
-            <!-- Sri Lanka outline (small) -->
-            <ellipse cx="208" cy="397" rx="8" ry="12" style="fill:#e8ddc8;stroke:#b8a878;stroke-width:.8;opacity:.5"/>
+            <!-- ══ SIMPLIFIED STATE ZONE LINES ══ -->
+            <line x1="140" y1="95"  x2="435" y2="95"  stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
+            <line x1="115" y1="163" x2="420" y2="163" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
+            <line x1="103" y1="233" x2="400" y2="233" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
+            <line x1="108" y1="310" x2="380" y2="310" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".3"/>
+            <line x1="190" y1="30"  x2="190" y2="480" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".2"/>
+            <line x1="335" y1="80"  x2="335" y2="310" stroke="#c8b490" stroke-width=".6" stroke-dasharray="4,5" opacity=".15"/>
 
-            <!-- ══ STATE BOUNDARY LINES (simplified dashed) ══ -->
-            <!-- North–South zone dividers -->
-            <line x1="145" y1="60" x2="310" y2="60" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".45"/>
-            <line x1="118" y1="120" x2="320" y2="120" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".45"/>
-            <line x1="108" y1="180" x2="318" y2="180" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".45"/>
-            <line x1="108" y1="240" x2="310" y2="240" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".45"/>
-            <line x1="120" y1="300" x2="300" y2="300" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".45"/>
-            <!-- West–East dividers -->
-            <line x1="200" y1="60" x2="200" y2="300" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".3"/>
-            <line x1="255" y1="60" x2="255" y2="240" stroke="#c8b490" stroke-width=".5" stroke-dasharray="3,4" opacity=".3"/>
+            <!-- ══ CITY MANDATE PINS — geographically accurate positions ══ -->
 
-            <!-- ══ CITY MANDATE PINS ══ -->
-
-            <!-- Himachal Pradesh (Kasauli · Chail) — latitude ~31°N -->
+            <!-- Himachal Pradesh (Kasauli · Chail) ~30.9°N,77.2°E → (188,129) -->
             <g id="pin-himachal" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('himachal',true)" onmouseout="igMapHover('himachal',false)">
-              <circle cx="182" cy="42" r="7" fill="#1A3A6B" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="182" cy="42" r="3" fill="#fff"/>
-              <text x="193" y="39" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="currentColor">Kasauli · Chail</text>
-              <text x="193" y="48" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" opacity=".65">₹75 Cr</text>
+              <circle cx="188" cy="129" r="8" fill="#1A3A6B" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="188" cy="129" r="3.2" fill="#fff"/>
+              <text x="200" y="126" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Kasauli · Chail</text>
+              <text x="200" y="137" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">₹75 Cr</text>
             </g>
 
-            <!-- Chandigarh — latitude ~30.7°N, just below Himachal -->
+            <!-- Chandigarh ~30.7°N,76.8°E → (183,132) -->
             <g id="pin-chandigarh" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('chandigarh',true)" onmouseout="igMapHover('chandigarh',false)">
-              <circle cx="177" cy="60" r="7" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="177" cy="60" r="3" fill="#fff"/>
-              <text x="188" y="57" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="currentColor">Chandigarh</text>
-              <text x="188" y="66" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" opacity=".65">₹70 Cr</text>
+              <circle cx="183" cy="149" r="8" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="183" cy="149" r="3.2" fill="#fff"/>
+              <text x="168" y="145" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Chandigarh</text>
+              <text x="168" y="156" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">₹70 Cr</text>
             </g>
 
-            <!-- Delhi NCR — pulsing gold anchor pin, latitude ~28.6°N -->
+            <!-- Delhi NCR ~28.6°N,77.2°E → (188,164) — pulsing gold anchor -->
             <g id="pin-delhi" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('delhi',true)" onmouseout="igMapHover('delhi',false)">
-              <!-- Pulse ring -->
-              <circle cx="183" cy="84" r="18" fill="rgba(184,150,12,.1)" stroke="rgba(184,150,12,.3)" stroke-width="1">
-                <animate attributeName="r" values="18;24;18" dur="2.5s" repeatCount="indefinite"/>
+              <circle cx="188" cy="164" r="22" fill="rgba(184,150,12,.1)" stroke="rgba(184,150,12,.3)" stroke-width="1">
+                <animate attributeName="r" values="22;30;22" dur="2.5s" repeatCount="indefinite"/>
                 <animate attributeName="opacity" values=".7;0.1;.7" dur="2.5s" repeatCount="indefinite"/>
               </circle>
-              <circle cx="183" cy="84" r="10" fill="#B8960C" stroke="#fff" stroke-width="2" filter="url(#mapPinGlow)"/>
-              <circle cx="183" cy="84" r="4" fill="#fff"/>
-              <text x="197" y="79" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="currentColor">Delhi NCR</text>
-              <text x="197" y="90" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".7">3 Mandates · ₹900 Cr</text>
+              <circle cx="188" cy="164" r="12" fill="#B8960C" stroke="#fff" stroke-width="2" filter="url(#mapPinGlow)"/>
+              <circle cx="188" cy="164" r="5" fill="#fff"/>
+              <text x="206" y="158" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" fill="currentColor">Delhi NCR</text>
+              <text x="206" y="170" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="7" fill="currentColor" opacity=".7">3 Mandates · ₹900 Cr</text>
             </g>
 
-            <!-- Jaipur — latitude ~26.9°N, west of Delhi -->
+            <!-- Jaipur ~26.9°N,75.8°E → (170,190) -->
             <g id="pin-jaipur" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('jaipur',true)" onmouseout="igMapHover('jaipur',false)">
-              <circle cx="160" cy="110" r="7" fill="#7C3AED" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="160" cy="110" r="3" fill="#fff"/>
-              <text x="149" y="107" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="currentColor" text-anchor="end">Jaipur</text>
-              <text x="149" y="116" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" opacity=".65" text-anchor="end">₹20 Cr</text>
+              <circle cx="170" cy="190" r="8" fill="#7C3AED" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="170" cy="190" r="3.2" fill="#fff"/>
+              <text x="158" y="186" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Jaipur</text>
+              <text x="158" y="196" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">₹20 Cr</text>
             </g>
 
-            <!-- Mumbai — latitude ~19°N, west coast -->
+            <!-- Mumbai ~19.1°N,72.9°E → (132,309) -->
             <g id="pin-mumbai" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('mumbai',true)" onmouseout="igMapHover('mumbai',false)">
-              <circle cx="118" cy="220" r="7.5" fill="#dc2626" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="118" cy="220" r="3.2" fill="#fff"/>
-              <text x="106" y="216" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="currentColor" text-anchor="end">Mumbai</text>
-              <text x="106" y="225" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" opacity=".65" text-anchor="end">Pipeline</text>
+              <circle cx="132" cy="309" r="8.5" fill="#dc2626" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="132" cy="309" r="3.5" fill="#fff"/>
+              <text x="120" y="305" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor" text-anchor="end">Mumbai</text>
+              <text x="120" y="315" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65" text-anchor="end">Pipeline</text>
             </g>
 
-            <!-- Bengaluru — latitude ~12.9°N -->
+            <!-- Bengaluru ~12.9°N,77.6°E → (193,404) -->
             <g id="pin-bengaluru" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('bengaluru',true)" onmouseout="igMapHover('bengaluru',false)">
-              <circle cx="193" cy="305" r="6.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="193" cy="305" r="2.8" fill="#fff"/>
-              <text x="203" y="302" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="7.5" font-weight="700" fill="currentColor">Bengaluru</text>
-              <text x="203" y="311" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6" fill="currentColor" opacity=".65">Pipeline</text>
+              <circle cx="193" cy="404" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="193" cy="404" r="3" fill="#fff"/>
+              <text x="205" y="400" class="map-pin-label" font-family="DM Sans,sans-serif" font-size="8" font-weight="700" fill="currentColor">Bengaluru</text>
+              <text x="205" y="410" class="map-pin-sub" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".65">Pipeline</text>
             </g>
 
             <!-- ══ LEGEND BAR ══ -->
-            <rect x="8" y="375" width="324" height="38" rx="2" class="map-legend-bg" fill="rgba(184,150,12,.06)" stroke="rgba(184,150,12,.18)" stroke-width=".8"/>
-            <text x="16" y="387" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" class="map-legend-text" fill="currentColor" opacity=".55" letter-spacing="1.2">ACTIVE MANDATE LOCATIONS</text>
+            <rect x="10" y="500" width="480" height="45" rx="3" class="map-legend-bg" fill="rgba(184,150,12,.05)" stroke="rgba(184,150,12,.18)" stroke-width=".8"/>
+            <text x="20" y="515" font-family="DM Sans,sans-serif" font-size="7" font-weight="700" class="map-legend-text" fill="currentColor" opacity=".5" letter-spacing="1.5">ACTIVE MANDATE LOCATIONS</text>
             ${[
-              { cx:16,  cy:402, color:'#B8960C', label:'Delhi NCR (₹900 Cr)' },
-              { cx:108, cy:402, color:'#065F46', label:'Chandigarh (₹70 Cr)' },
-              { cx:200, cy:402, color:'#1A3A6B', label:'Himachal (₹75 Cr)' },
-              { cx:278, cy:402, color:'#7C3AED', label:'Jaipur (₹20 Cr)' },
+              { cx:20,  cy:534, color:'#B8960C', label:'Delhi NCR (₹900 Cr)' },
+              { cx:140, cy:534, color:'#065F46', label:'Chandigarh (₹70 Cr)' },
+              { cx:258, cy:534, color:'#1A3A6B', label:'Himachal (₹75 Cr)' },
+              { cx:368, cy:534, color:'#7C3AED', label:'Jaipur (₹20 Cr)' },
             ].map(p => `
-            <circle cx="${p.cx}" cy="${p.cy}" r="4" fill="${p.color}"/>
-            <text x="${p.cx+8}" y="${p.cy+4}" font-family="DM Sans,sans-serif" font-size="6.5" class="map-legend-text" fill="currentColor" opacity=".7">${p.label}</text>`).join('')}
+            <circle cx="${p.cx}" cy="${p.cy}" r="5" fill="${p.color}"/>
+            <text x="${p.cx+10}" y="${p.cy+4}" font-family="DM Sans,sans-serif" font-size="7" class="map-legend-text" fill="currentColor" opacity=".7">${p.label}</text>`).join('')}
           </svg>
           <!-- Hover tooltip -->
           <div id="map-tooltip" style="position:absolute;display:none;background:rgba(10,10,10,.95);color:#fff;padding:.5rem .75rem;font-size:.7rem;pointer-events:none;border:1px solid rgba(184,150,12,.35);max-width:180px;z-index:10;border-radius:3px;box-shadow:0 8px 24px rgba(0,0,0,.3);"></div>

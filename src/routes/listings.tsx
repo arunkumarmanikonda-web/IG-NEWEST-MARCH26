@@ -99,7 +99,7 @@ app.get('/', (c) => {
     </div>
 
     <!-- Grid of cards -->
-    <div id="mandatesGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
+    <div id="mandatesGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;align-items:start;">
       ${LISTINGS.map((l: any, idx: number) => {
         const ss = statusStyle(l.statusType)
         const coverImg = l.coverImage || (l.images && l.images.length > 0 ? l.images[0] : null)
@@ -110,8 +110,9 @@ app.get('/', (c) => {
         const spocPhone = l.contactPhone || '+91 98108 89134'
         return `
       <!-- MANDATE CARD: ${l.id} -->
-      <a href="/listings/${l.id}" data-sector="${l.sector}" data-idx="${idx}" data-value="${parseFloat((l.value||'0').replace(/[^0-9.]/g,''))||0}" class="mandate-card ed-card"
-         style="display:block;text-decoration:none;animation:fadeUp .6s cubic-bezier(.4,0,.2,1) ${idx * 0.07}s both;box-shadow:0 2px 16px rgba(0,0,0,.08);">
+      <div data-href="/listings/${l.id}" data-sector="${l.sector}" data-idx="${idx}" data-value="${parseFloat((l.value||'0').replace(/[^0-9.]/g,''))||0}" class="mandate-card ed-card"
+         onclick="if(!event.target.closest('a,button'))window.location.href='/listings/${l.id}'"
+         style="display:block;cursor:pointer;text-decoration:none;animation:fadeUp .6s cubic-bezier(.4,0,.2,1) ${idx * 0.07}s both;box-shadow:0 2px 16px rgba(0,0,0,.08);">
 
         <!-- IMAGE / NDA PLACEHOLDER -->
         <div class="ed-card-img" style="position:relative;height:240px;background:#0a0a14;overflow:hidden;">
@@ -219,7 +220,7 @@ app.get('/', (c) => {
             </div>
           </div>
         </div>
-      </a>`
+      </div>`
       }).join('')}
     </div>
 
@@ -1810,7 +1811,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
             <span style="font-size:.65rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.08em;">View + EOI →</span>
           </div>
         </div>
-      </a>`
+      </div>`
       }).join('')}
     </div>
   </div>
