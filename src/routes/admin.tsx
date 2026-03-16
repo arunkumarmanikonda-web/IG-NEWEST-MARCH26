@@ -1582,21 +1582,60 @@ app.get('/cms', (c) => {
 })
 
 // ── USERS ─────────────────────────────────────────────────────────────────────
-app.get('/users', (c) => {
-  const users = [
-    {name:'Super Admin',    email:'superadmin@indiagully.com', role:'Super Admin', portal:'Admin',    login:'02 Mar 2026', active:true},
-    {name:'Arun Manikonda', email:'akm@indiagully.com',        role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
-    {name:'Pavan Manikonda',email:'pavan@indiagully.com',      role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
-    {name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',        portal:'Board',    login:'01 Mar 2026', active:true},
-    {name:'Demo Client',    email:'demo@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
-    {name:'Demo Employee',  email:'emp@indiagully.com',        role:'Employee',    portal:'Employee', login:'01 Mar 2026', active:true},
-    {name:'Demo KMP',       email:'kmp@indiagully.com',        role:'KMP',         portal:'Board',    login:'28 Feb 2026', active:true},
-    {name:'Ex Employee',    email:'ex.emp@indiagully.com',     role:'Employee',    portal:'Employee', login:'01 Jan 2026', active:false},
-  ]
+app.get('/users', async (c) => {
+  const env = (c as any).env
+  let users: any[] = []
+  let dataSource = 'static'
+
+  // Phase 19C: Read users from D1
+  if (env?.DB) {
+    try {
+      const rows = await env.DB.prepare(
+        `SELECT identifier AS email, role, portal, is_active, last_login, created_at
+         FROM ig_users ORDER BY created_at ASC`
+      ).all()
+      if (rows.results && rows.results.length > 0) {
+        users = (rows.results as any[]).map((u: any) => ({
+          name: u.email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, (l:string) => l.toUpperCase()),
+          email: u.email,
+          role: u.role || 'User',
+          portal: u.portal ? u.portal.charAt(0).toUpperCase() + u.portal.slice(1) : 'Client',
+          login: u.last_login ? new Date(u.last_login).toLocaleDateString('en-IN') : 'Never',
+          active: u.is_active === 1 || u.is_active === true,
+        }))
+        dataSource = 'd1'
+      }
+    } catch (_) { /* fallback */ }
+  }
+
+  // Static fallback
+  if (dataSource === 'static') {
+    users = [
+      {name:'Super Admin',    email:'superadmin@indiagully.com', role:'Super Admin', portal:'Admin',    login:'02 Mar 2026', active:true},
+      {name:'Arun Manikonda', email:'akm@indiagully.com',        role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
+      {name:'Pavan Manikonda',email:'pavan@indiagully.com',      role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
+      {name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',        portal:'Board',    login:'01 Mar 2026', active:true},
+      {name:'Demo Client',    email:'demo@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
+      {name:'Demo Employee',  email:'emp@indiagully.com',        role:'Employee',    portal:'Employee', login:'01 Mar 2026', active:true},
+      {name:'Demo KMP',       email:'kmp@indiagully.com',        role:'KMP',         portal:'Board',    login:'28 Feb 2026', active:true},
+      {name:'Ex Employee',    email:'ex.emp@indiagully.com',     role:'Employee',    portal:'Employee', login:'01 Jan 2026', active:false},
+    ]
+  }
+
+  const total     = users.length
+  const active    = users.filter(u => u.active).length
+  const admins    = users.filter(u => u.role === 'Super Admin' || u.role === 'Director').length
+  const inactive  = users.filter(u => !u.active).length
   const body = `
+  <!-- Data Source Badge -->
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:.4rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:.72rem;">
+    <i class="fas fa-database" style="color:#16a34a;"></i>
+    <span style="font-weight:600;color:#15803d;">Data source: ${dataSource.toUpperCase()}</span>
+    <span style="margin-left:auto;color:#166534;">${total} users total</span>
+  </div>
   <!-- Stats -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
-    ${[{label:'Total Users',value:'8',c:'#2563eb'},{label:'Active',value:'7',c:'#16a34a'},{label:'Admin Users',value:'1',c:'#d97706'},{label:'Deactivated',value:'1',c:'#dc2626'}].map(s=>`<div class="am" style="flex:1;"><div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div><div class="user-stat-val" style="font-family:'DM Serif Display',Georgia,serif;font-size:2rem;color:${s.c};">${s.value}</div></div>`).join('')}
+    ${[{label:'Total Users',value:String(total),c:'#2563eb'},{label:'Active',value:String(active),c:'#16a34a'},{label:'Directors/Admins',value:String(admins),c:'#d97706'},{label:'Inactive',value:String(inactive),c:'#dc2626'}].map(s=>`<div class="am" style="flex:1;"><div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div><div class="user-stat-val" style="font-family:'DM Serif Display',Georgia,serif;font-size:2rem;color:${s.c};">${s.value}</div></div>`).join('')}
   </div>
 
   <!-- Add User Panel Toggle -->
@@ -16298,45 +16337,66 @@ app.get('/enquiries', async (c) => {
   const env = (c as any).env
   let enquiries: any[] = []
   let horecaEnquiries: any[] = []
-  let kvAvailable = false
+  let dataSource = 'demo'
 
-  // Try to fetch from KV (production only — local dev will show demo data)
-  try {
-    if (env?.KV) {
-      kvAvailable = true
-      const list = await env.KV.list({ prefix: 'enquiry:' })
-      const hList = await env.KV.list({ prefix: 'horeca_enquiry:' })
+  // 1. Try D1 first (Phase 19B)
+  if (env?.DB) {
+    try {
+      const [enqRows, horecaRows] = await Promise.all([
+        env.DB.prepare(`SELECT ref_id AS ref, enquiry_type AS type, name, email, phone,
+          organisation AS org, message, mandate_title AS mandateTitle,
+          mandate_value AS mandateValue, ticket_size AS ticketSize,
+          investor_type AS investorType, status, created_at AS ts
+          FROM ig_enquiries WHERE enquiry_type != 'horeca'
+          ORDER BY created_at DESC LIMIT 50`).all(),
+        env.DB.prepare(`SELECT ref_id AS ref, 'horeca' AS type, name, email, phone,
+          organisation AS org, message, status, created_at AS ts
+          FROM ig_enquiries WHERE enquiry_type = 'horeca'
+          ORDER BY created_at DESC LIMIT 20`).all(),
+      ])
+      enquiries      = (enqRows.results   as any[]) || []
+      horecaEnquiries = (horecaRows.results as any[]) || []
+      dataSource = 'd1'
+    } catch (_) { /* fallback below */ }
+  }
 
+  // 2. Try KV if D1 empty / unavailable
+  if (dataSource !== 'd1' && env?.IG_SESSION_KV) {
+    try {
+      const list  = await env.IG_SESSION_KV.list({ prefix: 'enquiry:' })
+      const hList = await env.IG_SESSION_KV.list({ prefix: 'horeca_enquiry:' })
       const enqResults = await Promise.all(
         (list.keys || []).slice(0, 50).map(async (k: any) => {
-          try { return JSON.parse(await env.KV.get(k.name) || '{}') } catch { return null }
+          try { return JSON.parse(await env.IG_SESSION_KV.get(k.name) || '{}') } catch { return null }
         })
       )
       enquiries = enqResults.filter(Boolean).sort((a: any, b: any) =>
         new Date(b.ts || 0).getTime() - new Date(a.ts || 0).getTime()
       )
-
       const horecaResults = await Promise.all(
         (hList.keys || []).slice(0, 20).map(async (k: any) => {
-          try { return JSON.parse(await env.KV.get(k.name) || '{}') } catch { return null }
+          try { return JSON.parse(await env.IG_SESSION_KV.get(k.name) || '{}') } catch { return null }
         })
       )
       horecaEnquiries = horecaResults.filter(Boolean).sort((a: any, b: any) =>
         new Date(b.ts || 0).getTime() - new Date(a.ts || 0).getTime()
       )
-    }
-  } catch (_) { /* KV unavailable */ }
+      dataSource = 'kv'
+    } catch (_) { /* keep demo */ }
+  }
 
-  // Demo data for local dev
-  if (!kvAvailable) {
+  // 3. Demo seed data (local dev fallback)
+  if (dataSource === 'demo') {
     enquiries = [
-      { ref:'IG-ENQ-DEMO-001', type:'general', name:'Rahul Sharma', email:'rahul.sharma@example.com', phone:'+91 98765 43210', org:'Sharma Group', message:'Interested in your hotel advisory services for a 50-key boutique property in Manali.', source:'contact_form', ts: new Date(Date.now() - 1000*60*60*2).toISOString() },
-      { ref:'IG-ENQ-DEMO-002', type:'nda_acceptance', name:'Priya Mehta', email:'priya@metropolis.in', phone:'+91 91234 56789', org:'Metropolis Capital', mandateTitle:'Prism Tower, Gurugram', mandateValue:'₹400 Cr', ts: new Date(Date.now() - 1000*60*60*26).toISOString() },
-      { ref:'IG-ENQ-DEMO-003', type:'eoi', name:'Vikram Nair', email:'v.nair@peninsular.com', phone:'+91 80123 45678', org:'Peninsular Holdings', mandateTitle:'Hotel Rajshree & Spa', mandateValue:'₹70 Cr', ticketSize:'₹50 Cr+', investorType:'Family Office', ts: new Date(Date.now() - 1000*60*60*48).toISOString() },
-      { ref:'IG-ENQ-DEMO-004', type:'general', name:'Anjali Singh', email:'anjali@realtyworld.co', phone:'+91 99887 76655', org:'Realty World Developers', message:'Looking for retail leasing advisory for our upcoming mixed-use project in Noida Extension. About 1.2L sq ft of retail.', source:'contact_form', ts: new Date(Date.now() - 1000*60*60*72).toISOString() },
+      { ref:'IG-ENQ-001', type:'general', name:'Rahul Sharma', email:'rahul.sharma@example.com', phone:'+91 98765 43210', org:'Sharma Group', message:'Interested in hotel advisory for a 50-key boutique property in Manali.', status:'New', ts: new Date(Date.now()-1000*60*60*2).toISOString() },
+      { ref:'IG-ENQ-002', type:'nda_acceptance', name:'Priya Mehta', email:'priya@metropolis.in', phone:'+91 91234 56789', org:'Metropolis Capital', mandateTitle:'Prism Tower, Gurugram', mandateValue:'₹400 Cr', status:'Active', ts: new Date(Date.now()-1000*60*60*26).toISOString() },
+      { ref:'IG-ENQ-003', type:'eoi', name:'Vikram Nair', email:'v.nair@peninsular.com', phone:'+91 80123 45678', org:'Peninsular Holdings', mandateTitle:'Hotel Rajshree & Spa', mandateValue:'₹70 Cr', ticketSize:'₹50 Cr+', investorType:'Family Office', status:'Pending', ts: new Date(Date.now()-1000*60*60*48).toISOString() },
+      { ref:'IG-ENQ-004', type:'general', name:'Anjali Singh', email:'anjali@realtyworld.co', phone:'+91 99887 76655', org:'Realty World Developers', message:'Retail leasing advisory for 1.2L sq ft mixed-use project in Noida Extension.', status:'Active', ts: new Date(Date.now()-1000*60*60*72).toISOString() },
+      { ref:'IG-ENQ-005', type:'eoi', name:'Sanjay Tiwari', email:'s.tiwari@capitalfund.in', phone:'+91 98001 23456', org:'Capital Fund Partners', mandateTitle:'Retail Leasing, Mumbai', mandateValue:'₹2,100 Cr', ticketSize:'₹200 Cr+', investorType:'Institutional', status:'Active', ts: new Date(Date.now()-1000*60*60*96).toISOString() },
+      { ref:'IG-ENQ-006', type:'subscribe', name:'Deepa Reddy', email:'deepa.reddy@infracorp.com', phone:'+91 99112 34567', org:'InfraCorp Advisors', message:'Subscribe to insights newsletter.', status:'New', ts: new Date(Date.now()-1000*60*60*120).toISOString() },
     ]
     horecaEnquiries = [
-      { ref:'IG-HORECA-DEMO-001', name:'Chef Amandeep Bedi', email:'chef.bedi@thegrand.com', phone:'+91 97654 32109', org:'The Grand Hotel Delhi', message:'Need FF&E procurement for 80 room renovation.', ts: new Date(Date.now() - 1000*60*60*5).toISOString() },
+      { ref:'IG-HORECA-001', name:'Chef Amandeep Bedi', email:'chef.bedi@thegrand.com', phone:'+91 97654 32109', org:'The Grand Hotel Delhi', message:'FF&E procurement for 80 room renovation.', status:'New', ts: new Date(Date.now()-1000*60*60*5).toISOString() },
     ]
   }
 
@@ -16382,7 +16442,7 @@ app.get('/enquiries', async (c) => {
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
     <div>
       <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.6rem;color:#fff;margin-bottom:.3rem;">Enquiry Inbox</h1>
-      <p style="font-size:.78rem;color:rgba(255,255,255,.4);">${kvAvailable ? 'Live data from Cloudflare KV' : '⚠️ Demo data — KV not available in local dev'}</p>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);">${dataSource === 'd1' ? '✅ Live data from D1 database' : dataSource === 'kv' ? '✅ Live data from Cloudflare KV' : '⚠️ Demo data — connect D1/KV for live data'}</p>
     </div>
     <a href="mailto:info@indiagully.com" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;background:rgba(184,150,12,.15);border:1px solid rgba(184,150,12,.3);color:#fbbf24;text-decoration:none;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;">
       <i class="fas fa-envelope"></i>Open Email

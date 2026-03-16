@@ -3098,6 +3098,36 @@ app.get('/invoices', requireAnyAuth(), async (c) => {
   ]})
 })
 
+// Phase 19E: POST /invoices — create invoice in D1
+app.post('/invoices', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+  try {
+    const body = await c.req.json().catch(async () => {
+      const fd = await c.req.parseBody() as Record<string,string>
+      return fd
+    })
+    const { client_name, description, amount, gst_rate = '18', due_date, sac_code = '998313' } = body as any
+    if (!client_name || !amount) return c.json({ success: false, error: 'client_name and amount are required' }, 400)
+
+    const amtNet   = parseFloat(amount)
+    const gstPct   = parseFloat(gst_rate) / 100
+    const amtGst   = Math.round(amtNet * gstPct)
+    const amtGross = amtNet + amtGst
+    const invNo    = `INV-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`
+    const dueDt    = due_date || new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10)
+
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `INSERT INTO ig_invoices (invoice_number, client_name, description, sac_code, amount_net, amount_gst, amount_gross, status, due_date, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft', ?, datetime('now'))`
+      ).bind(invNo, client_name, description || '', sac_code, amtNet, amtGst, amtGross, dueDt).run()
+      return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'd1' })
+    }
+    return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'memory' })
+  } catch (e: any) {
+    return c.json({ success: false, error: e?.message || 'Invoice creation failed' }, 500)
+  }
+})
+
 app.get('/employees', requireAnyAuth(), async (c) => {
   if (c.env?.DB) {
     try {

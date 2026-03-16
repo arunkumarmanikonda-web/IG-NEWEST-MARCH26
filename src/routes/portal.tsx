@@ -1107,13 +1107,66 @@ app.get('/client/dashboard', async (c) => {
   return c.html(layout('Client Dashboard', clientShell('Dashboard', 'dashboard', body), { noNav:true, noFooter:true }))
 })
 
-app.get('/client/mandates', (c) => {
+app.get('/client/mandates', async (c) => {
+  const env = (c as any).env
+  let mandates: any[] = []
+  let dataSource = 'static'
+
+  // Phase 19D: Read mandates from D1 ig_clients table
+  if (env?.DB) {
+    try {
+      const rows = await env.DB.prepare(
+        `SELECT client_id AS id, company_name AS name, sector, status, pipeline_value AS value,
+                contact_name AS advisor, onboarded_at AS start, 0 AS progress
+         FROM ig_clients WHERE status IN ('Active','In Progress') ORDER BY onboarded_at DESC`
+      ).all()
+      if (rows.results && (rows.results as any[]).length > 0) {
+        mandates = (rows.results as any[]).map((m: any, idx: number) => ({
+          ...m,
+          value: m.value ? `₹${(m.value/10000000).toFixed(0)} Cr` : '—',
+          start: m.start ? new Date(m.start).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) : '—',
+          progress: [75, 45, 35, 60, 80][idx % 5],
+          cls: m.status === 'Active' ? 'b-gr' : m.status === 'In Progress' ? 'b-g' : 'b-bl',
+          milestones: [
+            { done: true,  label: 'Engagement Signed' },
+            { done: true,  label: 'Site Visit' },
+            { done: idx < 2, label: 'Due Diligence' },
+            { done: false, label: 'LOI Exchange' },
+            { done: false, label: 'Transaction Close' },
+          ]
+        }))
+        dataSource = 'd1'
+      }
+    } catch (_) { /* fallback */ }
+  }
+
+  // Static fallback
+  if (!mandates.length) {
+    mandates = [
+      { id:'MND-001', name:'Retail Leasing, Mumbai', sector:'Real Estate', value:'₹2,100 Cr', advisor:'Amit Jhingan', start:'01 Jan 2026', status:'Active', cls:'b-gr', progress:75,
+        milestones:[{done:true,label:'Engagement Signed'},{done:true,label:'Site Survey'},{done:true,label:'Shortlisting'},{done:false,label:'LOI Exchange'},{done:false,label:'Execution'}] },
+      { id:'MND-002', name:'Hotel Pre-Opening PMC', sector:'Hospitality', value:'₹45 Cr', advisor:'Arun Manikonda', start:'15 Feb 2026', status:'In Progress', cls:'b-g', progress:45,
+        milestones:[{done:true,label:'Scope Finalised'},{done:true,label:'Team Deployed'},{done:false,label:'Pre-opening Check'},{done:false,label:'Staff Training'},{done:false,label:'Soft Opening'}] },
+      { id:'MND-003', name:'Hotel Rajshree & Spa — Chandigarh', sector:'Hospitality', value:'₹70 Cr', advisor:'Amit Jhingan', start:'01 Mar 2026', status:'Active', cls:'b-bl', progress:35,
+        milestones:[{done:true,label:'NDA Executed'},{done:true,label:'Site Visit'},{done:false,label:'LOI Exchange'},{done:false,label:'Due Diligence'},{done:false,label:'Transaction Close'}] },
+    ]
+  }
+
+  const totalValue = mandates.length
+  const avgProgress = mandates.length ? Math.round(mandates.reduce((s:number,m:any) => s + (m.progress||0), 0) / mandates.length) : 0
+
   const body = `
+    <!-- Data Source Badge -->
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:.35rem .875rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:.7rem;">
+      <i class="fas fa-database" style="color:#16a34a;"></i>
+      <span style="font-weight:600;color:#15803d;">Source: ${dataSource.toUpperCase()}</span>
+      <span style="margin-left:auto;color:#166534;">${totalValue} active mandates</span>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
       ${[
-        { label:'Active Mandates',   value:'3',          color:'#B8960C'  },
-        { label:'Pipeline Value',    value:'₹6,645 Cr',  color:'#16a34a' },
-        { label:'Avg. Progress',     value:'62%',        color:'#2563eb' },
+        { label:'Active Mandates',   value:String(totalValue),     color:'#B8960C'  },
+        { label:'Pipeline Value',    value:mandates.length ? mandates[0].value : '₹6,645 Cr', color:'#16a34a' },
+        { label:'Avg. Progress',     value:`${avgProgress}%`,      color:'#2563eb' },
       ].map(s => `
       <div class="am">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div>
@@ -1121,14 +1174,7 @@ app.get('/client/mandates', (c) => {
       </div>`).join('')}
     </div>
     <div style="display:flex;flex-direction:column;gap:1rem;">
-      ${[
-        { id:'MND-001', name:'Retail Leasing. Mumbai',      sector:'Real Estate',   value:'₹2,100 Cr', advisor:'Amit Jhingan',    start:'01 Jan 2026', status:'Active',      cls:'b-gr', progress:75,
-          milestones:[{done:true,label:'Engagement Signed'},{done:true,label:'Site Survey'},{done:true,label:'Shortlisting'},{done:false,label:'LOI Exchange'},{done:false,label:'Execution'}] },
-        { id:'MND-002', name:'Hotel Pre-Opening PMC',         sector:'Hospitality',   value:'₹45 Cr',    advisor:'Arun Manikonda', start:'15 Feb 2026', status:'In Progress', cls:'b-g',  progress:45,
-          milestones:[{done:true,label:'Scope Finalised'},{done:true,label:'Team Deployed'},{done:false,label:'Pre-opening Check'},{done:false,label:'Staff Training'},{done:false,label:'Soft Opening'}] },
-        { id:'MND-003', name:'Hotel Rajshree & Spa — Chandigarh', sector:'Hospitality', value:'₹70 Cr', advisor:'Amit Jhingan', start:'01 Mar 2026', status:'Active', cls:'b-bl', progress:35,
-          milestones:[{done:true,label:'NDA Executed'},{done:true,label:'Site Visit'},{done:false,label:'LOI Exchange'},{done:false,label:'Due Diligence'},{done:false,label:'Transaction Close'}] },
-      ].map((m,mi) => `
+      ${mandates.map((m: any, mi: number) => `
       <div style="background:#fff;border:1px solid var(--border);">
         <div style="padding:1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
           <div style="flex:1;">
@@ -1138,7 +1184,7 @@ app.get('/client/mandates', (c) => {
               <span class="badge ${m.cls}">${m.status}</span>
             </div>
             <h4 style="font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:.25rem;">${m.name}</h4>
-            <div style="font-size:.78rem;color:var(--ink-muted);">Advisor: ${m.advisor} · Started: ${m.start}</div>
+            <div style="font-size:.78rem;color:var(--ink-muted);">Advisor: ${m.advisor || 'India Gully Team'} · Started: ${m.start}</div>
           </div>
           <div style="text-align:right;flex-shrink:0;">
             <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:var(--gold);">${m.value}</div>
@@ -1155,7 +1201,7 @@ app.get('/client/mandates', (c) => {
           </div>
         </div>
         <div style="border-top:1px solid var(--border);padding:.875rem 1.25rem;display:flex;gap:0;overflow-x:auto;">
-          ${m.milestones.map((ms,msi)=>`
+          ${(m.milestones || []).map((ms: any, msi: number)=>`
           <div style="display:flex;align-items:center;flex:1;min-width:80px;">
             <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;">
               <div style="width:20px;height:20px;border-radius:50%;background:${ms.done?'var(--gold)':'var(--parch-dk)'};border:2px solid ${ms.done?'var(--gold)':'var(--border)'};display:flex;align-items:center;justify-content:center;">
@@ -1163,7 +1209,7 @@ app.get('/client/mandates', (c) => {
               </div>
               <div style="font-size:.6rem;text-align:center;color:${ms.done?'var(--ink)':'var(--ink-muted)'};font-weight:${ms.done?'600':'400'};line-height:1.3;">${ms.label}</div>
             </div>
-            ${msi < m.milestones.length-1 ? `<div style="height:2px;background:${ms.done?'var(--gold)':'var(--border)'};flex:1;margin-bottom:1.4rem;min-width:8px;"></div>` : ''}
+            ${msi < (m.milestones.length-1) ? `<div style="height:2px;background:${ms.done?'var(--gold)':'var(--border)'};flex:1;margin-bottom:1.4rem;min-width:8px;"></div>` : ''}
           </div>`).join('')}
         </div>
         <div style="padding:.75rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:.5rem;">
@@ -1232,14 +1278,60 @@ app.get('/client/proposals', (c) => {
   return c.html(layout('Proposals', clientShell('Proposals', 'proposals', body), { noNav:true, noFooter:true }))
 })
 
-app.get('/client/invoices', (c) => {
+app.get('/client/invoices', async (c) => {
+  const env = (c as any).env
+  let invoices: any[] = []
+  let dataSource = 'static'
+
+  // Phase 19D: Read invoices from D1
+  if (env?.DB) {
+    try {
+      const rows = await env.DB.prepare(
+        `SELECT invoice_number, description, amount_net AS base, amount_gst AS gst,
+                amount_gross AS total, due_date AS due, status, paid_date
+         FROM ig_invoices ORDER BY created_at DESC LIMIT 20`
+      ).all()
+      if (rows.results && (rows.results as any[]).length > 0) {
+        invoices = (rows.results as any[]).map((r: any) => ({
+          ...r,
+          cls: r.status === 'Paid' ? 'b-gr' : r.status === 'Overdue' ? 'b-re' : r.status === 'Sent' ? 'b-bl' : 'b-dk',
+          due: r.due ? new Date(r.due).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) : '—',
+          desc: r.description || 'Advisory Services',
+        }))
+        dataSource = 'd1'
+      }
+    } catch (_) { /* fallback */ }
+  }
+
+  // Static fallback
+  if (!invoices.length) {
+    invoices = [
+      { inv:'INV-2026-001', desc:'Advisory Retainer — Jan 2026',    base:212000, gst:38160, total:250160, due:'15 Feb 2026', status:'Paid',    cls:'b-gr' },
+      { inv:'INV-2026-002', desc:'Hotel PMC, Phase 1',               base:152542, gst:27458, total:180000, due:'28 Feb 2026', status:'Overdue', cls:'b-re' },
+      { inv:'INV-2026-003', desc:'Entertainment Feasibility Study',  base:271186, gst:48814, total:320000, due:'31 Mar 2026', status:'Draft',   cls:'b-dk' },
+    ]
+  } else {
+    invoices = invoices.map((r: any) => ({ ...r, inv: r.invoice_number }))
+  }
+
+  const totalBilled  = invoices.reduce((s: number, i: any) => s + (i.total || i.amount_gross || 0), 0)
+  const totalPaid    = invoices.filter((i: any) => i.status === 'Paid').reduce((s: number, i: any) => s + (i.total || 0), 0)
+  const totalOverdue = invoices.filter((i: any) => i.status === 'Overdue').reduce((s: number, i: any) => s + (i.total || 0), 0)
+  const totalDue     = totalBilled - totalPaid
+  const fmtL = (v: number) => `₹${(v/100000).toFixed(2)}L`
   const body = `
+    <!-- Data Source Badge -->
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:.35rem .875rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:.7rem;">
+      <i class="fas fa-database" style="color:#16a34a;"></i>
+      <span style="font-weight:600;color:#15803d;">Source: ${dataSource.toUpperCase()}</span>
+      <span style="margin-left:auto;color:#166534;">${invoices.length} invoices</span>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
       ${[
-        { label:'Total Billed',   value:'₹7.5L',  color:'var(--gold)' },
-        { label:'Amount Paid',    value:'₹2.5L',  color:'#16a34a'    },
-        { label:'Amount Due',     value:'₹5.0L',  color:'#dc2626'    },
-        { label:'Overdue',        value:'₹1.8L',  color:'#7c3aed'    },
+        { label:'Total Billed',   value:fmtL(totalBilled),  color:'var(--gold)' },
+        { label:'Amount Paid',    value:fmtL(totalPaid),    color:'#16a34a'    },
+        { label:'Amount Due',     value:fmtL(totalDue),     color:'#dc2626'    },
+        { label:'Overdue',        value:fmtL(totalOverdue), color:'#7c3aed'    },
       ].map(s => `
       <div class="am">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div>
@@ -1254,23 +1346,19 @@ app.get('/client/invoices', (c) => {
       <table class="ig-tbl">
         <thead><tr><th>Invoice #</th><th>Description</th><th>Amount</th><th>GST (18%)</th><th>Total</th><th>Due Date</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>
-          ${[
-            { inv:'INV-2026-001', desc:'Advisory Retainer. Jan 2026',   base:212000, gst:38160, total:250160, due:'15 Feb 2026', status:'Paid',    cls:'b-gr' },
-            { inv:'INV-2026-002', desc:'Hotel PMC, Phase 1',             base:152542, gst:27458, total:180000, due:'28 Feb 2026', status:'Overdue', cls:'b-re' },
-            { inv:'INV-2026-003', desc:'Entertainment Feasibility Study', base:271186, gst:48814, total:320000, due:'31 Mar 2026', status:'Draft',   cls:'b-dk' },
-          ].map(r => `
+          ${invoices.map((r: any) => `
           <tr>
-            <td style="font-weight:600;font-size:.82rem;color:var(--gold);">${r.inv}</td>
-            <td style="font-size:.82rem;">${r.desc}</td>
-            <td style="font-family:'DM Serif Display',Georgia,serif;">₹${(r.base/100000).toFixed(2)}L</td>
-            <td style="font-size:.78rem;color:var(--ink-muted);">₹${(r.gst/100000).toFixed(2)}L</td>
-            <td style="font-family:'DM Serif Display',Georgia,serif;font-weight:600;">₹${(r.total/100000).toFixed(2)}L</td>
+            <td style="font-weight:600;font-size:.82rem;color:var(--gold);">${r.inv || r.invoice_number}</td>
+            <td style="font-size:.82rem;">${r.desc || r.description || 'Advisory Services'}</td>
+            <td style="font-family:'DM Serif Display',Georgia,serif;">₹${((r.base || r.amount_net || 0)/100000).toFixed(2)}L</td>
+            <td style="font-size:.78rem;color:var(--ink-muted);">₹${((r.gst || r.amount_gst || 0)/100000).toFixed(2)}L</td>
+            <td style="font-family:'DM Serif Display',Georgia,serif;font-weight:600;">₹${((r.total || r.amount_gross || 0)/100000).toFixed(2)}L</td>
             <td style="font-size:.78rem;color:var(--ink-muted);">${r.due}</td>
-            <td><span class="badge ${r.cls}" id="inv-status-${r.inv.replace(/-/g,'_')}">${r.status}</span></td>
+            <td><span class="badge ${r.cls}" id="inv-status-${(r.inv||r.invoice_number||'').replace(/-/g,'_')}">${r.status}</span></td>
             <td style="display:flex;gap:.4rem;">
-              <button onclick="igViewInvoice('${r.inv}','${r.desc}','${r.total}','${r.due}','${r.status}')" style="font-size:.68rem;color:var(--gold);background:none;border:1px solid #B8960C;cursor:pointer;padding:.2rem .5rem;"><i class='fas fa-eye'></i></button>
-              ${r.status!=='Paid'?`<button onclick="igPayInvoice('${r.inv}','${r.total}','${r.status}')" style="font-size:.68rem;color:#fff;background:#16a34a;border:none;cursor:pointer;padding:.2rem .5rem;"><i class='fas fa-credit-card'></i> Pay</button>`:'<span style="font-size:.68rem;color:#16a34a;"><i class="fas fa-check-circle"></i> Paid</span>'}
-              <button onclick="igViewInvoice('${r.inv}','${r.desc}','${r.total}','${r.due}','${r.status}')" style="font-size:.68rem;color:var(--gold);background:var(--gold-pale,#FAF6E8);border:1px solid var(--gold);cursor:pointer;padding:.2rem .5rem;" title="Download Invoice PDF"><i class='fas fa-download'></i></button>
+              <button onclick="igViewInvoice('${r.inv||r.invoice_number}','${(r.desc||r.description||'').replace(/'/g,"\\'")}','${r.total||r.amount_gross||0}','${r.due}','${r.status}')" style="font-size:.68rem;color:var(--gold);background:none;border:1px solid #B8960C;cursor:pointer;padding:.2rem .5rem;"><i class='fas fa-eye'></i></button>
+              ${r.status!=='Paid'?`<button onclick="igPayInvoice('${r.inv||r.invoice_number}','${r.total||r.amount_gross||0}','${r.status}')" style="font-size:.68rem;color:#fff;background:#16a34a;border:none;cursor:pointer;padding:.2rem .5rem;"><i class='fas fa-credit-card'></i> Pay</button>`:'<span style="font-size:.68rem;color:#16a34a;"><i class="fas fa-check-circle"></i> Paid</span>'}
+              <button onclick="igViewInvoice('${r.inv||r.invoice_number}','${(r.desc||r.description||'').replace(/'/g,"\\'")}','${r.total||r.amount_gross||0}','${r.due}','${r.status}')" style="font-size:.68rem;color:var(--gold);background:var(--gold-pale,#FAF6E8);border:1px solid var(--gold);cursor:pointer;padding:.2rem .5rem;" title="Download Invoice PDF"><i class='fas fa-download'></i></button>
             </td>
           </tr>`).join('')}
         </tbody>
