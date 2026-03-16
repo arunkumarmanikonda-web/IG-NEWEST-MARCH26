@@ -1228,28 +1228,66 @@ ${l.id === 'prism-tower-gurgaon' ? `
         </div>` : ''}
 
         ${l.id === 'belcibo-hospitality-platform' ? `
-        <!-- ── Belcibo Brand Portfolio Gallery ─────────── -->
+        <!-- ── Belcibo Brand Portfolio Gallery (9 brands) ─────────── -->
         <div style="margin-bottom:2.5rem;border:1px solid var(--border);overflow:hidden;">
-          <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;gap:.625rem;">
-            <i class="fas fa-store" style="color:var(--gold);font-size:.85rem;"></i>
-            <p style="font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0;">Brand Portfolio</p>
-            <span style="font-size:.6rem;color:var(--ink-muted);margin-left:.5rem;">10+ Belcibo outlets shown</span>
+          <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--parch);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+            <div style="display:flex;align-items:center;gap:.625rem;">
+              <i class="fas fa-store" style="color:var(--gold);font-size:.85rem;"></i>
+              <p style="font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:0;">Belcibo Brand Portfolio</p>
+            </div>
+            <span style="font-size:.6rem;color:var(--ink-muted);background:rgba(184,150,12,.08);padding:.2rem .6rem;border:1px solid rgba(184,150,12,.2);">9 Active Brands · 15+ Outlets</span>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0;">
+          <!-- Row 1: 3 cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);">
             ${[
-              {brand:'Imperfecto Shor', img:'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560'},
-              {brand:'Begam', img:'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560'},
-              {brand:'Noor by Khubani', img:'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560'},
-              {brand:'Informal', img:'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560'},
-            ].map(b => `
-            <div style="position:relative;height:200px;overflow:hidden;">
+              {brand:'Imperfecto Shor', sub:'Café & Club · Golf Course Road, Gurugram', img:'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560'},
+              {brand:'Imperfecto Patio', sub:'Open-Air Dining · Gurgaon Sector 51', img:'https://sspark.genspark.ai/cfimages?u1=EDO3q9fGisTV8hsein%2B3Y474MwAp7uJfE8uN28zPeKyybyoeo78X8HeXiKGy5oCN251FaU4b7cX1nO140GrCS2vA5Q25vFU9s%2Fos1CvkNfd95MBJkqEqzAUq0e4%2BHBc%2B0645lEkEcyZ3BbIcX5OJsk4bpOPbYy9NObhXMVakZHL5OGrZeSfgqD3cxCr7DlCUwhdhdeKWKr1jIBCT&u2=vj5WFpb%2BoeJIZtv2&width=2560'},
+              {brand:'Imperfecto Boutique', sub:'Premium Dining · Dwarka, New Delhi', img:'https://sspark.genspark.ai/cfimages?u1=7hVDmvPjH%2FqUTHzsLIETISv9j2bybCS1yCiFjf0wcmBUyFSEELV347cgn%2Be%2Fka2YmonBD5OzYu8KBF8e7l%2Bojv1P%2BaONpuIICYNfiS3DEnkr7vPj8M3Bu9nKJIGL2qKSw4M%3D&u2=UTsLO4u4LxV6f2Ka&width=2560'},
+            ].map((b,i) => `
+            <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
               <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
-              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%);"></div>
-              <div style="position:absolute;bottom:.75rem;left:.875rem;font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:#fff;">${b.brand}</div>
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%);"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:.75rem .875rem;">
+                <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:#fff;line-height:1.2;">${b.brand}</div>
+                <div style="font-size:.58rem;color:rgba(255,255,255,.55);margin-top:.2rem;">${b.sub}</div>
+              </div>
             </div>`).join('')}
           </div>
-          <div style="padding:.875rem 1.25rem;background:rgba(184,150,12,.04);border-top:1px solid var(--border);">
-            <p style="font-size:.75rem;color:var(--ink-muted);margin:0;"><i class="fas fa-info-circle" style="color:var(--gold);margin-right:.4rem;"></i>Full brand portfolio deck available post-NDA. Additional brands include Patio, Boutique, RuinPub, Shor, Khybani & more.</p>
+          <!-- Row 2: 3 cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid var(--border);">
+            ${[
+              {brand:'Noor by Khubani', sub:'Fine Dining · Sector 38, Noida', img:'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560'},
+              {brand:'Begam', sub:'Experiential F&B · Delhi NCR', img:'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560'},
+              {brand:'Khybani', sub:'Pan-Asian · Aerocity, Delhi', img:'https://sspark.genspark.ai/cfimages?u1=cbpOV8dZBBbfRgUonfsVjfKmSPk5O3UhiRBgrsaA2kuOj7pC7ZsA1RnVF6c6xvsLlEnyLzjf7qdbM5OkRB6auNZSyjtAYznngx9WxNpLPTg1EhG9gDPSvSEBm60LbpJBkZQ%3D&u2=qc5jDRC%2B7dYAurj3&width=2560'},
+            ].map((b,i) => `
+            <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
+              <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%);"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:.75rem .875rem;">
+                <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:#fff;line-height:1.2;">${b.brand}</div>
+                <div style="font-size:.58rem;color:rgba(255,255,255,.55);margin-top:.2rem;">${b.sub}</div>
+              </div>
+            </div>`).join('')}
+          </div>
+          <!-- Row 3: 3 cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
+            ${[
+              {brand:'Informal', sub:'Casual Dining · Delhi NCR', img:'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560'},
+              {brand:'Ruin Pub', sub:'Bar & Lounge · South Delhi', img:'https://sspark.genspark.ai/cfimages?u1=NfraJ2NdyeYb3OVOR37DdxRbaYc%2BN2jkpLSbyVPiP53CECYrq1t85qqORy3Og%2FvY7qlQvMKuhy8SirxvUVornh3aqI6O8kq5NVKuUTA61Q%2Fe%2Fs66jZgQCRnAoecnFGgj0QQauEYBapH8aEWGh3LchaA%3D&u2=tcK7qZkt78Y26ej6&width=2560'},
+              {brand:'Imperfecto (Original)', sub:'Flagship · Janpath, New Delhi', img:'https://sspark.genspark.ai/cfimages?u1=SCTSJ3oy5X2N4PKeuD9IhoL%2BFq96YGbhI5pORQAU4GQRCMXWny6Ctd065%2F1PshUnpkgs4o9Xto3A3vatwf8JFZOntUhgVJkdDm0OlwiZwH7vzYaoeEUkgkl3auBUKEKNp%2FZ6O%2BzOa9my5gatASDTnM3QbMbN%2FA%3D%3D&u2=7dMBfFutmUjpxE3b&width=2560'},
+            ].map((b,i) => `
+            <div style="position:relative;height:190px;overflow:hidden;${i<2?'border-right:1px solid var(--border);':''}">
+              <img src="${b.img}" alt="${b.brand}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 55%);"></div>
+              <div style="position:absolute;bottom:0;left:0;right:0;padding:.75rem .875rem;">
+                <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:#fff;line-height:1.2;">${b.brand}</div>
+                <div style="font-size:.58rem;color:rgba(255,255,255,.55);margin-top:.2rem;">${b.sub}</div>
+              </div>
+            </div>`).join('')}
+          </div>
+          <div style="padding:.875rem 1.25rem;background:rgba(184,150,12,.04);border-top:1px solid var(--border);display:flex;align-items:flex-start;gap:.625rem;">
+            <i class="fas fa-lock" style="color:var(--gold);font-size:.7rem;flex-shrink:0;margin-top:.1rem;"></i>
+            <p style="font-size:.72rem;color:var(--ink-muted);margin:0;line-height:1.5;">Full brand portfolio deck — including unit economics, P&L per outlet, expansion pipeline, and franchising model — is available post-NDA execution. Sign the NDA above to access the complete Information Memorandum.</p>
           </div>
         </div>` : ''}
 
