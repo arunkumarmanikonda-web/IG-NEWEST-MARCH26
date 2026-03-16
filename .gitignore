@@ -40,7 +40,17 @@ build/Release
 
 # Dependency directories
 node_modules/
+node__modules/
 jspm_packages/
+
+# Wrangler local dev state (D1 SQLite, KV blobs, tmp bundles)
+.wrangler/
+
+# PM2 local files
+.pm2/
+
+# Secrets / dev vars
+.dev.vars
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
