@@ -1034,7 +1034,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   </div>
 </div>` : l.id === 'belcibo-hospitality-platform' ? `
 <div style="position:relative;background:#0a0a0a;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560" alt="Belcibo Imperfecto Shor" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560" alt="Khubani at Hyatt Andaz Delhi — Belcibo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
