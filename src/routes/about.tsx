@@ -7,8 +7,10 @@ app.get('/', (c) => {
   const content = `
 
 <!-- ABOUT HERO -->
-<div class="hero-dk">
+<div class="hero-dk" style="position:relative;">
   <div class="hero-dk-grid"></div>
+  <!-- India skyline / commercial real estate background -->
+  <div style="position:absolute;inset:0;background-image:url('/static/mandates/hero/hero-dlf-gurgaon.jpg');background-size:cover;background-position:center 35%;opacity:.15;pointer-events:none;"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 65% at 75% 50%,rgba(184,150,12,.06) 0%,transparent 55%);pointer-events:none;"></div>
   <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,transparent,var(--ink));pointer-events:none;"></div>
   <!-- Floating year accent -->

@@ -20,9 +20,11 @@ app.get('/', (c) => {
   const content = `
 
 <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
-<div class="hero-dk">
+<div class="hero-dk" style="position:relative;">
   <div class="hero-dk-grid"></div>
   <div class="hero-dk-radial"></div>
+  <!-- India commercial skyline background image -->
+  <div style="position:absolute;inset:0;background-image:url('/static/mandates/hero/hero-dlf-gurgaon.jpg');background-size:cover;background-position:center 40%;opacity:.18;pointer-events:none;"></div>
   <!-- Bottom gradient fade -->
   <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,transparent,var(--ink));pointer-events:none;"></div>
 
@@ -697,16 +699,17 @@ app.get('/:id', (c) => {
   // After acceptance, user sees full mandate details and can submit EOI.
   const ndaModal = l.nda ? `
 <!-- ══════════════════════════════════════════════════════════════════════
-     NDA GATE — FLOATING PANEL (non-blocking teaser approach)
-     Basic project info visible beneath; detailed specs + financials + EOI
-     locked until NDA accepted. Collects: Full Name · Email · Phone · Org.
+     NDA BANNER — Inline (non-blocking). Page is fully browsable.
+     Specs + financials + EOI locked until NDA accepted.
      Storage: sessionStorage['ig_nda_${l.id}'] = JSON
 ═══════════════════════════════════════════════════════════════════════ -->
-<div id="nda-gate" style="position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-start;justify-content:center;padding:1rem;background:rgba(6,6,6,.88);backdrop-filter:blur(10px);overflow-y:auto;">
+<div id="nda-gate" style="display:none;position:fixed;inset:0;z-index:9000;align-items:flex-start;justify-content:center;padding:1rem;background:rgba(6,6,6,.88);backdrop-filter:blur(10px);overflow-y:auto;" onclick="if(event.target===this)igCloseNDA()">
   <div style="width:100%;max-width:580px;background:#fff;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.7);margin:2rem auto;">
 
     <!-- Modal header (dark) with mandate teaser -->
     <div style="background:var(--ink);padding:1.5rem 2rem;position:relative;overflow:hidden;">
+      <!-- Close button -->
+      <button onclick="igCloseNDA()" style="position:absolute;top:1rem;right:1rem;width:32px;height:32px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;transition:all .2s;" title="Close" onmouseover="this.style.background='rgba(255,255,255,.18)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.color='rgba(255,255,255,.7)'">&times;</button>
       <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,150,12,.08) 0%,transparent 60%);pointer-events:none;"></div>
       <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
         <div style="width:44px;height:44px;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -840,26 +843,29 @@ app.get('/:id', (c) => {
 (function(){
   var KEY = 'ig_nda_${l.id}';
   var gate = document.getElementById('nda-gate');
-  // Already accepted in this session?
+  // Already accepted in this session? → unlock content (gate stays hidden/closed)
   try {
     var stored = sessionStorage.getItem(KEY);
     if (stored) {
       var d = JSON.parse(stored);
       if (d && d.accepted) {
-        if (gate) gate.style.display = 'none';
-        // Unlock content sections immediately
+        // Gate stays display:none — unlock content directly
         if (typeof igUnlockContent === 'function') {
           igUnlockContent(d.name, d.email, d.phone, d.org);
         } else {
-          // Fallback: direct unlock
           var eoiLock = document.getElementById('eoi-lock-notice');
           var eoiSec  = document.getElementById('eoi-section');
           var specLock = document.getElementById('spec-lock-overlay');
-          if (eoiLock) eoiLock.style.display = 'none';
-          if (eoiSec)  eoiSec.style.display = 'block';
-          if (specLock) specLock.style.display = 'none';
+          var oLock    = document.getElementById('overview-lock');
+          if (eoiLock)  eoiLock.style.display  = 'none';
+          if (eoiSec)   eoiSec.style.display   = 'block';
+          if (specLock) specLock.style.display  = 'none';
+          if (oLock)    oLock.style.display     = 'none';
         }
-        // Pre-fill EOI form with stored name/email/phone/org
+        // Hide the NDA banner reminder too
+        var banner = document.getElementById('nda-banner');
+        if (banner) banner.style.display = 'none';
+        // Pre-fill EOI form
         setTimeout(function(){
           var en = document.getElementById('eoi-name');  if(en && d.name)  en.value = d.name;
           var ee = document.getElementById('eoi-email'); if(ee && d.email) ee.value = d.email;
@@ -924,7 +930,7 @@ function igAcceptNDA(mandateId) {
   var gate = document.getElementById('nda-gate');
   if (gate) {
     gate.style.opacity = '0';
-    setTimeout(function(){ gate.style.display = 'none'; }, 350);
+    setTimeout(function(){ gate.style.display = 'none'; gate.style.opacity = '1'; document.body.style.overflow = ''; }, 350);
   }
 
   // Send NDA acceptance log to API (fire-and-forget)
@@ -948,11 +954,22 @@ function igAcceptNDA(mandateId) {
 }
 
 function igScrollToNDA() {
+  // Open the NDA modal
   var gate = document.getElementById('nda-gate');
-  if (gate && gate.style.display !== 'none') {
+  if (gate) {
+    gate.style.display = 'flex';
     gate.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
     var inner = gate.querySelector('div');
     if (inner) { inner.style.animation = 'none'; setTimeout(function(){ inner.style.animation = 'fadeSlideUp .3s ease'; }, 10); }
+  }
+}
+
+function igCloseNDA() {
+  var gate = document.getElementById('nda-gate');
+  if (gate) {
+    gate.style.opacity = '0';
+    setTimeout(function(){ gate.style.display = 'none'; gate.style.opacity = '1'; document.body.style.overflow = ''; }, 350);
   }
 }
 
@@ -984,6 +1001,10 @@ function igUnlockContent(name, email, phone, org) {
   var badgeName = document.getElementById('nda-badge-name');
   if (badge) badge.style.display = 'block';
   if (badgeName && name) badgeName.textContent = 'Viewing as ' + name;
+
+  // Hide the NDA banner
+  var banner = document.getElementById('nda-banner');
+  if (banner) banner.style.display = 'none';
 }
 </script>` : ''
 
@@ -1012,7 +1033,7 @@ ${ndaModal}
 <!-- ══ HERO BANNER (Special featured mandates) ════════════════════════ -->
 ${l.id === 'prism-tower-gurgaon' ? `
 <div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="/static/mandates/gallery/img-00.jpg" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/prism/prism-myhq.jpg" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;object-position:center 30%;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1034,7 +1055,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   </div>
 </div>` : l.id === 'belcibo-hospitality-platform' ? `
 <div style="position:relative;background:#0a0a0a;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="/static/mandates/gallery/img-03.jpg" alt="Khubani at Hyatt Andaz Delhi — Belcibo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/belcibo/belcibo-cover.jpg" alt="Khubani at Hyatt Andaz Delhi — Belcibo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4;object-position:center 30%;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1059,7 +1080,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   </div>
 </div>` : l.id === 'sawasdee-jlg-noida' ? `
 <div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="/static/mandates/gallery/img-13.jpg" alt="Sawasdee JLG Galleria Noida" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;">
+  <img src="/static/mandates/sawasdee/sawasdee-cover.jpg" alt="Sawasdee JLG Galleria Noida" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4;object-position:center 30%;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
@@ -1080,6 +1101,21 @@ ${l.id === 'prism-tower-gurgaon' ? `
     </div>
   </div>
 </div>` : ''}
+
+<!-- ══ NDA INVITATION BANNER ════════════════════════════════════════════ -->
+<div id="nda-banner" style="background:linear-gradient(90deg,var(--ink) 0%,#0d1117 100%);border-bottom:2px solid rgba(184,150,12,.3);padding:.75rem 0;">
+  <div class="wrap" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:.625rem;flex:1;min-width:200px;">
+      <i class="fas fa-shield-alt" style="color:var(--gold);font-size:.9rem;flex-shrink:0;"></i>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.75);margin:0;line-height:1.4;">
+        <strong style="color:#fff;">Confidential Mandate</strong> · Sign a quick NDA to unlock full specifications, financials, SPOC contact &amp; submit EOI.
+      </p>
+    </div>
+    <button onclick="igScrollToNDA()" style="background:var(--gold);color:#fff;border:none;padding:.5rem 1.25rem;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:.5rem;flex-shrink:0;transition:background .2s;" onmouseover="this.style.background='#a37a08'" onmouseout="this.style.background='var(--gold)'">
+      <i class="fas fa-file-signature" style="font-size:.65rem;"></i>Sign NDA &amp; Unlock Details
+    </button>
+  </div>
+</div>
 
 <!-- ══ DETAIL HERO ══════════════════════════════════════════════════════ -->
 <div style="background:var(--ink);position:relative;overflow:hidden;">
@@ -1786,13 +1822,14 @@ ${l.id === 'prism-tower-gurgaon' ? `
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
       ${others.map((x: any) => {
-        const xHasImg = x.images && x.images.length > 0
+        const xCover = x.coverImage || (x.images && x.images.length > 0 ? x.images[0] : null)
+        const xHasImg = !!(xCover)
         return `
       <a href="/listings/${x.id}" style="display:block;background:var(--parch);border:1px solid var(--border);overflow:hidden;transition:all .25s;text-decoration:none;"
          onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 8px 28px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
         <div style="height:160px;overflow:hidden;position:relative;background:#1a1a1a;">
           ${xHasImg
-            ? `<img src="${x.images[0]}" alt="${x.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+            ? `<img src="${xCover}" alt="${x.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent);"></div>`
             : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#111 0%,#1a1a2e 100%);">
                 <i class="fas fa-lock" style="color:var(--gold);font-size:1.5rem;margin-bottom:.5rem;"></i>

@@ -466,7 +466,8 @@ button{font-family:inherit;}
 .car-ov-main{position:absolute;inset:0;background:linear-gradient(108deg,rgba(3,3,6,.90) 0%,rgba(3,3,6,.58) 48%,rgba(3,3,6,.18) 100%)}
 .car-ov-btm{position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to top,rgba(3,3,6,.65) 0%,transparent 100%)}
 .car-ov-gold{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 85%,rgba(184,150,12,.06) 0%,transparent 55%)}
-.car-body{position:relative;z-index:2;height:100%;display:flex;align-items:center}
+/* Car body: flex-start so text is always below the fixed header, never overlapping it */
+.car-body{position:relative;z-index:2;height:100%;display:flex;align-items:flex-start;padding-top:calc(var(--nav-h) + 5rem);padding-bottom:8rem;}
 /* slide text animation — staggered reveal */
 .s-txt{opacity:0;transform:translateY(32px);transition:opacity .85s cubic-bezier(.4,0,.2,1) .25s,transform .85s cubic-bezier(.4,0,.2,1) .25s}
 .car-slide.on .s-txt{opacity:1;transform:translateY(0)}
