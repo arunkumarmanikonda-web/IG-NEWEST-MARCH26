@@ -1,0 +1,95 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "india-gully",
+  "compatibility_date": "2026-02-27",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+
+  // ── KV Namespaces ────────────────────────────────────────────────────────────
+  // ig_session_kv:   server-side session storage (replaces in-memory SESSION_STORE)
+  // ig_ratelimit_kv: rate-limit counters + lockout timers per IP
+  // ig_audit_kv:     append-only audit event log
+  "kv_namespaces": [
+    {
+      "binding": "IG_SESSION_KV",
+      "id": "e649ea31983d43b38e679de75dd061d8"
+    },
+    {
+      "binding": "IG_RATELIMIT_KV",
+      "id": "aafa0f0466e84939b9bfb20bd48e0b6b"
+    },
+    {
+      "binding": "IG_AUDIT_KV",
+      "id": "26df48cf2353429a9de6d677d3257578"
+    }
+  ],
+
+  // ── D1 Database ──────────────────────────────────────────────────────────────
+  // Local dev: --local flag uses .wrangler/state/v3/d1 SQLite automatically.
+  // Production: create with `npx wrangler d1 create india-gully-production`
+  //   then replace PENDING_D1_ID with the returned database_id from wrangler output.
+  // Step 1: Upgrade API token to include D1:Edit permission at dash.cloudflare.com/profile/api-tokens
+  // Step 2: Run: npx wrangler d1 create india-gully-production
+  // Step 3: Replace PENDING_D1_ID below with the returned database_id
+  // Step 4: Run: npx wrangler d1 migrations apply india-gully-production
+  // Step 5: Re-deploy: npm run deploy
+  // PENDING D1:Edit permission — commenting out for production deploy (KV+USER_STORE fallback active)
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "india-gully-production",
+  //     "database_id": "PENDING_D1_ID"
+  //   }
+  // ],
+
+  // ── R2 Storage ───────────────────────────────────────────────────────────────
+  // Document storage: board packs, contracts, employee files
+  // Create with: npx wrangler r2 bucket create india-gully-docs
+  // PENDING: Enable once R2 bucket is created
+  // "r2_buckets": [
+  //   {
+  //     "binding": "DOCS_BUCKET",
+  //     "bucket_name": "india-gully-docs"
+  //   }
+  // ],
+
+  // ── Environment Variables (non-secret) ───────────────────────────────────────
+  "vars": {
+    "PLATFORM_ENV":       "production",
+    "PLATFORM_VERSION":   "2026.50",
+    "DPDP_DPO_EMAIL":     "dpo@indiagully.com",
+    "SUPPORT_EMAIL":      "admin@indiagully.com",
+    "SESSION_TTL_SECS":   "1800",
+    "RATE_MAX_ATTEMPTS":  "5",
+    "LOCKOUT_SECS":       "300"
+  }
+
+  // ── Secrets (set via: wrangler pages secret put SECRET_NAME) ─────────────────
+  // These are NEVER in wrangler.jsonc — use Cloudflare dashboard or CLI:
+  //
+  // Payment (Razorpay):
+  //   wrangler pages secret put RAZORPAY_KEY_ID            --project-name india-gully
+  //   wrangler pages secret put RAZORPAY_KEY_SECRET        --project-name india-gully
+  //   wrangler pages secret put RAZORPAY_WEBHOOK_SECRET    --project-name india-gully  ← J2 NEW
+  //
+  // Email (SendGrid):
+  //   wrangler pages secret put SENDGRID_API_KEY           --project-name india-gully
+  //
+  // SMS (Twilio):
+  //   wrangler pages secret put TWILIO_ACCOUNT_SID         --project-name india-gully  ← J2 NEW
+  //   wrangler pages secret put TWILIO_AUTH_TOKEN          --project-name india-gully  ← J2 NEW
+  //   wrangler pages secret put TWILIO_FROM_NUMBER         --project-name india-gully  ← J2 NEW
+  //
+  // Documents (DocuSign):
+  //   wrangler pages secret put DOCUSIGN_API_KEY           --project-name india-gully
+  //   wrangler pages secret put DOCUSIGN_ACCOUNT_ID        --project-name india-gully
+  //
+  // GST:
+  //   wrangler pages secret put GST_GSP_API_KEY            --project-name india-gully
+  //
+  // Platform:
+  //   wrangler pages secret put JWT_SECRET                 --project-name india-gully
+  //   wrangler pages secret put TOTP_ENCRYPT_KEY           --project-name india-gully
+}
