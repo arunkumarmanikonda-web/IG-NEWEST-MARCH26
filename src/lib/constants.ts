@@ -721,15 +721,13 @@ export const LISTINGS = [
     desc: 'Scalable multi-brand F&B platform operating across Delhi NCR and Goa. Growth equity mandate seeking strategic capital partner for pan-India rollout. Brands include Informal, Imperfecto, Khubani, Habibi, Begum, Noor, Imperfecto Boutique.',
     longDesc: `Growth Equity Investment Opportunity — Belcibo Hospitality is a scalable multi-brand F&B platform operating across Delhi NCR and Goa markets. The group operates 15+ outlets across its branded portfolio.\n\nBrands include: Informal, Imperfecto, Imperfecto Boutique, Khubani, Habibi, Begum, and Noor — covering the full spectrum from casual dining to premium experiential F&B.\n\nThe platform is seeking a strategic capital partner to accelerate brand portfolio expansion. Strong unit economics with a proven operational playbook ready for pan-India rollout. India Gully is the exclusive growth equity advisor.`,
     images: [
-      // Source: Belcibo brand portfolio — Imperfecto Shor, Begam, Noor by Khubani, Informal
-      // Images sourced from public restaurant review sites (Zomato, Justdial, Swiggy, Instagram)
-      'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=sfl3s3dWUNvQWuHFHWq%2Bguu9oEEOMTbbzylJr2vZTEJVyw0SgbckABFLXKDCjYLBGSXB3Gf8AbvHH6JYZlNiB3BHERH8S3wSYdQ2zjUteZN%2BPdpd%2BD7b%2FKIbgtMUqiJGfVjtrUi0c933RL4%2FlY%2BD4kf%2Bz9O2M7A%3D&u2=T8pWCzmyoGPlEBXO&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=cY0QhVLuY%2Fn7t02wF3OBY7ofm5kKimLFM64VCuDG7Fpg9UiOXMIfxf26iwbTQDIuVKCgeGy7NVLghGWqGIvyG2jmYhsa5aLoqNKSH3QfAHyrirlWKJabiceYF%2BHWdN6pUwGcnzPtq0AbmxY%2BR7M%3D&u2=y7uzoxXO4B3%2FwO71&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=mVEhrYyka2lqnbvbQ3Nx%2F2r28h0ByuIXS35mMuhM1bXmUI686LSNTldm7xwxkNy0Rai5WjEDACI6uYISgOsd77uhvpVK9U6YYhdKFZKttIYGyeMVHwVEspXSIgIO0bEy8GoEDi07h1LPpi0D1ep9xw9Gs0QsZv8AqVd%2BV9Z5sAttXmk3pJg%2BDPzTL2w8Z%2FfwO6aS7nttLG4IBA%3D%3D&u2=vHWB83aScSefDiaC&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=SCTSJ3oy5X2N4PKeuD9IhoL%2BFq96YGbhI5pORQAU4GQRCMXWny6Ctd065%2F1PshUnpkgs4o9Xto3A3vatwf8JFZOntUhgVJkdDm0OlwiZwH7vzYaoeEUkgkl3auBUKEKNp%2FZ6O%2BzOa9my5gatASDTnM3QbMbN%2FA%3D%3D&u2=7dMBfFutmUjpxE3b&width=2560',
+      // Source: Khubani at Hyatt Andaz Delhi (Belcibo / Noor), India luxury dining
+      'https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=NO6WJwz0zBnHkE9uaUuChcYcVKW%2BjKuHweYmbRA0FIZsjuUgoBKiTw6vdezZa0NQFN0LF4YLN7mWxGG3zNzkfb2cQHVbIwv3Q9%2BO8bN6aABn6RbHVH3JASjvY01ijiUeRZqAQRPzheHowuSpwqk%2BQ1JD7KV%2B%2F98M&u2=G4eRtqUbRQd0xAK1&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=Kotd9I2EW8wspNxnOnqJVuZFKezujBOHi91EvtXVlDCUQQWUmOcprjZJgWXayZfpgCeVNOjU8kW6rKEGyy8IUEeJs%2B0GJWdPhoshu5Wr%2BzSR3Jb%2FTTtQvFqG1wO7CT5P2m2XvoGHpSSxn5v44TDkfEpZfA%3D%3D&u2=%2BCuaMNeb%2FssIvMmU&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=9Y0dbMcddVo72b3Wkg8lgta9NLMHgREDQUgGQscCaq0n389cPi8z%2FD0Wtf29gG2rwdCwnmdQRZOWVCgo0Hl4e4kM%2FvKJsPsfOHzloM3NCRRSgwdKlnhbxH3JZiuyNCT3%2FfwNM6SZjHp2GDWVtDwt&u2=eup4cYVj675FHRv1&width=2560',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=%2Bz0187I11Q6PyxPekyTyFXXQfmD%2BF668EVnVOia4EyI0cFRP3TEywZsiZ4jmFmKZfmHfdYwx%2Bbc3BJYH%2Bkb93%2BiaCvYAkHns%2FVsxJdpjGLGEcT%2BqtrBtoJmjFZU%2F3Tkuuux5VEo0zr3DTk%2B%2F2ojDBdwTqVu2wLhL00xRIJxxlEXKal7ni9h%2B9q5bbRLUsj%2BN4Ln%2BFYX8TixeAVI3QgqlhDkI97QpoMOB1k4tYzkW7f%2FADVn2LMEbqzd%2Bbkov10bjDrHV79n0JftTfgmtx5DErOHuRUsb8Aw4xxi7SFfqOabe5WYYBJr2IgUPnOkKhHPLyfaXxLx%2BuhWxf9kLyp59eIzuCeRO%2FYk%3D&u2=C9lLIi%2FDpHcv3ST3&width=2560',
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=b%2B6wMqL3No5W9%2BZffx%2BGTpzyC0J9RNzL0wkVS%2Bg8OC32KM6VL9b5X8dA0k0foF%2BW5qz%2FVZl1vEaRfSQozWprR8antIxTyISi4d3F7CRCRGzq8q3ANRMzZy6QODE%3D&u2=K6AkEfE7F1y5AONr&width=2560',
     specs: {
       'Platform': 'Belcibo Hospitality',
       'Markets': 'Delhi NCR & Goa',
@@ -1047,11 +1045,12 @@ export const LISTINGS = [
     desc: "Structure-ready 114-key hotel integrated with retail mall in Noida's commercial corridor. Independent access and operational flexibility. Multiple revenue streams from hospitality-retail integrated development.",
     longDesc: `Mixed-Use Development Opportunity — Sawasdee JLG Galleria is a structure-ready 114-key hotel integrated with a retail mall in Noida's commercial corridor. The development offers independent access and operational flexibility for the hotel component.\n\nThe asset represents an attractive entry for investors seeking integrated hospitality-retail assets with multiple revenue streams. The hotel and mall components are separately operable, providing flexibility in operation or management of each vertical.\n\nProprietary sourcing by India Gully. The asset is negotiation-ready for qualified buyers. Suitable for hospitality operators, retail developers, or institutional investors seeking mixed-use integrated assets in NCR.`,
     images: [
-      // Source: Square Yards / InvestorMart / Regrob — Sawasdee JLG Galleria, Noida
-      'https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560',
-      'https://sspark.genspark.ai/cfimages?u1=kGimdoE8Xcgud58iYZA8A9tUNNkWsODJWOPEkq2IypTR1wtAl9tAMb482KFBZ79k8xREFNvvCj%2Be6I3s5AtTWp9xdCBWinJBR0JpSDpbSgWvm%2BQ1Kwyt1r6Y0h9IWrArhRP9I5txW482Qn3fTKjRQwxiMti096yW9Bb3Rv54Hn6PHA%3D%3D&u2=0PIPgO9kRiA8ZGLW&width=2560',
+      // Source: Hyatt Noida / India hospitality hotel — Sawasdee JLG Galleria, Noida
+      'https://sspark.genspark.ai/cfimages?u1=oMHrMKXCRzbu7CZFFKWnRarcMj%2FQdMza%2BcnOV7FWAUGgn3Ft86zKEcPMOKepepEfsgRrQfMhUoLrkaw%2BfEdrrNcZrfjCIc7mcISWKEcy%2FtV1tYpC5LJl1Tg%3D&u2=f6JAmD0cUFuyjIPo&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=eVkBdWAZws91FtPF57uJn8bPkA%2BnveJEDsD2P4Q0Du5DFIhoemTlSiP9p%2FURRxpOm8qnBtP6ZpslMFTfer0gw3drVeRXwmStqI9XiPV3rkM%2FOeNXjLgCwxbvDW1zO7WW%2BIguh%2FP7XfarLProOlOTfjU2V9X5&u2=xHnLVl1xfK%2BCwenC&width=2560',
+      'https://sspark.genspark.ai/cfimages?u1=wo4kZ2acHdPzCubtb8gUyeO%2F1MVRtp2i9rBM%2F1W5PlnyWFVbVhqe6s3mUTfpUm98fl0N2ocbosor4YTsaUpn%2FCQIyDP075hGBe%2FGt18APbceew%3D%3D&u2=rQg0AcJer2O%2Bu0Xq&width=2560',
     ],
-    coverImage: 'https://sspark.genspark.ai/cfimages?u1=T%2FXR1ywDCHXzuOG4oTZbKUQqIL4oEMkQ7dS7YCYI%2FBDnz57AQ4jPF18oW6dEhKCpBdyccFnMyojAjaBvQODwABzazxb5D3Mzx2qZLF3OnmaxdXtRo2vn2QVNK0kfmvmKRnXmv34lvsl7gA3dGVUzcxqfRth4R0GD0p%2BhR5cSLhU1N8SLwbW3V1M2&u2=V8D5sgTkvjI3BK6Y&width=2560',
+    coverImage: 'https://sspark.genspark.ai/cfimages?u1=oMHrMKXCRzbu7CZFFKWnRarcMj%2FQdMza%2BcnOV7FWAUGgn3Ft86zKEcPMOKepepEfsgRrQfMhUoLrkaw%2BfEdrrNcZrfjCIc7mcISWKEcy%2FtV1tYpC5LJl1Tg%3D&u2=f6JAmD0cUFuyjIPo&width=2560',
     specs: {
       'Entity': 'Sawasdee JLG Galleria',
       'Location': 'Noida, Uttar Pradesh',
