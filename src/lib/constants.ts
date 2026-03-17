@@ -670,14 +670,14 @@ export const LISTINGS = [
     desc: 'Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, part of a 4-star hotel property. 312 keys. Located within 10 km of Sikanderpur Metro with excellent road connectivity. REIT-listing potential.',
     longDesc: `100% Asset Acquisition Opportunity — Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, forming part of a 4-star hotel property complex in Gwalpahari, Gurugram.\n\nThe asset is located within 10 km of Sikanderpur Metro Station with excellent road connectivity to all major Gurugram micro-markets. 5-star hotels, hospitals, and malls are within a 2 km radius. The property offers multiple exit strategies including REIT listing potential or a strata sale model.\n\nIdeal for institutional investors seeking core+ returns. India Gully is advising on the acquisition process and due diligence. Currently at the reference transaction – due diligence stage.`,
     images: [
-      // Source: JLL Listing / Architecture MasterPrize / myHQ — Prism Tower, Gurgaon-Faridabad Road
-      '/static/mandates/prism/prism-architect-prize.jpg',
-      '/static/mandates/gallery/img-00.jpg',
+      // Source: JLL Listing / myHQ — Prism Tower, Gurgaon-Faridabad Road
       '/static/mandates/prism/prism-myhq.jpg',
+      '/static/mandates/prism/prism-tower-hero.jpg',
+      '/static/mandates/gallery/img-00.jpg',
       '/static/mandates/gallery/img-01.jpg',
       '/static/mandates/gallery/img-02.jpg',
     ],
-    coverImage: '/static/mandates/prism/prism-architect-prize.jpg',
+    coverImage: '/static/mandates/prism/prism-myhq.jpg',
     specs: {
       'Entity': 'Confidential (JLL Listed)',
       'Location': 'Gurgaon-Faridabad Road, Gwalpahari, Gurugram',
