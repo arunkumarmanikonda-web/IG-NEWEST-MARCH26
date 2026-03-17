@@ -100,7 +100,23 @@ All portals require credentials provisioned by the system administrator.
 
 ---
 
-## 🚀 Phase 17 — Insights Expansion, Pipeline Dashboard, India Map, Header Fix, JS Fix (v29)
+## 🚀 Phase 28–33 — India Map Polish, Content Expansion & RECENT_INSIGHTS (v36)
+
+**Version: v36 | Build: 4.0 MB | Routes: 23+ all 200 OK | Commit: 1148359 | Date: March 2026**
+
+### ✅ Phase 28–33 Deliverables
+
+| Area | What Changed |
+|------|-------------|
+| **J&K Claim Polygon (Phase 29/31/32)** | Full J&K claim polygon added to India map (`id=jk-full-claim`). Covers POK/Gilgit-Baltistan (left lobe), Indian-administered J&K/Ladakh (centre), Aksai Chin (right) per Survey of India claimed boundary. Trapezoidal shape x=67–187, dashed blue stroke, light fill overlay, "J&K / India's Claim" labels. Caption updated: "J&K shown per India's claimed boundaries". |
+| **Pin Label Overlap Fix (Phase 32)** | Kasauli·Chail label moved LEFT (text-anchor:end, x=124) to avoid overlap with Chandigarh. Chandigarh pin lowered to cy=112, label stays right (x=143). Both pins fully readable at all screen sizes. |
+| **Hyderabad Pin (Phase 33)** | 7th city pin added at cx=156, cy=323 (HITEC City · Banjara Hills, lon 78.5°E). Colour #9D4E15. Tooltip: "HITEC City · Banjara Hills · Advisory pipeline". Legend entry added to SVG strip. |
+| **RECENT_INSIGHTS Refreshed (Phase 33)** | Homepage "Recent Insights" strip updated to 3 newest March 2026 articles: Cloud Kitchens & Dark Stores (HORECA), Hotel Brand Affiliation 2026 (Hospitality), Entertainment Destination Development 2026 (Entertainment). |
+| **5 Stub Articles Expanded (Phase 33)** | `india-hospitality-2024` 285w→787w (RevPAR/occupancy data, 5 segment analysis, brand expansion table); `entertainment-destinations-india` 305w→754w (₹38,000 Cr pipeline, FEC P&L model, format typology); `horeca-procurement-strategy` 235w→727w (18-month critical path, 3-level vendor QC, budget control); `debt-special-situations-hospitality` 245w→648w (CIRP valuation dynamics, 5-workstream DD, post-resolution IRR data); `retail-leasing-malls-india` 304w→768w (footfall premium benchmarks, Tier 2 dynamics, lease negotiation strategy). |
+
+---
+
+
 
 **Version: v29 | Build: 3.9 MB | Routes: 23+ all 200 OK | Deploy: https://d0b3ecef.india-gully.pages.dev**  
 **Commit: 912302c | Date: March 2026**
