@@ -1362,6 +1362,8 @@ body{overflow-x:hidden;}
 .india-map-box{background:linear-gradient(135deg,#f0ebe0 0%,#e8e1d0 100%);transition:background .3s;}
 .india-map-wrap svg .india-land{fill:#e8ddc8;stroke:#b8a878;stroke-width:1.2;stroke-linejoin:round;}
 .india-map-wrap svg text{fill:#444;}
+/* Map pin group transitions — supports auto-cycle animation */
+.map-pin-group{transition:opacity .4s ease, transform .4s ease;transform-box:fill-box;transform-origin:center center;}
 
 /* ── tel-card (quick dial team card) ─────────── */
 .tel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;}

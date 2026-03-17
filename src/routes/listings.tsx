@@ -882,6 +882,24 @@ app.get('/:id', (c) => {
       // no-op: validation happens on click
     });
   }
+  // ── AUTO-OPEN NDA gate 2.2s after page load (if not yet accepted) ──────
+  var _ndaKey = 'ig_nda_${l.id}';
+  try {
+    var _stored = sessionStorage.getItem(_ndaKey);
+    var _accepted = _stored && JSON.parse(_stored).accepted;
+    if (!_accepted) {
+      setTimeout(function() {
+        var _gate = document.getElementById('nda-gate');
+        if (_gate && _gate.style.display === 'none') {
+          _gate.style.display = 'flex';
+          _gate.scrollTop = 0;
+          document.body.style.overflow = 'hidden';
+          var _inner = _gate.querySelector('div');
+          if (_inner) { _inner.style.animation = 'none'; setTimeout(function(){ _inner.style.animation = 'fadeSlideUp .45s ease'; }, 10); }
+        }
+      }, 2200);
+    }
+  } catch(e) {}
 })();
 
 function igAcceptNDA(mandateId) {

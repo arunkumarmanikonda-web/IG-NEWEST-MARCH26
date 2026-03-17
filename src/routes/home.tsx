@@ -649,6 +649,102 @@ app.get('/', (c) => {
               });
             }
           }).catch(function(){});
+
+          // ── AUTO-CYCLE through mandate pins like Google Earth ──────────
+          var _pins = ['delhi','chandigarh','himachal','jaipur','mumbai','bengaluru'];
+          var _pinIdx = 0;
+          var _cycleTimer = null;
+          var _userInteracting = false;
+          var _interactTimer = null;
+
+          function igMapCyclePin(id) {
+            var tt = document.getElementById('map-tooltip');
+            var groups = document.querySelectorAll('.map-pin-group');
+            groups.forEach(function(g){ g.style.opacity = '0.45'; g.style.transform = 'scale(1)'; g.style.transition = 'opacity .4s,transform .4s'; });
+            var active = document.getElementById('pin-'+id);
+            if (active) {
+              active.style.opacity = '1';
+              active.style.transform = 'scale(1.25)';
+              active.style.transition = 'opacity .4s,transform .4s';
+            }
+            if (tt && tooltips[id]) {
+              var d = tooltips[id];
+              tt.innerHTML = '<strong style="display:block;font-size:.72rem;color:'+d.color+';margin-bottom:.2rem;">'+d.title+'</strong>'+
+                '<span style="display:block;font-size:.65rem;color:rgba(255,255,255,.65);margin-bottom:.2rem;">'+d.sub+'</span>'+
+                '<span style="font-size:.65rem;color:#D4AE2A;font-weight:700;">'+d.val+'</span>';
+              tt.style.display = 'block';
+              tt.style.top = '12px'; tt.style.right = '12px'; tt.style.left = 'auto'; tt.style.transform = 'none';
+            }
+          }
+
+          function igMapResetAll() {
+            var groups = document.querySelectorAll('.map-pin-group');
+            groups.forEach(function(g){ g.style.opacity = '1'; g.style.transform = 'scale(1)'; });
+            var tt = document.getElementById('map-tooltip');
+            if (tt) tt.style.display = 'none';
+          }
+
+          function igStartCycle() {
+            _cycleTimer = setInterval(function(){
+              if (_userInteracting) return;
+              igMapResetAll();
+              setTimeout(function(){
+                igMapCyclePin(_pins[_pinIdx]);
+                _pinIdx = (_pinIdx + 1) % _pins.length;
+              }, 200);
+            }, 2800);
+            // Start first cycle immediately after 1.5s
+            setTimeout(function(){
+              igMapCyclePin(_pins[_pinIdx]);
+              _pinIdx = (_pinIdx + 1) % _pins.length;
+            }, 1500);
+          }
+
+          // Override hover to pause auto-cycle
+          window.igMapHover = function(id, on) {
+            _userInteracting = on;
+            clearTimeout(_interactTimer);
+            if (!on) {
+              // Resume auto-cycle 4s after user stops interacting
+              _interactTimer = setTimeout(function(){ _userInteracting = false; }, 4000);
+            }
+            var tt = document.getElementById('map-tooltip');
+            var groups = document.querySelectorAll('.map-pin-group');
+            groups.forEach(function(g){ g.style.opacity = on ? '0.45' : '1'; g.style.transform = 'scale(1)'; });
+            var active = document.getElementById('pin-'+id);
+            if (active) { active.style.opacity = '1'; if (on) active.style.transform = 'scale(1.2)'; }
+            if (!tt) return;
+            if (on && tooltips[id]) {
+              var d = tooltips[id];
+              tt.innerHTML = '<strong style="display:block;font-size:.72rem;color:'+d.color+';margin-bottom:.2rem;">'+d.title+'</strong>'+
+                '<span style="display:block;font-size:.65rem;color:rgba(255,255,255,.65);margin-bottom:.2rem;">'+d.sub+'</span>'+
+                '<span style="font-size:.65rem;color:#D4AE2A;font-weight:700;">'+d.val+'</span>';
+              tt.style.display = 'block';
+              tt.style.top = '12px'; tt.style.right = '12px'; tt.style.left = 'auto'; tt.style.transform = 'none';
+            } else {
+              tt.style.display = 'none';
+              if (!on) groups.forEach(function(g){ g.style.opacity = '1'; g.style.transform = 'scale(1)'; });
+            }
+          };
+
+          // Use IntersectionObserver to start cycle only when map is visible
+          var mapWrap = document.getElementById('indiaMapWrap');
+          if (mapWrap && 'IntersectionObserver' in window) {
+            var obs = new IntersectionObserver(function(entries){
+              entries.forEach(function(entry){
+                if (entry.isIntersecting && !_cycleTimer) {
+                  igStartCycle();
+                } else if (!entry.isIntersecting && _cycleTimer) {
+                  clearInterval(_cycleTimer); _cycleTimer = null;
+                  _pinIdx = 0;
+                  igMapResetAll();
+                }
+              });
+            }, { threshold: 0.3 });
+            obs.observe(mapWrap);
+          } else {
+            igStartCycle();
+          }
         })();
         </script>
       </div>
