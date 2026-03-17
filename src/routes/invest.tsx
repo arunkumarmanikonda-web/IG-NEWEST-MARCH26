@@ -173,19 +173,80 @@ app.get('/', (c) => {
 
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);" class="mob-stack-bg">
       ${[
-        { sector:'Entertainment', value:'₹1,350 Cr+', deal:'Entertainment City Limited Divestment', location:'Noida', co:'Joint advisory with EY', year:'2022', icon:'ticket-alt', color:'#B8960C' },
-        { sector:'Real Estate',   value:'₹400 Cr',    deal:'Prism Tower Mixed-Use Acquisition',    location:'Gurugram', co:'Asset acquisition advisory', year:'2025', icon:'building', color:'#1A3A6B' },
-        { sector:'Hospitality',   value:'₹415 Cr',    deal:'Boutique Hotel Platform Rollout',       location:'Chandigarh · Delhi NCR', co:'15+ hotel pre-openings', year:'2017–26', icon:'hotel', color:'#065F46' },
-        { sector:'Retail',        value:'₹1,40,000 Sq Ft', deal:'Premium Retail & F&B Leasing',  location:'Gardens Galleria · Hyatt Andaz · AIPL Joy Street', co:'30+ brand placements', year:'2019–26', icon:'store', color:'#7C3AED' },
-        { sector:'HORECA',        value:'15+ Properties', deal:'End-to-End HORECA Procurement',   location:'Pan-India', co:'Mahindra · Accor · CGH Earth', year:'2020–26', icon:'utensils', color:'#B8960C' },
-        { sector:'Debt',          value:'Ongoing',    deal:'Debt & Special Situations Advisory',  location:'Delhi NCR · Mumbai', co:'Distressed asset resolution', year:'2023–26', icon:'balance-scale', color:'#DC2626' },
+        {
+          sector:'Entertainment',
+          value:'₹1,350 Cr+',
+          deal:'Entertainment City Limited — Landmark Divestment',
+          location:'Entertainment City, Noida',
+          co:'Joint Transaction Advisory with EY',
+          year:'2022',
+          icon:'ticket-alt',
+          color:'#B8960C',
+          badge:'Completed · Co-advised with EY',
+        },
+        {
+          sector:'Real Estate',
+          value:'₹100 Cr+',
+          deal:"Lutyens' Delhi Ultra-Premium Property Acquisition",
+          location:"Lutyens' Delhi, New Delhi",
+          co:'1,600 Sq. Yd. · Residential advisory',
+          year:'2021',
+          icon:'building',
+          color:'#1A3A6B',
+          badge:'Completed',
+        },
+        {
+          sector:'Hospitality',
+          value:'15+ Hotels',
+          deal:'Hotel Brand Pre-Openings & PMC',
+          location:'Pan-India — Noida, Chandigarh, Delhi, Hosur',
+          co:'Fern · Regenta · Cygnett · Radisson · Park Inn',
+          year:'2017–26',
+          icon:'hotel',
+          color:'#065F46',
+          badge:'Ongoing Portfolio',
+        },
+        {
+          sector:'Retail Leasing',
+          value:'1,40,000+ Sq Ft',
+          deal:'Premium F&B & Retail Leasing — Khubani at Hyatt Andaz',
+          location:'Hyatt Andaz · Gardens Galleria · AIPL Joy Street',
+          co:'30+ brand placements including Khubani (42,000 sq ft)',
+          year:'2019–26',
+          icon:'store',
+          color:'#7C3AED',
+          badge:'Completed',
+        },
+        {
+          sector:'HORECA',
+          value:'15+ Properties',
+          deal:'End-to-End HORECA Procurement',
+          location:'Pan-India',
+          co:'Mahindra Holidays · Accor Hotels · CGH Earth',
+          year:'2020–26',
+          icon:'utensils',
+          color:'#B8960C',
+          badge:'Ongoing Supply',
+        },
+        {
+          sector:'Debt & Special Situations',
+          value:'Ongoing',
+          deal:'Distressed Asset Resolution & Debt Advisory',
+          location:'Delhi NCR · Mumbai',
+          co:'Structured debt solutions for hospitality & RE assets',
+          year:'2023–26',
+          icon:'balance-scale',
+          color:'#DC2626',
+          badge:'Active Advisory',
+        },
       ].map((t, ti) => `
-      <div style="background:rgba(255,255,255,.03);padding:2.25rem 2rem;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='rgba(255,255,255,.03)'">
+      <div style="background:rgba(255,255,255,.03);padding:2.25rem 2rem;transition:background .2s;position:relative;" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background='rgba(255,255,255,.03)'">
         <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
           <div style="width:38px;height:38px;background:${t.color}22;border:1px solid ${t.color}44;display:flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0;">
             <i class="fas fa-${t.icon}" style="color:${t.color};font-size:.8rem;"></i>
           </div>
           <span style="font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${t.color};">${t.sector}</span>
+          <span style="margin-left:auto;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.18rem .5rem;white-space:nowrap;">${t.badge}</span>
         </div>
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.6rem;color:var(--gold);letter-spacing:-.02em;margin-bottom:.5rem;">${t.value}</div>
         <h4 style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:#fff;line-height:1.3;margin-bottom:.5rem;">${t.deal}</h4>
