@@ -5,34 +5,34 @@ import { VERTICALS, LISTINGS, HOSPITALITY_BRANDS, RETAIL_BRANDS, ADVISORY_PARTNE
 // ── RECENT INSIGHTS (3 latest) ───────────────────────────────────────────────
 const RECENT_INSIGHTS = [
   {
-    id: 'retail-leasing-trends-india-2026',
-    category: 'Retail',
+    id: 'horeca-cloud-kitchen-india-2026',
+    category: 'HORECA',
     date: 'March 2026',
-    readTime: '8 min read',
-    title: 'India Retail Leasing 2026: Premiumisation, Omnichannel & the New Mall Hierarchy',
-    excerpt: 'High-street and grade-A malls are diverging sharply from secondary retail. We map the forces reshaping where brands expand, how rents are structured, and which micro-markets will lead the next leasing cycle.',
-    img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80',
-    color: '#B8960C',
+    readTime: '9 min read',
+    title: 'Cloud Kitchens & Dark Stores: India\'s HORECA Infrastructure Revolution',
+    excerpt: 'India\'s online food delivery GMV crossed ₹1,00,000 Cr in Q3 FY26. We map the cloud kitchen formats, dark store real estate economics, and the investment models disrupting traditional HORECA infrastructure.',
+    img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
+    color: '#065F46',
   },
   {
-    id: 'debt-special-situations-india-hospitality-2026',
-    category: 'Debt & Special Situations',
+    id: 'india-hospitality-brand-strategy-2026',
+    category: 'Hospitality',
     date: 'March 2026',
-    readTime: '11 min read',
-    title: 'Distressed Hospitality Assets in India 2026: Opportunity Map for Special Situations Investors',
-    excerpt: 'IBC resolution timelines are shortening, and a new class of hotel assets is emerging from NCLT. We identify the 12 most actionable distressed hospitality opportunities and the deal structures that work.',
+    readTime: '12 min read',
+    title: 'Hotel Brand Affiliation in India 2026: Choosing the Right Flag for Your Asset',
+    excerpt: 'Marriott, IHG, Hyatt, or domestic? Fee structures, contract lengths, territorial protection, exit clauses — a comprehensive MC framework for asset owners navigating India\'s crowded hotel brand landscape.',
     img: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&auto=format&fit=crop&q=80',
-    color: '#7F1D1D',
+    color: '#1A3A6B',
   },
   {
-    id: 'india-realty-2026-outlook',
-    category: 'Real Estate',
-    date: 'February 2026',
+    id: 'entertainment-destination-development-india-2026',
+    category: 'Entertainment',
+    date: 'March 2026',
     readTime: '10 min read',
-    title: 'India Real Estate 2026: Commercial & Hospitality Convergence',
-    excerpt: 'Hybrid work patterns and experience-led tenants are rewriting Grade-A office specifications. Five structural drivers and an investment framework for developers navigating the convergence.',
-    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&auto=format&fit=crop&q=80',
-    color: '#1A3A6B',
+    title: 'Building India\'s Next Entertainment Destination: Development Economics & Operational Model',
+    excerpt: 'A pipeline of 35+ large-format entertainment projects in 2026–29. We break down capex benchmarks, revenue splits, operator structures, and the investor framework for India\'s experiential leisure boom.',
+    img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&auto=format&fit=crop&q=80',
+    color: '#7C3AED',
   },
 ]
 
@@ -494,6 +494,12 @@ app.get('/', (c) => {
               </style>
             </defs>
 
+            <!-- J&K Full Claim Polygon — covers POK/Gilgit-Baltistan (left lobe), Indian J&K/Ladakh (centre), Aksai Chin (right) per Survey of India claimed boundary -->
+            <path id="jk-full-claim" d="M89.8,88.0L82.3,65.8L71.9,44.4L67.4,24.7L82.3,6.6L112.3,3.3L134.7,1.6L157.2,4.9L179.6,11.5L187.1,32.9L179.6,60.9L161.7,82.2L134.7,88.0L104.8,88.0Z"
+              fill="rgba(26,58,107,0.08)" stroke="#1A3A6B" stroke-width="1.2" stroke-dasharray="3,2.5" stroke-linejoin="round"/>
+            <text x="127" y="40" font-family="DM Sans,sans-serif" font-size="6.5" font-weight="700" fill="#1A3A6B" opacity=".7" text-anchor="middle">J&amp;K</text>
+            <text x="127" y="50" font-family="DM Sans,sans-serif" font-size="5.2" fill="#1A3A6B" opacity=".5" text-anchor="middle">India's Claim</text>
+
             <!-- India States — generated from GADM GeoJSON, simplified for SVG rendering -->
             <g id="india-states" filter="url(#mapShadow)">
               <path class="india-state" d="M213.3,332.6L211.4,332.4L213.4,335.0L208.0,337.8L199.3,338.4L193.4,348.7L189.2,346.2L183.0,349.6L179.7,359.4L183.7,386.3L181.2,381.6L179.7,383.8L183.6,387.4L179.1,384.7L175.2,390.2L170.5,388.1L166.3,393.3L159.6,392.5L157.3,398.6L154.6,399.8L152.0,398.7L152.7,395.9L155.9,395.8L157.8,389.1L154.6,388.2L155.0,384.0L150.4,383.0L150.7,379.5L146.4,378.1L144.8,381.4L140.9,382.4L140.6,379.8L136.9,378.4L136.7,381.1L134.1,381.3L132.6,374.4L140.2,379.0L139.4,375.0L141.7,372.8L133.3,373.1L133.8,369.2L130.7,367.3L130.8,359.7L135.4,360.7L136.5,358.7L133.8,352.6L136.0,350.2L135.2,345.9L141.8,345.6L143.1,338.7L137.7,336.6L141.2,334.7L139.9,324.3L144.5,319.8L140.8,318.3L144.0,312.0L142.1,304.3L148.3,298.0L145.5,294.6L147.1,290.1L151.7,291.2L153.8,287.6L153.8,280.1L161.8,282.6L166.7,287.5L167.7,285.0L171.1,286.9L176.2,285.7L178.6,288.5L177.6,298.3L188.4,303.0L189.9,308.7L193.5,308.7L194.6,315.0L203.0,314.5L209.2,310.5L212.7,311.8L215.9,302.7L218.2,307.7L220.7,304.3L224.5,305.3L223.9,301.0L229.6,297.9L228.3,295.3L230.5,296.0L233.0,292.6L239.9,299.3L243.3,298.7L244.8,294.9L249.2,292.6L240.5,306.4L214.3,325.9L213.3,332.6Z"/>
@@ -529,20 +535,20 @@ app.get('/', (c) => {
 
             <!-- ══ MANDATE CITY PINS ══ -->
 
-            <!-- Himachal Pradesh (Kasauli · Chail) lon 77.1°E lat 31.0°N → 136,100 -->
+            <!-- Himachal Pradesh (Kasauli · Chail) lon 77.1°E lat 31.0°N → 136,100 — label left to avoid overlap -->
             <g id="pin-himachal" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('himachal',true)" onmouseout="igMapHover('himachal',false)">
               <circle cx="136" cy="100" r="7.5" fill="#1A3A6B" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
               <circle cx="136" cy="100" r="3" fill="#fff"/>
-              <text x="147" y="97" class="map-pin-label">Kasauli · Chail</text>
-              <text x="147" y="107" class="map-pin-sub">₹75 Cr</text>
+              <text x="124" y="97" class="map-pin-label" text-anchor="end">Kasauli · Chail</text>
+              <text x="124" y="107" class="map-pin-sub" text-anchor="end">₹75 Cr</text>
             </g>
 
-            <!-- Chandigarh lon 76.8°E lat 30.7°N → 131,103 -->
+            <!-- Chandigarh lon 76.8°E lat 30.7°N → 131,112 — label right -->
             <g id="pin-chandigarh" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('chandigarh',true)" onmouseout="igMapHover('chandigarh',false)">
-              <circle cx="131" cy="113" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
-              <circle cx="131" cy="113" r="3" fill="#fff"/>
-              <text x="142" y="110" class="map-pin-label">Chandigarh</text>
-              <text x="142" y="120" class="map-pin-sub">₹70 Cr</text>
+              <circle cx="131" cy="112" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="131" cy="112" r="3" fill="#fff"/>
+              <text x="143" y="109" class="map-pin-label">Chandigarh</text>
+              <text x="143" y="119" class="map-pin-sub">₹70 Cr</text>
             </g>
 
             <!-- Delhi NCR lon 77.2°E lat 28.6°N → 137,138 — pulsing gold -->
@@ -581,6 +587,14 @@ app.get('/', (c) => {
               <text x="155" y="402" class="map-pin-sub">Pipeline</text>
             </g>
 
+            <!-- Hyderabad lon 78.5°E lat 17.4°N → 156,323 -->
+            <g id="pin-hyderabad" class="map-pin-group" style="cursor:pointer;" onmouseover="igMapHover('hyderabad',true)" onmouseout="igMapHover('hyderabad',false)">
+              <circle cx="156" cy="323" r="7" fill="#9D4E15" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
+              <circle cx="156" cy="323" r="2.8" fill="#fff"/>
+              <text x="168" y="320" class="map-pin-label">Hyderabad</text>
+              <text x="168" y="330" class="map-pin-sub">HITEC · Pipeline</text>
+            </g>
+
             <!-- ══ LEGEND ══ -->
             <rect x="5" y="453" width="390" height="50" rx="2"
               fill="rgba(184,150,12,.04)" stroke="rgba(184,150,12,.18)" stroke-width=".7"/>
@@ -598,13 +612,15 @@ app.get('/', (c) => {
             <text x="22" y="500" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".5">Mumbai · Pipeline</text>
             <circle cx="110" cy="496" r="4" fill="#065F46"/>
             <text x="118" y="500" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".5">Bengaluru · Pipeline</text>
+            <circle cx="210" cy="496" r="4" fill="#9D4E15"/>
+            <text x="218" y="500" font-family="DM Sans,sans-serif" font-size="6.5" fill="currentColor" opacity=".5">Hyderabad · Pipeline</text>
 
           </svg>
           <!-- Hover tooltip -->
           <div id="map-tooltip" style="position:absolute;display:none;background:rgba(10,10,10,.95);color:#fff;padding:.5rem .75rem;font-size:.7rem;pointer-events:none;border:1px solid rgba(184,150,12,.35);max-width:180px;z-index:10;border-radius:3px;box-shadow:0 8px 24px rgba(0,0,0,.3);"></div>
         </div>
         <!-- Map caption -->
-        <p class="india-map-caption" style="font-size:.62rem;color:var(--ink-faint);text-align:center;margin-top:.5rem;"><i class="fas fa-map-pin" style="color:var(--gold);margin-right:.3rem;font-size:.55rem;"></i>Pins show active India Gully advisory mandates · Updated Q1 2026</p>
+        <p class="india-map-caption" style="font-size:.62rem;color:var(--ink-faint);text-align:center;margin-top:.5rem;"><i class="fas fa-map-pin" style="color:var(--gold);margin-right:.3rem;font-size:.55rem;"></i>Pins show active India Gully advisory mandates · Updated Q1 2026 · J&amp;K shown per India's claimed boundaries</p>
         <script>
         (function(){
           var tooltips = {
@@ -614,6 +630,7 @@ app.get('/', (c) => {
             jaipur:     { title:'Jaipur', sub:'Heritage Hotel · 43 Keys', val:'₹20 Cr', color:'#7C3AED' },
             mumbai:     { title:'Mumbai', sub:'BKC · Lower Parel · Advisory pipeline', val:'In discussion', color:'#dc2626' },
             bengaluru:  { title:'Bengaluru', sub:'Whitefield · MG Road · Active pipeline', val:'In discussion', color:'#065F46' },
+            hyderabad:  { title:'Hyderabad', sub:'HITEC City · Banjara Hills · Advisory pipeline', val:'In discussion', color:'#9D4E15' },
           };
           window.igMapHover = function(id, on) {
             var tt = document.getElementById('map-tooltip');
