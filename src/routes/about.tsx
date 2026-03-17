@@ -100,7 +100,7 @@ app.get('/', (c) => {
         { year:'2021', desc:'Launched India Gully brand identity, celebrating Desiness. Deepened retail leasing practice with 30+ brand relationships across fashion, F&B and entertainment.' },
         { year:'2023', desc:'Scaled hospitality transaction advisory with high-value asset sales and acquisitions across Delhi NCR, Chandigarh and Himachal Pradesh. Debt & Special Situations vertical established. Advisory pipeline crosses ₹1,000 Cr+.' },
         { year:'2024', desc:'Digital transformation initiative. India Gully Enterprise Platform (ERP), integrated advisory management, governance and HORECA procurement system launched.' },
-        { year:'2025', desc:'₹1,165 Cr+ active advisory pipeline. Prism Tower (₹400 Cr) and Belcibo Hospitality Platform (₹100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with IBC-related hospitality mandates.' },
+        { year:'2025', desc:'₹1,165 Cr+ active advisory pipeline. Prism Tower (₹400 Cr) and Belcibo Hospitality Platform (₹100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
         { year:'2026', desc:'India Gully Investor Relations portal launched. /invest page goes live for qualified institutional investors and family offices. CERT-In OWASP Top-10 security compliance achieved. Eight active mandates across five asset classes.' },
       ].map((t,i) => `
       <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;margin-bottom:2.5rem;align-items:center;">
@@ -187,7 +187,7 @@ app.get('/', (c) => {
             Arun Kumar Manikonda is the Managing Director &amp; Founder of India Gully (Vivacious Entertainment and Hospitality Pvt. Ltd.), India's premier multi-vertical advisory firm. With over <strong style="color:var(--ink);">20 years</strong> of deep domain expertise spanning hospitality, real estate, retail, entertainment and HORECA, Arun has led landmark institutional transactions and built enduring partnerships with India's most prominent developers, hotel brands and investors.
           </p>
           <p style="font-size:.925rem;color:var(--ink-soft);line-height:1.9;margin-bottom:2rem;">
-            Prior to founding India Gully, Arun served as <strong style="color:var(--ink);">Managing Director of Entertainment City Limited, Noida</strong> — India's largest entertainment destination, where he co-led the landmark ₹1,350+ Cr divestment transaction in joint advisory with Ernst &amp; Young, one of the most complex and significant entertainment real estate deals in India's history.
+            Prior to founding India Gully, Arun served as <strong style="color:var(--ink);">Managing Director of Entertainment City Limited, Noida</strong> — where he co-led the landmark ₹1,350+ Cr 100% shareholder-consented divestment in joint advisory with Ernst &amp; Young — a clean, consensual transaction with full board and promoter alignment, one of the most significant entertainment real estate deals in India's history.
           </p>
 
           <!-- Career highlights -->
@@ -215,7 +215,7 @@ app.get('/', (c) => {
             <div>
               <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;">Prior Leadership Role</div>
               <div style="font-size:.875rem;color:var(--ink);font-weight:600;">Managing Director — Entertainment City Limited, Noida</div>
-              <div style="font-size:.78rem;color:var(--ink-muted);margin-top:.2rem;">India's largest entertainment destination · ₹1,350+ Cr divestment advisory alongside Ernst &amp; Young</div>
+              <div style="font-size:.78rem;color:var(--ink-muted);margin-top:.2rem;">₹1,350+ Cr 100% shareholder-consented divestment · Joint advisory alongside Ernst &amp; Young</div>
             </div>
           </div>
 
@@ -406,7 +406,7 @@ app.get('/', (c) => {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
       ${[
         { n:'₹1,165 Cr+', label:'Active Pipeline', sub:'8 mandates across 5 asset classes', icon:'chart-bar', color:'#B8960C' },
-        { n:'₹2,000 Cr+', label:'Transactions Advised', sub:'Including ₹1,350 Cr+ Entertainment City mandate', icon:'trophy', color:'#1A3A6B' },
+        { n:'₹2,000 Cr+', label:'Transactions Advised', sub:'Including ₹1,350 Cr+ Entertainment City divestment', icon:'trophy', color:'#1A3A6B' },
         { n:'1,40,000 sq ft', label:'Retail Leased', sub:'Across Delhi NCR and Gurugram', icon:'store', color:'#15803d' },
         { n:'15+', label:'Hotel Projects', sub:'PMC, pre-opening & HORECA supply', icon:'hotel', color:'#7C3AED' },
         { n:'500+ SKUs', label:'HORECA Catalogue', sub:'FF&E, OS&E, kitchen, linen, uniforms', icon:'utensils', color:'#B8960C' },
@@ -483,7 +483,7 @@ app.get('/', (c) => {
         <h2 class="h2" style="margin-bottom:2rem;">Selected Highlights</h2>
         <div style="display:flex;flex-direction:column;gap:1rem;">
           ${[
-            { value:'₹1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY for India\'s largest entertainment sector transaction — full due diligence, IBC process and asset restructuring advisory.', sector:'Entertainment', color:'#7C3AED' },
+            { value:'₹1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY — 100% shareholder-consented divestment with full promoter alignment, comprehensive due diligence and structured deal closure.', sector:'Entertainment', color:'#7C3AED' },
             { value:'₹400 Cr', title:'Prism Tower, Gurugram', desc:'312-key mixed-use hospitality & commercial asset advisory mandate. REIT-grade exit potential. 10 km metro connectivity. Active transaction.', sector:'Real Estate', color:'#1A3A6B' },
             { value:'₹70 Cr', title:'Hotel Rajshree & Spa, Chandigarh', desc:'41-key boutique hotel — full HORECA procurement refresh, operational enhancement and active asset sale advisory.', sector:'Hospitality', color:'#15803d' },
             { value:'₹45 Cr', title:'WelcomHeritage Santa Roza, Kasauli', desc:'44-key luxury heritage resort under ITC WelcomHeritage brand. End-to-end transaction advisory and investor outreach.', sector:'Heritage Hospitality', color:'#B8960C' },

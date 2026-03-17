@@ -1051,7 +1051,7 @@ ${ndaModal}
 <!-- ══ HERO BANNER (Special featured mandates) ════════════════════════ -->
 ${l.id === 'prism-tower-gurgaon' ? `
 <div style="position:relative;background:#0a0a14;overflow:hidden;min-height:320px;display:flex;align-items:center;">
-  <img src="/static/mandates/prism/prism-myhq.jpg" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;object-position:center 30%;">
+  <img src="/static/mandates/prism/prism-tower-hero.jpg" alt="Prism Tower Gurgaon" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;object-position:center 30%;">
   <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 100%);"></div>
   <div class="wrap" style="position:relative;z-index:2;">
     <div style="max-width:640px;">
