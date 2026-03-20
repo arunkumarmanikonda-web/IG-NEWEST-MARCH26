@@ -362,7 +362,51 @@ function isDemoMode(env?: Partial<Bindings>): boolean {
  * To rotate: run scripts/hash-credentials.ts offline, update hashes here,
  * then move to D1 in P1 sprint.
  */
-const USER_STORE = {} as Record<string, { salt:string; hash:string; role:string; portal:string; dashboard:string; totp_secret:string; mfa_required:boolean; demo_account:boolean; totp_demo_pin:string }>
+// ── TEST-ONLY credentials (dev/staging). NEVER use these in production. ────────
+// Generated offline via PBKDF2-SHA256 (100k iterations). Rotate before go-live.
+// In production: D1 database binding (env.DB) is used — USER_STORE is the fallback.
+const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal:string; dashboard:string; totp_secret:string; mfa_required:boolean; demo_account:boolean; totp_demo_pin:string; identifier:string }> = {
+  'superadmin@indiagully.com': {
+    identifier: 'superadmin@indiagully.com',
+    salt: 'ig-salt-admin-v3-2026',
+    hash: '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
+    role: 'Super Admin', portal: 'admin', dashboard: '/admin/dashboard',
+    totp_secret: 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
+  },
+  'demo@indiagully.com': {
+    identifier: 'demo@indiagully.com',
+    salt: 'ig-salt-client-v3-2026',
+    hash: '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
+    role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
+    totp_secret: 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
+  },
+  'IG-EMP-0001': {
+    identifier: 'IG-EMP-0001',
+    salt: 'ig-salt-emp-v3-2026',
+    hash: '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
+    role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
+    totp_secret: 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
+  },
+  'IG-KMP-0001': {
+    identifier: 'IG-KMP-0001',
+    salt: 'ig-salt-board-v3-2026',
+    hash: '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
+    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
+    totp_secret: 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
+  },
+  'qa@indiagully.com': {
+    identifier: 'qa@indiagully.com',
+    salt: 'ig-salt-qa-v3-2026',
+    hash: '9fa32eacc8b9baf0a2e6f564cae45ae40e97110136d05d420e7bbd50554709d8',
+    role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
+    totp_secret: 'WGYPMNQOOEEJT7VJKBE6ZMZDH3UEGYSK',
+    mfa_required: false, demo_account: true, totp_demo_pin: '',
+  },
+}
 
 // ── UserRecord type (unified D1 + USER_STORE) ──────────────────────────────
 type UserRecord = {
@@ -443,7 +487,7 @@ async function verifyTOTPStrict(
   user: { totp_secret: string },
   token: string,
 ): Promise<boolean> {
-  if (!token || token.length !== 6 || !/^\d{6}.test(token)) return false
+  if (!token || token.length !== 6 || !/^\d{6}$/.test(token)) return false
   if (!user.totp_secret) return false
   return verifyTOTP(user.totp_secret, token)
 }
