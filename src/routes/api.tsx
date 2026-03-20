@@ -2277,7 +2277,7 @@ function buildOwnerNotificationEmail(opts: {
 <body style="${emailBaseStyle()}">
 <div style="max-width:600px;margin:32px auto;background:#fff;border:1px solid #e4dece;">
   <div style="background:${bgColor};padding:24px 32px;display:flex;align-items:center;gap:16px;">
-    <img src="https://india-gully.pages.dev/static/ig-logo-white.png" alt="India Gully" style="height:36px;" onerror="this.style.display='none'">
+    <img src="https://indiagully.in/assets/logo-white.png" alt="India Gully" style="height:36px;" onerror="this.style.display='none'">
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:2px;">India Gully Advisory Platform</div>
       <div style="font-size:20px;font-family:Georgia,serif;color:#fff;">${typeLabel} — Action Required</div>

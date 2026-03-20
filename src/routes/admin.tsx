@@ -75,7 +75,7 @@ function adminShell(pageTitle: string, active: string, body: string) {
            height="28"
            style="height:28px;width:auto;max-width:180px;object-fit:contain;object-position:left center;display:block;"
            draggable="false"
-           decoding="async">
+           decoding="async" onerror="this.style.opacity='0'">
       <div style="font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:4px;">Super Admin</div>
     </a>
     <nav style="flex:1;padding:.5rem;">${nav}</nav>

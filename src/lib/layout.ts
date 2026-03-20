@@ -1577,7 +1577,7 @@ const NAV = `
            style="height:38px;width:auto;max-width:200px;object-fit:contain;object-position:left center;display:block;"
            draggable="false"
            fetchpriority="high"
-           decoding="async">
+           decoding="async" onerror="this.style.opacity='0'">
     </a>
 
     <!-- DESKTOP NAV — 6 top-level items only -->
@@ -1722,7 +1722,7 @@ const FOOTER = `
              height="34"
              style="height:34px;width:auto;max-width:200px;object-fit:contain;object-position:left center;display:block;"
              draggable="false"
-             decoding="async">
+             decoding="async" onerror="this.style.opacity='0'">
       </div>
       <p style="font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.85;max-width:300px;margin-bottom:1.5rem;">India's premier multi-vertical advisory firm. Strategy, transactions and enablement across Real Estate, Retail, Hospitality, Entertainment and HORECA.</p>
       
