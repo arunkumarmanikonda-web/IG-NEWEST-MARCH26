@@ -38,13 +38,13 @@
   // Phase 18A: D1 enabled for local dev (--local flag auto-creates SQLite in .wrangler/state/v3/d1)
   // Production: replace PENDING_D1_ID with real database_id after `wrangler d1 create india-gully-production`
   // NOTE: D1 binding disabled until database_id is available — uncomment when API token has D1:Edit permission
-  // "d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "india-gully-production",
-  //     "database_id": "PENDING_D1_ID"
-  //   }
-  // ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "india-gully-production",
+      "database_id": "00bfc8d3-c51c-4e88-82e6-a0be53b5bdcf"
+    }
+  ],
 
   // ── R2 Storage ───────────────────────────────────────────────────────────────
   // Document storage: board packs, contracts, employee files
