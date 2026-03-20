@@ -3316,12 +3316,12 @@ app.get('/finance', (c) => {
     tbody.innerHTML='';
     d.invoices.forEach(function(inv){
       var statusCol=inv.status==='Paid'?'#15803d':inv.status==='Overdue'?'#dc2626':'#d97706';
-      tbody.innerHTML+='<tr><td style="font-size:.78rem;font-weight:600;">'+esc(inv.id)+'</td>'
-        +'<td style="font-size:.78rem;">'+esc(inv.client)+'</td>'
-        +'<td style="font-size:.78rem;">'+esc(inv.date)+'</td>'
-        +'<td style="font-family:\\x27DM Serif Display\\x27,Georgia,serif;">₹'+inv.amount.toLocaleString('en-IN')+'</td>'
+      tbody.innerHTML+='<tr><td style="font-size:.78rem;font-weight:600;">'+esc(inv.invoice_number||inv.id)+'</td>'
+        +'<td style="font-size:.78rem;">'+esc(inv.client_name||inv.client)+'</td>'
+        +'<td style="font-size:.78rem;">'+esc(inv.due_date||inv.date)+'</td>'
+        +'<td style="font-family:\\x27DM Serif Display\\x27,Georgia,serif;">₹'+(inv.amount_net||inv.amount||0).toLocaleString('en-IN')+'</td>'
         +'<td><span style="font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:'+statusCol+';border:1px solid '+statusCol+'20;padding:.15rem .5rem;">'+esc(inv.status)+'</span></td>'
-        +'<td><button onclick="igFinViewInv(\\x27'+esc(inv.id)+'\\x27)" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download"></i></button></td>'
+        +'<td><button onclick="igFinViewInv(\\x27'+esc(inv.invoice_number||inv.id)+'\\x27)" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download"></i></button></td>'
         +'</tr>';
     });
   });
@@ -16306,15 +16306,14 @@ app.get('/enquiries', async (c) => {
   if (env?.DB) {
     try {
       const [enqRows, horecaRows] = await Promise.all([
-        env.DB.prepare(`SELECT ref_id AS ref, enquiry_type AS type, name, email, phone,
-          organisation AS org, message, mandate_title AS mandateTitle,
-          mandate_value AS mandateValue, ticket_size AS ticketSize,
-          investor_type AS investorType, status, created_at AS ts
-          FROM ig_enquiries WHERE enquiry_type != 'horeca'
+        env.DB.prepare(`SELECT ref_number AS ref, enquiry_type AS type, name, email, phone,
+          organisation AS org, message, vertical, scale AS ticketSize,
+          source, status, created_at AS ts
+          FROM ig_enquiries WHERE enquiry_type != 'HORECA'
           ORDER BY created_at DESC LIMIT 50`).all(),
-        env.DB.prepare(`SELECT ref_id AS ref, 'horeca' AS type, name, email, phone,
+        env.DB.prepare(`SELECT ref_number AS ref, 'horeca' AS type, name, email, phone,
           organisation AS org, message, status, created_at AS ts
-          FROM ig_enquiries WHERE enquiry_type = 'horeca'
+          FROM ig_enquiries WHERE enquiry_type = 'HORECA'
           ORDER BY created_at DESC LIMIT 20`).all(),
       ])
       enquiries      = (enqRows.results   as any[]) || []
