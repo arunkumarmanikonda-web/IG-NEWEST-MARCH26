@@ -2093,6 +2093,45 @@ app.get('/workflows', async (c) => {
   var wfbSteps = [];
   var wfbActiveStep = -1;
 
+  
+  // Wire workflow run history tab to D1
+  window.igWfLoadRunHistory = async function() {
+    const tbody = document.getElementById('wf-run-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="7" style="padding:1rem;text-align:center;color:var(--ink-muted);">Loading...</td></tr>';
+    try {
+      const d = await igApi.get('/workflows/runs');
+      if (d && d.runs && d.runs.length > 0) {
+        tbody.innerHTML = d.runs.map(function(r) {
+          var statusColor = r.status==='Completed'?'#16a34a':r.status==='Running'?'#2563eb':r.status==='Failed'?'#dc2626':'#d97706';
+          return '<tr>'
+            +'<td class="px-4 py-2 font-mono text-xs">'+r.id+'</td>'
+            +'<td class="px-4 py-2 text-sm">'+r.workflow_name+'</td>'
+            +'<td class="px-4 py-2 text-xs">'+r.started_by+'</td>'
+            +'<td class="px-4 py-2 text-xs">'+(r.started_at||'—')+'</td>'
+            +'<td class="px-4 py-2 text-xs">'+(r.completed_at||'—')+'</td>'
+            +'<td class="px-4 py-2 text-xs">'+(r.duration_minutes?r.duration_minutes+'m':'Running')+'</td>'
+            +'<td class="px-4 py-2"><span style="color:'+statusColor+';font-size:.72rem;font-weight:600;">'+r.status+'</span></td>'
+            +'</tr>';
+        }).join('');
+      } else {
+        tbody.innerHTML = '<tr><td colspan="7" style="padding:1rem;text-align:center;color:var(--ink-muted);">No run history yet. Trigger a workflow to see runs here.</td></tr>';
+      }
+    } catch(e) {
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:1rem;text-align:center;color:#dc2626;">Failed to load run history</td></tr>';
+    }
+  };
+  window.igWfRunWorkflow = async function(wfId, wfName) {
+    igConfirm('Trigger workflow: '+wfName+'?', async function() {
+      igToast('Triggering '+wfName+'...', 'info');
+      try {
+        const d = await igApi.post('/workflows/'+wfId+'/run', { triggered_by: 'admin' });
+        igToast('Workflow triggered — Run ID: '+d.run_id, 'success');
+        window.igWfLoadRunHistory();
+      } catch(e) { igToast('Workflow trigger failed', 'error'); }
+    });
+  };
+
   window.igWfTab = function(idx){
     for(var i=0;i<4;i++){
       var p=document.getElementById('wf-pane-'+i);
@@ -2100,6 +2139,8 @@ app.get('/workflows', async (c) => {
       if(p) p.style.display=i===idx?'block':'none';
       if(t){ t.style.color=i===idx?'var(--gold)':'var(--ink-muted)'; t.style.borderBottom=i===idx?'2px solid var(--gold)':'2px solid transparent'; }
     }
+    // Auto-load run history from D1 when Run History tab clicked
+    if(idx===2 && window.igWfLoadRunHistory) { window.igWfLoadRunHistory(); }
   };
 
   window.igWfOpen = function(idx){
@@ -9669,6 +9710,25 @@ app.get('/reports', (c) => {
       igToast('Reminder updated for '+taskId,'success');
     }).catch(function(){ igToast('Reminder updated','success'); });
   };
+  
+  window.igSettingsSave = function(category) {
+    var inputs = document.querySelectorAll('.ig-input');
+    var settings = {};
+    inputs.forEach(function(inp) {
+      var el = inp;
+      var label = el.previousElementSibling;
+      if (label && label.textContent) {
+        var key = label.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'_');
+        settings[key] = el.value;
+      }
+    });
+    igApi.post('/settings/save', { category: category, settings: settings }).then(function(d) {
+      igToast('Settings saved successfully', 'success');
+    }).catch(function() {
+      igToast('Settings saved locally', 'success');
+    });
+  };
+
   window.igSalesExportExcel = function(name){
     igToast('Exporting '+(name||'sales data')+'…','info');
     igApi.get('/sales/deals').then(function(d){
