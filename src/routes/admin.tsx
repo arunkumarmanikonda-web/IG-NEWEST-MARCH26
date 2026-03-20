@@ -8077,7 +8077,29 @@ app.get('/horeca', async (c) => {
 app.get('/contracts', async (c) => {
   // ── D1: Load contracts from ig_contracts ───────────────────────────────────
   let contracts: any[] = []
-  const FALLBACK_CONTRACTS = [
+  
+// Phase N: Live contracts loader — falls back to FALLBACK_CONTRACTS if API unavailable
+;(window as any).igLoadContractsLive = async function(tableBodyId: string) {
+  try {
+    const r = await fetch('/api/contracts?limit=50', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    if (!d.contracts?.length) return
+    const tbody = document.getElementById(tableBodyId)
+    if (!tbody) return
+    tbody.innerHTML = d.contracts.map((c: any) => `
+      <tr>
+        <td>${c.contract_number || c.id}</td>
+        <td>${c.client_name || ''}</td>
+        <td>${c.title || c.contract_type || ''}</td>
+        <td><span class="ig-badge" style="background:${c.status==='Active'?'#16a34a20':c.status==='Draft'?'#d9770620':'#6b728020'};color:${c.status==='Active'?'#16a34a':c.status==='Draft'?'#d97706':'#6b7280'}">${c.status||'Unknown'}</span></td>
+        <td>${c.value ? '₹'+Number(c.value).toLocaleString('en-IN') : '—'}</td>
+        <td>${c.expiry_date ? c.expiry_date.slice(0,10) : '—'}</td>
+      </tr>`).join('')
+  } catch(e) { console.warn('[igLoadContractsLive]', e) }
+}
+
+const FALLBACK_CONTRACTS = [
     {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Demo Client Corp',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
     {id:'PMC-001', name:'Hotel PMC Agreement',              party:'Rajasthan Hotels',  type:'PMC',         start:'15 Feb 2026',expiry:'14 Feb 2027',status:'Active',   cls:'b-gr',signed:true},
     {id:'MND-001', name:'Retail Leasing Mandate',           party:'Mumbai Mall Pvt.', type:'Mandate',     start:'01 Dec 2025',expiry:'30 Nov 2026',status:'Active',   cls:'b-gr',signed:true},
@@ -14916,7 +14938,30 @@ app.get('/sales', (c) => c.redirect('/admin/sales/dashboard', 302))
 app.get('/sales/dashboard', async (c) => {
   // ── D1: Load leads from ig_leads ────────────────────────────────────────────
   let leads: any[] = []
-  const FALLBACK_LEADS = [
+  
+// Phase N: Live leads loader
+;(window as any).igLoadLeadsLive = async function(tableBodyId: string) {
+  try {
+    const r = await fetch('/api/sales/leads?limit=50', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    const leads = d.leads || d.data || []
+    if (!leads.length) return
+    const tbody = document.getElementById(tableBodyId)
+    if (!tbody) return
+    tbody.innerHTML = leads.map((l: any) => `
+      <tr>
+        <td>${l.name || ''}</td>
+        <td>${l.company || ''}</td>
+        <td>${l.interest_area || l.service_interest || ''}</td>
+        <td><span class="ig-badge" style="background:#16a34a20;color:#16a34a">${l.stage || l.status || 'New'}</span></td>
+        <td>${l.value ? '₹'+Number(l.value).toLocaleString('en-IN') : '—'}</td>
+        <td>${l.created_at ? l.created_at.slice(0,10) : '—'}</td>
+      </tr>`).join('')
+  } catch(e) { console.warn('[igLoadLeadsLive]', e) }
+}
+
+const FALLBACK_LEADS = [
     {id:'LD-001', name:'Green Valley Mall', sector:'Retail',        value:'₹240 Cr', stage:'Proposal',    contact:'Rajan Mehta',    prob:60, owner:'AKM',   date:'28 Feb 2026'},
     {id:'LD-002', name:'Sunrise Hotel Chain',sector:'Hospitality',  value:'₹580 Cr', stage:'Negotiation', contact:'Priya Kapoor',   prob:75, owner:'Pavan', date:'01 Mar 2026'},
     {id:'LD-003', name:'Tech Valley Office', sector:'Real Estate',   value:'₹1,200 Cr',stage:'Discovery',  contact:'Arjun Singh',    prob:30, owner:'AKM',   date:'02 Mar 2026'},
@@ -15707,7 +15752,30 @@ app.get('/audit-log', async (c) => {
 app.get('/mandates', async (c) => {
   // ── D1: Load mandates from ig_mandates ─────────────────────────────────────
   let mandates: any[] = []
-  const FALLBACK_MANDATES = [
+  
+// Phase N: Live mandates loader
+;(window as any).igLoadMandatesLive = async function(tableBodyId: string) {
+  try {
+    const r = await fetch('/api/mandates?limit=50', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    const mandates = d.mandates || d.data || []
+    if (!mandates.length) return
+    const tbody = document.getElementById(tableBodyId)
+    if (!tbody) return
+    tbody.innerHTML = mandates.map((m: any) => `
+      <tr>
+        <td>${m.mandate_ref || m.id}</td>
+        <td>${m.title || ''}</td>
+        <td>${m.location || ''}</td>
+        <td><span class="ig-badge" style="background:#2563eb20;color:#2563eb">${m.status || 'Active'}</span></td>
+        <td>${m.value_inr_cr ? '₹'+m.value_inr_cr+' Cr' : '—'}</td>
+        <td>${m.created_at ? m.created_at.slice(0,10) : '—'}</td>
+      </tr>`).join('')
+  } catch(e) { console.warn('[igLoadMandatesLive]', e) }
+}
+
+const FALLBACK_MANDATES = [
     {id:'MND-001', name:'Jaipur Hospitality Hub — 5-Star Hotel',    type:'Hospitality', value:'₹425 Cr', stage:'LOI Signed',    client:'Jaipur Hotels Ltd',      date:'Jan 2026', status:'Active'},
     {id:'MND-002', name:'Delhi NCR Mixed-Use Commercial Complex',    type:'Real Estate', value:'₹2,100 Cr',stage:'Due Diligence', client:'NCR Realty Corp',        date:'Dec 2025', status:'Active'},
     {id:'MND-003', name:'Mumbai HORECA Supply Chain Consolidation',  type:'HORECA',      value:'₹87 Cr',  stage:'Mandate Signed', client:'Mumbai F&B Group',       date:'Nov 2025', status:'Active'},
@@ -16225,7 +16293,30 @@ app.get('/clients', async (c) => {
 app.get('/documents', async (c) => {
   // ── D1: Load documents from ig_documents ──────────────────────────────────
   let docs: any[] = []
-  const FALLBACK_DOCS = [
+  
+// Phase N: Live documents loader
+;(window as any).igLoadDocsLive = async function(tableBodyId: string) {
+  try {
+    const r = await fetch('/api/documents?limit=50', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    const docs = d.documents || []
+    if (!docs.length) return
+    const tbody = document.getElementById(tableBodyId)
+    if (!tbody) return
+    tbody.innerHTML = docs.map((doc: any) => `
+      <tr>
+        <td>${doc.file_name || doc.name || ''}</td>
+        <td>${doc.category || ''}</td>
+        <td>${doc.file_size ? Math.round(doc.file_size/1024)+'KB' : '—'}</td>
+        <td>${doc.uploaded_by || ''}</td>
+        <td>${doc.created_at ? doc.created_at.slice(0,10) : '—'}</td>
+        <td><button class="ig-btn ig-btn-sm" onclick="igDownloadDoc('${doc.r2_key || doc.id}')">Download</button></td>
+      </tr>`).join('')
+  } catch(e) { console.warn('[igLoadDocsLive]', e) }
+}
+
+const FALLBACK_DOCS = [
     {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
     {id:'DOC-002', name:'EY Retainer Agreement v3.pdf',            cat:'Contracts',   size:'1.2 MB', date:'10 Jan 2026', uploader:'pavan',       ndaGated:false},
     {id:'DOC-003', name:'Jaipur Hotel Feasibility Report.pdf',     cat:'Mandates',    size:'4.8 MB', date:'05 Jan 2026', uploader:'akm',         ndaGated:false},
