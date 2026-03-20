@@ -43,11 +43,16 @@ async function generateTOTP(secret: string): Promise<string> {
 
 /** Login via form submission, return page after redirect */
 async function adminLogin(page: Page): Promise<void> {
+  const ADMIN_USER = process.env.ADMIN_USER
+  const ADMIN_PASS = process.env.ADMIN_PASS
+  const ADMIN_TOTP_SECRET = process.env.ADMIN_TOTP_SECRET
+  test.skip(!ADMIN_USER || !ADMIN_PASS || !ADMIN_TOTP_SECRET, 'ADMIN_USER/ADMIN_PASS/ADMIN_TOTP_SECRET not set')
+
   await page.goto(`${BASE}/admin`)
   await page.waitForSelector('#username, input[name="username"]', { timeout: 10_000 })
-  const totp = await generateTOTP('JBSWY3DPEHPK3PXP')
-  await page.fill('input[name="username"]', 'superadmin@indiagully.com')
-  await page.fill('input[name="password"]', 'India@5327**')
+  const totp = await generateTOTP(ADMIN_TOTP_SECRET as string)
+  await page.fill('input[name="username"]', ADMIN_USER as string)
+  await page.fill('input[name="password"]', ADMIN_PASS as string)
   await page.fill('input[name="totp"]',     totp)
   await Promise.all([
     page.waitForURL(/\/admin\/dashboard/, { timeout: 15_000 }),

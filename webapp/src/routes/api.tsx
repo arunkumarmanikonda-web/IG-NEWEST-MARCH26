@@ -362,52 +362,51 @@ function isDemoMode(env?: Partial<Bindings>): boolean {
  * To rotate: run scripts/hash-credentials.ts offline, update hashes here,
  * then move to D1 in P1 sprint.
  */
-const USER_STORE = {
+// ── TEST-ONLY credentials (dev/staging). NEVER use these in production. ────────
+// Generated offline via PBKDF2-SHA256 (100k iterations). Rotate before go-live.
+// In production: D1 database binding (env.DB) is used — USER_STORE is the fallback.
+const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal:string; dashboard:string; totp_secret:string; mfa_required:boolean; demo_account:boolean; totp_demo_pin:string; identifier:string }> = {
   'superadmin@indiagully.com': {
+    identifier: 'superadmin@indiagully.com',
     salt: 'ig-salt-admin-v3-2026',
-    hash: '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',  // IGAdmin@2026
-    role: 'Super Admin',
-    portal: 'admin',
-    dashboard: '/admin/dashboard',
-    totp_secret: 'JBSWY3DPEHPK3PXP',
-    mfa_required: true,
-    demo_account: true,
-    totp_demo_pin: '123456',
+    hash: '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
+    role: 'Super Admin', portal: 'admin', dashboard: '/admin/dashboard',
+    totp_secret: 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
   'demo@indiagully.com': {
+    identifier: 'demo@indiagully.com',
     salt: 'ig-salt-client-v3-2026',
-    hash: '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',  // IGDemo@2026
-    role: 'Client',
-    portal: 'client',
-    dashboard: '/portal/client/dashboard',
-    totp_secret: 'JBSWY3DPEHPK3PXQ',
-    mfa_required: true,
-    demo_account: true,
-    totp_demo_pin: '123456',
+    hash: '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
+    role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
+    totp_secret: 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
   'IG-EMP-0001': {
+    identifier: 'IG-EMP-0001',
     salt: 'ig-salt-emp-v3-2026',
-    hash: '2327d437979646c3a1dd2535776f7b2998528832264450ce3a82ce1c335b59d4',  // IGEmp@2026
-    role: 'Employee',
-    portal: 'employee',
-    dashboard: '/portal/employee/dashboard',
-    totp_secret: 'JBSWY3DPEHPK3PXR',
-    mfa_required: true,
-    demo_account: true,
-    totp_demo_pin: '123456',
+    hash: '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
+    role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
+    totp_secret: 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
   'IG-KMP-0001': {
+    identifier: 'IG-KMP-0001',
     salt: 'ig-salt-board-v3-2026',
-    hash: 'd436a3bf72ea09c74d7f778ecbc32fcd0c54db0d2cd2c3ecc352c1cb994be876',  // IGBoard@2026
-    role: 'Board',
-    portal: 'board',
-    dashboard: '/portal/board/dashboard',
-    totp_secret: 'JBSWY3DPEHPK3PXS',
-    mfa_required: true,
-    demo_account: true,
-    totp_demo_pin: '123456',
+    hash: '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
+    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
+    totp_secret: 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
-} as Record<string, { salt:string; hash:string; role:string; portal:string; dashboard:string; totp_secret:string; mfa_required:boolean; demo_account:boolean; totp_demo_pin:string }>
+  'qa@indiagully.com': {
+    identifier: 'qa@indiagully.com',
+    salt: 'ig-salt-qa-v3-2026',
+    hash: '9fa32eacc8b9baf0a2e6f564cae45ae40e97110136d05d420e7bbd50554709d8',
+    role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
+    totp_secret: 'WGYPMNQOOEEJT7VJKBE6ZMZDH3UEGYSK',
+    mfa_required: false, demo_account: true, totp_demo_pin: '',
+  },
+}
 
 // ── UserRecord type (unified D1 + USER_STORE) ──────────────────────────────
 type UserRecord = {
@@ -479,25 +478,17 @@ async function verifyDemoPassword(identifier: string, password: string, db?: D1D
 }
 
 /**
- * verifyTOTPWithDemoBypass — G-Round TOTP helper.
- * For production accounts (demo_account:false) always runs full RFC 6238.
- * For demo accounts when isDemoMode() is true:
- *   1. Accepts the fixed totp_demo_pin (evaluator convenience code).
- *   2. Still accepts a valid TOTP from an authenticator app (pins are additive).
- * superadmin is never a demo_account, so bypass never applies to admin logins.
- */
-async function verifyTOTPWithDemoBypass(
-  user: { totp_secret: string; demo_account: boolean; totp_demo_pin: string },
+ * verifyTOTPStrict — RFC 6238 verifier (no demo bypass).
+ * Requires a 6-digit numeric token and a configured TOTP secret.
+ *
+ * SECURITY: demo pins/bypass codes are not supported.
+ **/
+async function verifyTOTPStrict(
+  user: { totp_secret: string },
   token: string,
-  env?: Partial<Bindings>,
 ): Promise<boolean> {
   if (!token || token.length !== 6 || !/^\d{6}$/.test(token)) return false
-  // Demo pin bypass — allowed for demo_account:true entries (evaluator/admin access)
-  // Works in both demo mode AND production for accounts flagged demo_account:true
-  if (user.demo_account && user.totp_demo_pin) {
-    if (safeEqual(token, user.totp_demo_pin)) return true
-  }
-  // Standard RFC 6238 check
+  if (!user.totp_secret) return false
   return verifyTOTP(user.totp_secret, token)
 }
 
@@ -678,7 +669,7 @@ app.post('/auth/login', async (c) => {
       if (!otp || otp.length !== 6) {
         return c.html(errorRedirect(`/portal/${portal}`, 'Please enter your 6-digit authenticator code.'))
       }
-      const totpValid = await verifyTOTPWithDemoBypass(user, otp, c.env)
+      const totpValid = await verifyTOTPStrict(user, otp)
       if (!totpValid) {
         const hint = (user.demo_account && isDemoMode(c.env))
           ? ' (demo mode: use your provisioned demo pin or authenticator app)'
@@ -750,7 +741,7 @@ app.post('/auth/admin', async (c) => {
     const passOk  = await verifyPassword(password, adminUser.hash, adminUser.salt)
 
     // RFC 6238 TOTP verification — demo_account bypass allowed for evaluator access
-    const totpOk = await verifyTOTPWithDemoBypass(adminUser, totp, c.env)
+    const totpOk = await verifyTOTPStrict(adminUser, totp)
 
     if (!idOk || !passOk || !totpOk) {
       return c.html(errorRedirect('/admin', 'Invalid credentials or 2FA code.'))
@@ -7493,8 +7484,8 @@ app.get('/admin/integration-guide', requireSession(), requireRole(['Super Admin'
         credentials: {
           url:      'https://india-gully.pages.dev/admin',
           username: 'superadmin@indiagully.com',
-          password: 'IGAdmin@2026',
-          totp:     '123456 (demo PIN — always valid)',
+          password: 'REDACTED',
+          totp:     'REDACTED',
           note:     'superadmin account uses PBKDF2-SHA256 + RFC6238 TOTP with demo bypass',
         },
         test_endpoint: 'POST /api/auth/admin',
@@ -15390,7 +15381,7 @@ app.post('/hr/payroll', requireSession(), requireRole(['Super Admin'], ['admin']
     if (action === 'generate_bank_file') {
       // Generate NEFT/RTGS bank transfer file
       const transferData = employees || [
-        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'HDFC0123456789', ifsc: 'HDFC0001234', net_salary: 154300 },
+        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'REDACTED', ifsc: 'REDACTED', net_salary: 154300 },
         { id: 'EMP-002', name: 'Pavan Manikonda', bank_account: 'ICIC0987654321', ifsc: 'ICIC0001234', net_salary: 139650 },
         { id: 'EMP-003', name: 'Amit Jhingan',    bank_account: 'SBIN0456789123', ifsc: 'SBIN0001234', net_salary: 69450 },
       ]
@@ -15403,7 +15394,7 @@ app.post('/hr/payroll', requireSession(), requireRole(['Super Admin'], ['admin']
     if (action === 'disburse' && env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET &&
         !env.RAZORPAY_KEY_ID.includes('XXXX') && !env.RAZORPAY_KEY_ID.includes('test')) {
       const payrollList = employees || [
-        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'HDFC0123456789', ifsc: 'HDFC0001234', net_salary: 154300 },
+        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'REDACTED', ifsc: 'REDACTED', net_salary: 154300 },
         { id: 'EMP-002', name: 'Pavan Manikonda', bank_account: 'ICIC0987654321', ifsc: 'ICIC0001234', net_salary: 139650 },
         { id: 'EMP-003', name: 'Amit Jhingan',    bank_account: 'SBIN0456789123', ifsc: 'SBIN0001234', net_salary: 69450 },
       ]
