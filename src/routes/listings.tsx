@@ -35,6 +35,11 @@ app.get('/', async (c) => {
     }
   } catch (_) { /* D1 unavailable – fall through to defaults */ }
 
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
   const content = `
 
 <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
@@ -690,11 +695,7 @@ function resetFilters() {
 }
 </script>
 
-`
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
+${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Active Mandates — India Gully Advisory Pipeline', content, {
     description: 'India Gully active mandates — ₹1,165 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
     canonical: 'https://india-gully.pages.dev/listings',

@@ -153,6 +153,11 @@ app.get('/', async (c) => {
     }
   } catch (_) { /* D1 unavailable – fall through to defaults */ }
 
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
   const content = `
 
 <!-- ══ HERO CAROUSEL ════════════════════════════════════════════════════ -->
@@ -1417,11 +1422,6 @@ function filterRB(cat){
 </div>
 
 ${cmsZoneHtml}`
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
-
   return c.html(layout(cmsTitle || 'Home', content, {
     description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
     canonical: 'https://india-gully.pages.dev/',

@@ -26,6 +26,11 @@ app.get('/', async (c) => {
   const service = c.req.query('service') || ''
   const mandate = c.req.query('mandate') || ''
 
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
   const content = `
 
 <!-- CONTACT HERO -->
@@ -430,11 +435,6 @@ function igContactAjax() {
 <!-- WhatsApp float handled by global ig-contact-fab in layout -->
 
 ${cmsZoneHtml}`
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
-
   return c.html(layout(cmsTitle || 'Contact & Enquiry', content, {
     description: 'Contact India Gully, submit a mandate enquiry, HORECA RFQ or advisory request. Our leadership team responds within 24 hours.',
     canonical: 'https://india-gully.pages.dev/contact',
