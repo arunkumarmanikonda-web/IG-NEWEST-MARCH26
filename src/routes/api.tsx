@@ -5648,7 +5648,9 @@ app.put('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async 
   const session = c.get('session') as SessionData
   const id = Number(c.req.param('id'))
   const body = await c.req.json() as Record<string, string>
-  const { title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, change_note } = body
+  const { title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, change_note, status: reqStatus } = body
+  // Super Admin can publish directly; otherwise save as draft
+  const newStatus = (session.role === 'admin' && reqStatus === 'published') ? 'published' : 'draft'
 
   if (c.env?.DB) {
     const existing = await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
@@ -5663,11 +5665,16 @@ app.put('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async 
          title=COALESCE(?,title), meta_title=COALESCE(?,meta_title), meta_desc=COALESCE(?,meta_desc),
          og_image=COALESCE(?,og_image), hero_headline=COALESCE(?,hero_headline),
          hero_subheading=COALESCE(?,hero_subheading), body_html=COALESCE(?,body_html),
-         status='draft', version=?, author=?, updated_at=CURRENT_TIMESTAMP
+         status=?, version=?, author=?, updated_at=CURRENT_TIMESTAMP
        WHERE id=?`
-    ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newVersion, session.user, id).run()
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
-    return c.json({ success: true, page_id: id, version: newVersion, status: 'draft' })
+    ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newStatus, newVersion, session.user, id).run()
+    if (newStatus === 'published') {
+      await c.env.DB.prepare(
+        `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note) VALUES (?, ?, ?, ?, 'published', ?, ?)`
+      ).bind(id, newVersion, title || existing.title, body_html || existing.body_html, session.user, 'Published directly by Super Admin').run()
+    }
+    await kvAuditLog(c.env?.IG_AUDIT_KV, newStatus === 'published' ? 'CMS_PAGE_PUBLISHED' : 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
+    return c.json({ success: true, page_id: id, version: newVersion, status: newStatus })
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)

@@ -133,7 +133,26 @@ const SLIDES = [
   },
 ]
 
-app.get('/', (c) => {
+app.get('/', async (c) => {
+  // ── CMS: fetch published row from D1 ─────────────────────────────────────
+  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
+  try {
+    const db = (c.env as any)?.DB
+    if (db) {
+      const row = await db.prepare(
+        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
+           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
+      ).bind('/').first()
+      if (row) {
+        cmsTitle    = (row.title        as string) || ''
+        cmsMeta     = (row.meta_desc    as string) || ''
+        cmsHeroH    = (row.hero_headline   as string) || ''
+        cmsHeroSub  = (row.hero_subheading as string) || ''
+        cmsBodyHtml = (row.body_html    as string) || ''
+      }
+    }
+  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+
   const content = `
 
 <!-- ══ HERO CAROUSEL ════════════════════════════════════════════════════ -->
@@ -1397,9 +1416,14 @@ function filterRB(cat){
   </div>
 </div>
 
-`
-  return c.html(layout('Home', content, {
-    description: "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
+${cmsZoneHtml}`
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
+  return c.html(layout(cmsTitle || 'Home', content, {
+    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
     canonical: 'https://india-gully.pages.dev/',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     heroPreload: '/static/mandates/chail/chail-img1.jpg',

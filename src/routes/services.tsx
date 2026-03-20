@@ -98,7 +98,26 @@ function brandLogoGrid(brands: any[], title: string, subtitle: string) {
 </div>`
 }
 
-app.get('/', (c) => {
+app.get('/', async (c) => {
+  // ── CMS: fetch published row from D1 ─────────────────────────────────────
+  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
+  try {
+    const db = (c.env as any)?.DB
+    if (db) {
+      const row = await db.prepare(
+        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
+           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
+      ).bind('/services').first()
+      if (row) {
+        cmsTitle    = (row.title        as string) || ''
+        cmsMeta     = (row.meta_desc    as string) || ''
+        cmsHeroH    = (row.hero_headline   as string) || ''
+        cmsHeroSub  = (row.hero_subheading as string) || ''
+        cmsBodyHtml = (row.body_html    as string) || ''
+      }
+    }
+  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+
   const content = `
 
 <!-- ══ SERVICES HERO ════════════════════════════════════════════════════ -->
@@ -255,8 +274,13 @@ ${SERVICES.map((s, i) => `
   </div>
 </div>
 
-`
-  return c.html(layout('Advisory Services', content, {
+${cmsZoneHtml}`
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
+  return c.html(layout(cmsTitle || 'Advisory Services', content, {
     description: 'India Gully advisory services. Real Estate, Retail & Leasing, Hospitality Management, Entertainment Advisory, Debt & Special Situations, HORECA Solutions. Pan-India presence.',
     canonical: 'https://india-gully.pages.dev/services',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
@@ -274,6 +298,7 @@ ${SERVICES.map((s, i) => `
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Retail & Leasing' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Hospitality Management' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Entertainment Advisory' } },
+
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Debt & Special Situations' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'HORECA Solutions' } }
         ]

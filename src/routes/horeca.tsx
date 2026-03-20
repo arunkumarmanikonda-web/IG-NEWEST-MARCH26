@@ -11,7 +11,25 @@ const STEPS = [
 ]
 
 // ── Public HORECA home page ──────────────────────────────────────────────────
-app.get('/', (c) => {
+app.get('/', async (c) => {
+  // ── CMS: fetch published row from D1 ─────────────────────────────────────
+  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
+  try {
+    const db = (c.env as any)?.DB
+    if (db) {
+      const row = await db.prepare(
+        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
+           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
+      ).bind('/horeca').first()
+      if (row) {
+        cmsTitle    = (row.title        as string) || ''
+        cmsMeta     = (row.meta_desc    as string) || ''
+        cmsHeroH    = (row.hero_headline   as string) || ''
+        cmsHeroSub  = (row.hero_subheading as string) || ''
+        cmsBodyHtml = (row.body_html    as string) || ''
+      }
+    }
+  } catch (_) { /* D1 unavailable – fall through to defaults */ }
   const content = `
 
 <!-- HORECA HERO -->
@@ -331,7 +349,11 @@ app.get('/', (c) => {
   </div>
 </div>
 `
-  return c.html(layout('HORECA Solutions', content, {
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+  return c.html(layout(cmsTitle || 'HORECA Solutions', content, {
     description: 'India Gully HORECA Solutions — kitchen equipment, FF&E, OS&E, linens, uniforms and guest amenities for hotels and F&B operators across India.',
     canonical: 'https://india-gully.pages.dev/horeca'
   }))

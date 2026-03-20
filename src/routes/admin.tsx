@@ -1114,12 +1114,17 @@ app.get('/cms', (c) => {
     var metaDesc   = panel ? panel.querySelectorAll('textarea')[0] : null;
     var statusEl   = panel ? panel.querySelector('select') : null;
 
+    var heroH   = panel ? panel.querySelectorAll('input[type="text"]')[3] : null;
+    var heroSub = panel ? panel.querySelectorAll('textarea')[1] : null;
     var payload = {
-      title:     titleEl    ? titleEl.value    : pageName,
-      body_html: bodyEl     ? bodyEl.value     : '',
-      meta_title: metaTitle ? metaTitle.value  : '',
-      meta_desc:  metaDesc  ? metaDesc.value   : '',
-      change_note: 'Updated via CMS editor',
+      title:           titleEl    ? titleEl.value    : pageName,
+      body_html:       bodyEl     ? bodyEl.value     : '',
+      meta_title:      metaTitle  ? metaTitle.value  : '',
+      meta_desc:       metaDesc   ? metaDesc.value   : '',
+      hero_headline:   heroH      ? heroH.value      : '',
+      hero_subheading: heroSub    ? heroSub.value    : '',
+      status: 'published',
+      change_note: 'Published via CMS editor',
     };
 
     // Determine page ID from panel index (1-based in DB seeded order)
@@ -1288,8 +1293,16 @@ app.get('/cms', (c) => {
       }
       if(d.pages && d.pages.length){
         d.pages.forEach(function(pg, idx){
-          var titleEls = document.querySelectorAll('#cms-panel-'+idx+' input[type=\"text\"]');
-          if(titleEls[0] && pg.title) titleEls[0].value = pg.title;
+          var panel = document.getElementById('cms-panel-'+idx);
+          var titleEls = panel ? panel.querySelectorAll('input[type=\"text\"]') : [];
+          if(titleEls[0] && pg.title)        titleEls[0].value = pg.title;
+          if(titleEls[2] && pg.meta_title)   titleEls[2].value = pg.meta_title;
+          if(titleEls[3] && pg.hero_headline)titleEls[3].value = pg.hero_headline;
+          var textareas = panel ? panel.querySelectorAll('textarea') : [];
+          if(textareas[0] && pg.meta_desc)       textareas[0].value = pg.meta_desc;
+          if(textareas[1] && pg.hero_subheading) textareas[1].value = pg.hero_subheading;
+          var bodyEl = document.getElementById('cms-body-'+idx);
+          if(bodyEl && pg.body_html) bodyEl.value = pg.body_html;
           var statusBadge = document.getElementById('cms-status-badge-'+idx);
           if(statusBadge){ statusBadge.textContent = pg.status || 'draft'; statusBadge.className='badge '+(pg.status==='published'?'b-gr':'b-g'); }
         });
@@ -1304,9 +1317,13 @@ app.get('/cms', (c) => {
     var panel = document.getElementById('cms-panel-'+idx);
     var titleEl = panel ? panel.querySelector('input[type="text"]') : null;
     var bodyEl = document.getElementById('cms-body-'+idx);
+    var heroH2   = panel ? panel.querySelectorAll('input[type="text"]')[3] : null;
+    var heroSub2 = panel ? panel.querySelectorAll('textarea')[1] : null;
     var payload = {
-      title: titleEl ? titleEl.value : pageName,
-      body_html: bodyEl ? bodyEl.value : '',
+      title:           titleEl ? titleEl.value : pageName,
+      body_html:       bodyEl  ? bodyEl.value  : '',
+      hero_headline:   heroH2  ? heroH2.value  : '',
+      hero_subheading: heroSub2? heroSub2.value: '',
       status: 'draft',
       change_note: 'Saved as draft via CMS editor'
     };

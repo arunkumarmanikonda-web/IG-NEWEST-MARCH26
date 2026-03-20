@@ -15,7 +15,25 @@ function statusStyle(type: string) {
 }
 
 // ── LISTINGS INDEX ─────────────────────────────────────────────────────────
-app.get('/', (c) => {
+app.get('/', async (c) => {
+  // ── CMS: fetch published row from D1 ─────────────────────────────────────
+  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
+  try {
+    const db = (c.env as any)?.DB
+    if (db) {
+      const row = await db.prepare(
+        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
+           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
+      ).bind('/listings').first()
+      if (row) {
+        cmsTitle    = (row.title        as string) || ''
+        cmsMeta     = (row.meta_desc    as string) || ''
+        cmsHeroH    = (row.hero_headline   as string) || ''
+        cmsHeroSub  = (row.hero_subheading as string) || ''
+        cmsBodyHtml = (row.body_html    as string) || ''
+      }
+    }
+  } catch (_) { /* D1 unavailable – fall through to defaults */ }
 
   const content = `
 
@@ -673,7 +691,11 @@ function resetFilters() {
 </script>
 
 `
-  return c.html(layout('Active Mandates — India Gully Advisory Pipeline', content, {
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+  return c.html(layout(cmsTitle || 'Active Mandates — India Gully Advisory Pipeline', content, {
     description: 'India Gully active mandates — ₹1,165 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
     canonical: 'https://india-gully.pages.dev/listings',
     ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg'
