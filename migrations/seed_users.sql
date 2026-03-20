@@ -10,37 +10,37 @@ INSERT OR IGNORE INTO ig_users
   (identifier, password_hash, password_salt, totp_secret, totp_enabled,
    role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
 VALUES
-  -- Super Admin: IGAdmin@2026 / TOTP: JBSWY3DPEHPK3PXP / PIN: 123456
+  -- Super Admin (credentials provisioned via D1/secrets)
   ('superadmin@indiagully.com',
    '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',
    'ig-salt-admin-v3-2026',
-   'JBSWY3DPEHPK3PXP', 1,
+   '' , 0,
    'Super Admin', 'admin', '/admin/dashboard',
-   1, 1, 1, '123456'),
+   1, 1, 1, '')
 
-  -- Demo Client: IGDemo@2026 / TOTP: JBSWY3DPEHPK3PXQ / PIN: 123456
+  -- Demo Client (credentials provisioned via D1/secrets)
   ('demo@indiagully.com',
    '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',
    'ig-salt-client-v3-2026',
-   'JBSWY3DPEHPK3PXQ', 1,
+   '' , 0,
    'Client', 'client', '/portal/client/dashboard',
-   1, 1, 1, '123456'),
+   1, 1, 1, '')
 
-  -- Demo Employee: IGEmp@2026 / TOTP: JBSWY3DPEHPK3PXR / PIN: 123456
+  -- Demo Employee (credentials provisioned via D1/secrets)
   ('IG-EMP-0001',
    '2327d437979646c3a1dd2535776f7b2998528832264450ce3a82ce1c335b59d4',
    'ig-salt-emp-v3-2026',
-   'JBSWY3DPEHPK3PXR', 1,
+   '' , 0,
    'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 1, '123456'),
+   1, 1, 1, '')
 
-  -- Demo Board/KMP: IGBoard@2026 / TOTP: JBSWY3DPEHPK3PXS / PIN: 123456
+  -- Demo Board/KMP (credentials provisioned via D1/secrets)
   ('IG-KMP-0001',
    'd436a3bf72ea09c74d7f778ecbc32fcd0c54db0d2cd2c3ecc352c1cb994be876',
    'ig-salt-board-v3-2026',
-   'JBSWY3DPEHPK3PXS', 1,
+   '' , 0,
    'Board', 'board', '/portal/board/dashboard',
-   1, 1, 1, '123456');
+   1, 1, 1, '')
 
 -- ── CMS Content defaults ──────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_cms_content (key, value, content_type, page, section, is_published, version)

@@ -116,8 +116,8 @@ VALUES
   ('superadmin@indiagully.com',
    '531e7f8d58df22dc04f4883380c7def8ea1f7a548938d62065d46cf1c011ec1c',
    'ig-salt-admin-v3-2026',
-   'JBSWY3DPEHPK3PXP',
-   NULL,                          -- prod: AES-GCM(JBSWY3DPEHPK3PXP, KMS_KEY)
+   ' ',
+   NULL,                          -- prod: AES-GCM(TOTP_SECRET, KMS_KEY)
    'Super Admin', 'admin', '/admin/dashboard',
    1, 1, 0, '');
 
@@ -129,10 +129,10 @@ VALUES
   ('demo@indiagully.com',
    '3a7f1c9e2b5d8f4a6c0e3b7d1f5a8c2e4b6d9f1c3a7e0b4d8f2a5c9e1b3d7f',
    'ig-salt-client-v3-2026',
-   'JBSWY3DPEHPK3PXQ',
+   ''],
    NULL,
    'Client', 'client', '/portal/client/dashboard',
-   1, 1, 1, '282945');
+   1'');
 
 -- Demo Employee
 INSERT OR IGNORE INTO ig_users
@@ -142,10 +142,10 @@ VALUES
   ('IG-EMP-0001',
    '7b3e9a1d5f2c8e4b0d6f3a9c1e7b5d2f8a4c6e0b3d9f1a5c7e2b4d8f0a3c6e',
    'ig-salt-emp-v3-2026',
-   'JBSWY3DPEHPK3PXR',
+   ''],
    NULL,
    'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 1, '374816');
+   1'');
 
 -- Demo Board/KMP
 INSERT OR IGNORE INTO ig_users
@@ -155,10 +155,10 @@ VALUES
   ('IG-KMP-0001',
    '1d8f4c2a7e5b3f9c6a1d4b8e2f5c9a3d7b1f4e8c2a6d9f3b1e5c8a2d7f4b9e',
    'ig-salt-board-v3-2026',
-   'JBSWY3DPEHPK3PXS',
+   ''],
    NULL,
    'Board', 'board', '/portal/board/dashboard',
-   1, 1, 1, '591203');
+   1'');
 
 -- QA Automation (no TOTP, demo mode only)
 INSERT OR IGNORE INTO ig_users
@@ -168,10 +168,10 @@ VALUES
   ('qa@indiagully.com',
    'b4e8f2a6c0d4f8b2e6a0c4d8f2a6b0e4c8d2f6a0b4e8c2d6f0a4b8e2c6d0f4',
    'ig-salt-qa-v3-2026',
-   'JBSWY3DPEHPK3PXT',
+   '',
    NULL,
    'Client', 'client', '/portal/client/dashboard',
-   1, 0, 1, '000000');
+   1, 0, 1, '');
 
 -- ── Seed: Default user preferences ───────────────────────────────────────────
 INSERT OR IGNORE INTO ig_user_preferences (user_id)

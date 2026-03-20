@@ -332,8 +332,8 @@ app.get('/', (c) => {
       </div>
       <div style="background:#f0f9ff;border-bottom:1px solid #bae6fd;padding:.875rem 1.5rem;display:flex;gap:.6rem;">
         <i class="fas fa-shield-alt" style="color:#0369a1;font-size:.75rem;margin-top:.15rem;flex-shrink:0;"></i>
-        <div><p style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0c4a6e;margin-bottom:.3rem;">2FA Auto-Fill Enabled</p>
-        <p style="font-size:.75rem;color:#0369a1;line-height:1.7;">The 6-digit TOTP code is <strong>automatically filled and refreshed every 30 seconds</strong>. Just enter your username and password and click Authenticate — no authenticator app needed on this device.</p></div>
+        <div><p style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0c4a6e;margin-bottom:.3rem;">Two-Factor Authentication Required</p>
+        <p style="font-size:.75rem;color:#0369a1;line-height:1.7;">Enter the 6-digit TOTP code from your authenticator app (Google Authenticator/Authy/Microsoft Authenticator).</p></div>
       </div>
       ${eb}
       <div style="padding:2rem;">
@@ -352,43 +352,6 @@ app.get('/', (c) => {
   var csrf=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');
   var ce=document.getElementById('csrf-admin'); if(ce) ce.value=csrf;
   sessionStorage.setItem('ig_csrf_admin',csrf);
-
-  /* ── TOTP auto-fill: uses fixed demo PIN for evaluator access ────────────
-     The admin account accepts TOTP code 123456 as a demo convenience PIN.
-     A live RFC 6238 TOTP from an authenticator app (secret: JBSWY3DPEHPK3PXP)
-     also works if you have the app configured.
-  ── */
-  var TOTP_SECRET = 'JBSWY3DPEHPK3PXP';
-  function b32decode(s){
-    var alpha='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-    var bits='';
-    for(var i=0;i<s.length;i++){var idx=alpha.indexOf(s[i].toUpperCase());if(idx>=0)bits+=idx.toString(2).padStart(5,'0');}
-    var bytes=new Uint8Array(Math.floor(bits.length/8));
-    for(var j=0;j<bytes.length;j++)bytes[j]=parseInt(bits.slice(j*8,j*8+8),2);
-    return bytes.buffer;
-  }
-  async function computeHOTP(secret, counter){
-    var keyData = b32decode(secret);
-    var key = await crypto.subtle.importKey('raw', keyData, {name:'HMAC',hash:'SHA-1'}, false, ['sign']);
-    var msg = new ArrayBuffer(8);
-    var view = new DataView(msg);
-    view.setUint32(0, Math.floor(counter/0x100000000), false);
-    view.setUint32(4, counter>>>0, false);
-    var sig = await crypto.subtle.sign('HMAC', key, msg);
-    var bytes = new Uint8Array(sig);
-    var offset = bytes[19] & 0x0f;
-    var code = ((bytes[offset]&0x7f)<<24 | bytes[offset+1]<<16 | bytes[offset+2]<<8 | bytes[offset+3]) % 1000000;
-    return code.toString().padStart(6,'0');
-  }
-  async function igFillTOTP(){
-    // Use fixed demo PIN — always valid for evaluator access
-    var inp = document.getElementById('otp-input-admin');
-    if(inp && !inp.matches(':focus')) inp.value = '123456';
-    var cd = document.getElementById('otp-countdown-admin');
-    if(cd) cd.textContent = '(demo PIN — always valid)';
-  }
-  igFillTOTP();
-  setInterval(igFillTOTP, 30000);
 
   /* ── Rate limiting ── */
   var attKey='ig_attempts_admin';var lockKey='ig_lock_admin';

@@ -87,23 +87,23 @@ INSERT OR IGNORE INTO ig_users
 VALUES
   ('superadmin@indiagully.com',
    '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',
-   'ig-salt-admin-v3-2026', 'JBSWY3DPEHPK3PXP', 1,
-   'Super Admin', 'admin', '/admin/dashboard', 1, 1, 1, '123456'),
+   'ig-salt-admin-v3-2026', '' , 0,
+   'Super Admin', 'admin', '/admin/dashboard', 1, 1, 1, '')
 
   ('demo@indiagully.com',
    '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',
-   'ig-salt-client-v3-2026', 'JBSWY3DPEHPK3PXQ', 1,
-   'Client', 'client', '/portal/client/dashboard', 1, 1, 1, '123456'),
+   'ig-salt-client-v3-2026', '' , 0,
+   'Client', 'client', '/portal/client/dashboard', 1, 1, 1, '')
 
   ('IG-EMP-0001',
    '2327d437979646c3a1dd2535776f7b2998528832264450ce3a82ce1c335b59d4',
-   'ig-salt-emp-v3-2026', 'JBSWY3DPEHPK3PXR', 1,
-   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 1, '123456'),
+   'ig-salt-emp-v3-2026', '' , 0,
+   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 1, '')
 
   ('IG-KMP-0001',
    'd436a3bf72ea09c74d7f778ecbc32fcd0c54db0d2cd2c3ecc352c1cb994be876',
-   'ig-salt-board-v3-2026', 'JBSWY3DPEHPK3PXS', 1,
-   'Board', 'board', '/portal/board/dashboard', 1, 1, 1, '123456');
+   'ig-salt-board-v3-2026', '' , 0,
+   'Board', 'board', '/portal/board/dashboard', 1, 1, 1, '')
 
 -- ── Seed: ig_cms_pages (Phase 18D CMS) ───────────────────────────────────────
 INSERT OR IGNORE INTO ig_cms_pages

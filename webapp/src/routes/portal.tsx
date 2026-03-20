@@ -145,9 +145,6 @@ function loginPage(opts: {
   var csrf=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>(b).toString(16).padStart(2,'0')).join('');
   var csrfEl=document.getElementById('csrf-'+portal); if(csrfEl) csrfEl.value=csrf;
   sessionStorage.setItem('ig_csrf_'+portal, csrf);
-  /* TOTP auto-fill: fixed demo PIN 123456 for evaluator access */
-  var otpInp = document.querySelector('input[name="otp"]');
-  if(otpInp) { otpInp.value = '123456'; otpInp.placeholder = 'Demo PIN: 123456 (pre-filled)'; }
   /* ── Rate limiting (5 attempts → 5min lockout) ── */
   var attKey='ig_attempts_'+portal; var lockKey='ig_lock_'+portal;
   var form=document.getElementById('login-form-'+portal);
