@@ -15551,7 +15551,7 @@ app.post('/hr/payroll', requireSession(), requireRole(['Super Admin'], ['admin']
     if (action === 'generate_bank_file') {
       // Generate NEFT/RTGS bank transfer file
       const transferData = employees || [
-        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'HDFC0123456789', ifsc: 'HDFC0001234', net_salary: 154300 },
+        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'REDACTED', ifsc: 'REDACTED', net_salary: 154300 },
         { id: 'EMP-002', name: 'Pavan Manikonda', bank_account: 'ICIC0987654321', ifsc: 'ICIC0001234', net_salary: 139650 },
         { id: 'EMP-003', name: 'Amit Jhingan',    bank_account: 'SBIN0456789123', ifsc: 'SBIN0001234', net_salary: 69450 },
       ]
@@ -15564,7 +15564,7 @@ app.post('/hr/payroll', requireSession(), requireRole(['Super Admin'], ['admin']
     if (action === 'disburse' && env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET &&
         !env.RAZORPAY_KEY_ID.includes('XXXX') && !env.RAZORPAY_KEY_ID.includes('test')) {
       const payrollList = employees || [
-        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'HDFC0123456789', ifsc: 'HDFC0001234', net_salary: 154300 },
+        { id: 'EMP-001', name: 'Arun Manikonda',  bank_account: 'REDACTED', ifsc: 'REDACTED', net_salary: 154300 },
         { id: 'EMP-002', name: 'Pavan Manikonda', bank_account: 'ICIC0987654321', ifsc: 'ICIC0001234', net_salary: 139650 },
         { id: 'EMP-003', name: 'Amit Jhingan',    bank_account: 'SBIN0456789123', ifsc: 'SBIN0001234', net_salary: 69450 },
       ]

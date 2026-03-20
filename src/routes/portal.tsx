@@ -1385,7 +1385,7 @@ app.get('/client/invoices', async (c) => {
             <tbody id="inv-tbody"></tbody>
           </table>
           <div id="inv-total-row" style="background:var(--ink);color:#fff;padding:.875rem 1rem;display:flex;justify-content:space-between;margin-bottom:1rem;"></div>
-          <div style="font-size:.72rem;color:var(--ink-muted);margin-bottom:1rem;">Payment Terms: 30 days from invoice date · Late payment interest: 18% p.a.<br>Bank: HDFC Bank · A/C: 50200012345678 · IFSC: HDFC0001234</div>
+          <div style="font-size:.72rem;color:var(--ink-muted);margin-bottom:1rem;">Payment Terms: 30 days from invoice date · Late payment interest: 18% p.a.<br>Bank: Bank: [REDACTED] · A/C: [REDACTED] · IFSC: [REDACTED]</div>
           <div id="inv-pay-btn-area"></div>
         </div>
       </div>
@@ -1432,7 +1432,7 @@ app.get('/client/invoices', async (c) => {
           <!-- Bank transfer panel -->
           <div id="pay-panel-neft" style="display:none;">
             <div style="background:var(--parch-dk);border:1px solid var(--border);padding:.875rem;margin-bottom:1rem;font-size:.78rem;">
-              <strong>Bank Details:</strong><br>HDFC Bank · A/C: 50200012345678 · IFSC: HDFC0001234 · India Gully
+              <strong>Bank Details:</strong><br>Bank: [REDACTED] · A/C: [REDACTED] · IFSC: [REDACTED] · India Gully
             </div>
             <div style="display:flex;flex-direction:column;gap:.625rem;">
               <div><label class="ig-label">UTR / Transaction Reference</label><input type="text" class="ig-input" id="pay-utr" placeholder="Enter UTR No." style="font-size:.82rem;"></div>
@@ -1764,7 +1764,7 @@ app.get('/client/profile', (c) => {
             { label:'Phone',         value:'+91 8988 988 988'               },
             { label:'Organisation',  value:'Demo Corp Pvt. Ltd.'             },
             { label:'GST Number',    value:'07XXXXXXXXXXX1ZX'               },
-            { label:'PAN Number',    value:'XXXXX0000X'                     },
+            { label:'PAN Number',    value:'[REDACTED-PAN]'                     },
           ].map(f => `
           <div>
             <label class="ig-label">${f.label}</label>
@@ -1779,7 +1779,7 @@ app.get('/client/profile', (c) => {
               <div><label class="ig-label">Phone</label><input type="tel" class="ig-input" value="+91 8988 988 988" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Organisation</label><input type="text" class="ig-input" value="Demo Corp Pvt. Ltd." style="font-size:.82rem;"></div>
               <div><label class="ig-label">GST Number</label><input type="text" class="ig-input" value="07XXXXXXXXXXX1ZX" style="font-size:.82rem;"></div>
-              <div><label class="ig-label">PAN Number</label><input type="text" class="ig-input" value="XXXXX0000X" style="font-size:.82rem;"></div>
+              <div><label class="ig-label">PAN Number</label><input type="text" class="ig-input" value="[REDACTED-PAN]" style="font-size:.82rem;"></div>
             </div>
             <div style="display:flex;gap:.75rem;margin-top:1rem;">
               <button onclick="fetch('/api/portal/profile/update',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({type:'client'})}).then(function(){igToast('Profile updated successfully','success');togglePanel('client-profile-edit');}).catch(function(){igToast('Profile updated successfully','success');togglePanel('client-profile-edit');})" style="background:var(--gold);color:#fff;border:none;padding:.5rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;">Save Changes</button>
@@ -2283,7 +2283,7 @@ app.get('/employee/payslips', (c) => {
         <div style="padding:1.25rem 1.5rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;font-size:.82rem;">
             <div style="background:var(--parch-dk);padding:.875rem;"><strong>Employee:</strong> Demo Employee<br><strong>ID:</strong> IG-EMP-0001<br><strong>Dept:</strong> Operations<br><strong>Designation:</strong> Associate</div>
-            <div style="background:var(--parch-dk);padding:.875rem;"><strong>PAN:</strong> XXXXX0000X<br><strong>UAN:</strong> 100123456789<br><strong>Bank:</strong> ****4521 (HDFC)<br><strong>Pay Period:</strong> <span id="ps-period"></span></div>
+            <div style="background:var(--parch-dk);padding:.875rem;"><strong>PAN:</strong> [REDACTED-PAN]<br><strong>UAN:</strong> [REDACTED-UAN]<br><strong>Bank:</strong> [REDACTED-ACCT]<br><strong>Pay Period:</strong> <span id="ps-period"></span></div>
           </div>
           <table style="width:100%;font-size:.82rem;border-collapse:collapse;margin-bottom:1rem;">
             <thead><tr style="background:var(--ink);color:#fff;"><th style="padding:.5rem .75rem;text-align:left;">Earnings</th><th style="padding:.5rem .75rem;text-align:right;">Amount</th><th style="padding:.5rem .75rem;text-align:left;">Deductions</th><th style="padding:.5rem .75rem;text-align:right;">Amount</th></tr></thead>
@@ -2451,7 +2451,7 @@ app.get('/employee/profile', (c) => {
             { label:'Date of Joining', value:'01 January 2025'        },
             { label:'Work Email',      value:'emp@indiagully.com'     },
             { label:'Phone',           value:'+91 8988 988 988'       },
-            { label:'PAN Number',      value:'XXXXX0000X'             },
+            { label:'PAN Number',      value:'[REDACTED-PAN]'             },
           ].map(f => `
           <div>
             <label class="ig-label">${f.label}</label>

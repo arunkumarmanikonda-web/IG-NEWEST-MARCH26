@@ -2435,7 +2435,7 @@ app.get('/finance', (c) => {
       <div style="background:#fff;border:1px solid var(--border);">
         <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">GSTR-3B — Feb 2026</h3>
-          <button onclick="igConfirm('File GSTR-3B for February 2026?',function(){ igApi.post('/finance/gst/file',{form:'GSTR-3B',period:'Feb 2026'}).then(function(r){igToast('GSTR-3B filed. ARN: '+(r&&r.arn?r.arn:'AA270226123456'),'success');}).catch(function(){igToast('GSTR-3B filed. ARN: AA270226123456','success');}); })" style="background:#16a34a;color:#fff;border:none;padding:.3rem .75rem;font-size:.68rem;font-weight:600;cursor:pointer;">File Now</button>
+          <button onclick="igConfirm('File GSTR-3B for February 2026?',function(){ igApi.post('/finance/gst/file',{form:'GSTR-3B',period:'Feb 2026'}).then(function(r){igToast('GSTR-3B filed. ARN: '+(r&&r.arn?r.arn:'ARN-REDACTED'),'success');}).catch(function(){igToast('GSTR-3B filed. ARN: ARN-REDACTED','success');}); })" style="background:#16a34a;color:#fff;border:none;padding:.3rem .75rem;font-size:.68rem;font-weight:600;cursor:pointer;">File Now</button>
         </div>
         <div style="padding:1.25rem;">
           ${[
@@ -2474,7 +2474,7 @@ app.get('/finance', (c) => {
       <div style="background:#fff;border:1px solid var(--border);">
         <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">GSTR-3B — Feb 2026</h3>
-          <button onclick="igConfirm('File GSTR-3B for February 2026?',function(){ igApi.post('/finance/gst/file',{form:'GSTR-3B',period:'Feb 2026'}).then(function(r){igToast('GSTR-3B filed. ARN: '+(r&&r.arn?r.arn:'AA270226123456'),'success');}).catch(function(){igToast('GSTR-3B filed. ARN: AA270226123456','success');}); })" style="background:#16a34a;color:#fff;border:none;padding:.3rem .75rem;font-size:.68rem;font-weight:600;cursor:pointer;">File Now</button>
+          <button onclick="igConfirm('File GSTR-3B for February 2026?',function(){ igApi.post('/finance/gst/file',{form:'GSTR-3B',period:'Feb 2026'}).then(function(r){igToast('GSTR-3B filed. ARN: '+(r&&r.arn?r.arn:'ARN-REDACTED'),'success');}).catch(function(){igToast('GSTR-3B filed. ARN: ARN-REDACTED','success');}); })" style="background:#16a34a;color:#fff;border:none;padding:.3rem .75rem;font-size:.68rem;font-weight:600;cursor:pointer;">File Now</button>
         </div>
         <div style="padding:1.25rem;">
           ${[
@@ -3620,7 +3620,7 @@ app.get('/finance', (c) => {
     igToast('Downloading ITR-V acknowledgement…','info');
     igApi.get('/finance/itr/download').then(function(d){
       var csv = igBuildCsv(['Field','Value'],[
-        ['Acknowledgement No',(d&&d.ack_no)||'IND2025261234567'],
+        ['Acknowledgement No',(d&&d.ack_no)||'ACK-REDACTED'],
         ['PAN',(d&&d.pan)||'AAACN1234D'],
         ['Assessment Year','2025-26'],
         ['Filing Date',(d&&d.filed_at)||'15 Jul 2025'],
@@ -4480,7 +4480,7 @@ app.get('/hr', (c) => {
               ${[
                 {l:'Bank Name',          id:'ob-bank',    ph:'HDFC Bank'},
                 {l:'Account Number',     id:'ob-acc',     ph:'XXXXXXXXXXXX'},
-                {l:'IFSC Code',          id:'ob-ifsc',    ph:'HDFC0001234'},
+                {l:'IFSC Code',          id:'ob-ifsc',    ph:'[REDACTED-IFSC]'},
                 {l:'Account Type',       id:'ob-acctype', ph:'Savings'},
               ].map(f=>`<div style="margin-bottom:.5rem;"><label class="ig-label">${f.l}</label><input type="text" id="${f.id}" class="ig-input" placeholder="${f.ph}" style="font-size:.82rem;"></div>`).join('')}
             </div>
@@ -5205,7 +5205,7 @@ app.get('/hr', (c) => {
     igApi.post('/hr/payroll',{action:'generate_bank_file',month:'March 2026'}).then(function(r){
       var csv = igBuildCsv(
         ['EMP ID','Name','Bank','IFSC','Account No','Amount (INR)','Payment Date','Ref'],
-        [['IG-EMP-0001','Riya Sharma','HDFC Bank','HDFC0001234','XXXX5678','49500','28 Mar 2026','NEFT-MAR26-001'],
+        [['IG-EMP-0001','Riya Sharma','HDFC Bank','[REDACTED-IFSC]','XXXX5678','49500','28 Mar 2026','NEFT-MAR26-001'],
          ['IG-EMP-0002','Arjun Mehta','ICICI Bank','ICIC0005678','XXXX9012','39340','28 Mar 2026','NEFT-MAR26-002'],
          ['IG-EMP-0003','Priya Nair','SBI','SBIN0001111','XXXX3456','74900','28 Mar 2026','NEFT-MAR26-003'],
          ['IG-EMP-0004','Vikram Singh','Axis Bank','UTIB0002222','XXXX7890','108800','28 Mar 2026','NEFT-MAR26-004'],
@@ -5225,7 +5225,7 @@ app.get('/hr', (c) => {
       var challanRef = (r&&r.ref)||('PF-MAR26-'+Math.floor(Math.random()*90000+10000));
       var csv = igBuildCsv(
         ['EMP ID','Name','UAN','PF Number','Employee PF','Employer PF','EPS','Total','Month'],
-        [['IG-EMP-0001','Riya Sharma','100123456789','MH/1234/5678','4200','4200','1250','9650','March 2026'],
+        [['IG-EMP-0001','Riya Sharma','[REDACTED-UAN]','MH/1234/5678','4200','4200','1250','9650','March 2026'],
          ['IG-EMP-0002','Arjun Mehta','100234567890','MH/1234/5679','3360','3360','1250','7970','March 2026'],
          ['IG-EMP-0003','Priya Nair','100345678901','MH/1234/5680','6600','6600','1250','14450','March 2026'],
          ['IG-EMP-0004','Vikram Singh','100456789012','MH/1234/5681','10200','10200','1250','21650','March 2026'],
@@ -5244,7 +5244,7 @@ app.get('/hr', (c) => {
     igApi.post('/hr/payroll',{action:'download_form16a',employee:name||shortName}).then(function(r){
       var csv = igBuildCsv(['Form 16 Part A - FY 2025-26','',''],
         [['Employee', name||shortName, ''],
-         ['PAN', r&&r.pan ? r.pan : 'XXXXX0000X', ''],
+         ['PAN', r&&r.pan ? r.pan : '[REDACTED-PAN]', ''],
          ['Employer TAN', 'DLGM12345A', ''],
          ['Annual Salary (₹)', r&&r.annual_salary ? r.annual_salary : '9,00,000', ''],
          ['TDS Deducted (₹)', r&&r.tds ? r.tds : '90,000', ''],
@@ -5255,7 +5255,7 @@ app.get('/hr', (c) => {
       igToast('Form-16 Part A downloaded for '+shortName,'success');
     }).catch(function(){
       var csv = igBuildCsv(['Form 16 Part A - FY 2025-26','',''],
-        [['Employee', name||shortName, ''],['PAN','XXXXX0000X',''],['TDS Deducted (₹)','90,000',''],['FY','2025-26','']]);
+        [['Employee', name||shortName, ''],['PAN','[REDACTED-PAN]',''],['TDS Deducted (₹)','90,000',''],['FY','2025-26','']]);
       igSaveFile('form16a-'+shortName.toLowerCase()+'-fy2526.csv', csv, 'text/csv');
       igToast('Form-16 Part A downloaded for '+shortName,'success');
     });
@@ -6484,7 +6484,7 @@ app.get('/governance', (c) => {
   window.igGovViewRegister = function(name){
     igApi.get('/governance/registers').then(function(d){
       var regData = {
-        'Register of Directors': [['Arun Manikonda','Director','DIN: 00123456','01 Jan 2017','Active'],['Pavan Manikonda','Director','DIN: 00234567','01 Jan 2017','Active'],['Amit Jhingan','Independent Director','DIN: 00345678','15 Jan 2026','Active']],
+        'Register of Directors': [['Arun Manikonda','Director','DIN: [REDACTED]','01 Jan 2017','Active'],['Pavan Manikonda','Director','DIN: [REDACTED]','01 Jan 2017','Active'],['Amit Jhingan','Independent Director','DIN: [REDACTED]','15 Jan 2026','Active']],
         'Register of Members': [['India Gully LLP','Promoter','40% holding','As on 05 Mar 2026','Current'],['Arun Manikonda','Individual','35% holding','As on 05 Mar 2026','Current'],['Pavan Manikonda','Individual','25% holding','As on 05 Mar 2026','Current']],
         'Register of Charges': [['No charges registered','—','—','—','—']],
         'Attendance Register': [['BM-01/2025-26','15 Oct 2025','Arun Manikonda,Pavan Manikonda','2/2','Quorum Met'],['BM-02/2025-26','28 Feb 2026','All 3 Directors','3/3','Quorum Met']]
@@ -7068,10 +7068,10 @@ app.get('/horeca', (c) => {
       </div>
       <table class="ig-tbl"><thead><tr><th>Shipment ID</th><th>PO Ref</th><th>Carrier</th><th>AWB / LR</th><th>Origin</th><th>Destination</th><th>ETA</th><th>Last Update</th><th>Status</th></tr></thead><tbody>
         ${[
-          {id:'SHP-028',po:'PO-020',carrier:'Blue Dart',   awb:'BD1234567890',origin:'Mumbai',     dest:'Delhi Central',  eta:'01 Mar 2026',upd:'28 Feb — Out for delivery',cls:'b-g',  s:'In Transit'},
+          {id:'SHP-028',po:'PO-020',carrier:'Blue Dart',   awb:'AWB-REDACTED-1',origin:'Mumbai',     dest:'Delhi Central',  eta:'01 Mar 2026',upd:'28 Feb — Out for delivery',cls:'b-g',  s:'In Transit'},
           {id:'SHP-027',po:'PO-019',carrier:'DTDC',        awb:'DT9876543210',origin:'Delhi',      dest:'Gurgaon Depot',  eta:'28 Feb 2026',upd:'28 Feb — Delivered',     cls:'b-gr', s:'Delivered'},
           {id:'SHP-026',po:'PO-018',carrier:'DHL Express', awb:'DH4567890123',origin:'Hyderabad',  dest:'Mumbai',         eta:'05 Mar 2026',upd:'27 Feb — In transit',     cls:'b-dk', s:'Scheduled'},
-          {id:'SHP-025',po:'PO-017',carrier:'Gati',        awb:'GT7890123456',origin:'Delhi',      dest:'Delhi Central',  eta:'26 Feb 2026',upd:'26 Feb — Delivered',     cls:'b-gr', s:'Delivered'},
+          {id:'SHP-025',po:'PO-017',carrier:'Gati',        awb:'AWB-REDACTED-2',origin:'Delhi',      dest:'Delhi Central',  eta:'26 Feb 2026',upd:'26 Feb — Delivered',     cls:'b-gr', s:'Delivered'},
         ].map(s=>`<tr>
           <td style="font-weight:700;font-size:.78rem;color:var(--gold);">${s.id}</td>
           <td style="font-size:.75rem;color:var(--ink-muted);">${s.po}</td>
