@@ -2082,6 +2082,15 @@ const SCRIPTS = (_nonce?: string) => `
   };
 
   /* ── DOCUMENT WATERMARK ───────────────────────────────────────────────── */
+  /* igCloseModal — closes the most recently opened igModal overlay */
+  window.igCloseModal = function(){
+    // igModal overlays have IDs starting with "igm_"
+    var overlays = document.querySelectorAll('[id^="igm_"]');
+    if(overlays.length){
+      overlays[overlays.length-1].remove();
+    }
+  };
+
   window.igWatermark = function(docEl, userLabel){
     if(!docEl) return;
     userLabel = userLabel || 'CONFIDENTIAL — India Gully';

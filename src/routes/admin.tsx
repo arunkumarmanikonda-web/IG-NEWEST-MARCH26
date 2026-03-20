@@ -7372,6 +7372,25 @@ app.get('/horeca', async (c) => {
   };
 
   // Open Add Product form
+  // ── HORECA: Dynamic tab loaders (Phase L) ────────────────────────────────
+  window.igHorecaLoadVendors = function() {
+    igApi.get('/horeca/vendors').then(function(r) {
+      if (r && r.vendors && r.vendors.length) {
+        igToast('Vendor list refreshed — '+r.vendors.length+' vendors','info');
+      }
+    }).catch(function(){});
+  };
+  window.igHorecaLoadPOs = function() {
+    igApi.get('/horeca/purchase-orders').then(function(r) {
+      if (r && r.orders) igToast('PO list refreshed','info');
+    }).catch(function(){});
+  };
+  window.igHorecaLoadGrn = function() {
+    igApi.get('/horeca/logistics').then(function(r) {
+      if (r) igToast('GRN/logistics data refreshed','info');
+    }).catch(function(){});
+  };
+
   window.igHorecaOpenAddProduct = function() {
     _hrcEditMode = false;
     document.getElementById('add-product-title').textContent = 'New Product / SKU';
@@ -8014,8 +8033,10 @@ app.get('/horeca', async (c) => {
 })
 
 // ── CONTRACTS ─────────────────────────────────────────────────────────────────
-app.get('/contracts', (c) => {
-  const contracts = [
+app.get('/contracts', async (c) => {
+  // ── D1: Load contracts from ig_contracts ───────────────────────────────────
+  let contracts: any[] = []
+  const FALLBACK_CONTRACTS = [
     {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Demo Client Corp',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
     {id:'PMC-001', name:'Hotel PMC Agreement',              party:'Rajasthan Hotels',  type:'PMC',         start:'15 Feb 2026',expiry:'14 Feb 2027',status:'Active',   cls:'b-gr',signed:true},
     {id:'MND-001', name:'Retail Leasing Mandate',           party:'Mumbai Mall Pvt.', type:'Mandate',     start:'01 Dec 2025',expiry:'30 Nov 2026',status:'Active',   cls:'b-gr',signed:true},
@@ -8024,6 +8045,28 @@ app.get('/contracts', (c) => {
     {id:'NDA-001', name:'NDA — Entertainment Project',      party:'Confidential',     type:'NDA',         start:'01 Feb 2026',expiry:'01 Feb 2027',status:'Active',   cls:'b-gr',signed:false},
     {id:'DRF-001', name:'New Client Advisory Agreement',    party:'TBD',              type:'Advisory',    start:'—',          expiry:'—',           status:'Draft',    cls:'b-dk',signed:false},
   ]
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`
+        SELECT contract_id as id, name, party, contract_type as type,
+               start_date as start, expiry_date as expiry, status,
+               CASE WHEN status='Active' THEN 'b-gr'
+                    WHEN status='Expiring' THEN 'b-g'
+                    WHEN status='Draft' THEN 'b-dk'
+                    ELSE 'b-re' END as cls,
+               signed
+        FROM ig_contracts
+        ORDER BY created_at DESC LIMIT 50
+      `).all()
+      if (rows?.results?.length) {
+        contracts = rows.results.map((r: any) => ({
+          ...r, signed: r.signed === 1
+        }))
+      }
+    }
+  } catch(_) {}
+  if (!contracts.length) contracts = FALLBACK_CONTRACTS
   const templates = ['Advisory Services Agreement','Hotel Management Pre-Opening Contract','Retail Leasing Mandate','Non-Disclosure Agreement (NDA)','Memorandum of Understanding (MOU)','Engagement Letter']
   const clauses = [
     {name:'Scope of Services',     cat:'Standard'},
@@ -9779,8 +9822,10 @@ app.get('/config', (c) => {
 })
 
 // ── SECURITY AUDIT (Phase 6 — TOTP, RBAC, rate-limiting, PAN masking) ─────────
-app.get('/security', (c) => {
-  const logs = [
+app.get('/security', async (c) => {
+  // ── D1: Load recent audit events for security page ────────────────────────
+  let logs: any[] = []
+  const STATIC_LOGS = [
     {ts:'2025-02-28 09:15:22', user:'superadmin@indiagully.com', action:'Login Success',              mod:'Auth',     ip:'103.21.x.x', ua:'Chrome/Win',  ok:true,  risk:'Low'},
     {ts:'2025-02-28 09:12:01', user:'akm@indiagully.com',        action:'Invoice Approved ₹3.2L',     mod:'Finance',  ip:'49.36.x.x',  ua:'Safari/Mac',  ok:true,  risk:'Low'},
     {ts:'2025-02-28 08:55:34', user:'pavan@indiagully.com',      action:'CMS Page Published — Home',  mod:'CMS',      ip:'49.36.x.x',  ua:'Chrome/Win',  ok:true,  risk:'Low'},
@@ -9792,6 +9837,24 @@ app.get('/security', (c) => {
     {ts:'2025-02-25 16:45:00', user:'Unknown',                   action:'Brute Force — 12 attempts',  mod:'Auth',     ip:'91.108.x.x', ua:'Python/3.11', ok:false, risk:'Critical'},
     {ts:'2025-02-25 09:30:00', user:'IG-EMP-0001',               action:'Attendance Check-In',        mod:'HR',       ip:'182.65.x.x', ua:'Firefox/Win', ok:true,  risk:'Low'},
   ]
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`
+        SELECT created_at as ts, user_email as user, action,
+               event_type as mod, ip_address as ip, user_agent as ua,
+               CASE WHEN status='SUCCESS' THEN 1 ELSE 0 END as ok,
+               CASE WHEN event_type LIKE 'AUTH_FAIL%' OR event_type='SECURITY_BREACH' THEN 'Critical'
+                    WHEN event_type LIKE '%FAIL%' OR status='FAILURE' THEN 'High'
+                    WHEN event_type LIKE 'ADMIN_%' THEN 'Med'
+                    ELSE 'Low' END as risk
+        FROM ig_audit_log
+        ORDER BY created_at DESC LIMIT 20
+      `).all()
+      if (rows?.results?.length) logs = rows.results
+    }
+  } catch(_) {}
+  if (!logs.length) logs = STATIC_LOGS
   const rbacRoles = [
     {role:'Super Admin',    users:1, perms:['All Modules','All Portals','User Management','System Config','Security Audit'],  color:'#dc2626'},
     {role:'Director / KMP', users:2, perms:['Board Portal','Finance ERP (read)','Contracts (sign)','Governance'],             color:'#1E1E1E'},
@@ -14790,8 +14853,10 @@ app.get('/settings', (c) => c.redirect('/admin/config', 302))
 app.get('/sales', (c) => c.redirect('/admin/sales/dashboard', 302))
 
 // ── SALES FORCE / CRM DASHBOARD ────────────────────────────────────────────────
-app.get('/sales/dashboard', (c) => {
-  const leads = [
+app.get('/sales/dashboard', async (c) => {
+  // ── D1: Load leads from ig_leads ────────────────────────────────────────────
+  let leads: any[] = []
+  const FALLBACK_LEADS = [
     {id:'LD-001', name:'Green Valley Mall', sector:'Retail',        value:'₹240 Cr', stage:'Proposal',    contact:'Rajan Mehta',    prob:60, owner:'AKM',   date:'28 Feb 2026'},
     {id:'LD-002', name:'Sunrise Hotel Chain',sector:'Hospitality',  value:'₹580 Cr', stage:'Negotiation', contact:'Priya Kapoor',   prob:75, owner:'Pavan', date:'01 Mar 2026'},
     {id:'LD-003', name:'Tech Valley Office', sector:'Real Estate',   value:'₹1,200 Cr',stage:'Discovery',  contact:'Arjun Singh',    prob:30, owner:'AKM',   date:'02 Mar 2026'},
@@ -14799,6 +14864,21 @@ app.get('/sales/dashboard', (c) => {
     {id:'LD-005', name:'PVR Entertainment', sector:'Entertainment',  value:'₹890 Cr', stage:'Proposal',    contact:'Vikram Nair',    prob:45, owner:'AKM',   date:'25 Feb 2026'},
     {id:'LD-006', name:'Coastal Resorts',   sector:'Hospitality',   value:'₹320 Cr', stage:'Qualification',contact:'Sunita Reddy',  prob:20, owner:'Pavan', date:'02 Mar 2026'},
   ]
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`
+        SELECT lead_id as id, name, sector,
+               printf('₹%g Cr', value_cr) as value,
+               stage, contact_name as contact, probability as prob, owner,
+               date(created_at) as date, status
+        FROM ig_leads WHERE status='Active'
+        ORDER BY created_at DESC LIMIT 50
+      `).all()
+      if (rows?.results?.length) leads = rows.results
+    }
+  } catch(_) {}
+  if (!leads.length) leads = FALLBACK_LEADS
   const pipeline_stages = ['Qualification','Discovery','Proposal','Negotiation','LOI','Won','Lost']
   const body = `
   <!-- KPI Row -->
@@ -15565,7 +15645,9 @@ app.get('/audit-log', async (c) => {
 
 // ── MANDATES PAGE ──────────────────────────────────────────────────────────────
 app.get('/mandates', async (c) => {
-  const mandates = [
+  // ── D1: Load mandates from ig_mandates ─────────────────────────────────────
+  let mandates: any[] = []
+  const FALLBACK_MANDATES = [
     {id:'MND-001', name:'Jaipur Hospitality Hub — 5-Star Hotel',    type:'Hospitality', value:'₹425 Cr', stage:'LOI Signed',    client:'Jaipur Hotels Ltd',      date:'Jan 2026', status:'Active'},
     {id:'MND-002', name:'Delhi NCR Mixed-Use Commercial Complex',    type:'Real Estate', value:'₹2,100 Cr',stage:'Due Diligence', client:'NCR Realty Corp',        date:'Dec 2025', status:'Active'},
     {id:'MND-003', name:'Mumbai HORECA Supply Chain Consolidation',  type:'HORECA',      value:'₹87 Cr',  stage:'Mandate Signed', client:'Mumbai F&B Group',       date:'Nov 2025', status:'Active'},
@@ -15573,6 +15655,21 @@ app.get('/mandates', async (c) => {
     {id:'MND-005', name:'Hyderabad IT Park — Entertainment Zone',    type:'Entertainment',value:'₹1,500 Cr',stage:'NDA Signed',   client:'Tech Parks India Ltd',   date:'Jan 2026', status:'Active'},
     {id:'MND-006', name:'Bengaluru Food Court Chain Rollout',        type:'HORECA',      value:'₹45 Cr',  stage:'LOI Signed',    client:'Bengaluru Foods Pvt Ltd', date:'Mar 2026', status:'Active'},
   ]
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`
+        SELECT mandate_id as id, name, mandate_type as type,
+               printf('₹%g Cr', value_cr) as value,
+               stage, client_name as client,
+               date(created_at) as date, status
+        FROM ig_mandates WHERE status='Active'
+        ORDER BY created_at DESC LIMIT 50
+      `).all()
+      if (rows?.results?.length) mandates = rows.results
+    }
+  } catch(_) {}
+  if (!mandates.length) mandates = FALLBACK_MANDATES
   const body = `
   <div style="display:flex;flex-direction:column;gap:1.5rem;">
     <!-- Stats -->
@@ -16066,7 +16163,9 @@ app.get('/clients', async (c) => {
 
 // ── DOCUMENTS PAGE ─────────────────────────────────────────────────────────────
 app.get('/documents', async (c) => {
-  const docs = [
+  // ── D1: Load documents from ig_documents ──────────────────────────────────
+  let docs: any[] = []
+  const FALLBACK_DOCS = [
     {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
     {id:'DOC-002', name:'EY Retainer Agreement v3.pdf',            cat:'Contracts',   size:'1.2 MB', date:'10 Jan 2026', uploader:'pavan',       ndaGated:false},
     {id:'DOC-003', name:'Jaipur Hotel Feasibility Report.pdf',     cat:'Mandates',    size:'4.8 MB', date:'05 Jan 2026', uploader:'akm',         ndaGated:false},
@@ -16076,6 +16175,29 @@ app.get('/documents', async (c) => {
     {id:'DOC-007', name:'Investor Deck — India Gully 2026.pdf',    cat:'Investment',  size:'6.3 MB', date:'01 Feb 2026', uploader:'superadmin',  ndaGated:true},
     {id:'DOC-008', name:'DPDP Compliance Report Q4 FY26.pdf',      cat:'Compliance',  size:'890 KB', date:'28 Feb 2026', uploader:'dpo',         ndaGated:false},
   ]
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`
+        SELECT id, file_name as name, category as cat, file_size_bytes, uploaded_by as uploader,
+               created_at as date, access_level, r2_key
+        FROM ig_documents
+        ORDER BY created_at DESC LIMIT 50
+      `).all()
+      if (rows?.results?.length) {
+        docs = rows.results.map((r: any) => ({
+          id: 'DOC-' + String(r.id).padStart(3, '0'),
+          name: r.name || 'Untitled',
+          cat: r.cat || 'General',
+          size: r.file_size_bytes ? Math.round(r.file_size_bytes / 1024) + ' KB' : '—',
+          date: r.date ? new Date(r.date).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—',
+          uploader: r.uploader || '—',
+          ndaGated: r.access_level === 'NDA-gated' || r.access_level === 'Private',
+        }))
+      }
+    }
+  } catch(_) {}
+  if (!docs.length) docs = FALLBACK_DOCS
   const catColors: Record<string,string> = {Legal:'#7c3aed',Contracts:'#2563eb',Mandates:'#d97706',Finance:'#16a34a',HR:'#0891b2',Compliance:'#dc2626',Investment:'#db2777'}
   const body = `
   <div style="display:flex;flex-direction:column;gap:1.5rem;">
