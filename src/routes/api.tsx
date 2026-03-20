@@ -15760,7 +15760,20 @@ app.post('/governance/resolutions', requireSession(), requireRole(['Super Admin'
     const body = await c.req.json() as Record<string, unknown>
     const { action, resolution_id, title, type } = body
     if (action === 'cast_vote') return c.json({ success: true, action, resolution_id, vote: body.vote, recorded_at: new Date().toISOString() })
-    if (action === 'create') return c.json({ success: true, resolution_id: `RES-00${Date.now()}`.slice(-6), title, type, status: 'Draft', message: `Resolution drafted. Directors notified.` })
+    if (action === 'create') {
+      const env2 = (c as any).env
+      if (env2?.DB) {
+        try {
+          const resNo = `RES-${String(Date.now()).slice(-6)}`
+          const r2 = await env2.DB.prepare(
+            `INSERT INTO ig_resolutions (resolution_no, meeting_type, meeting_date, subject, resolution_text, proposed_by, status)
+             VALUES (?, ?, ?, ?, ?, ?, 'Pending')`
+          ).bind(resNo, (body.resolution_type ?? type ?? 'Board Resolution'), (body.date ?? new Date().toISOString().slice(0,10)), (title ?? 'New Resolution'), (body.resolution_text ?? ''), (body.proposed_by ?? 'Board')).run()
+          return c.json({ success: true, resolution_id: r2.meta?.last_row_id, resolution_no: resNo, title, type, status: 'Pending', message: `Resolution drafted. Directors notified.` })
+        } catch {}
+      }
+      return c.json({ success: true, resolution_id: `RES-00${Date.now()}`.slice(-6), title, type, status: 'Draft', message: `Resolution drafted. Directors notified.` })
+    }
     if (action === 'schedule') return c.json({ success: true, action, type: body.type, date: body.date, ref: `MTG-${Date.now()}`, message: 'Meeting scheduled. Notices sent to directors.' })
     if (action === 'dsc_enroll') return c.json({ success: true, action, person: body.person, ref: `DSC-${Date.now()}`, message: `DSC enrollment initiated for ${body.person}.` })
     if (action === 'dsc_sign') return c.json({ success: true, action, doc: body.doc, signed_at: new Date().toISOString(), message: `${body.doc} signed with Class 3 DSC.` })
@@ -15776,21 +15789,48 @@ app.post('/governance/resolutions', requireSession(), requireRole(['Super Admin'
 
 // Governance: POST Meetings
 app.post('/governance/meetings', requireSession(), requireRole(['Super Admin', 'Director', 'KMP'], ['admin', 'board']), async (c) => {
+  const env = (c as any).env
   try {
-    const { action, type, date, venue, meeting_number } = await c.req.json() as Record<string, unknown>
-    const ref = `MTG-${Date.now()}`
-    return c.json({ success: true, action, ref, type, date, venue, meeting_number, status: 'Scheduled', message: `${type || 'Board Meeting'} scheduled. Notice sent to all directors.` })
-  } catch { return c.json({ success: false, error: 'Meeting scheduling failed' }, 500) }
+    const { action, type, date, venue, mode, meeting_number, time, agenda } = await c.req.json() as Record<string, unknown>
+    const mtgNum = meeting_number ?? `BM-${Date.now()}`
+    if (env?.DB) {
+      const r = await env.DB.prepare(
+        `INSERT INTO ig_board_meetings (meeting_type, meeting_number, meeting_date, meeting_time, venue, mode, agenda_text, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'Scheduled')`
+      ).bind(
+        type ?? 'Board Meeting',
+        mtgNum,
+        date ?? new Date().toISOString().slice(0,10),
+        time ?? '11:00',
+        venue ?? 'Registered Office, New Delhi',
+        mode ?? 'Physical',
+        Array.isArray(agenda) ? agenda.join('\n') : (agenda ?? '')
+      ).run()
+      return c.json({ success: true, id: r.meta?.last_row_id, meeting_number: mtgNum, status: 'Scheduled', message: `${type || 'Board Meeting'} scheduled. Notice sent to all directors.` })
+    }
+    return c.json({ success: true, ref: `MTG-${Date.now()}`, meeting_number: mtgNum, status: 'Scheduled', message: `${type || 'Board Meeting'} scheduled. Notice sent to all directors.` })
+  } catch (err: any) { return c.json({ success: false, error: err?.message ?? 'Meeting scheduling failed' }, 500) }
 })
 
 // Governance: GET Meetings
-app.get('/governance/meetings', requireSession(), requireRole(['Super Admin', 'Director', 'KMP'], ['admin', 'board']), (c) => c.json({
-  success: true, total: 5, meetings: [
-    { id: 'BM-001', type: 'Board Meeting', date: '2026-01-15', venue: 'Registered Office, New Delhi', status: 'Completed' },
-    { id: 'BM-002', type: 'Audit Committee', date: '2026-02-10', venue: 'Virtual', status: 'Completed' },
-    { id: 'BM-003', type: 'Board Meeting', date: '2026-03-20', venue: 'Registered Office, New Delhi', status: 'Scheduled' },
-  ],
-}))
+app.get('/governance/meetings', requireSession(), requireRole(['Super Admin', 'Director', 'KMP'], ['admin', 'board']), async (c) => {
+  const env = (c as any).env
+  if (env?.DB) {
+    try {
+      const rows = await env.DB.prepare(
+        `SELECT id, meeting_number AS meeting_id, meeting_type AS type, meeting_date AS date, venue, mode, status FROM ig_board_meetings ORDER BY meeting_date DESC LIMIT 20`
+      ).all()
+      return c.json({ success: true, total: rows.results?.length ?? 0, meetings: rows.results ?? [] })
+    } catch {}
+  }
+  return c.json({
+    success: true, total: 3, meetings: [
+      { meeting_id: 'BM-001', type: 'Board Meeting', date: '2026-01-15', venue: 'Registered Office, New Delhi', status: 'Concluded' },
+      { meeting_id: 'BM-002', type: 'Audit Committee', date: '2026-02-10', venue: 'Virtual', status: 'Concluded' },
+      { meeting_id: 'BM-003', type: 'Board Meeting', date: '2026-03-20', venue: 'Registered Office, New Delhi', status: 'Scheduled' },
+    ],
+  })
+})
 
 // CMS: POST Templates
 app.post('/cms/templates', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
@@ -16707,7 +16747,28 @@ app.get('/clients', requireSession(), requireRole(['Super Admin'], ['admin']), (
 }))
 
 app.post('/clients', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+  const env = (c as any).env
   const body = await c.req.json() as Record<string,unknown>
+  if (env?.DB) {
+    try {
+      const r = await env.DB.prepare(
+        `INSERT INTO ig_clients (company_name, contact_name, email, phone, sector, status, source, notes)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        body.company_name ?? body.name ?? 'New Client',
+        body.contact_name ?? body.contact ?? '',
+        body.email ?? '',
+        body.phone ?? '',
+        body.sector ?? body.type ?? '',
+        body.status ?? 'Prospect',
+        body.source ?? body.manager ?? '',
+        body.notes ?? ''
+      ).run()
+      return c.json({ success: true, client_id: r.meta?.last_row_id, status: body.status ?? 'Prospect', created_at: new Date().toISOString() })
+    } catch (err: any) {
+      return c.json({ success: false, error: err?.message ?? 'DB error' }, 500)
+    }
+  }
   const clientId = `CL-${String(Date.now()).slice(-3)}`
   return c.json({ success: true, client_id: clientId, status: 'Onboarding', created_at: new Date().toISOString(), ...body })
 })

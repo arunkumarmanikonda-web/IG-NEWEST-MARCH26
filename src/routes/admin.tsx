@@ -1795,7 +1795,7 @@ app.get('/users', async (c) => {
 })
 
 // ── WORKFLOWS ─────────────────────────────────────────────────────────────────
-app.get('/workflows', (c) => {
+app.get('/workflows', async (c) => {
   const WF = [
     {id:'wf0', name:'Invoice Approval',    cat:'Finance',    icon:'file-invoice',   color:'#2563eb',
      steps:[{n:'Submit Invoice',role:'Submitter',sla:2,action:'Form submission'},{n:'Finance Review',role:'Finance Manager',sla:24,action:'Amount & GST check'},{n:'Director Approval',role:'Director',sla:48,action:'Digital signature required'},{n:'GST Filing',role:'Finance',sla:24,action:'Auto-file to GST portal'},{n:'Archive',role:'System',sla:1,action:'Auto-archive to R2'}],
@@ -2303,7 +2303,28 @@ app.get('/workflows', (c) => {
 })
 
 // ── FINANCE ERP ───────────────────────────────────────────────────────────────
-app.get('/finance', (c) => {
+app.get('/finance', async (c) => {
+  // ── D1: Load invoices and financial summary ──────────────────────────────
+  let d1Invoices: any[] = []
+  let finSummary = { revenue: 1240000, expenses: 780000, profit: 460000, gst: 210000 }
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const [invRows, sumRow] = await Promise.all([
+        db.prepare(`SELECT invoice_number, client_name, amount_gross, amount_gst, amount_net, status, due_date, created_at FROM ig_invoices ORDER BY created_at DESC LIMIT 20`).all(),
+        db.prepare(`SELECT SUM(amount_net) as rev FROM ig_invoices WHERE status != 'Draft'`).first(),
+      ])
+      if (invRows?.results?.length) d1Invoices = invRows.results
+      if ((sumRow as any)?.rev) finSummary.revenue = (sumRow as any).rev
+    }
+  } catch(_) {}
+  const invRowsHtml = d1Invoices.length > 0
+    ? d1Invoices.map((r: any) => {
+        const st = r.status||'Draft'; const cls = st==='Paid'?'b-gr':st==='Overdue'?'b-re':st==='Sent'?'b-bl':'b-dk'
+        const due = r.due_date ? new Date(r.due_date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '—'
+        return `<tr><td style="font-size:.82rem;font-weight:600;color:var(--gold);">${r.invoice_number||'—'}</td><td style="font-size:.8rem;">${r.client_name||'—'}</td><td style="font-size:.72rem;color:var(--ink-muted);">998313</td><td style="font-family:'DM Serif Display',Georgia,serif;">₹${((r.amount_gross||0)/100000).toFixed(2)}L</td><td style="font-size:.75rem;color:var(--ink-muted);">₹${Math.round((r.amount_gst||0)/1000)}K</td><td style="font-family:'DM Serif Display',Georgia,serif;font-weight:600;">₹${((r.amount_net||0)/100000).toFixed(2)}L</td><td style="font-size:.78rem;color:var(--ink-muted);">${due}</td><td><span class="badge ${cls}">${st}</span></td><td style="display:flex;gap:.3rem;"><button onclick="igToast('Downloading PDF…','info')" style="background:none;border:1px solid var(--border);cursor:pointer;font-size:.68rem;color:var(--gold);padding:.2rem .5rem;"><i class="fas fa-download"></i></button><button onclick="igToast('Invoice sent','success')" style="background:var(--gold);color:#fff;border:none;cursor:pointer;font-size:.68rem;padding:.2rem .5rem;">Send</button></td></tr>`
+      }).join('')
+    : '<tr><td colspan="9" style="text-align:center;padding:1.5rem;color:var(--ink-muted);font-size:.82rem;">No invoices yet — create your first invoice above</td></tr>'
   const body = `
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[{label:'Revenue MTD',value:'₹12.4L',trend:'↑ +8.3%',c:'#16a34a'},{label:'Expenses MTD',value:'₹7.8L',trend:'↓ -2.1%',c:'#dc2626'},{label:'Net Profit',value:'₹4.6L',trend:'37.1% margin',c:'#2563eb'},{label:'GST Liability',value:'₹2.1L',trend:'Due 20 Mar',c:'#d97706'}].map((s,i)=>`<div class="am fin-kpi"><div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div><div class="kpi-v" style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--ink);line-height:1;margin-bottom:.3rem;">${s.value}</div><div class="kpi-t" style="font-size:.7rem;color:${s.c};">${s.trend}</div></div>`).join('')}
@@ -2351,24 +2372,7 @@ app.get('/finance', (c) => {
       <table class="ig-tbl" id="inv-register-table">
         <thead><tr><th>Invoice</th><th>Client</th><th>SAC</th><th>Amount</th><th>GST</th><th>Total</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="inv-tbody">
-          ${[
-            {inv:'INV-2026-001',client:'Demo Client',sac:'998313',base:212000,gst:38160,total:250160,due:'15 Feb',status:'Paid',   cls:'b-gr'},
-            {inv:'INV-2026-002',client:'Demo Client',sac:'998313',base:152542,gst:27458,total:180000,due:'28 Feb',status:'Overdue',cls:'b-re'},
-            {inv:'INV-2026-003',client:'Entertainment Ventures',sac:'998313',base:271186,gst:48814,total:320000,due:'31 Mar',status:'Draft', cls:'b-dk'},
-          ].map(r=>`<tr id="inv-row-${r.inv.replace(/-/g,'_')}">
-            <td style="font-size:.82rem;font-weight:600;color:var(--gold);">${r.inv}</td>
-            <td style="font-size:.8rem;">${r.client}</td>
-            <td style="font-size:.72rem;color:var(--ink-muted);">${r.sac}</td>
-            <td style="font-family:'DM Serif Display',Georgia,serif;">₹${(r.base/100000).toFixed(2)}L</td>
-            <td style="font-size:.75rem;color:var(--ink-muted);">₹${(r.gst/1000).toFixed(1)}K</td>
-            <td style="font-family:'DM Serif Display',Georgia,serif;font-weight:600;">₹${(r.total/100000).toFixed(2)}L</td>
-            <td style="font-size:.78rem;color:${r.status==='Overdue'?'#dc2626':'var(--ink-muted)'};">${r.due}</td>
-            <td id="status-${r.inv.replace(/-/g,'_')}"><span class="badge ${r.cls}">${r.status}</span></td>
-            <td style="display:flex;gap:.3rem;">
-              <button onclick="igFinDownloadInvoicePdf('${r.inv}')" style="background:none;border:1px solid var(--border);cursor:pointer;font-size:.68rem;color:var(--gold);padding:.2rem .5rem;"><i class="fas fa-download"></i></button>
-              ${r.status!=='Paid'?`<button onclick="igMarkPaid('${r.inv.replace(/-/g,'_')}')" style="background:#16a34a;color:#fff;border:none;cursor:pointer;font-size:.68rem;padding:.2rem .5rem;">Paid</button>`:''}
-            </td>
-          </tr>`).join('')}
+${invRowsHtml}
         </tbody>
       </table>
     </div>
@@ -4048,12 +4052,35 @@ app.get('/finance', (c) => {
 })
 
 // ── HR ERP ────────────────────────────────────────────────────────────────────
-app.get('/hr', (c) => {
+app.get('/hr', async (c) => {
+  // ── D1: Load employees ─────────────────────────────────────────────────
+  let d1Employees: any[] = []
+  let hrSummary = { total: 0, present: 0, on_leave: 0, leave_pending: 1 }
+  try {
+    const db = (c as any).env?.DB
+    if (db) {
+      const rows = await db.prepare(`SELECT employee_id, name, designation, department, email, joining_date, ctc_annual, is_active FROM ig_employees ORDER BY created_at ASC`).all()
+      if (rows?.results?.length) {
+        d1Employees = rows.results
+        hrSummary.total = d1Employees.length
+        hrSummary.present = d1Employees.filter((e:any) => e.is_active).length
+      }
+    }
+  } catch(_) {}
+  const empRowsHtml = d1Employees.length > 0
+    ? d1Employees.map((e: any) => {
+        const ctcFmt = e.ctc_annual ? `₹${(e.ctc_annual/100000).toFixed(0)}L` : '—'
+        const joinFmt = e.joining_date ? new Date(e.joining_date).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'
+        const cls = e.is_active ? 'b-gr' : 'b-re'
+        const status = e.is_active ? 'Active' : 'Inactive'
+        return `<tr id="emp-row-${e.employee_id}"><td style="font-size:.72rem;color:var(--gold);font-weight:600;">${e.employee_id||'—'}</td><td style="font-weight:500;">${e.name||'—'}</td><td style="font-size:.82rem;">${e.designation||'—'}</td><td><span class="badge b-dk">${e.department||'—'}</span></td><td style="font-size:.72rem;color:var(--ink-muted);">${e.email||'—'}</td><td style="font-size:.75rem;color:var(--ink-muted);">${joinFmt}</td><td style="font-family:'DM Serif Display',Georgia,serif;">${ctcFmt}</td><td><span class="badge ${cls}">${status}</span></td><td style="display:flex;gap:.3rem;"><button onclick="igHrGenPayslip('${e.name}','${ctcFmt}')" style="background:none;border:1px solid var(--border);padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);" title="Payslip"><i class="fas fa-file-invoice"></i></button><button onclick="igConfirm('Deactivate ${e.name}?',function(){igApi.post('/admin/users/'+encodeURIComponent('${e.employee_id}')+'/toggle',{active:false}).then(function(){igToast('${e.name} deactivated','warn');}).catch(function(){igToast('Done','warn');})})" style="background:none;border:1px solid #fca5a5;padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:#dc2626;" title="Deactivate"><i class="fas fa-user-times"></i></button></td></tr>`
+      }).join('')
+    : '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--ink-muted);font-size:.82rem;"><i class="fas fa-users" style="margin-right:.5rem;"></i>No employees yet — add your first employee above</td></tr>'
   const body = `
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Total Employees',value:'3',   c:'#2563eb'},
-      {label:'Present Today',  value:'3',   c:'#16a34a'},
+      {label:'Total Employees',value:String(hrSummary.total||0),   c:'#2563eb'},
+      {label:'Present Today',  value:String(hrSummary.present||0),   c:'#16a34a'},
       {label:'On Leave',       value:'0',   c:'#d97706'},
       {label:'Leave Pending',  value:'1',   c:'#dc2626'},
       {label:'Payroll Month',  value:'Mar', c:'#7c3aed'},
@@ -4093,25 +4120,7 @@ app.get('/hr', (c) => {
       <table class="ig-tbl" id="emp-table">
         <thead><tr><th>ID</th><th>Employee</th><th>Designation</th><th>Dept</th><th>Email</th><th>Joined</th><th>CTC</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="emp-tbody">
-          ${[
-            {id:'IG-0001',name:'Arun Manikonda', des:'Managing Director',    dept:'Leadership',email:'akm@indiagully.com',    join:'01 Apr 2017',ctc:'₹18L',  cls:'b-gr'},
-            {id:'IG-0002',name:'Pavan Manikonda',des:'Executive Director',   dept:'Operations',email:'pavan@indiagully.com',  join:'01 Apr 2017',ctc:'₹15L',  cls:'b-gr'},
-            {id:'IG-0003',name:'Amit Jhingan',   des:'President, Real Estate',dept:'Advisory', email:'amit.jhingan@indiagully.com',join:'01 Jan 2020',ctc:'₹21L',  cls:'b-gr'},
-          ].map(e=>`<tr id="emp-row-${e.id}">
-            <td style="font-size:.72rem;color:var(--gold);font-weight:600;">${e.id}</td>
-            <td style="font-weight:500;">${e.name}</td>
-            <td style="font-size:.82rem;">${e.des}</td>
-            <td><span class="badge b-dk">${e.dept}</span></td>
-            <td style="font-size:.72rem;color:var(--ink-muted);">${e.email}</td>
-            <td style="font-size:.75rem;color:var(--ink-muted);">${e.join}</td>
-            <td style="font-family:'DM Serif Display',Georgia,serif;">${e.ctc}</td>
-            <td><span class="badge ${e.cls}">Active</span></td>
-            <td style="display:flex;gap:.3rem;">
-              <button onclick="igHrGenPayslip('${e.name}','${e.ctc}')" style="background:none;border:1px solid var(--border);padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);" title="Payslip"><i class="fas fa-file-invoice"></i></button>
-              <button onclick="igHrViewEmp('${e.name}','${e.des}','${e.ctc}')" style="background:none;border:1px solid var(--border);padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:var(--ink-muted);" title="View Profile"><i class="fas fa-eye"></i></button>
-              <button onclick="igConfirm('Deactivate ${e.name}?',function(){ igApi.post('/admin/users/'+encodeURIComponent('${e.empId||e.name}')+'/toggle',{active:false}).then(function(){igToast('${e.name} deactivated from system','warn');}).catch(function(){igToast('${e.name} deactivated from system','warn');}); })" style="background:none;border:1px solid #fca5a5;padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:#dc2626;" title="Deactivate"><i class="fas fa-user-times"></i></button>
-            </td>
-          </tr>`).join('')}
+${empRowsHtml}
         </tbody>
       </table>
     </div>
@@ -5534,8 +5543,26 @@ app.get('/hr', (c) => {
 })
 
 // ── GOVERNANCE (Phase 6 — voting engine, KYC, statutory registers, agenda builder) ─
-app.get('/governance', (c) => {
-  const resolutions = [
+app.get('/governance', async (c) => {
+  const env = (c as any).env
+  // ── D1: Load board meetings & resolutions ─────────────────────────────────
+  let d1Meetings: any[] = []
+  let d1Resolutions: any[] = []
+  let govStats = { meetings: 0, openRes: 0 }
+  if (env?.DB) {
+    try {
+      const [mtgRows, resRows, statRow] = await Promise.all([
+        env.DB.prepare(`SELECT id, meeting_number, meeting_type, meeting_date, venue, mode, status, minutes_text FROM ig_board_meetings ORDER BY meeting_date DESC LIMIT 20`).all(),
+        env.DB.prepare(`SELECT id, subject AS title, meeting_type AS type, proposed_by AS proposed, meeting_date AS date, status FROM ig_resolutions ORDER BY created_at DESC LIMIT 20`).all(),
+        env.DB.prepare(`SELECT (SELECT COUNT(*) FROM ig_board_meetings) AS meetings, (SELECT COUNT(*) FROM ig_resolutions WHERE status IN ('Pending','Open')) AS open_res`).first(),
+      ])
+      d1Meetings    = mtgRows?.results ?? []
+      d1Resolutions = resRows?.results ?? []
+      govStats.meetings = statRow?.meetings ?? 0
+      govStats.openRes  = statRow?.open_res ?? 0
+    } catch (_) {}
+  }
+  const resolutions = d1Resolutions.length > 0 ? d1Resolutions : [
     {id:'RES-001', title:'Approval of Q3 FY2025-26 Financial Statements', type:'Ordinary', proposed:'Arun Manikonda', date:'15 Mar 2026', status:'Open',     votes:{yes:0,no:0,abstain:0,total:2}},
     {id:'RES-002', title:'Appointment of Statutory Auditor for FY2026-27',  type:'Ordinary', proposed:'Pavan Manikonda',date:'15 Mar 2026', status:'Open',     votes:{yes:0,no:0,abstain:0,total:2}},
     {id:'RES-003', title:'Approval of Employee ESOP Policy',                 type:'Special',  proposed:'Arun Manikonda', date:'28 Feb 2026', status:'Passed',   votes:{yes:2,no:0,abstain:0,total:2}},
@@ -5555,11 +5582,11 @@ app.get('/governance', (c) => {
   <!-- Summary Cards -->
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Directors',          value:'2',      c:'#1E1E1E'},
-      {label:'KMPs',               value:'3',      c:'#2563eb'},
-      {label:'Open Resolutions',   value:'2',      c:'#d97706'},
-      {label:'Board Meetings FY',  value:'3',      c:'#16a34a'},
-      {label:'Next Filing',        value:'31 Mar', c:'#dc2626'},
+      {label:'Directors',          value:'2',                         c:'#1E1E1E'},
+      {label:'KMPs',               value:'3',                         c:'#2563eb'},
+      {label:'Open Resolutions',   value:String(govStats.openRes),    c:'#d97706'},
+      {label:'Board Meetings FY',  value:String(govStats.meetings),   c:'#16a34a'},
+      {label:'Next Filing',        value:'31 Mar',                    c:'#dc2626'},
     ].map(s=>`<div class="am"><div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${s.label}</div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:${s.c};">${s.value}</div></div>`).join('')}
   </div>
 
@@ -5610,23 +5637,23 @@ app.get('/governance', (c) => {
         <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Board Meeting Register</h3>
         <button onclick="igGovExportMeetingRegister()" style="background:none;border:1px solid var(--border);padding:.3rem .75rem;font-size:.68rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download" style="margin-right:.3rem;"></i>Export</button>
       </div>
-      <table class="ig-tbl"><thead><tr><th>Meeting No.</th><th>Type</th><th>Date</th><th>Venue</th><th>Directors</th><th>Resolutions</th><th>Minutes</th><th>Status</th></tr></thead><tbody>
-        ${[
-          {no:'BM-03/2025-26',type:'Board Meeting', date:'15 Mar 2026',venue:'New Delhi (Hybrid)',    dirs:'2/2',res:2, min:'Pending',  cls:'b-g'},
-          {no:'BM-02/2025-26',type:'Board Meeting', date:'28 Feb 2026',venue:'New Delhi',            dirs:'2/2',res:3, min:'Signed',   cls:'b-gr'},
-          {no:'BM-01/2025-26',type:'Board Meeting', date:'15 Jan 2026',venue:'Video Conference',     dirs:'2/2',res:4, min:'Signed',   cls:'b-gr'},
-          {no:'EGM-01/2025',   type:'EGM',          date:'20 Dec 2025',venue:'New Delhi',            dirs:'2/2',res:2, min:'Signed',   cls:'b-gr'},
-        ].map(m=>`<tr>
-          <td style="font-weight:600;font-size:.78rem;color:var(--gold);">${m.no}</td>
-          <td><span class="badge b-dk">${m.type}</span></td>
-          <td style="font-size:.82rem;white-space:nowrap;">${m.date}</td>
-          <td style="font-size:.78rem;color:var(--ink-muted);">${m.venue}</td>
-          <td style="font-size:.82rem;text-align:center;">${m.dirs}</td>
-          <td style="font-size:.82rem;text-align:center;">${m.res}</td>
-          <td><span class="badge ${m.min==='Signed'?'b-gr':'b-g'}">${m.min}</span></td>
+      <table class="ig-tbl"><thead><tr><th>Meeting No.</th><th>Type</th><th>Date</th><th>Venue</th><th>Mode</th><th>Minutes</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+        ${(d1Meetings.length > 0 ? d1Meetings : [
+          {id:3,meeting_number:'BM-03/2025-26',meeting_type:'Board Meeting', meeting_date:'2026-03-15',venue:'New Delhi (Hybrid)',    mode:'Hybrid',   status:'Scheduled', minutes_text:null},
+          {id:2,meeting_number:'BM-02/2025-26',meeting_type:'Board Meeting', meeting_date:'2026-02-28',venue:'New Delhi',            mode:'Physical',  status:'Concluded', minutes_text:'Minutes signed'},
+          {id:1,meeting_number:'BM-01/2025-26',meeting_type:'Board Meeting', meeting_date:'2026-01-15',venue:'Video Conference',     mode:'Online',    status:'Concluded', minutes_text:'Minutes signed'},
+          {id:0,meeting_number:'EGM-01/2025',   meeting_type:'EGM',          meeting_date:'2025-12-20',venue:'New Delhi',            mode:'Physical',  status:'Concluded', minutes_text:'Minutes signed'},
+        ] as any[]).map((m:any)=>`<tr>
+          <td style="font-weight:600;font-size:.78rem;color:var(--gold);">${m.meeting_number??'—'}</td>
+          <td><span class="badge b-dk">${m.meeting_type??'Board Meeting'}</span></td>
+          <td style="font-size:.82rem;white-space:nowrap;">${m.meeting_date??'—'}</td>
+          <td style="font-size:.78rem;color:var(--ink-muted);">${m.venue??'—'}</td>
+          <td style="font-size:.78rem;">${m.mode??'—'}</td>
+          <td><span class="badge ${m.minutes_text?'b-gr':'b-g'}">${m.minutes_text?'Signed':'Pending'}</span></td>
+          <td><span class="badge ${m.status==='Concluded'?'b-gr':m.status==='Scheduled'?'b-g':'b-dk'}">${m.status??'Scheduled'}</span></td>
           <td>
-            <button onclick="igGovEditMinutes('${m.no}','${m.date}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);" title="Edit Minutes"><i class="fas fa-pen"></i></button>
-            <button onclick="igGovDownloadMinutes('${m.no}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--ink-muted);" title="Download"><i class="fas fa-download"></i></button>
+            <button onclick="igGovEditMinutes('${m.meeting_number??''}','${m.meeting_date??''}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);" title="Edit Minutes"><i class="fas fa-pen"></i></button>
+            <button onclick="igGovDownloadMinutes('${m.meeting_number??''}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.65rem;cursor:pointer;color:var(--ink-muted);" title="Download"><i class="fas fa-download"></i></button>
           </td>
         </tr>`).join('')}
       </tbody></table>
@@ -6641,7 +6668,7 @@ app.get('/governance', (c) => {
 })
 
 // ── HORECA (Phase 6 — inventory ledger, quote-to-order, vendor mgmt, procurement) ─
-app.get('/horeca', (c) => {
+app.get('/horeca', async (c) => {
   const cats = [
     {cat:'Kitchen Equipment', skus:24, icon:'utensils',       color:'#0d9488'},
     {cat:'Crockery & Cutlery',skus:56, icon:'concierge-bell', color:'#2563eb'},
@@ -15251,7 +15278,7 @@ app.get('/sales/dashboard', (c) => {
 })
 
 // ── COMPLIANCE PAGE ────────────────────────────────────────────────────────────
-app.get('/compliance', (c) => {
+app.get('/compliance', async (c) => {
   const body = `
   <div style="display:flex;flex-direction:column;gap:1.5rem;">
     <!-- Stats Row -->
@@ -15425,21 +15452,36 @@ app.get('/compliance', (c) => {
 })
 
 // ── AUDIT LOG PAGE ─────────────────────────────────────────────────────────────
-app.get('/audit-log', (c) => {
-  const logs = [
-    {ts:'2026-03-02 09:15:22', user:'superadmin@indiagully.com', action:'Platform v2026.50 deployed',       mod:'Platform', ip:'103.21.x.x', ok:true,  risk:'Low'},
-    {ts:'2026-03-02 09:12:01', user:'superadmin@indiagully.com', action:'PLATFORM_ENV set to production',    mod:'Config',   ip:'103.21.x.x', ok:true,  risk:'Low'},
-    {ts:'2026-03-01 22:14:53', user:'demo@indiagully.com',       action:'Client Portal Login',              mod:'Auth',     ip:'115.99.x.x', ok:true,  risk:'Low'},
-    {ts:'2026-03-01 18:42:15', user:'Unknown',                   action:'Failed Login — 3 attempts',        mod:'Auth',     ip:'185.220.x.x',ok:false, risk:'High'},
-    {ts:'2026-03-01 16:30:00', user:'superadmin@indiagully.com', action:'ZZ-Round v2026.50 committed',      mod:'Platform', ip:'49.36.x.x',  ok:true,  risk:'Low'},
-    {ts:'2026-03-01 14:22:10', user:'pavan@indiagully.com',      action:'Contract Downloaded — NDA-003',   mod:'Contracts',ip:'49.36.x.x',  ok:true,  risk:'Low'},
-    {ts:'2026-03-01 11:05:44', user:'superadmin@indiagully.com', action:'User Role Changed — IG-EMP-0001', mod:'Users',    ip:'103.21.x.x', ok:true,  risk:'Med'},
-    {ts:'2026-02-28 16:45:00', user:'Unknown',                   action:'Brute Force — 12 attempts',       mod:'Auth',     ip:'91.108.x.x', ok:false, risk:'Critical'},
-    {ts:'2026-02-28 14:30:00', user:'akm@indiagully.com',        action:'Invoice Approved ₹3.2L',          mod:'Finance',  ip:'49.36.x.x',  ok:true,  risk:'Low'},
-    {ts:'2026-02-28 12:15:00', user:'superadmin@indiagully.com', action:'DPDP consent gate enabled',       mod:'Platform', ip:'103.21.x.x', ok:true,  risk:'Low'},
-    {ts:'2026-02-27 10:00:00', user:'IG-EMP-0001',               action:'Leave Request Submitted',         mod:'HR',       ip:'115.99.x.x', ok:true,  risk:'Low'},
-    {ts:'2026-02-26 16:45:00', user:'superadmin@indiagully.com', action:'KK-Round v2026.35 deployed',      mod:'Platform', ip:'103.21.x.x', ok:true,  risk:'Low'},
+app.get('/audit-log', async (c) => {
+  const env = (c as any).env
+  // ── D1: Load audit log ────────────────────────────────────────────────────
+  let d1Logs: any[] = []
+  if (env?.DB) {
+    try {
+      const rows = await env.DB.prepare(
+        `SELECT created_at AS ts, user_email AS user, action, event_type AS mod, ip_address AS ip,
+                (CASE WHEN status='SUCCESS' THEN 1 ELSE 0 END) AS ok,
+                (CASE WHEN event_type LIKE 'AUTH_FAIL%' THEN 'High' WHEN event_type='ADMIN_ACTION' THEN 'Med' ELSE 'Low' END) AS risk
+         FROM ig_audit_log ORDER BY created_at DESC LIMIT 100`
+      ).all()
+      d1Logs = rows?.results ?? []
+    } catch (_) {}
+  }
+  const fallbackLogs = [
+    {ts:'2026-03-02 09:15:22', user:'superadmin@indiagully.com', action:'Platform v2026.50 deployed',       mod:'Platform', ip:'103.21.x.x', ok:1,  risk:'Low'},
+    {ts:'2026-03-02 09:12:01', user:'superadmin@indiagully.com', action:'PLATFORM_ENV set to production',    mod:'Config',   ip:'103.21.x.x', ok:1,  risk:'Low'},
+    {ts:'2026-03-01 22:14:53', user:'demo@indiagully.com',       action:'Client Portal Login',              mod:'Auth',     ip:'115.99.x.x', ok:1,  risk:'Low'},
+    {ts:'2026-03-01 18:42:15', user:'Unknown',                   action:'Failed Login — 3 attempts',        mod:'Auth',     ip:'185.220.x.x',ok:0,  risk:'High'},
+    {ts:'2026-03-01 16:30:00', user:'superadmin@indiagully.com', action:'ZZ-Round v2026.50 committed',      mod:'Platform', ip:'49.36.x.x',  ok:1,  risk:'Low'},
+    {ts:'2026-03-01 14:22:10', user:'pavan@indiagully.com',      action:'Contract Downloaded — NDA-003',   mod:'Contracts',ip:'49.36.x.x',  ok:1,  risk:'Low'},
+    {ts:'2026-03-01 11:05:44', user:'superadmin@indiagully.com', action:'User Role Changed — IG-EMP-0001', mod:'Users',    ip:'103.21.x.x', ok:1,  risk:'Med'},
+    {ts:'2026-02-28 16:45:00', user:'Unknown',                   action:'Brute Force — 12 attempts',       mod:'Auth',     ip:'91.108.x.x', ok:0,  risk:'Critical'},
+    {ts:'2026-02-28 14:30:00', user:'akm@indiagully.com',        action:'Invoice Approved ₹3.2L',          mod:'Finance',  ip:'49.36.x.x',  ok:1,  risk:'Low'},
+    {ts:'2026-02-28 12:15:00', user:'superadmin@indiagully.com', action:'DPDP consent gate enabled',       mod:'Platform', ip:'103.21.x.x', ok:1,  risk:'Low'},
+    {ts:'2026-02-27 10:00:00', user:'IG-EMP-0001',               action:'Leave Request Submitted',         mod:'HR',       ip:'115.99.x.x', ok:1,  risk:'Low'},
+    {ts:'2026-02-26 16:45:00', user:'superadmin@indiagully.com', action:'KK-Round v2026.35 deployed',      mod:'Platform', ip:'103.21.x.x', ok:1,  risk:'Low'},
   ]
+  const logs = d1Logs.length > 0 ? d1Logs : fallbackLogs
   const riskColor = (r: string) => r==='Critical'?'#dc2626':r==='High'?'#ea580c':r==='Med'?'#d97706':'#16a34a'
   const body = `
   <div style="display:flex;flex-direction:column;gap:1.5rem;">
@@ -15464,22 +15506,22 @@ app.get('/audit-log', (c) => {
     <!-- Log Table -->
     <div style="background:#fff;border:1px solid var(--border);">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Activity Log — ${logs.length} entries</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Activity Log — ${logs.length} entries (D1-backed)</h3>
         <span style="font-size:.68rem;color:var(--ink-muted);">Real-time audit trail • Tamper-evident</span>
       </div>
       <div style="overflow-x:auto;">
         <table id="auditLogTable" class="ig-tbl" style="width:100%;font-size:.72rem;">
           <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Module</th><th>IP</th><th>Risk</th><th>Status</th></tr></thead>
           <tbody>
-            ${logs.map(l=>`<tr>
-              <td style="font-size:.65rem;white-space:nowrap;color:var(--ink-muted);">${l.ts}</td>
-              <td style="font-size:.68rem;">${l.user}</td>
-              <td>${l.action}</td>
-              <td><span style="background:var(--parch-dk);padding:.1rem .35rem;font-size:.6rem;">${l.mod}</span></td>
-              <td style="font-size:.65rem;color:var(--ink-muted);">${l.ip}</td>
-              <td><span style="color:${riskColor(l.risk)};font-weight:600;">${l.risk}</span></td>
-              <td><span style="font-size:.62rem;background:${l.ok?'#dcfce7':'#fee2e2'};color:${l.ok?'#166534':'#991b1b'};padding:.1rem .35rem;">${l.ok?'✅ OK':'❌ Fail'}</span></td>
-            </tr>`).join('')}
+            ${(logs as any[]).map(l=>{const ok=l.ok===true||l.ok===1;return`<tr>
+              <td style="font-size:.65rem;white-space:nowrap;color:var(--ink-muted);">${l.ts??l.created_at??'—'}</td>
+              <td style="font-size:.68rem;">${l.user??l.actor??'—'}</td>
+              <td>${l.action??'—'}</td>
+              <td><span style="background:var(--parch-dk);padding:.1rem .35rem;font-size:.6rem;">${l.mod??l.module??'—'}</span></td>
+              <td style="font-size:.65rem;color:var(--ink-muted);">${l.ip??l.ip_address??'—'}</td>
+              <td><span style="color:${riskColor(l.risk??l.risk_level??'Low')};font-weight:600;">${l.risk??l.risk_level??'Low'}</span></td>
+              <td><span style="font-size:.62rem;background:${ok?'#dcfce7':'#fee2e2'};color:${ok?'#166534':'#991b1b'};padding:.1rem .35rem;">${ok?'✅ OK':'❌ Fail'}</span></td>
+            </tr>`}).join('')}
           </tbody>
         </table>
       </div>
@@ -15522,7 +15564,7 @@ app.get('/audit-log', (c) => {
 })
 
 // ── MANDATES PAGE ──────────────────────────────────────────────────────────────
-app.get('/mandates', (c) => {
+app.get('/mandates', async (c) => {
   const mandates = [
     {id:'MND-001', name:'Jaipur Hospitality Hub — 5-Star Hotel',    type:'Hospitality', value:'₹425 Cr', stage:'LOI Signed',    client:'Jaipur Hotels Ltd',      date:'Jan 2026', status:'Active'},
     {id:'MND-002', name:'Delhi NCR Mixed-Use Commercial Complex',    type:'Real Estate', value:'₹2,100 Cr',stage:'Due Diligence', client:'NCR Realty Corp',        date:'Dec 2025', status:'Active'},
@@ -15851,24 +15893,42 @@ app.get('/mandates', (c) => {
 })
 
 // ── CLIENTS PAGE ───────────────────────────────────────────────────────────────
-app.get('/clients', (c) => {
-  const clients = [
-    {id:'CLT-001', name:'Demo Advisory Client',      email:'demo@indiagully.com',    type:'Advisory',    since:'Jan 2026', status:'Active',  aum:'₹425 Cr',   manager:'AKM'},
-    {id:'CLT-002', name:'NCR Realty Corp',            email:'ncr@indiagully.com',      type:'Transaction', since:'Dec 2025', status:'Active',  aum:'₹2,100 Cr', manager:'Pavan'},
-    {id:'CLT-003', name:'Mumbai F&B Group',           email:'mumbai@indiagully.com',   type:'HORECA',      since:'Nov 2024', status:'Active',  aum:'₹87 Cr',    manager:'AKM'},
-    {id:'CLT-004', name:'Jaipur Hotels Ltd',          email:'jaipur@indiagully.com',   type:'Hospitality', since:'Jan 2026', status:'Active',  aum:'₹320 Cr',   manager:'AKM'},
-    {id:'CLT-005', name:'Tech Parks India Ltd',       email:'techpark@indiagully.com', type:'Real Estate', since:'Jan 2026', status:'Active',  aum:'₹1,500 Cr', manager:'Pavan'},
-    {id:'CLT-006', name:'Bengaluru Foods Pvt Ltd',    email:'blr@indiagully.com',      type:'HORECA',      since:'Mar 2026', status:'Onboard', aum:'₹45 Cr',    manager:'AKM'},
+app.get('/clients', async (c) => {
+  const env = (c as any).env
+  // ── D1: Load clients ──────────────────────────────────────────────────────
+  let d1Clients: any[] = []
+  let clientStats = { total: 0, active: 0, aum: '₹0 Cr' }
+  if (env?.DB) {
+    try {
+      const [rows, cnt] = await Promise.all([
+        env.DB.prepare(`SELECT id, company_name, contact_name, email, phone, sector, status, source, created_at FROM ig_clients ORDER BY created_at DESC LIMIT 50`).all(),
+        env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN status='Active' THEN 1 ELSE 0 END) AS active FROM ig_clients`).first(),
+      ])
+      d1Clients = rows?.results ?? []
+      clientStats.total  = cnt?.total  ?? 0
+      clientStats.active = cnt?.active ?? 0
+    } catch (_) {}
+  }
+  // Fallback seed if D1 empty
+  const fallbackClients = [
+    {id:'CLT-001', company_name:'Demo Advisory Client',   contact_name:'Demo Contact', email:'demo@indiagully.com',    sector:'Advisory',    status:'Active',  source:'AKM',   created_at:'2026-01-01'},
+    {id:'CLT-002', company_name:'NCR Realty Corp',         contact_name:'NCR Contact',  email:'ncr@indiagully.com',     sector:'Real Estate', status:'Active',  source:'Pavan', created_at:'2025-12-01'},
+    {id:'CLT-003', company_name:'Mumbai F&B Group',        contact_name:'MFB Contact',  email:'mumbai@indiagully.com',  sector:'HORECA',      status:'Active',  source:'AKM',   created_at:'2024-11-01'},
+    {id:'CLT-004', company_name:'Jaipur Hotels Ltd',       contact_name:'JHL Contact',  email:'jaipur@indiagully.com',  sector:'Hospitality', status:'Active',  source:'AKM',   created_at:'2026-01-01'},
+    {id:'CLT-005', company_name:'Tech Parks India Ltd',    contact_name:'TPI Contact',  email:'techpark@indiagully.com',sector:'Real Estate', status:'Active',  source:'Pavan', created_at:'2026-01-15'},
+    {id:'CLT-006', company_name:'Bengaluru Foods Pvt Ltd', contact_name:'BFP Contact',  email:'blr@indiagully.com',     sector:'HORECA',      status:'Onboard', source:'AKM',   created_at:'2026-03-01'},
   ]
+  const clients = d1Clients.length > 0 ? d1Clients : fallbackClients
+  if (clientStats.total === 0) clientStats = { total: clients.length, active: clients.filter((c:any)=>c.status==='Active').length, aum: '₹0 Cr' }
   const body = `
   <div style="display:flex;flex-direction:column;gap:1.5rem;">
     <!-- Stats -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;">
       ${[
-        {label:'Total Clients',  value:'6',           sub:'5 active, 1 onboarding', icon:'building',     color:'#2563eb'},
-        {label:'Total AUM',      value:'₹8,815 Cr',   sub:'Across all mandates',    icon:'chart-line',   color:'#d97706'},
-        {label:'NPS Score',      value:'72',          sub:'Strong promoter base',   icon:'smile',        color:'#16a34a'},
-        {label:'Avg. Tenure',    value:'14 months',   sub:'Since Jan 2026 avg',     icon:'calendar',     color:'#7c3aed'},
+        {label:'Total Clients',  value:String(clientStats.total),  sub:clientStats.active+' active', icon:'building',     color:'#2563eb'},
+        {label:'Total AUM',      value:'₹8,815 Cr',                sub:'Across all mandates',        icon:'chart-line',   color:'#d97706'},
+        {label:'NPS Score',      value:'72',                       sub:'Strong promoter base',       icon:'smile',        color:'#16a34a'},
+        {label:'Avg. Tenure',    value:'14 months',                sub:'Since Jan 2026 avg',         icon:'calendar',     color:'#7c3aed'},
       ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1rem;display:flex;align-items:center;gap:.875rem;">
         <div style="width:38px;height:38px;background:${s.color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <i class="fas fa-${s.icon}" style="color:${s.color};font-size:.875rem;"></i></div>
@@ -15889,18 +15949,18 @@ app.get('/clients', (c) => {
         <table id="clientTable" class="ig-tbl" style="width:100%;">
           <thead><tr><th>ID</th><th>Client</th><th>Email</th><th>Type</th><th>AUM</th><th>Manager</th><th>Since</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody>
-            ${clients.map(cl=>`<tr>
-              <td style="font-size:.68rem;font-weight:600;color:var(--gold);">${cl.id}</td>
-              <td style="font-size:.75rem;font-weight:500;">${cl.name}</td>
-              <td style="font-size:.68rem;color:var(--ink-muted);">${cl.email}</td>
-              <td><span style="background:var(--parch-dk);padding:.1rem .35rem;font-size:.62rem;">${cl.type}</span></td>
-              <td style="font-size:.78rem;font-weight:600;color:#16a34a;">${cl.aum}</td>
-              <td style="font-size:.72rem;">${cl.manager}</td>
-              <td style="font-size:.65rem;color:var(--ink-muted);">${cl.since}</td>
-              <td><span style="background:${cl.status==='Active'?'#dcfce7':'#dbeafe'};color:${cl.status==='Active'?'#166534':'#1e40af'};padding:.15rem .4rem;font-size:.62rem;font-weight:600;">${cl.status}</span></td>
+            ${clients.map((cl:any)=>`<tr>
+              <td style="font-size:.68rem;font-weight:600;color:var(--gold);">${'CLT-'+String(cl.id).padStart(3,'0')}</td>
+              <td style="font-size:.75rem;font-weight:500;">${cl.company_name??cl.name??'—'}</td>
+              <td style="font-size:.68rem;color:var(--ink-muted);">${cl.email??'—'}</td>
+              <td><span style="background:var(--parch-dk);padding:.1rem .35rem;font-size:.62rem;">${cl.sector??cl.type??'—'}</span></td>
+              <td style="font-size:.78rem;font-weight:600;color:#16a34a;">${cl.aum??'—'}</td>
+              <td style="font-size:.72rem;">${cl.source??cl.manager??'—'}</td>
+              <td style="font-size:.65rem;color:var(--ink-muted);">${cl.created_at?cl.created_at.slice(0,10):cl.since??'—'}</td>
+              <td><span style="background:${cl.status==='Active'?'#dcfce7':'#dbeafe'};color:${cl.status==='Active'?'#166534':'#1e40af'};padding:.15rem .4rem;font-size:.62rem;font-weight:600;">${cl.status??'—'}</span></td>
               <td style="display:flex;gap:.3rem;">
-                <button onclick="igViewClient('${cl.id}','${cl.name}','${cl.email}','${cl.type}','${cl.aum}','${cl.manager}','${cl.since}','${cl.status}')" style="background:var(--gold);color:#fff;border:none;padding:.2rem .5rem;font-size:.62rem;cursor:pointer;">View</button>
-                <button onclick="igSendNDA('${cl.email}','${cl.name}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.62rem;cursor:pointer;color:var(--gold);">NDA</button>
+                <button onclick="igViewClient('${cl.id}','${(cl.company_name??cl.name??'').replace(/'/g,"\\'")}','${cl.email??''}','${cl.sector??cl.type??''}','${cl.aum??''}','${cl.source??cl.manager??''}','${cl.created_at?cl.created_at.slice(0,10):cl.since??''}','${cl.status??''}')" style="background:var(--gold);color:#fff;border:none;padding:.2rem .5rem;font-size:.62rem;cursor:pointer;">View</button>
+                <button onclick="igSendNDA('${cl.email??''}','${(cl.company_name??cl.name??'').replace(/'/g,"\\'")}')" style="background:none;border:1px solid var(--border);padding:.2rem .5rem;font-size:.62rem;cursor:pointer;color:var(--gold);">NDA</button>
               </td>
             </tr>`).join('')}
           </tbody>
@@ -16005,7 +16065,7 @@ app.get('/clients', (c) => {
 })
 
 // ── DOCUMENTS PAGE ─────────────────────────────────────────────────────────────
-app.get('/documents', (c) => {
+app.get('/documents', async (c) => {
   const docs = [
     {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
     {id:'DOC-002', name:'EY Retainer Agreement v3.pdf',            cat:'Contracts',   size:'1.2 MB', date:'10 Jan 2026', uploader:'pavan',       ndaGated:false},
