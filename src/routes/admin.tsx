@@ -1817,14 +1817,9 @@ app.get('/workflows', async (c) => {
      trigger:'Board meeting scheduled', active:true, runs:5, lastRun:'01 Mar 2026', avgTime:'6d'},
   ]
 
-  const runHistory = [
-    {wf:'Invoice Approval',    id:'RUN-INV-047', started:'02 Mar 10:14', ended:'02 Mar 22:07', duration:'11h 53m', status:'Completed', triggered:'INV-2026-003 submitted'},
-    {wf:'Leave Approval',      id:'RUN-LV-012',  started:'05 Mar 09:30', ended:'05 Mar 12:45', duration:'3h 15m',  status:'Completed', triggered:'Amit Jhingan leave request'},
-    {wf:'Mandate Onboarding',  id:'RUN-MND-008', started:'25 Feb 14:00', ended:null,           duration:'—',       status:'In Progress',triggered:'New HORECA client enquiry'},
-    {wf:'Contract Renewal',    id:'RUN-CR-003',  started:'01 Mar 00:00', ended:'04 Mar 11:30', duration:'3d 11h',  status:'Completed', triggered:'EY Retainer expiry alert'},
-    {wf:'Invoice Approval',    id:'RUN-INV-046', started:'25 Feb 16:22', ended:'26 Feb 09:14', duration:'16h 52m', status:'Completed', triggered:'INV-2026-002 submitted'},
-    {wf:'Board Resolution',    id:'RUN-BR-005',  started:'28 Feb 11:00', ended:null,           duration:'—',       status:'In Progress',triggered:'Q1 Board meeting scheduled'},
-  ]
+  // Phase O: runHistory loaded via igWfLoadRunHistory() from /api/workflows/runs
+  const runHistory: any[] = []
+  // igWfLoadRunHistory is called onload via igWfTab(1) — see layout.ts
 
   const body = `
   <!-- Summary Cards -->
@@ -5610,6 +5605,29 @@ app.get('/governance', async (c) => {
     {id:'RES-004', title:'Authorise MD to sign Advisory Agreement — EVL',    type:'Ordinary', proposed:'Pavan Manikonda',date:'20 Feb 2026', status:'Passed',   votes:{yes:2,no:0,abstain:0,total:2}},
     {id:'RES-005', title:'Approval of Capital Expenditure Budget FY2026-27', type:'Ordinary', proposed:'Arun Manikonda', date:'31 Jan 2026', status:'Deferred', votes:{yes:1,no:0,abstain:1,total:2}},
   ]
+
+// Phase O: Live governance directors/KMPs loader
+;(window as any).igLoadGovernanceDirectors = async function() {
+  try {
+    const r = await fetch('/api/governance/board', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    // Update directors section if present
+    const dirTbody = document.getElementById('directors-tbody')
+    if (dirTbody && d.directors?.length) {
+      dirTbody.innerHTML = d.directors.map((dir: any) => `
+        <tr>
+          <td>${dir.name || ''}</td>
+          <td>${dir.din || ''}</td>
+          <td>${dir.designation || ''}</td>
+          <td><span class="ig-badge" style="background:#16a34a20;color:#16a34a">${dir.kyc_status || 'Verified'}</span></td>
+          <td>${dir.din_status || 'Active'}</td>
+          <td><button class="ig-btn ig-btn-sm" onclick="igGovSubmitDir3('${dir.id||dir.din}')">DIR-3 KYC</button></td>
+        </tr>`).join('')
+    }
+  } catch(e) { console.warn('[igLoadGovernanceDirectors]', e) }
+}
+
   const directors = [
     {name:'Arun Manikonda',  din:'00000001', desig:'Managing Director',  kyc:'Verified', din_status:'Active', dob:'1980-04-15'},
     {name:'Pavan Manikonda', din:'00000002', desig:'Executive Director',  kyc:'Verified', din_status:'Active', dob:'1985-07-22'},
@@ -8965,6 +8983,15 @@ const FALLBACK_CONTRACTS = [
 })
 
 // ── INTEGRATIONS ──────────────────────────────────────────────────────────────
+
+// Phase O: Auto-load integration health on /integrations page open
+;(window as any).igAutoLoadIntegrationHealth = function() {
+  // Trigger J2 health panel load
+  if (typeof (window as any).igLoadIntegrationHealth === 'function') {
+    (window as any).igLoadIntegrationHealth()
+  }
+}
+
 app.get('/integrations', (c) => {
   const integrations = [
     {name:'GST Portal',         desc:'Auto-filing GSTR-1, GSTR-3B',     status:'Connected',       icon:'percent',         color:'#16a34a', fields:[{l:'API Key',v:'GST_API_KEY_XXXX',t:'password'},{l:'GSTIN',v:'07XXXXXX000XXX',t:'text'},{l:'Username',v:'indiagully_gst',t:'text'}]},
@@ -14795,6 +14822,30 @@ window.igKpiViewDetail = function(kpiName){
 })
 
 // ── MANDATE RISK SCORING (/admin/risk) ────────────────────────────────────────
+
+// Phase O: Live mandate risk loader from /api/risk/mandates
+;(window as any).igLoadRiskMandatesLive = async function(tableBodyId: string) {
+  try {
+    const r = await fetch('/api/risk/mandates', {credentials:'include'})
+    if (!r.ok) return
+    const d = await r.json() as any
+    const items = d.mandates || d.data || []
+    if (!items.length) return
+    const tbody = document.getElementById(tableBodyId)
+    if (!tbody) return
+    tbody.innerHTML = items.map((m: any) => `
+      <tr>
+        <td>${m.id || m.mandate_ref || ''}</td>
+        <td>${m.name || m.title || ''}</td>
+        <td>${m.sector || ''}</td>
+        <td>${m.score ?? m.risk_score ?? '—'}</td>
+        <td><span class="ig-badge" style="background:${(m.score||0)>=80?'#16a34a20':(m.score||0)>=65?'#d9770620':'#dc262620'};color:${(m.score||0)>=80?'#16a34a':(m.score||0)>=65?'#d97706':'#dc2626'}">${(m.score||0)>=80?'Low':(m.score||0)>=65?'Medium':'High'}</span></td>
+        <td>${m.trend || 'stable'}</td>
+        <td>${m.assigned || ''}</td>
+      </tr>`).join('')
+  } catch(e) { console.warn('[igLoadRiskMandatesLive]', e) }
+}
+
 app.get('/risk', (c) => {
   const mandates = [
     { id:'MND-001', name:'Hotel Rajshree & Spa — Chandigarh', sector:'Hospitality', value:'₹70 Cr',    score:83, factors:{regulatory:85,counterparty:88,timeline:82,financial:82,legal:78}, trend:'stable',   assigned:'Amit Jhingan' },
@@ -16315,6 +16366,37 @@ app.get('/documents', async (c) => {
       </tr>`).join('')
   } catch(e) { console.warn('[igLoadDocsLive]', e) }
 }
+// ── Phase P Live Loaders ─────────────────────────────────────────────────────
+(window as any).igLoadAuditLogLive = async function(limit = 50, module = '') {
+  try {
+    const url = `/api/audit-log?limit=${limit}${module ? '&module='+module : ''}`
+    const r = await fetch(url, { credentials: 'include' })
+    const d = await r.json()
+    return d.entries || []
+  } catch { return [] }
+}
+;(window as any).igLoadRiskRegisterLive = async function() {
+  try {
+    const r = await fetch('/api/risk/register', { credentials: 'include' })
+    const d = await r.json()
+    return d.risks || []
+  } catch { return [] }
+}
+;(window as any).igLoadWorkflowsLive = async function() {
+  try {
+    const r = await fetch('/api/workflows', { credentials: 'include' })
+    const d = await r.json()
+    return d.workflows || []
+  } catch { return [] }
+}
+;(window as any).igLoadInvoicesLive = async function() {
+  try {
+    const r = await fetch('/api/finance/invoices', { credentials: 'include' })
+    const d = await r.json()
+    return d.invoices || []
+  } catch { return [] }
+}
+
 
 const FALLBACK_DOCS = [
     {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
