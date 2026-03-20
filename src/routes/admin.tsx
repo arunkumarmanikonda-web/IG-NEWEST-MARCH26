@@ -16396,6 +16396,51 @@ app.get('/documents', async (c) => {
     return d.invoices || []
   } catch { return [] }
 }
+// ── Phase R Live Loaders ─────────────────────────────────────────────────────
+;(window as any).igLoadApprovalLive = async function() {
+  try {
+    const r = await fetch('/api/cms/approvals', { credentials: 'include' })
+    const d = await r.json()
+    return d.approvals || d.items || []
+  } catch { return [] }
+}
+;(window as any).igLoadClientsDashboardLive = async function() {
+  try {
+    const r = await fetch('/api/clients?limit=10', { credentials: 'include' })
+    const d = await r.json()
+    return d.clients || d.data || []
+  } catch { return [] }
+}
+;(window as any).igLoadIntegrationsLive = async function() {
+  try {
+    const r = await fetch('/api/integrations/health', { credentials: 'include' })
+    const d = await r.json()
+    return d.integrations || d.checks || []
+  } catch { return [] }
+}
+;(window as any).igLoadReportsLive = async function() {
+  try {
+    const r = await fetch('/api/reports/list', { credentials: 'include' })
+    const d = await r.json()
+    return d.reports || []
+  } catch { return [] }
+}
+;(window as any).igLoadDashboardKPIsLive = async function() {
+  try {
+    const r = await fetch('/api/admin/dashboard-kpis', { credentials: 'include' })
+    const d = await r.json()
+    return d.kpis || {}
+  } catch { return {} }
+}
+;(window as any).igAutoRefreshDashboard = function(intervalMs = 60000) {
+  return setInterval(async () => {
+    const kpis = await (window as any).igLoadDashboardKPIsLive()
+    if (kpis && kpis.source) {
+      console.log('[Dashboard] KPIs refreshed from', kpis.source, '—', new Date().toLocaleTimeString())
+    }
+  }, intervalMs)
+}
+
 
 
 const FALLBACK_DOCS = [
