@@ -2867,115 +2867,45 @@ app.post('/subscribe', async (c) => {
 app.post('/valuation', async (c) => {
   try {
     let body: any = {}
-    const ct = c.req.header('content-type') || ''
-    if (ct.includes('application/json')) {
-      body = await c.req.json()
-    } else {
-      const fd = await c.req.formData()
-      for (const [k, v] of fd.entries()) { body[k] = v }
-    }
+    const ct = (c.req.header('content-type') || '')
+    if (ct.includes('application/json')) body = await c.req.json()
+    else { const fd = await c.req.formData(); for(const [k,v] of fd.entries()) body[k] = v }
 
-    const method = String(body.method || 'cap').toLowerCase()
-    const ref = `IG-VAL-${Date.now()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`
+    const { name, email, phone, company, asset_type, location, message } = body
+    if (!name || !email) return c.json({ success: false, error: 'Name and email required' }, 400)
+
+    const ref = `VAL-${Date.now().toString(36).toUpperCase()}`
     const ts  = new Date().toISOString()
+    const db  = (c as any).env?.DB
 
-    let result: any = { method, ref, ts }
-
-    if (method === 'cap') {
-      const noi    = parseFloat(body.noi)    || 0
-      const rate   = parseFloat(body.rate)   || 8.5
-      const vac    = parseFloat(body.vac)    || 0
-      const capex  = parseFloat(body.capex)  || 0
-
-      if (!noi || noi <= 0) return c.json({ success: false, error: 'NOI must be a positive number' }, 400)
-      if (rate < 1 || rate > 25)  return c.json({ success: false, error: 'Cap rate must be between 1% and 25%' }, 400)
-
-      const effectiveNOI = noi * (1 - vac / 100) * (1 - capex / 100)
-      const value = effectiveNOI / (rate / 100)
-
-      result = { ...result, noi_lakhs: noi, cap_rate_pct: rate, vacancy_pct: vac, capex_pct: capex,
-        effective_noi_lakhs: +effectiveNOI.toFixed(2),
-        indicated_value_lakhs: +value.toFixed(2),
-        indicated_value_cr: +(value / 100).toFixed(3),
-        gross_yield_pct: +(noi / value * 100).toFixed(2),
-        method_label: 'Income Capitalisation'
-      }
-    } else if (method === 'dcf') {
-      const noi0     = parseFloat(body.noi)      || 0
-      const g        = parseFloat(body.growth)   / 100 || 0.06
-      const r        = parseFloat(body.discount) / 100 || 0.13
-      const termCap  = parseFloat(body.termcap)  / 100 || 0.095
-
-      if (!noi0 || noi0 <= 0) return c.json({ success: false, error: 'Year-1 NOI must be positive' }, 400)
-      if (r <= g)             return c.json({ success: false, error: 'Discount rate must exceed NOI growth rate' }, 400)
-
-      let pv = 0; let yr10noi = 0
-      for (let i = 1; i <= 10; i++) {
-        const noi_i = noi0 * Math.pow(1 + g, i)
-        pv += noi_i / Math.pow(1 + r, i)
-        if (i === 10) yr10noi = noi_i
-      }
-      const termValue = (yr10noi * (1 + g)) / termCap
-      const pvTerm    = termValue / Math.pow(1 + r, 10)
-      const total     = pv + pvTerm
-
-      result = { ...result,
-        pv_cashflows_lakhs: +pv.toFixed(2),
-        pv_terminal_lakhs: +pvTerm.toFixed(2),
-        total_value_lakhs: +total.toFixed(2),
-        total_value_cr: +(total / 100).toFixed(3),
-        yr10_noi_lakhs: +yr10noi.toFixed(2),
-        terminal_value_pct: +(pvTerm / total * 100).toFixed(1),
-        method_label: 'Discounted Cash Flow (10-yr)'
-      }
-    } else if (method === 'rev') {
-      const keys      = parseInt(body.keys)    || 40
-      const adr       = parseFloat(body.adr)   || 4800
-      const occ       = parseFloat(body.occ)   / 100 || 0.72
-      const fnbPct    = parseFloat(body.fnb)   / 100 || 0.35
-      const ebitdaMg  = parseFloat(body.ebitda)/ 100 || 0.28
-      const multiple  = parseFloat(body.mult)  || 8
-
-      if (keys < 1)     return c.json({ success: false, error: 'Number of keys must be at least 1' }, 400)
-      if (adr < 500)    return c.json({ success: false, error: 'ADR must be at least ₹500' }, 400)
-      if (multiple < 1) return c.json({ success: false, error: 'EBITDA multiple must be positive' }, 400)
-
-      const roomRev    = keys * adr * occ * 365 / 100000
-      const fnbRev     = roomRev * fnbPct
-      const totalRev   = roomRev + fnbRev
-      const ebitda     = totalRev * ebitdaMg
-      const value      = ebitda * multiple
-      const revpar     = adr * occ
-
-      result = { ...result, keys, adr_inr: adr, occupancy_pct: occ * 100, fnb_pct: fnbPct * 100,
-        revpar_inr: +revpar.toFixed(0),
-        room_revenue_lakhs: +roomRev.toFixed(2),
-        fnb_revenue_lakhs: +fnbRev.toFixed(2),
-        total_revenue_lakhs: +totalRev.toFixed(2),
-        ebitda_lakhs: +ebitda.toFixed(2),
-        ebitda_margin_pct: ebitdaMg * 100,
-        ebitda_multiple: multiple,
-        indicated_value_lakhs: +value.toFixed(2),
-        indicated_value_cr: +(value / 100).toFixed(3),
-        value_per_key_lakhs: +(value / keys).toFixed(2),
-        method_label: 'Revenue Method (Hotel / F&B)'
-      }
-    } else {
-      return c.json({ success: false, error: 'Unknown method. Use cap, dcf, or rev.' }, 400)
+    if (db) {
+      try {
+        await db.prepare(
+          `INSERT INTO ig_leads (lead_id, name, email, phone, company, source, vertical, stage, notes, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, 'Valuation Form', ?, 'New', ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+        ).bind(ref, String(name), String(email), String(phone || ''), String(company || ''),
+               String(asset_type || 'General'), String(message || '')).run()
+        await db.prepare(
+          `INSERT OR IGNORE INTO ig_audit_log (id, actor, action, module, details, created_at)
+           VALUES (?, 'system', ?, 'Sales', ?, CURRENT_TIMESTAMP)`
+        ).bind(`AUD-VAL-${Date.now()}`, `Valuation enquiry submitted — ${ref}`,
+               JSON.stringify({ ref, name, email, asset_type, location })).run()
+      } catch(_) { /* non-fatal */ }
     }
 
-    // Log to KV if available
+    // Send notification email (fire-and-forget)
     try {
-      const env = (c as any).env
-      if (env && env.KV) {
-        await env.KV.put(`valuation:${ref}`, JSON.stringify({ ...result, ip: c.req.header('cf-connecting-ip') }),
-          { expirationTtl: 60 * 60 * 24 * 90 }) // 90 days
-      }
-    } catch (_) { /* silent */ }
+      await sendEmail(c.env, {
+        to: 'admin@indiagully.com',
+        subject: `New Valuation Enquiry — ${ref}`,
+        html: `<h2>Valuation Enquiry ${ref}</h2><p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Phone:</b> ${phone || 'N/A'}</p><p><b>Company:</b> ${company || 'N/A'}</p><p><b>Asset Type:</b> ${asset_type || 'N/A'}</p><p><b>Location:</b> ${location || 'N/A'}</p><p><b>Message:</b> ${message || 'N/A'}</p>`,
+      })
+    } catch(_) {}
 
-    return c.json({ success: true, ...result })
-  } catch (e) {
-    return c.json({ success: false, error: 'Valuation calculation failed. Please check inputs.' }, 500)
+    return c.json({ success: true, ref, ts, source: db ? 'D1' : 'memory',
+                    message: 'Valuation enquiry received. Our team will contact you within 24 hours.' })
+  } catch(e: any) {
+    return c.json({ success: false, error: 'Valuation submission failed' }, 500)
   }
 })
 
@@ -3708,8 +3638,34 @@ app.get('/governance/resolutions', async (c) => {
   ]})
 })
 
-app.get('/finance/gst/gstr1',  (c) => c.json({ period:'Feb 2026', gstin:'07AAGCV0867P1ZN', b2b_invoices:[{gstin:'27AAACN1234D1ZI',inv:'INV-2026-001',taxable:500000,cgst:45000,sgst:45000}], totals:{taxable:680000,cgst:61200,sgst:61200}, status:'Draft — Not filed', due_date:'11 Mar 2026' }))
-app.get('/finance/gst/gstr3b', (c) => c.json({ period:'Feb 2026', gstin:'07AAGCV0867P1ZN', outward_taxable:{cgst:61200,sgst:61200}, itc_available:{cgst:12000,sgst:12000}, net_payable:{cgst:49200,sgst:49200}, status:'Draft — Not filed', due_date:'20 Mar 2026' }))
+app.get('/finance/gst/gstr1',  async (c) => {
+  const db = (c as any).env?.DB
+  if (db) {
+    try {
+      const rows = await db.prepare(
+        `SELECT * FROM ig_gst_filings WHERE form_type = 'GSTR-1' ORDER BY period DESC LIMIT 12`
+      ).all()
+      if (rows?.results?.length) {
+        return c.json({ success: true, source: 'D1', filings: rows.results })
+      }
+    } catch(_) {}
+  }
+  return c.json({ success: true, source: 'static', filings: [], message: 'No GSTR-1 filings found. File via /api/finance/gst/file' })
+})
+app.get('/finance/gst/gstr3b', async (c) => {
+  const db = (c as any).env?.DB
+  if (db) {
+    try {
+      const rows = await db.prepare(
+        `SELECT * FROM ig_gst_filings WHERE form_type = 'GSTR-3B' ORDER BY period DESC LIMIT 12`
+      ).all()
+      if (rows?.results?.length) {
+        return c.json({ success: true, source: 'D1', filings: rows.results })
+      }
+    } catch(_) {}
+  }
+  return c.json({ success: true, source: 'static', filings: [], message: 'No GSTR-3B filings found.' })
+})
 app.get('/finance/hsn-sac',    (c) => c.json({ master:[
   {code:'998313',type:'SAC',description:'Management Consulting Services',gst_rate:18},
   {code:'997212',type:'SAC',description:'Real Estate Advisory Services',gst_rate:18},
@@ -8582,39 +8538,57 @@ app.get('/compliance/gold-cert-status', requireSession(), requireRole(['Super Ad
 // ─────────────────────────────────────────────────────────────────────────────
 
 // V1 — D1 Live Binding Status
-app.get('/admin/d1-live-status', requireSession(), requireRole(['Super Admin']), (c) => {
-  const tables = [
-    { name: 'users',           rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'sessions',        rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'mandates',        rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'contacts',        rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'consent_records', rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'dpo_requests',    rows: 0,    indexed: false, status: 'pending_bind' },
-    { name: 'dpa_agreements',  rows: 0,    indexed: false, status: 'pending_bind' },
-    { name: 'audit_log',       rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'invoices',        rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'payments',        rows: 0,    indexed: true,  status: 'pending_bind' },
-    { name: 'webhooks',        rows: 0,    indexed: false, status: 'pending_bind' },
-    { name: 'risk_items',      rows: 0,    indexed: true,  status: 'pending_bind' },
+app.get('/admin/d1-live-status', requireSession(), requireRole(['Super Admin']), async (c) => {
+  const db = (c as any).env?.DB
+  const ts = new Date().toISOString()
+  const coreTableNames = [
+    'ig_users','ig_sessions','ig_mandates','ig_leads','ig_clients',
+    'ig_dpdp_consents','ig_audit_log','ig_invoices','ig_razorpay_webhooks',
+    'ig_risk_registry','ig_compliance_calendar','ig_workflows',
+    'ig_okrs','ig_kpi_records','ig_cms_pages','ig_contracts',
+    'ig_documents','ig_horeca_products','ig_employees','ig_gst_filings',
   ]
-  const bound = tables.filter(t => t.status === 'live').length
-  const readinessPct = Math.round((bound / tables.length) * 100)
+  if (db) {
+    try {
+      const tableResults: any[] = []
+      for (const tbl of coreTableNames) {
+        try {
+          const row = await db.prepare(`SELECT COUNT(*) as n FROM ${tbl}`).first() as any
+          tableResults.push({ name: tbl, rows: row?.n ?? 0, status: 'live', indexed: true })
+        } catch(_) {
+          tableResults.push({ name: tbl, rows: 0, status: 'missing', indexed: false })
+        }
+      }
+      const live = tableResults.filter((t:any) => t.status === 'live').length
+      return c.json({
+        success: true,
+        d1_status: {
+          binding: 'DB', database_name: 'india-gully-production',
+          binding_active: true, connection: 'Connected — Cloudflare D1',
+          tables: tableResults, bound_count: live,
+          total_tables: coreTableNames.length,
+          readiness_pct: Math.round((live / coreTableNames.length) * 100),
+          source: 'D1 live query',
+        },
+        platform_version: '2026.50',
+        timestamp: ts,
+      })
+    } catch(e: any) {
+      return c.json({ success: false, error: e.message, timestamp: ts }, 500)
+    }
+  }
+  // D1 not bound
+  const tables = coreTableNames.map(n => ({ name: n, rows: 0, status: 'pending_bind', indexed: true }))
   return c.json({
     success: true,
     d1_status: {
-      binding:        'DB',
-      database_name:  'india-gully-production',
+      binding: 'DB', database_name: 'india-gully-production',
       binding_active: false,
-      connection:     'pending — add D1 binding in Cloudflare dashboard',
-      local_schema:   { tables: tables.length, indexed_tables: tables.filter(t => t.indexed).length },
-      tables,
-      bound_count:    bound,
-      total_tables:   tables.length,
-      readiness_pct:  readinessPct,
-      action_required: 'Bind D1 database in Cloudflare Pages settings → Functions → D1 bindings',
+      connection: 'pending — bind D1 in Cloudflare dashboard → Functions → D1 bindings',
+      tables, bound_count: 0, total_tables: tables.length, readiness_pct: 0,
+      action_required: 'Run: npx wrangler d1 execute DB --remote --file migrations/0001_initial_schema.sql',
     },
-    platform_version: '2026.20',
-    timestamp: new Date().toISOString(),
+    platform_version: '2026.50', timestamp: ts,
   })
 })
 
@@ -14562,25 +14536,72 @@ app.post('/cms/templates', requireSession(), requireRole(['Super Admin'], ['admi
     const { name, type, blocks } = await c.req.json() as { name?: string; type?: string; blocks?: unknown[] }
     if (!name) return c.json({ success: false, error: 'Template name required' }, 400)
     const id = `TMPL-${Date.now()}`
-    return c.json({ success: true, id, name, type: type || 'Page', blocks: blocks || [], created_at: new Date().toISOString(), message: `Template "${name}" created successfully.` })
+    const db = (c as any).env?.DB
+    if (db) {
+      try {
+        await db.prepare(
+          `INSERT INTO ig_cms_pages (slug, title, content, page_type, status, created_at, updated_at)
+           VALUES (?, ?, ?, 'template', 'draft', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+        ).bind(`template-${id.toLowerCase()}`, String(name),
+               JSON.stringify({ blocks: blocks || [], template_type: type || 'Page' })).run()
+      } catch(_) { /* non-fatal if table missing */ }
+    }
+    return c.json({ success: true, id, name, type: type || 'Page', blocks: blocks || [],
+                    source: db ? 'D1' : 'memory',
+                    created_at: new Date().toISOString(), message: `Template "${name}" created successfully.` })
   } catch { return c.json({ success: false, error: 'Template creation failed' }, 500) }
 })
 
 // CMS: GET Templates
-app.get('/cms/templates', requireSession(), requireRole(['Super Admin'], ['admin']), (c) => c.json({
-  success: true, total: 6, templates: [
-    { id: 'TMPL-001', name: 'Landing Page', type: 'Page', blocks: 6 },
-    { id: 'TMPL-002', name: 'Advisory Service', type: 'Service', blocks: 4 },
-    { id: 'TMPL-003', name: 'Mandate Showcase', type: 'Mandate', blocks: 5 },
-  ],
-}))
+app.get('/cms/templates', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+  const db = (c as any).env?.DB
+  if (db) {
+    try {
+      const rows = await db.prepare(
+        `SELECT id, slug, title, page_type as type, status, created_at, updated_at
+         FROM ig_cms_pages WHERE page_type = 'template' ORDER BY created_at DESC`
+      ).all()
+      if (rows?.results?.length) {
+        return c.json({ success: true, total: rows.results.length, source: 'D1', templates: rows.results })
+      }
+    } catch(_) { /* fallback */ }
+  }
+  return c.json({
+    success: true, total: 3, source: 'static',
+    templates: [
+      { id: 'TMPL-001', name: 'Landing Page', type: 'Page', blocks: 6 },
+      { id: 'TMPL-002', name: 'Advisory Service', type: 'Service', blocks: 4 },
+      { id: 'TMPL-003', name: 'Mandate Showcase', type: 'Mandate', blocks: 5 },
+    ],
+  })
+})
 
 // CMS: Page SEO
 app.post('/cms/pages/:id/seo', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   try {
     const id = c.req.param('id')
     const body = await c.req.json() as Record<string, unknown>
-    return c.json({ success: true, page_id: id, page: body.page, saved_at: new Date().toISOString(), message: `SEO tags for page ${id} saved.` })
+    const savedAt = new Date().toISOString()
+    const db = (c as any).env?.DB
+    if (db) {
+      try {
+        // Try to update meta_title / meta_desc if columns exist, else update content JSON
+        const existing = await db.prepare(
+          `SELECT id, content FROM ig_cms_pages WHERE slug = ? OR CAST(id AS TEXT) = ?`
+        ).bind(String(id), String(id)).first() as any
+        if (existing) {
+          let content: any = {}
+          try { content = JSON.parse(existing.content || '{}') } catch(_) {}
+          content.seo = { ...content.seo, ...body }
+          await db.prepare(
+            `UPDATE ig_cms_pages SET content = ?, updated_at = ? WHERE id = ?`
+          ).bind(JSON.stringify(content), savedAt, existing.id).run()
+        }
+      } catch(_) { /* non-fatal */ }
+    }
+    return c.json({ success: true, page_id: id, page: body.page, saved_at: savedAt,
+                    source: db ? 'D1' : 'static',
+                    message: `SEO tags for page ${id} saved.` })
   } catch { return c.json({ success: false, error: 'SEO save failed' }, 500) }
 })
 
