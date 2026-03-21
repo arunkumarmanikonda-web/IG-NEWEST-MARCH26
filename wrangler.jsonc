@@ -49,18 +49,17 @@
   // ── R2 Storage ───────────────────────────────────────────────────────────────
   // Document storage: board packs, contracts, employee files
   // Create with: npx wrangler r2 bucket create india-gully-docs
-  // PENDING: Enable once R2 bucket is created
-  // "r2_buckets": [
-  //   {
-  //     "binding": "DOCS_BUCKET",
-  //     "bucket_name": "india-gully-docs"
-  //   }
-  // ],
+  "r2_buckets": [
+    {
+      "binding": "DOCS_BUCKET",
+      "bucket_name": "india-gully-docs"
+    }
+  ],
 
   // ── Environment Variables (non-secret) ───────────────────────────────────────
   "vars": {
     "PLATFORM_ENV":       "production",
-    "PLATFORM_VERSION":   "2026.50",
+    "PLATFORM_VERSION":   "2026.51",
     "DPDP_DPO_EMAIL":     "dpo@indiagully.com",
     "SUPPORT_EMAIL":      "admin@indiagully.com",
     "SESSION_TTL_SECS":   "1800",
