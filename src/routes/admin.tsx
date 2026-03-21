@@ -16605,6 +16605,184 @@ app.get('/documents', async (c) => {
   } catch(e) { console.warn('[igLoadMarketIntelLive]', e) }
 }
 
+// ── Phase V: CS, Procurement, ESG, Risk, AI/Data, Marketing, IT, HR, Partner, R&D, Finance loaders ──
+;(window as any).igLoadCsHealthLive = async function() {
+  try {
+    const r = await fetch('/api/cs/health-score', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadCsHealthLive]', e) }
+}
+;(window as any).igLoadChurnPredictionLive = async function() {
+  try {
+    const r = await fetch('/api/cs/churn-prediction', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadChurnPredictionLive]', e) }
+}
+;(window as any).igLoadOnboardingTrackerLive = async function() {
+  try {
+    const r = await fetch('/api/cs/onboarding-tracker', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadOnboardingTrackerLive]', e) }
+}
+;(window as any).igLoadExpansionRevenueLive = async function() {
+  try {
+    const r = await fetch('/api/cs/expansion-revenue', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadExpansionRevenueLive]', e) }
+}
+;(window as any).igLoadVendorScorecardLive = async function() {
+  try {
+    const r = await fetch('/api/procurement/vendor-scorecard', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadVendorScorecardLive]', e) }
+}
+;(window as any).igLoadPoTrackerLive = async function() {
+  try {
+    const r = await fetch('/api/procurement/po-tracker', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPoTrackerLive]', e) }
+}
+;(window as any).igLoadSpendAnalysisLive = async function() {
+  try {
+    const r = await fetch('/api/procurement/spend-analysis', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadSpendAnalysisLive]', e) }
+}
+;(window as any).igLoadContractRenewalLive = async function() {
+  try {
+    const r = await fetch('/api/procurement/contract-renewal', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadContractRenewalLive]', e) }
+}
+;(window as any).igLoadEsgCarbonLive = async function() {
+  try {
+    const r = await fetch('/api/esg/carbon-footprint', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgCarbonLive]', e) }
+}
+;(window as any).igLoadEsgDiversityLive = async function() {
+  try {
+    const r = await fetch('/api/esg/diversity-inclusion', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgDiversityLive]', e) }
+}
+;(window as any).igLoadEsgEnergyLive = async function() {
+  try {
+    const r = await fetch('/api/esg/energy-sustainability', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgEnergyLive]', e) }
+}
+;(window as any).igLoadFraudAlertsLive = async function() {
+  try {
+    const r = await fetch('/api/risk/fraud-alerts', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadFraudAlertsLive]', e) }
+}
+;(window as any).igLoadAnomalyFlagsLive = async function() {
+  try {
+    const r = await fetch('/api/risk/transaction-anomalies', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadAnomalyFlagsLive]', e) }
+}
+;(window as any).igLoadOperationalRiskLive = async function() {
+  try {
+    const r = await fetch('/api/risk/operational-risk', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadOperationalRiskLive]', e) }
+}
+;(window as any).igLoadPipelineHealthLive = async function() {
+  try {
+    const r = await fetch('/api/ai/pipeline-health', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPipelineHealthLive]', e) }
+}
+;(window as any).igLoadDataStorageLive = async function() {
+  try {
+    const r = await fetch('/api/data/storage-analytics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadDataStorageLive]', e) }
+}
+;(window as any).igLoadCampaignSpendLive = async function() {
+  try {
+    const r = await fetch('/api/marketing/campaign-spend', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadCampaignSpendLive]', e) }
+}
+;(window as any).igLoadLeadFunnelLive = async function() {
+  try {
+    const r = await fetch('/api/marketing/lead-funnel', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadLeadFunnelLive]', e) }
+}
+;(window as any).igLoadSeoMetricsLive = async function() {
+  try {
+    const r = await fetch('/api/marketing/seo-metrics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadSeoMetricsLive]', e) }
+}
+;(window as any).igLoadItAssetsLive = async function() {
+  try {
+    const r = await fetch('/api/it/asset-inventory', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadItAssetsLive]', e) }
+}
+;(window as any).igLoadItSecurityLive = async function() {
+  try {
+    const r = await fetch('/api/it/security-posture', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadItSecurityLive]', e) }
+}
+;(window as any).igLoadAttritionLive = async function() {
+  try {
+    const r = await fetch('/api/hr/attrition-analytics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadAttritionLive]', e) }
+}
+;(window as any).igLoadLearningDevelopmentLive = async function() {
+  try {
+    const r = await fetch('/api/hr/learning-development', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadLearningDevelopmentLive]', e) }
+}
+;(window as any).igLoadPartnerRevenueL = async function() {
+  try {
+    const r = await fetch('/api/partner/revenue-attribution', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPartnerRevenueLive]', e) }
+}
+;(window as any).igLoadPartnerHealthLive = async function() {
+  try {
+    const r = await fetch('/api/partner/health-scorecard', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPartnerHealthLive]', e) }
+}
+;(window as any).igLoadRdSpendLive = async function() {
+  try {
+    const r = await fetch('/api/rd/spend-roi', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadRdSpendLive]', e) }
+}
+;(window as any).igLoadBudgetForecastLive = async function() {
+  try {
+    const r = await fetch('/api/finance/budget-forecast', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadBudgetForecastLive]', e) }
+}
+;(window as any).igLoadCashFlowForecastLive = async function() {
+  try {
+    const r = await fetch('/api/finance/cash-flow-forecast', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadCashFlowForecastLive]', e) }
+}
+;(window as any).igLoadComplianceCalendarLive = async function() {
+  try {
+    const r = await fetch('/api/compliance/calendar', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadComplianceCalendarLive]', e) }
+}
+
+
+
 
 
 const FALLBACK_DOCS = [
