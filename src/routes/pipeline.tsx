@@ -7,8 +7,8 @@ const app = new Hono()
 // ── PIPELINE DATA ─────────────────────────────────────────────────────────────
 // Sector breakdown for donut chart
 const SECTOR_DATA = [
-  { sector: 'Real Estate',          value: 900, color: '#1A3A6B', pct: 77.3 },
-  { sector: 'Hospitality',          value: 265, color: '#065F46', pct: 22.7 },
+  { sector: 'Real Estate',          value: 1620, color: '#1A3A6B', pct: 77.1 },
+  { sector: 'Hospitality',          value: 480, color: '#065F46', pct: 22.9 },
 ]
 
 // Status stages
@@ -219,6 +219,7 @@ app.get('/', (c) => {
             <div class="pip-sector-pct">${s.pct}%</div>
           </div>`).join('')}
         </div>
+        <p style="font-size:.6rem;color:var(--ink-faint);margin-top:1rem;line-height:1.5;text-align:center;">Includes listed mandates plus confidential advisory pipeline</p>
       </div>
 
       <!-- ── DEAL SIZE WATERFALL ── -->

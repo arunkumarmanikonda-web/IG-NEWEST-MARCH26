@@ -459,7 +459,7 @@ app.get('/', async (c) => {
     <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:stretch;">
       ${[
         { icon:'shield-alt',    color:'#065F46', bg:'rgba(22,163,74,.08)', border:'rgba(22,163,74,.2)',  title:'CERT-In Compliant',         sub:'Cyber security advisory standard' },
-        { icon:'check-shield',  color:'#1A3A6B', bg:'rgba(37,99,235,.08)', border:'rgba(37,99,235,.2)',  title:'OWASP Top-10 Secure',       sub:'Platform security verified 2025' },
+        { icon:'check-shield',  color:'#1A3A6B', bg:'rgba(37,99,235,.08)', border:'rgba(37,99,235,.2)',  title:'OWASP Top-10 Secure',       sub:'Platform security verified 2026' },
         { icon:'file-contract', color:'#B8960C', bg:'rgba(184,150,12,.08)',border:'rgba(184,150,12,.2)', title:'Mutual NDA Framework',      sub:'All mandates NDA-protected' },
         { icon:'balance-scale', color:'#7C3AED', bg:'rgba(124,58,237,.08)',border:'rgba(124,58,237,.2)', title:'SEBI-Compliant Advisory',   sub:'Transaction advisory within regulatory framework' },
         { icon:'building',      color:'#065F46', bg:'rgba(22,163,74,.08)', border:'rgba(22,163,74,.2)',  title:'EY Co-Advisory',            sub:'Joint mandates with Ernst & Young' },
