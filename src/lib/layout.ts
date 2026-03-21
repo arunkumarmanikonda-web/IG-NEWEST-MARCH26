@@ -1548,7 +1548,7 @@ ${opts?.noNav ? '' : `<nav id="ig-mob-bar" aria-label="Quick contact">
   <div class="wrap" style="padding-top:0;padding-bottom:0;">
     <div style="display:flex;align-items:center;justify-content:space-between;overflow-x:auto;gap:0;">
       ${[
-        {n:'₹1,165 Cr+',l:'Pipeline'},
+        {n:'₹2,100 Cr+',l:'Pipeline'},
         {n:'15+',        l:'Hotels'},
         {n:'35+',        l:'Retail Brands'},
         {n:'20+',        l:'Hotel Brands'},
