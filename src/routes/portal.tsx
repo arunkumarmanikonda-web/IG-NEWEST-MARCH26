@@ -262,7 +262,7 @@ app.get('/client/register', (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Full Name *</label>
-              <input id="reg-name" type="text" required placeholder="Rajesh Kumar"
+              <input id="reg-name" type="text" required placeholder="Legal full name"
                      style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                      onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
             </div>

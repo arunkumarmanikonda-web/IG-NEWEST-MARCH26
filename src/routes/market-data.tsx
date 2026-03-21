@@ -16,34 +16,34 @@ const CITY_DATA = [
 ]
 
 const HOTEL_SEGMENTS = [
-  { segment: 'Luxury (5-star)',    adr: '₹14,000-28,000', occ: '74-82%', cap: '8.0-10.0%',  mult: '12-16×', supply: '+2,400 keys (FY26)' },
-  { segment: 'Upper-Upscale',      adr: '₹7,000-14,000',  occ: '72-79%', cap: '8.5-10.5%', mult: '9-12×',  supply: '+4,800 keys (FY26)' },
-  { segment: 'Upscale (Branded)',   adr: '₹4,500-7,000',   occ: '70-77%', cap: '9.0-11.0%', mult: '7-10×',  supply: '+6,200 keys (FY26)' },
-  { segment: 'Mid-Scale',           adr: '₹2,800-4,500',   occ: '68-75%', cap: '10.0-12.0%',mult: '6-8×',   supply: '+8,500 keys (FY26)' },
-  { segment: 'Economy',             adr: '₹1,800-2,800',   occ: '66-74%', cap: '11.0-13.5%',mult: '5-7×',   supply: '+5,200 keys (FY26)' },
-  { segment: 'Heritage/Boutique',   adr: '₹5,500-15,000',  occ: '65-75%', cap: '9.5-11.5%', mult: '8-12×',  supply: '+900 keys (FY26)' },
+  { segment: 'Luxury (5-star)',    adr: '₹14,000-28,000', occ: '74-82%', cap: '8.0-10.0%',  mult: '12-16×', supply: '+2,400 keys (FY 2025-26)' },
+  { segment: 'Upper-Upscale',      adr: '₹7,000-14,000',  occ: '72-79%', cap: '8.5-10.5%', mult: '9-12×',  supply: '+4,800 keys (FY 2025-26)' },
+  { segment: 'Upscale (Branded)',   adr: '₹4,500-7,000',   occ: '70-77%', cap: '9.0-11.0%', mult: '7-10×',  supply: '+6,200 keys (FY 2025-26)' },
+  { segment: 'Mid-Scale',           adr: '₹2,800-4,500',   occ: '68-75%', cap: '10.0-12.0%',mult: '6-8×',   supply: '+8,500 keys (FY 2025-26)' },
+  { segment: 'Economy',             adr: '₹1,800-2,800',   occ: '66-74%', cap: '11.0-13.5%',mult: '5-7×',   supply: '+5,200 keys (FY 2025-26)' },
+  { segment: 'Heritage/Boutique',   adr: '₹5,500-15,000',  occ: '65-75%', cap: '9.5-11.5%', mult: '8-12×',  supply: '+900 keys (FY 2025-26)' },
 ]
 
 const MACRO_INDICATORS = [
-  { label: 'India GDP Growth (FY26)',       value: '6.8%',       sub: 'IMF estimate',                      trend: 'up',    color: '#4ade80' },
-  { label: 'Domestic Air Pax (FY26)',       value: '165 Mn',     sub: '+14% YoY',                          trend: 'up',    color: '#4ade80' },
+  { label: 'India GDP Growth (FY 2025-26)',       value: '6.8%',       sub: 'IMF estimate',                      trend: 'up',    color: '#4ade80' },
+  { label: 'Domestic Air Pax (FY 2025-26)',       value: '165 Mn',     sub: '+14% YoY',                          trend: 'up',    color: '#4ade80' },
   { label: 'Foreign Tourist Arrivals',      value: '9.2 Mn',     sub: '+22% YoY (UNWTO provisional)',      trend: 'up',    color: '#4ade80' },
-  { label: 'Pan-India Hotel Occ (Q3 FY26)', value: '71.4%',      sub: '+2.8pp YoY',                        trend: 'up',    color: '#4ade80' },
-  { label: 'Pan-India RevPAR (Q3 FY26)',    value: '₹4,820',     sub: '+9.1% YoY',                         trend: 'up',    color: '#4ade80' },
+  { label: 'Pan-India Hotel Occ (Q3 FY 2025-26)', value: '71.4%',      sub: '+2.8pp YoY',                        trend: 'up',    color: '#4ade80' },
+  { label: 'Pan-India RevPAR (Q3 FY 2025-26)',    value: '₹4,820',     sub: '+9.1% YoY',                         trend: 'up',    color: '#4ade80' },
   { label: 'Grade-A Office Vacancy',        value: '15.8%',      sub: 'Top-6 markets, Q4 2025',            trend: 'down',  color: '#fbbf24' },
-  { label: 'Office Net Absorption (FY26)',  value: '47 Mn sq. ft.', sub: '+8% vs FY25',                       trend: 'up',    color: '#4ade80' },
+  { label: 'Office Net Absorption (FY 2025-26)',  value: '47 Mn sq. ft.', sub: '+8% vs FY 2024-25',                       trend: 'up',    color: '#4ade80' },
   { label: 'Retail Mall Vacancy',           value: '8.2%',       sub: 'Top-8 markets, H2 2025',            trend: 'down',  color: '#4ade80' },
   { label: 'Branded Hotel Supply Pipeline', value: '1,35,000',   sub: 'Keys under development (FY 2026-28)',   trend: 'up',    color: '#93c5fd' },
-  { label: 'Hotel Transaction Volume',      value: 'INR 4,800 Cr',  sub: 'H1 FY26 (deal completions)',        trend: 'up',    color: '#4ade80' },
+  { label: 'Hotel Transaction Volume',      value: 'INR 4,800 Cr',  sub: 'H1 FY 2025-26 (deal completions)',        trend: 'up',    color: '#4ade80' },
   { label: 'RBI Repo Rate',                 value: '6.25%',      sub: 'Feb 2026 cut (-25bps)',              trend: 'down',  color: '#4ade80' },
   { label: 'INR / USD',                     value: '₹83.4',      sub: 'as of Mar 2026',                    trend: 'stable',color: '#fbbf24' },
 ]
 
 const DEAL_ACTIVITY = [
-  { quarter: 'Q1 FY26', commercial: 28, hospitality: 12, retail: 8,  total: 'INR 3,200 Cr' },
-  { quarter: 'Q2 FY26', commercial: 32, hospitality: 15, retail: 10, total: 'INR 4,100 Cr' },
-  { quarter: 'Q3 FY26', commercial: 35, hospitality: 18, retail: 11, total: 'INR 4,800 Cr' },
-  { quarter: 'Q4 FY26 (est)', commercial: 38, hospitality: 20, retail: 13, total: 'INR 5,400 Cr (est)' },
+  { quarter: 'Q1 FY 2025-26', commercial: 28, hospitality: 12, retail: 8,  total: 'INR 3,200 Cr' },
+  { quarter: 'Q2 FY 2025-26', commercial: 32, hospitality: 15, retail: 10, total: 'INR 4,100 Cr' },
+  { quarter: 'Q3 FY 2025-26', commercial: 35, hospitality: 18, retail: 11, total: 'INR 4,800 Cr' },
+  { quarter: 'Q4 FY 2025-26 (est)', commercial: 38, hospitality: 20, retail: 13, total: 'INR 5,400 Cr (est)' },
 ]
 
 app.get('/', (c) => {
@@ -139,7 +139,7 @@ app.get('/', (c) => {
       </table>
     </div>
     <div style="margin-top:.75rem;font-size:.72rem;color:rgba(255,255,255,.3);font-family:'DM Sans',sans-serif;">
-      * Office rates: per sq. ft. capital value. Hotel rates: Average Room Rate. Retail: Ground-floor prime rate. Data as of Q3-Q4 FY26. Sources: JLL, CBRE, ANAROCK, STR, India Gully Research.
+      * Office rates: per sq. ft. capital value. Hotel rates: Average Room Rate. Retail: Ground-floor prime rate. Data as of Q3-Q4 FY 2025-26. Sources: JLL, CBRE, ANAROCK, STR, India Gully Research.
     </div>
   </div>
 </section>
@@ -147,7 +147,7 @@ app.get('/', (c) => {
 <!-- ── HOTEL SEGMENT TABLE ───────────────────────────────────────────── -->
 <section style="background:rgba(255,255,255,.02);border-top:1px solid rgba(255,255,255,.07);padding:3rem 0;">
   <div class="container" style="max-width:1200px;margin:0 auto;padding:0 1.5rem;">
-    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;">Hotel Asset Class Benchmarks — India FY26</h2>
+    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;">Hotel Asset Class Benchmarks — India FY 2025-26</h2>
     <div style="overflow-x:auto;">
       <table class="mkt-table">
         <thead>
@@ -157,7 +157,7 @@ app.get('/', (c) => {
             <th>Occupancy Stabilization</th>
             <th>Cap Rate</th>
             <th>EBITDA Multiple</th>
-            <th>New Supply and Absorption Rate (FY26)</th>
+            <th>New Supply and Absorption Rate (FY 2025-26)</th>
           </tr>
         </thead>
         <tbody>
@@ -179,7 +179,7 @@ app.get('/', (c) => {
 <!-- ── DEAL ACTIVITY ─────────────────────────────────────────────────── -->
 <section style="background:var(--bg-dk);padding:3rem 0;">
   <div class="container" style="max-width:1200px;margin:0 auto;padding:0 1.5rem;">
-    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;">Transaction Volume and Absorption Activity — FY26</h2>
+    <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:#fff;margin-bottom:1.5rem;">Transaction Volume and Absorption Activity — FY 2025-26</h2>
     <div class="mkt-deal-grid">
       ${DEAL_ACTIVITY.map(d => `
       <div class="mkt-deal-card reveal">

@@ -222,7 +222,7 @@ app.get('/leads', (c) => {
       <div><label class="ig-label">Company Name *</label><input type="text" id="nl-company" class="ig-input" style="font-size:.82rem;" placeholder="Company / Individual"></div>
       <div><label class="ig-label">Contact Person *</label><input type="text" id="nl-contact" class="ig-input" style="font-size:.82rem;" placeholder="Full name"></div>
       <div><label class="ig-label">Email *</label><input type="email" id="nl-email" class="ig-input" style="font-size:.82rem;" placeholder="contact@company.com"></div>
-      <div><label class="ig-label">Phone</label><input type="text" id="nl-phone" class="ig-input" style="font-size:.82rem;" placeholder="+91 XXXXX XXXXX"></div>
+      <div><label class="ig-label">Phone</label><input type="text" id="nl-phone" class="ig-input" style="font-size:.82rem;" placeholder="Direct line or mobile"></div>
       <div><label class="ig-label">Vertical</label><select id="nl-vert" class="ig-input" style="font-size:.82rem;"><option>Real Estate</option><option>Retail</option><option>Hospitality</option><option>Entertainment</option><option>HORECA</option><option>Debt & Special</option></select></div>
       <div><label class="ig-label">Source</label><select id="nl-src" class="ig-input" style="font-size:.82rem;"><option>Website</option><option>Referral</option><option>LinkedIn</option><option>Event</option><option>Cold Call</option><option>Other</option></select></div>
       <div><label class="ig-label">Estimated Value (₹)</label><input type="text" id="nl-val" class="ig-input" style="font-size:.82rem;" placeholder="e.g. 2,50,00,000"></div>

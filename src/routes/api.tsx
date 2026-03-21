@@ -17336,8 +17336,8 @@ app.get('/leads', requireSession(), async (c) => {
   }
   // Demo data
   return c.json({ success: true, total: 12, leads: [
-    { id:'LEAD-001', name:'Rajesh Kumar', email:'rajesh@xyzfamily.com', phone:'+91 98XXX XXXXX', org:'XYZ Family Office', mandate:'prism-tower-gurgaon', mandateTitle:'Prism Tower — Mixed-Use', type:'nda_acceptance', ts:'2026-03-12T09:15:00Z' },
-    { id:'LEAD-002', name:'Priya Sharma',  email:'priya@abcpe.com',     phone:'+91 97XXX XXXXX', org:'ABC Private Equity',  mandate:'belcibo-hospitality-platform', mandateTitle:'Belcibo Hospitality Platform', type:'nda_acceptance', ts:'2026-03-11T14:30:00Z' },
+    { id:'LEAD-001', name:'Arjun Mehta', email:'arjun@mehtafamilyoffice.com', phone:'+91 98XXX XXXXX', org:'Mehta Family Office', mandate:'prism-tower-gurgaon', mandateTitle:'Prism Tower — Mixed-Use', type:'nda_acceptance', ts:'2026-03-12T09:15:00Z' },
+    { id:'LEAD-002', name:'Priya Sharma',  email:'priya@nexuspe.in',     phone:'+91 97XXX XXXXX', org:'Nexus Private Equity',  mandate:'belcibo-hospitality-platform', mandateTitle:'Belcibo Hospitality Platform', type:'nda_acceptance', ts:'2026-03-11T14:30:00Z' },
     { id:'LEAD-003', name:'Vikram Singh',  email:'vikram@hotelsco.com', phone:'+91 96XXX XXXXX', org:'Vikram Hotels Ltd',   mandate:'hotel-rajshree-chandigarh', mandateTitle:'Hotel Rajshree & Spa', type:'nda_acceptance', ts:'2026-03-10T11:45:00Z' },
     { id:'LEAD-004', name:'Ananya Patel',  email:'ananya@reit.in',      phone:'+91 95XXX XXXXX', org:'Delta REIT Fund',     mandate:'ambience-tower-north-delhi', mandateTitle:'Ambience Tower — Adaptive Reuse', type:'nda_acceptance', ts:'2026-03-09T16:00:00Z' },
     { id:'LEAD-005', name:'Suresh Nair',   email:'suresh@heritage.co',  phone:'+91 94XXX XXXXX', org:'Heritage Hotels Co.', mandate:'welcomheritage-santa-roza-kasauli', mandateTitle:'WelcomHeritage Santa Roza', type:'nda_acceptance', ts:'2026-03-08T10:20:00Z' },
