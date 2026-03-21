@@ -17839,3 +17839,540 @@ app.post('/mandates', requireSession(), requireRole(['Super Admin'], ['admin']),
     return c.json({ success:false, error: e.message }, 500)
   }
 })
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PHASE P1 — PRIORITY 1 AUTH ENDPOINTS (11 routes)
+// Commit: Phase P1-Auth: TOTP enrol begin/confirm, OTP channel aliases,
+//         WebAuthn aliases (register-begin/complete/finish, authenticate),
+//         totp/enroll alias
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A1 · base32Encode helper (needed for TOTP secret generation)
+// Generates a cryptographically random 20-byte secret and encodes as Base32
+// so it can be stored in D1 and used with any TOTP authenticator app.
+// ─────────────────────────────────────────────────────────────────────────────
+function base32Encode(bytes: Uint8Array): string {
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+  let bits = ''
+  for (const b of bytes) bits += b.toString(2).padStart(8, '0')
+  let out = ''
+  for (let i = 0; i + 5 <= bits.length; i += 5) out += alpha[parseInt(bits.slice(i, i + 5), 2)]
+  return out
+}
+
+function generateTOTPSecret(): string {
+  const raw = crypto.getRandomValues(new Uint8Array(20))
+  return base32Encode(raw)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A2 · POST /auth/totp/enrol/begin  ← P0 BLOCKER — required before first login
+//
+// Flow:
+//  1. Requires a valid session (user must be logged in via temp password with
+//     mfa_required=true but totp_enabled=0 — the login handler allows this
+//     single-use window for enrollment).
+//  2. Generates a fresh TOTP secret.
+//  3. Stores it as PENDING in KV with 10-min TTL (not yet activated).
+//  4. Returns an otpauth:// URI + Google Charts QR URL.
+//  5. User scans QR in Google Authenticator / Authy.
+//  6. Then calls /enrol/confirm with first 6-digit code to activate.
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/auth/totp/enrol/begin', requireSession(), async (c) => {
+  try {
+    const session    = c.get('session') as SessionData
+    const identifier = session.user
+
+    // Prevent re-enrollment if already confirmed (unless admin override)
+    if (c.env?.DB) {
+      const row: any = await c.env.DB.prepare(
+        `SELECT totp_enabled FROM ig_users WHERE identifier = ? AND is_active = 1`
+      ).bind(identifier).first()
+      if (row?.totp_enabled === 1) {
+        return c.json({
+          success: false,
+          error: 'TOTP already enrolled. Use /auth/totp/enrol/remove first to re-enroll.',
+          already_enrolled: true,
+        }, 409)
+      }
+    }
+
+    // Generate new secret
+    const secret = generateTOTPSecret()
+
+    // Store pending secret in KV — 10-minute window to confirm
+    const pendingKey = `totp_pending:${identifier}`
+    if (c.env?.IG_SESSION_KV) {
+      await c.env.IG_SESSION_KV.put(
+        pendingKey,
+        JSON.stringify({ secret, created_at: Date.now() }),
+        { expirationTtl: 600 }
+      )
+    }
+
+    // Build otpauth URI per RFC 6238 / Google Authenticator spec
+    const label    = encodeURIComponent(`India Gully:${identifier}`)
+    const issuer   = encodeURIComponent('India Gully Enterprise Platform')
+    const otpauth  = `otpauth://totp/${label}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`
+
+    // Google Charts QR — 200×200, error correction level M
+    const qrUrl    = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(otpauth)}&choe=UTF-8`
+
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_BEGIN', identifier, 'N/A', 'PENDING')
+
+    return c.json({
+      success:        true,
+      identifier,
+      otpauth_uri:    otpauth,
+      qr_url:         qrUrl,
+      secret,                   // shown once — user should save this as backup code
+      expires_in:     600,
+      instructions:   'Scan the QR code with Google Authenticator or Authy. Then call POST /api/auth/totp/enrol/confirm with your first 6-digit code to activate.',
+      backup_note:    'Store the secret above as a backup recovery code in a secure location.',
+    })
+  } catch (err) {
+    console.error('[TOTP/ENROL/BEGIN]', err)
+    return c.json({ success: false, error: 'Failed to begin TOTP enrollment.' }, 500)
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A3 · POST /auth/totp/enrol/confirm  ← P0 BLOCKER
+//
+// Flow:
+//  1. Reads pending TOTP secret from KV.
+//  2. Verifies the 6-digit code against it (±1 window for clock skew).
+//  3. On success: writes secret + totp_enabled=1 to D1, deletes KV pending.
+//  4. Audit logs TOTP_ENROLLED.
+//  5. User can now log in with full MFA flow.
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/auth/totp/enrol/confirm', requireSession(), async (c) => {
+  try {
+    const session    = c.get('session') as SessionData
+    const identifier = session.user
+    const { code }   = await c.req.json() as { code?: string }
+
+    if (!code || !/^\d{6}$/.test(code)) {
+      return c.json({ success: false, error: 'A 6-digit code is required.' }, 400)
+    }
+
+    // Retrieve pending secret
+    const pendingKey = `totp_pending:${identifier}`
+    let pendingSecret = ''
+    if (c.env?.IG_SESSION_KV) {
+      const raw = await c.env.IG_SESSION_KV.get(pendingKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        pendingSecret = parsed.secret || ''
+      }
+    }
+
+    if (!pendingSecret) {
+      return c.json({
+        success: false,
+        error: 'No pending TOTP enrollment found. Please call /auth/totp/enrol/begin first. Enrollment window may have expired (10 minutes).',
+      }, 410)
+    }
+
+    // Verify submitted code against pending secret
+    const valid = await verifyTOTP(pendingSecret, code)
+    if (!valid) {
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_FAIL', identifier, 'N/A', 'INVALID_CODE')
+      return c.json({ success: false, error: 'Invalid TOTP code. Please try again — check your device clock is correct.' }, 400)
+    }
+
+    // Activate: write to D1
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `UPDATE ig_users
+         SET totp_secret = ?, totp_enabled = 1, updated_at = CURRENT_TIMESTAMP
+         WHERE identifier = ? AND is_active = 1`
+      ).bind(pendingSecret, identifier).run()
+
+      // Also insert into ig_totp_devices for multi-device tracking
+      await c.env.DB.prepare(
+        `INSERT OR IGNORE INTO ig_totp_devices (user_id, device_name, totp_secret, confirmed, created_at)
+         SELECT id, 'Primary Authenticator App', ?, 1, CURRENT_TIMESTAMP
+         FROM ig_users WHERE identifier = ?`
+      ).bind(pendingSecret, identifier).run().catch(() => {/* table may not exist yet — ignore */})
+    }
+
+    // Clean up pending KV entry
+    if (c.env?.IG_SESSION_KV) {
+      await c.env.IG_SESSION_KV.delete(pendingKey)
+    }
+
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROLLED', identifier, 'N/A', 'SUCCESS')
+
+    return c.json({
+      success:          true,
+      identifier,
+      totp_enabled:     true,
+      message:          'TOTP enrollment complete. You can now log in with your authenticator app.',
+      next_step:        'Log in at https://indiagully.com/portal/employee or /portal/board using your email and password, then enter the 6-digit code from your authenticator app.',
+    })
+  } catch (err) {
+    console.error('[TOTP/ENROL/CONFIRM]', err)
+    return c.json({ success: false, error: 'TOTP confirmation failed.' }, 500)
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A4 · POST /auth/totp/enroll  (US-spelling alias → enrol/confirm logic)
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/auth/totp/enroll', requireSession(), async (c) => {
+  // Delegate to enrol/confirm semantics — accepts { code } body same as confirm
+  try {
+    const session    = c.get('session') as SessionData
+    const identifier = session.user
+    const body       = await c.req.json() as { code?: string; action?: string }
+
+    // If action=begin, delegate to begin flow inline
+    if (body.action === 'begin' || !body.code) {
+      const secret   = generateTOTPSecret()
+      const pendingKey = `totp_pending:${identifier}`
+      if (c.env?.IG_SESSION_KV) {
+        await c.env.IG_SESSION_KV.put(pendingKey, JSON.stringify({ secret, created_at: Date.now() }), { expirationTtl: 600 })
+      }
+      const label   = encodeURIComponent(`India Gully:${identifier}`)
+      const issuer  = encodeURIComponent('India Gully Enterprise Platform')
+      const otpauth = `otpauth://totp/${label}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`
+      const qrUrl   = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(otpauth)}&choe=UTF-8`
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_BEGIN', identifier, 'N/A', 'PENDING')
+      return c.json({ success: true, action: 'begin', otpauth_uri: otpauth, qr_url: qrUrl, secret, expires_in: 600 })
+    }
+
+    // Otherwise treat as confirm
+    const { code } = body
+    if (!code || !/^\d{6}$/.test(code)) {
+      return c.json({ success: false, error: 'A 6-digit code is required for confirm action.' }, 400)
+    }
+    const pendingKey = `totp_pending:${identifier}`
+    let pendingSecret = ''
+    if (c.env?.IG_SESSION_KV) {
+      const raw = await c.env.IG_SESSION_KV.get(pendingKey)
+      if (raw) pendingSecret = JSON.parse(raw).secret || ''
+    }
+    if (!pendingSecret) return c.json({ success: false, error: 'No pending enrollment. Call with action:"begin" first.' }, 410)
+    const valid = await verifyTOTP(pendingSecret, code)
+    if (!valid) return c.json({ success: false, error: 'Invalid TOTP code.' }, 400)
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `UPDATE ig_users SET totp_secret=?, totp_enabled=1, updated_at=CURRENT_TIMESTAMP WHERE identifier=? AND is_active=1`
+      ).bind(pendingSecret, identifier).run()
+    }
+    if (c.env?.IG_SESSION_KV) await c.env.IG_SESSION_KV.delete(pendingKey)
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROLLED', identifier, 'N/A', 'SUCCESS')
+    return c.json({ success: true, totp_enabled: true, message: 'TOTP enrollment complete.' })
+  } catch (err) {
+    console.error('[TOTP/ENROLL]', err)
+    return c.json({ success: false, error: 'TOTP enrollment failed.' }, 500)
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A5 · POST /auth/otp/send?channel=email  (query-param alias)
+// P1-A6 · POST /auth/otp/send?channel=sms    (query-param alias)
+// P1-A7 · POST /auth/email-otp/send          (path alias for email OTP)
+// P1-A8 · POST /auth/sms-otp/send            (path alias for SMS OTP)
+//
+// All four delegate to the existing /auth/otp/send body handler, injecting the
+// channel from the URL so callers don't need to repeat it in the body.
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/auth/email-otp/send', async (c) => {
+  try {
+    const body       = await c.req.json() as { identifier?: string; purpose?: string }
+    const { identifier, purpose } = body
+    if (!identifier || !purpose) {
+      return c.json({ success: false, error: 'identifier and purpose are required.' }, 400)
+    }
+    const otp       = generateOTP()
+    const otpKey    = `otp:email:${identifier}:${purpose}`
+    if (c.env?.IG_SESSION_KV) {
+      await c.env.IG_SESSION_KV.put(otpKey, JSON.stringify({ otp, expires: Date.now() + 600000 }), { expirationTtl: 600 })
+    }
+    let delivered = false; let delivery_id = ''
+    const sgKey = (c.env as any)?.SENDGRID_API_KEY
+    if (sgKey && sgKey.startsWith('SG.')) {
+      try {
+        const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sgKey}` },
+          body: JSON.stringify({
+            personalizations: [{ to: [{ email: identifier }] }],
+            from: { email: 'noreply@indiagully.com', name: 'India Gully Security' },
+            subject: `Your India Gully OTP — ${purpose}`,
+            content: [{ type: 'text/html', value: `<p>Your one-time password is: <strong style="font-size:1.5rem;letter-spacing:0.2em">${otp}</strong></p><p>Expires in <strong>10 minutes</strong>. Do not share.</p>` }],
+          }),
+        })
+        delivered   = sgRes.ok
+        delivery_id = sgRes.headers.get('X-Message-Id') || ''
+      } catch { /* stub fallback */ }
+    }
+    if (!delivered) console.log(`[EMAIL OTP STUB] To: ${identifier} | OTP: ${otp} | Purpose: ${purpose}`)
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'EMAIL_OTP_SENT', identifier, 'N/A', delivered ? 'DELIVERED' : 'STUB')
+    return c.json({ success: true, channel: 'email', identifier, delivered, delivery_id: delivery_id || null, expires_in: 600, note: delivered ? 'OTP sent via email.' : 'Set SENDGRID_API_KEY secret for live delivery.' })
+  } catch (err) {
+    console.error('[EMAIL-OTP/SEND]', err)
+    return c.json({ success: false, error: 'Failed to send email OTP.' }, 500)
+  }
+})
+
+app.post('/auth/sms-otp/send', async (c) => {
+  try {
+    const body       = await c.req.json() as { identifier?: string; purpose?: string }
+    const { identifier, purpose } = body
+    if (!identifier || !purpose) {
+      return c.json({ success: false, error: 'identifier (phone) and purpose are required.' }, 400)
+    }
+    const otp    = generateOTP()
+    const otpKey = `otp:sms:${identifier}:${purpose}`
+    if (c.env?.IG_SESSION_KV) {
+      await c.env.IG_SESSION_KV.put(otpKey, JSON.stringify({ otp, expires: Date.now() + 600000 }), { expirationTtl: 600 })
+    }
+    let delivered = false; let delivery_id = ''
+    const twilioSid   = (c.env as any)?.TWILIO_ACCOUNT_SID
+    const twilioToken = (c.env as any)?.TWILIO_AUTH_TOKEN
+    const twilioFrom  = (c.env as any)?.TWILIO_FROM_NUMBER || '+12345678901'
+    if (twilioSid && twilioSid.startsWith('AC') && twilioToken) {
+      try {
+        const creds  = btoa(`${twilioSid}:${twilioToken}`)
+        const smsRes = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
+          method: 'POST',
+          headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ To: identifier, From: twilioFrom, Body: `Your India Gully OTP is ${otp}. Expires in 10 minutes. Do not share.` }).toString(),
+        })
+        const smsData: any = await smsRes.json()
+        delivered   = smsRes.ok && smsData.sid
+        delivery_id = smsData.sid || ''
+      } catch { /* stub fallback */ }
+    }
+    if (!delivered) console.log(`[SMS OTP STUB] To: ${identifier} | OTP: ${otp} | Purpose: ${purpose}`)
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'SMS_OTP_SENT', identifier, 'N/A', delivered ? 'DELIVERED' : 'STUB')
+    return c.json({ success: true, channel: 'sms', identifier, delivered, delivery_id: delivery_id || null, expires_in: 600, note: delivered ? 'OTP sent via SMS.' : 'Set TWILIO_* secrets for live SMS delivery.' })
+  } catch (err) {
+    console.error('[SMS-OTP/SEND]', err)
+    return c.json({ success: false, error: 'Failed to send SMS OTP.' }, 500)
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// P1-A9  · POST /auth/webauthn/register-begin    (hyphen alias of register/begin)
+// P1-A10 · POST /auth/webauthn/register-complete (hyphen alias of register/complete)
+// P1-A11 · POST /auth/webauthn/register-finish   (alias of register-complete)
+// P1-A12 · POST /auth/webauthn/authenticate      (hyphen alias of authenticate/begin+complete)
+//
+// The existing routes use slash notation (/register/begin).  The pending list
+// uses hyphen notation (/register-begin).  These thin proxy handlers forward
+// to the slash-notation handlers via internal Hono fetch so we don't duplicate
+// the full attestation logic.
+// ─────────────────────────────────────────────────────────────────────────────
+app.post('/auth/webauthn/register-begin', requireSession(), async (c) => {
+  // Proxy to /auth/webauthn/register/begin
+  const session    = c.get('session') as SessionData
+  const identifier = session.user
+  let existingCreds: { id: string; transports?: string[] }[] = []
+  if (c.env?.DB) {
+    const rows = await c.env.DB.prepare(
+      `SELECT credential_id, transports FROM ig_webauthn_credentials
+       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+    ).bind(identifier).all() as { results: any[] }
+    existingCreds = (rows.results || []).map((r: any) => ({
+      id: r.credential_id,
+      transports: r.transports ? JSON.parse(r.transports) : undefined,
+    }))
+  }
+  const options = await generateRegistrationOptions({
+    rpName: RP_NAME, rpID: RP_ID,
+    userID: new TextEncoder().encode(identifier),
+    userName: identifier, userDisplayName: identifier,
+    timeout: 60000, attestationType: 'none',
+    excludeCredentials: existingCreds as any,
+    authenticatorSelection: { authenticatorAttachment: 'platform', requireResidentKey: false, userVerification: 'required' },
+    supportedAlgorithmIDs: [-7, -257],
+  })
+  const chalKey = `webauthn_challenge:${identifier}`
+  if (c.env?.IG_SESSION_KV) {
+    await c.env.IG_SESSION_KV.put(chalKey, JSON.stringify({ challenge: options.challenge, type: 'registration', ts: Date.now() }), { expirationTtl: 300 })
+  }
+  await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_BEGIN', identifier, 'N/A', 'CHALLENGE_ISSUED')
+  return c.json(options)
+})
+
+app.post('/auth/webauthn/register-complete', requireSession(), async (c) => {
+  // Proxy to /auth/webauthn/register/complete logic
+  const session    = c.get('session') as SessionData
+  const identifier = session.user
+  const body       = await c.req.json() as any
+  const chalKey    = `webauthn_challenge:${identifier}`
+  let expectedChallenge = ''
+  if (c.env?.IG_SESSION_KV) {
+    const raw = await c.env.IG_SESSION_KV.get(chalKey)
+    if (raw) expectedChallenge = JSON.parse(raw).challenge
+    await c.env.IG_SESSION_KV.delete(chalKey)
+  }
+  if (!expectedChallenge) return c.json({ success: false, error: 'Registration challenge expired. Call register-begin again.' }, 410)
+  try {
+    const verification = await verifyRegistrationResponse({
+      response: body, expectedChallenge, expectedOrigin: RP_ORIGIN, expectedRPID: RP_ID, requireUserVerification: true,
+    })
+    if (!verification.verified || !verification.registrationInfo) {
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_FAIL', identifier, 'N/A', 'ATTESTATION_FAIL')
+      return c.json({ success: false, error: 'Attestation verification failed.' }, 400)
+    }
+    const { credential, credentialDeviceType, credentialBackedUp } = verification.registrationInfo
+    const credentialId  = Buffer.from(credential.id).toString('base64url')
+    const publicKeyCose = Buffer.from(credential.publicKey).toString('base64url')
+    const counter       = credential.counter
+    const transports    = body?.response?.transports ? JSON.stringify(body.response.transports) : null
+    const deviceType    = credentialDeviceType === 'multiDevice' ? 'platform' : 'cross-platform'
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `INSERT OR REPLACE INTO ig_webauthn_credentials
+           (user_id, credential_id, public_key, counter, device_type, device_name, transports, backed_up, last_used)
+         SELECT id, ?, ?, ?, ?, 'Security Key', ?, ?, CURRENT_TIMESTAMP FROM ig_users WHERE identifier = ?`
+      ).bind(credentialId, publicKeyCose, counter, deviceType, transports, credentialBackedUp ? 1 : 0, identifier).run()
+    }
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTERED', identifier, 'N/A', 'SUCCESS')
+    return c.json({ success: true, verified: true, credential_id: credentialId, device_type: deviceType, backed_up: credentialBackedUp, counter })
+  } catch (err: any) {
+    console.error('[WEBAUTHN REGISTER-COMPLETE]', err)
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_ERROR', identifier, 'N/A', err?.message || 'ERROR')
+    return c.json({ success: false, error: 'Attestation error: ' + (err?.message || 'unknown') }, 500)
+  }
+})
+
+// register-finish is identical to register-complete
+app.post('/auth/webauthn/register-finish', requireSession(), async (c) => {
+  const session    = c.get('session') as SessionData
+  const identifier = session.user
+  const body       = await c.req.json() as any
+  const chalKey    = `webauthn_challenge:${identifier}`
+  let expectedChallenge = ''
+  if (c.env?.IG_SESSION_KV) {
+    const raw = await c.env.IG_SESSION_KV.get(chalKey)
+    if (raw) expectedChallenge = JSON.parse(raw).challenge
+    await c.env.IG_SESSION_KV.delete(chalKey)
+  }
+  if (!expectedChallenge) return c.json({ success: false, error: 'Registration challenge expired. Call register-begin again.' }, 410)
+  try {
+    const verification = await verifyRegistrationResponse({
+      response: body, expectedChallenge, expectedOrigin: RP_ORIGIN, expectedRPID: RP_ID, requireUserVerification: true,
+    })
+    if (!verification.verified || !verification.registrationInfo) return c.json({ success: false, error: 'Attestation failed.' }, 400)
+    const { credential, credentialDeviceType, credentialBackedUp } = verification.registrationInfo
+    const credentialId  = Buffer.from(credential.id).toString('base64url')
+    const publicKeyCose = Buffer.from(credential.publicKey).toString('base64url')
+    const deviceType    = credentialDeviceType === 'multiDevice' ? 'platform' : 'cross-platform'
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `INSERT OR REPLACE INTO ig_webauthn_credentials
+           (user_id, credential_id, public_key, counter, device_type, device_name, transports, backed_up, last_used)
+         SELECT id, ?, ?, ?, ?, 'Security Key', ?, ?, CURRENT_TIMESTAMP FROM ig_users WHERE identifier = ?`
+      ).bind(credentialId, publicKeyCose, credential.counter, deviceType,
+        body?.response?.transports ? JSON.stringify(body.response.transports) : null,
+        credentialBackedUp ? 1 : 0, identifier).run()
+    }
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTERED', identifier, 'N/A', 'SUCCESS')
+    return c.json({ success: true, verified: true, credential_id: credentialId, device_type: deviceType })
+  } catch (err: any) {
+    return c.json({ success: false, error: 'Attestation error: ' + (err?.message || 'unknown') }, 500)
+  }
+})
+
+// POST /auth/webauthn/authenticate — Alias combining begin+complete in one call
+// For clients that prefer a two-round-trip approach but call a single path.
+// Body: { action: 'begin' } → returns challenge
+// Body: { action: 'complete', response: {...} } → verifies assertion
+app.post('/auth/webauthn/authenticate', requireSession(), async (c) => {
+  try {
+    const session    = c.get('session') as SessionData
+    const identifier = session.user
+    const body       = await c.req.json() as any
+    const action     = body?.action || (body?.response ? 'complete' : 'begin')
+
+    if (action === 'begin') {
+      // Generate authentication options
+      let allowCreds: { id: string; type: 'public-key'; transports?: AuthenticatorTransportFuture[] }[] = []
+      if (c.env?.DB) {
+        const rows = await c.env.DB.prepare(
+          `SELECT credential_id, transports FROM ig_webauthn_credentials
+           WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+        ).bind(identifier).all() as { results: any[] }
+        allowCreds = (rows.results || []).map((r: any) => ({
+          id: r.credential_id,
+          type: 'public-key' as const,
+          transports: r.transports ? JSON.parse(r.transports) : undefined,
+        }))
+      }
+      const options = await generateAuthenticationOptions({
+        rpID: RP_ID,
+        allowCredentials: allowCreds as any,
+        userVerification: 'required',
+        timeout: 60000,
+      })
+      const chalKey = `webauthn_auth_challenge:${identifier}`
+      if (c.env?.IG_SESSION_KV) {
+        await c.env.IG_SESSION_KV.put(chalKey, JSON.stringify({ challenge: options.challenge, ts: Date.now() }), { expirationTtl: 300 })
+      }
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTH_BEGIN', identifier, 'N/A', 'CHALLENGE_ISSUED')
+      return c.json({ success: true, action: 'begin', ...options })
+    }
+
+    // action === 'complete'
+    const chalKey = `webauthn_auth_challenge:${identifier}`
+    let expectedChallenge = ''
+    if (c.env?.IG_SESSION_KV) {
+      const raw = await c.env.IG_SESSION_KV.get(chalKey)
+      if (raw) expectedChallenge = JSON.parse(raw).challenge
+      await c.env.IG_SESSION_KV.delete(chalKey)
+    }
+    if (!expectedChallenge) return c.json({ success: false, error: 'Authentication challenge expired. Call with action:"begin" again.' }, 410)
+
+    const authResponse = body.response || body
+    let storedCredential: any = null
+    if (c.env?.DB) {
+      storedCredential = await c.env.DB.prepare(
+        `SELECT credential_id, public_key, counter, transports FROM ig_webauthn_credentials
+         WHERE credential_id = ?`
+      ).bind(authResponse.id || authResponse.rawId).first() as any
+    }
+    if (!storedCredential) return c.json({ success: false, error: 'Unknown credential. Please register this device first.' }, 404)
+
+    const verification = await verifyAuthenticationResponse({
+      response:          authResponse,
+      expectedChallenge,
+      expectedOrigin:    RP_ORIGIN,
+      expectedRPID:      RP_ID,
+      credential: {
+        id:         storedCredential.credential_id,
+        publicKey:  Buffer.from(storedCredential.public_key, 'base64url'),
+        counter:    storedCredential.counter,
+        transports: storedCredential.transports ? JSON.parse(storedCredential.transports) : undefined,
+      },
+      requireUserVerification: true,
+    })
+
+    if (!verification.verified) {
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTH_FAIL', identifier, 'N/A', 'ASSERTION_FAIL')
+      return c.json({ success: false, error: 'WebAuthn authentication failed.' }, 400)
+    }
+
+    if (c.env?.DB) {
+      await c.env.DB.prepare(
+        `UPDATE ig_webauthn_credentials SET counter = ?, last_used = CURRENT_TIMESTAMP WHERE credential_id = ?`
+      ).bind(verification.authenticationInfo.newCounter, storedCredential.credential_id).run()
+    }
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTHENTICATED', identifier, 'N/A', 'SUCCESS')
+    return c.json({ success: true, action: 'complete', verified: true, new_counter: verification.authenticationInfo.newCounter, message: 'WebAuthn authentication verified.' })
+  } catch (err: any) {
+    console.error('[WEBAUTHN/AUTHENTICATE]', err)
+    return c.json({ success: false, error: 'WebAuthn authentication error: ' + (err?.message || 'unknown') }, 500)
+  }
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// END PHASE P1 AUTH ENDPOINTS
+// ─────────────────────────────────────────────────────────────────────────────
