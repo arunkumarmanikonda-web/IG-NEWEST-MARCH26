@@ -23,13 +23,13 @@ const STAGE_CONFIG: Record<string, { label: string; color: string; icon: string;
 
 // Deal size buckets for waterfall
 const DEAL_BUCKETS = [
-  { label: '₹0–50 Cr',    min: 0,   max: 50,   count: 0, total: 0, color: '#16a34a' },
-  { label: '₹50–100 Cr',  min: 50,  max: 100,  count: 0, total: 0, color: '#0369a1' },
-  { label: '₹100–200 Cr', min: 100, max: 200,  count: 0, total: 0, color: '#7C3AED' },
+  { label: '₹0-50 Cr',    min: 0,   max: 50,   count: 0, total: 0, color: '#16a34a' },
+  { label: '₹50-100 Cr',  min: 50,  max: 100,  count: 0, total: 0, color: '#0369a1' },
+  { label: '₹100-200 Cr', min: 100, max: 200,  count: 0, total: 0, color: '#7C3AED' },
   { label: '₹200 Cr+',    min: 200, max: 99999,count: 0, total: 0, color: '#B8960C' },
 ]
 
-// Helper: parse value string to number (₹400 Cr → 400)
+// Helper: parse value string to number (INR 400 Cr → 400)
 function parseValue(v: string): number {
   const m = v.match(/[\d,]+/)
   return m ? parseFloat(m[0].replace(/,/g, '')) : 0
@@ -154,7 +154,7 @@ app.get('/', (c) => {
         <span style="width:8px;height:8px;background:#16a34a;border-radius:50%;animation:pulse 2s infinite;display:block;"></span>
         <span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);">Live Investor Pipeline</span>
       </div>
-      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;line-height:1.1;margin-bottom:1.25rem;">₹1,165 Cr+ Active<br><em style="color:var(--gold);font-style:italic;">Advisory Pipeline</em></h1>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;line-height:1.1;margin-bottom:1.25rem;">INR 1,165 Cr+ Active<br><em style="color:var(--gold);font-style:italic;">Advisory Pipeline</em></h1>
       <p style="font-size:1rem;color:rgba(255,255,255,.55);line-height:1.85;max-width:620px;margin:0 auto 2.5rem;">India Gully's live mandate pipeline across Real Estate, Hospitality, Debt & Special Situations — updated continuously from active advisory engagements.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="#timeline" class="btn btn-g" style="min-width:180px;justify-content:center;"><i class="fas fa-stream" style="margin-right:.5rem;font-size:.72rem;"></i>View Timeline</a>
@@ -170,11 +170,11 @@ app.get('/', (c) => {
   <div class="wrap" style="padding:0;">
     <div class="pip-kpi-grid">
       ${[
-        { n: '₹1,165 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
+        { n: 'INR 1,165 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
         { n: `${listings.length}`,  l: 'Active Mandates',  sub: 'Open to qualified investors' },
         { n: '5',           l: 'Sectors',                  sub: 'Diversified verticals' },
         { n: '8+',          l: 'Years',                    sub: 'Advisory track record' },
-        { n: '₹2,000 Cr+',  l: 'Transactions Advised',     sub: 'Since inception 2017' },
+        { n: 'INR 2,000 Cr+',  l: 'Transactions Advised',     sub: 'Since inception 2017' },
       ].map(s => `
       <div class="pip-kpi">
         <div class="pip-kpi-n">${s.n}</div>
@@ -367,14 +367,14 @@ app.get('/', (c) => {
 `
 
   return c.html(layout('Investor Pipeline Dashboard — India Gully', content, {
-    description: 'India Gully\'s live investor pipeline dashboard — ₹1,165 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
+    description: 'India Gully\'s live investor pipeline dashboard — INR 1,165 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
     canonical: 'https://india-gully.pages.dev/pipeline',
     ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Investor Pipeline Dashboard — India Gully',
-      description: 'Live advisory pipeline of ₹1,165 Cr+ across Real Estate, Hospitality, and Debt verticals.',
+      description: 'Live advisory pipeline of INR 1,165 Cr+ across Real Estate, Hospitality, and Debt verticals.',
       url: 'https://india-gully.pages.dev/pipeline',
       publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://india-gully.pages.dev' }
     }

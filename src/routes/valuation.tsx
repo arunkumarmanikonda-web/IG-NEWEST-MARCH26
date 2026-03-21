@@ -11,19 +11,17 @@ app.get('/', (c) => {
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;">
       <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(212,174,42,.12);border:1px solid rgba(212,174,42,.3);border-radius:100px;padding:.3rem .9rem;font-size:.78rem;font-family:'DM Sans',sans-serif;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;">
         <span style="width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;"></span>
-        Free Tool · Advisory Grade
+        Institutional Advisory Grade · Proprietary Methodology
       </span>
     </div>
     <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.8rem);color:#fff;line-height:1.08;margin-bottom:1rem;">
-      Property Valuation<br>
+      Institutional-Grade Property<br>
       <span style="background:linear-gradient(135deg,var(--gold),#e8c84a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-        Calculator
+        Valuation Engine
       </span>
     </h1>
     <p style="color:rgba(255,255,255,.65);font-size:clamp(1rem,1.6vw,1.18rem);max-width:540px;line-height:1.6;margin-bottom:0;font-family:'DM Sans',sans-serif;">
-      Three industry-standard methodologies in one tool — Income Capitalisation, 
-      Discounted Cash Flow, and Revenue-Based valuation. Built on India Gully's 
-      active advisory intelligence across ₹1,165 Cr+ of mandates.
+      Three institutional valuation methodologies in one engine — Income Capitalisation, Discounted Cash Flow, and Revenue-Based Approach. Built on India Gully's active advisory intelligence across INR 1,165 Cr+ of live mandates, with Risk-Adjusted WACC, Adjusted NOI, and Vacancy and CapEx leakage modeling.
     </p>
   </div>
 </section>
@@ -32,22 +30,44 @@ app.get('/', (c) => {
 <section style="background:#0c0c18;padding:3rem 0 5rem;">
   <div class="container" style="max-width:1100px;margin:0 auto;padding:0 1.5rem;">
 
+    <!-- ── FORMULA TRANSPARENCY PANEL ──────────────────────────────── -->
+    <div style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.15);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem;">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Formula Transparency — Institutional Valuation Engine</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+        <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:.875rem 1rem;">
+          <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem;">Income Model</div>
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--gold);">Value = Adjusted NOI / Cap Rate</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.3rem;font-family:'DM Sans',sans-serif;">Where Adjusted NOI = Gross NOI less Vacancy Leakage less CapEx Reserve</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:.875rem 1rem;">
+          <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem;">DCF Model</div>
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--gold);">NPV = &Sigma; CF<sub>t</sub> / (1 + WACC)<sup>t</sup> + Terminal Value</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.3rem;font-family:'DM Sans',sans-serif;">Terminal Value = Year 10 NOI &times; (1 + g) / Terminal Cap Rate</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border-radius:8px;padding:.875rem 1rem;">
+          <div style="font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.5rem;">Revenue Model</div>
+          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--gold);">Value = EBITDA &times; EBITDA Multiple</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.3rem;font-family:'DM Sans',sans-serif;">EBITDA = (Room Revenue + F&amp;B Revenue) &times; EBITDA Margin %</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Method Switcher -->
     <div style="display:flex;gap:.75rem;margin-bottom:2.5rem;flex-wrap:wrap;">
       <button id="tab-cap" onclick="switchTab('cap')"
         class="val-tab active"
         style="background:rgba(212,174,42,.12);border:1.5px solid var(--gold);color:var(--gold);">
-        📊 Income Capitalisation
+        Income Capitalisation Method — Institutional Grade
       </button>
       <button id="tab-dcf" onclick="switchTab('dcf')"
         class="val-tab"
         style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);">
-        📈 Discounted Cash Flow
+        Discounted Cash Flow - DCF
       </button>
       <button id="tab-rev" onclick="switchTab('rev')"
         class="val-tab"
         style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);">
-        🏨 Revenue Method
+        Revenue Method - Hotels and F&B
       </button>
     </div>
 
@@ -58,23 +78,23 @@ app.get('/', (c) => {
 
         <!-- Income Capitalisation -->
         <div id="panel-cap" class="val-card">
-          <h2 class="val-card-title">Income Capitalisation Method</h2>
-          <p class="val-card-sub">Ideal for stabilised income-producing assets: commercial, retail, and operating hotels with a track record.</p>
+          <h2 class="val-card-title">Income Capitalisation Method — Institutional Grade</h2>
+          <p class="val-card-sub">Optimal for stabilized income-producing assets with a verified operational track record — Grade-A commercial, branded retail, and operating hotel assets.</p>
           <div class="val-form-grid">
             <div class="val-field">
-              <label>Net Operating Income (₹ Lakhs / yr)</label>
+              <label>Gross Annual NOI — INR Lakhs per annum</label>
               <input type="number" id="cap-noi" value="120" min="0" step="5" class="val-input" oninput="calcCap()">
             </div>
             <div class="val-field">
-              <label>Capitalisation Rate (%)</label>
-              <input type="number" id="cap-rate" value="8.5" min="1" max="20" step="0.25" class="val-input" oninput="calcCap()">
+              <label>Capitalisation Rate (%) — minimum 2 decimal precision</label>
+              <input type="number" id="cap-rate" value="8.50" min="1" max="20" step="0.01" class="val-input" oninput="calcCap()">
             </div>
             <div class="val-field">
-              <label>Vacancy Allowance (%)</label>
+              <label>Vacancy and CapEx Leakage — Vacancy Allowance (%)</label>
               <input type="number" id="cap-vac" value="8" min="0" max="40" step="1" class="val-input" oninput="calcCap()">
             </div>
             <div class="val-field">
-              <label>Capital Expenditure Reserve (%)</label>
+              <label>Vacancy and CapEx Leakage — CapEx Reserve (%)</label>
               <input type="number" id="cap-capex" value="3" min="0" max="15" step="0.5" class="val-input" oninput="calcCap()">
             </div>
           </div>
@@ -82,16 +102,16 @@ app.get('/', (c) => {
           <!-- Cap Rate Benchmarks -->
           <div style="margin:1.25rem 0;padding:1rem;background:rgba(212,174,42,.06);border:1px solid rgba(212,174,42,.15);border-radius:10px;">
             <div style="font-size:.72rem;font-family:'DM Sans',sans-serif;color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem;">
-              India Gully Cap Rate Benchmarks (2026)
+              Proprietary Market Intelligence — 2026 Cap Rate Benchmarks
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem;">
               ${[
-                ['Grade-A Commercial', '7.0–8.5%'],
-                ['Branded Hotel', '8.5–10.5%'],
-                ['Shopping Mall', '8.0–9.5%'],
-                ['Service Apartment', '9.0–11.0%'],
-                ['Tier 2 Hotel', '10.0–12.5%'],
-                ['Heritage Resort', '9.5–11.5%'],
+                ['Grade-A Commercial', '7.0-8.5%'],
+                ['Branded Hotel', '8.5-10.5%'],
+                ['Shopping Mall', '8.0-9.5%'],
+                ['Service Apartment', '9.0-11.0%'],
+                ['Tier-2 Hotel', '10.0-12.5%'],
+                ['Heritage Resort', '9.5-11.5%'],
               ].map(([label, rate]) => `
               <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;">
                 <div style="font-size:.7rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">${label}</div>
@@ -106,23 +126,23 @@ app.get('/', (c) => {
 
         <!-- DCF Panel -->
         <div id="panel-dcf" class="val-card" style="display:none;">
-          <h2 class="val-card-title">Discounted Cash Flow (DCF)</h2>
-          <p class="val-card-sub">For development projects, pre-stabilised assets, or where detailed cash flow projection is needed. Standard 10-year hold period.</p>
+          <h2 class="val-card-title">Discounted Cash Flow - DCF — 10-Year Hold Period</h2>
+          <p class="val-card-sub">For development assets, pre-stabilization mandates, and high-quantum acquisitions requiring detailed cash flow projection. Standard institutional 10-year hold period with Terminal Growth Rate modeling.</p>
           <div class="val-form-grid">
             <div class="val-field">
-              <label>Year 1 Net Operating Income (₹ Lakhs)</label>
+              <label>Year 1 Adjusted NOI — INR Lakhs</label>
               <input type="number" id="dcf-noi" value="80" min="0" step="5" class="val-input" oninput="calcDCF()">
             </div>
             <div class="val-field">
-              <label>Annual NOI Growth Rate (%)</label>
+              <label>Annual Adjusted NOI Growth Rate (%)</label>
               <input type="number" id="dcf-growth" value="6" min="0" max="20" step="0.5" class="val-input" oninput="calcDCF()">
             </div>
             <div class="val-field">
-              <label>Discount Rate / WACC (%)</label>
+              <label>Risk-Adjusted WACC (%)</label>
               <input type="number" id="dcf-discount" value="13" min="5" max="30" step="0.5" class="val-input" oninput="calcDCF()">
             </div>
             <div class="val-field">
-              <label>Terminal Cap Rate (%)</label>
+              <label>Terminal Cap Rate (%) — Exit Capitalisation</label>
               <input type="number" id="dcf-termcap" value="9.5" min="3" max="20" step="0.25" class="val-input" oninput="calcDCF()">
             </div>
           </div>
@@ -130,16 +150,16 @@ app.get('/', (c) => {
           <!-- WACC Benchmarks -->
           <div style="margin:1.25rem 0;padding:1rem;background:rgba(26,58,107,.12);border:1px solid rgba(26,58,107,.25);border-radius:10px;">
             <div style="font-size:.72rem;font-family:'DM Sans',sans-serif;color:#5b8def;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem;">
-              Typical Discount Rates (India Real Estate, 2026)
+              Proprietary Market Intelligence — Risk-Adjusted WACC Benchmarks 2026
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem;">
               ${[
-                ['Institutional / REIT', '11–13%'],
-                ['PE Real Estate Fund', '13–16%'],
-                ['Family Office', '14–18%'],
-                ['Promoter Equity', '16–22%'],
-                ['NRI Investor', '13–17%'],
-                ['JV / Platform', '12–15%'],
+                ['Institutional / REIT', '11-13%'],
+                ['PE Real Estate Fund', '13-16%'],
+                ['Family Office', '14-18%'],
+                ['Promoter Equity', '16-22%'],
+                ['NRI Investor', '13-17%'],
+                ['JV / Platform', '12-15%'],
               ].map(([label, rate]) => `
               <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;">
                 <div style="font-size:.7rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">${label}</div>
@@ -154,8 +174,8 @@ app.get('/', (c) => {
 
         <!-- Revenue Method Panel -->
         <div id="panel-rev" class="val-card" style="display:none;">
-          <h2 class="val-card-title">Revenue Method (Hotels &amp; F&amp;B)</h2>
-          <p class="val-card-sub">Specifically designed for operating hotels and restaurant/F&B businesses. Uses Gross Revenue Multiplier (GRM) and EBITDA multiple approaches.</p>
+          <h2 class="val-card-title">Revenue Method — Operating Hotels and F&B Platforms</h2>
+          <p class="val-card-sub">Calibrated for operating hotels and F&B platform assets. Employs Estimated Gross Revenue Multiplier and institutional EBITDA multiple approach aligned to India market benchmarks.</p>
           <div class="val-form-grid">
             <div class="val-field">
               <label>Total Keys / Rooms</label>
@@ -166,7 +186,7 @@ app.get('/', (c) => {
               <input type="number" id="rev-adr" value="4800" min="500" step="100" class="val-input" oninput="calcRev()">
             </div>
             <div class="val-field">
-              <label>Annual Occupancy Rate (%)</label>
+              <label>Occupancy Stabilization Rate (%)</label>
               <input type="number" id="rev-occ" value="72" min="20" max="100" step="1" class="val-input" oninput="calcRev()">
             </div>
             <div class="val-field">
@@ -174,7 +194,7 @@ app.get('/', (c) => {
               <input type="number" id="rev-fnb" value="35" min="0" max="150" step="5" class="val-input" oninput="calcRev()">
             </div>
             <div class="val-field">
-              <label>EBITDA Margin (%)</label>
+              <label>EBITDA Margin (%) — Operational Yield</label>
               <input type="number" id="rev-ebitda" value="28" min="5" max="60" step="1" class="val-input" oninput="calcRev()">
             </div>
             <div class="val-field">
@@ -186,16 +206,16 @@ app.get('/', (c) => {
           <!-- Hotel Benchmarks -->
           <div style="margin:1.25rem 0;padding:1rem;background:rgba(34,94,56,.12);border:1px solid rgba(34,94,56,.3);border-radius:10px;">
             <div style="font-size:.72rem;font-family:'DM Sans',sans-serif;color:#4caf50;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.7rem;">
-              India Hotel EBITDA Multiple Benchmarks (2026)
+              Proprietary Market Intelligence — Hotel EBITDA Multiple Benchmarks 2026
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem;">
               ${[
-                ['Luxury (5-star)', '12–16×'],
-                ['Upper-Upscale (4-star)', '9–12×'],
-                ['Upscale (Branded)', '7–10×'],
-                ['Mid-Scale', '6–8×'],
-                ['Economy', '5–7×'],
-                ['Boutique / Heritage', '8–12×'],
+                ['Luxury (5-star)', '12-16×'],
+                ['Upper-Upscale (4-star)', '9-12×'],
+                ['Upscale (Branded)', '7-10×'],
+                ['Mid-Scale', '6-8×'],
+                ['Economy', '5-7×'],
+                ['Boutique / Heritage', '8-12×'],
               ].map(([label, rate]) => `
               <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;">
                 <div style="font-size:.7rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">${label}</div>
@@ -218,20 +238,18 @@ app.get('/', (c) => {
           <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;">
             <span style="font-size:1.6rem;">🏛️</span>
             <div>
-              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:#fff;">Expert Valuation Advisory</div>
-              <div style="font-size:.78rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">India Gully Transaction Advisory</div>
+              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:#fff;">Institutional Valuation and Transaction Advisory</div>
+              <div style="font-size:.78rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">India Gully Advisory — Capital Markets Mandate Desk</div>
             </div>
           </div>
           <p style="color:rgba(255,255,255,.65);font-size:.88rem;font-family:'DM Sans',sans-serif;line-height:1.6;margin-bottom:1.25rem;">
-            This calculator provides indicative valuations. For formal valuation opinions, 
-            transaction advisory, or institutional-grade reports, engage India Gully's 
-            advisory team — active across ₹1,165 Cr+ of live mandates.
+            This engine provides institutional-grade indicative valuation outputs. For formal valuation opinions, transaction advisory mandates, or boardroom-grade reports, engage India Gully's advisory desk — active across INR 1,165 Cr+ of live mandates.
           </p>
           <a href="/contact#enquiry" class="btn btn-g" style="display:block;text-align:center;text-decoration:none;margin-bottom:.6rem;">
-            Request Valuation Advisory
+            Initiate Valuation Advisory Mandate
           </a>
           <a href="/listings" style="display:block;text-align:center;text-decoration:none;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.75);padding:.65rem 1.5rem;font-size:.82rem;font-weight:600;letter-spacing:.06em;font-family:'DM Sans',sans-serif;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,.08)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,.75)'">
-            View Active Mandates
+            Access Active Strategic Mandates
           </a>
         </div>
 
@@ -263,13 +281,13 @@ app.get('/', (c) => {
     <!-- India Gully Market Intelligence Strip -->
     <div class="ig-callout-gold" style="margin-top:3rem;">
       <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.15rem;color:#fff;margin-bottom:.6rem;">
-        India Gully's Active Market Intelligence
+        Proprietary Advisory Intelligence — Live Pipeline Benchmarks
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-top:1rem;">
         ${[
-          ['₹1,165 Cr+', 'Active mandate pipeline'],
+          ['INR 1,165 Cr+', 'Active strategic mandate pipeline'],
           ['8 active', 'Live transaction mandates'],
-          ['₹2,100 Cr', 'Entertainment advisory'],
+          ['INR 2,100 Cr', 'Entertainment advisory'],
           ['15+', 'Hotel projects advised'],
           ['6 verticals', 'Cross-sector coverage'],
           ['Pan-India', 'Advisory footprint'],
@@ -404,16 +422,16 @@ function calcCap() {
   const el = document.getElementById('cap-result');
   el.style.display = 'block';
   el.innerHTML = \`
-    <div class="val-result-label">Indicated Valuation</div>
+    <div class="val-result-label">Implied Asset Valuation</div>
     <div class="val-result-main">\${fmtL(value)}</div>
     <div style="font-size:.82rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;margin-top:.2rem;">
-      Gross yield: \${yieldCheck}% · Effective NOI: \${fmtL(effectiveNOI)}/yr
+      Estimated Gross Yield: \${yieldCheck}% · Adjusted NOI: \${fmtL(effectiveNOI)}/yr
     </div>
     <div class="val-result-breakdown">
       <div class="val-result-item"><strong>\${fmtL(noi)}</strong>Gross NOI/yr</div>
       <div class="val-result-item"><strong>\${rate}%</strong>Cap Rate Applied</div>
-      <div class="val-result-item"><strong>\${fmtL(noi * vac/100)}</strong>Vacancy Deduction</div>
-      <div class="val-result-item"><strong>\${fmtL(noi * capex/100)}</strong>CapEx Reserve</div>
+      <div class="val-result-item"><strong>\${fmtL(noi * vac/100)}</strong>Vacancy Leakage</div>
+      <div class="val-result-item"><strong>\${fmtL(noi * capex/100)}</strong>CapEx Leakage</div>
     </div>
   \`;
 }
@@ -492,7 +510,7 @@ calcCap();
 </script>
 `
   return c.html(layout('Property Valuation Calculator', html, {
-    description: 'Free interactive property valuation calculator using Income Capitalisation, DCF, and Revenue methods. Built on India Gully\'s active ₹1,165 Cr+ advisory intelligence across hotels, commercial, and retail real estate.',
+    description: 'Free interactive property valuation calculator using Income Capitalisation, DCF, and Revenue methods. Built on India Gully\'s active INR 1,165 Cr+ advisory intelligence across hotels, commercial, and retail real estate.',
     canonical: '/valuation',
     ogImage: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
   }))

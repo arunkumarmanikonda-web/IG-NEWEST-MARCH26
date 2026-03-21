@@ -30,7 +30,7 @@ const RECENT_INSIGHTS = [
     date: 'March 2026',
     readTime: '10 min read',
     title: 'Building India\'s Next Entertainment Destination: Development Economics & Operational Model',
-    excerpt: 'A pipeline of 35+ large-format entertainment projects in 2026–29. We break down capex benchmarks, revenue splits, operator structures, and the investor framework for India\'s experiential leisure boom.',
+    excerpt: 'A pipeline of 35+ large-format entertainment projects in 2026-29. We break down capex benchmarks, revenue splits, operator structures, and the investor framework for India\'s experiential leisure boom.',
     img: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&auto=format&fit=crop&q=80',
     color: '#7C3AED',
   },
@@ -44,63 +44,63 @@ const SLIDES = [
   // ── MANDATE 1: Prism Tower, Gurgaon ────────────────────────────────────
   {
     bg: '#030610',
-    tag: 'Active Mandate · Gurgaon · ₹400 Cr · Due Diligence Stage',
+    tag: 'Active Mandate · Gurgaon · INR 400 Cr · Due Diligence Stage',
     h1a: 'Prism Tower',
     h1b: 'Gurgaon.',
-    h1c: '312 Keys · Mixed-Use · REIT-Grade',
+    h1c: '312 Keys · Mixed-Use · REIT-Grade · Leasing Velocity Active',
     sub: 'Institutional-grade mixed-use commercial building on Gurgaon-Faridabad Road, part of a 4-star hotel complex. 312 keys. REIT listing potential. India Gully advising on acquisition & due diligence.',
-    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/prism-tower-gurgaon' },
-    cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20I%20am%20interested%20in%20Prism%20Tower%20Gurgaon%20mandate' },
+    cta1: { text: 'Access Mandate Brief — Pre-Mandate Confidentiality Protocol', href: '/listings/prism-tower-gurgaon' },
+    cta2: { text: 'Initiate Strategic Consultation', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20I%20am%20interested%20in%20Prism%20Tower%20Gurgaon%20mandate' },
     img: '/static/mandates/prism/prism-tower-hero.jpg',
-    label: 'REIT-Grade · ₹400 Cr',
+    label: 'REIT-Grade · INR 400 Cr',
     spoc: 'Arun Manikonda',
-    value: '₹400 Cr',
+    value: 'INR 400 Cr',
     type: 'mandate',
   },
   // ── MANDATE 2: Belcibo Multi-Brand F&B Platform ─────────────────────────
   {
     bg: '#0a0008',
-    tag: 'Growth Equity · Delhi NCR & Goa · ₹100 Cr · Active Fundraise',
+    tag: 'Growth Equity · Delhi NCR & Goa · INR 100 Cr · Active Fundraise',
     h1a: 'Belcibo',
     h1b: 'F&B Platform.',
-    h1c: '15+ Outlets · Pan-India Rollout',
+    h1c: '15+ Outlets · Pan-India Rollout · Absorption Rate: 72%',
     sub: 'Scalable multi-brand F&B platform — Imperfecto, Noor, Begam, Khybani, Informal, RuinPub, Patio & more. Seeking strategic growth equity partner for pan-India expansion. Exclusive advisory mandate with India Gully.',
-    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/belcibo-hospitality-platform' },
-    cta2: { text: 'Express Interest', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Belcibo%20growth%20equity%20mandate' },
+    cta1: { text: 'Access Mandate Brief — Pre-Mandate Confidentiality Protocol', href: '/listings/belcibo-hospitality-platform' },
+    cta2: { text: 'Submit Expression of Interest', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Belcibo%20growth%20equity%20mandate' },
     img: '/static/mandates/belcibo/belcibo-cover.jpg',
-    label: 'Growth Equity · ₹100 Cr',
+    label: 'Growth Equity · INR 100 Cr',
     spoc: 'Arun Manikonda',
-    value: '₹100 Cr',
+    value: 'INR 100 Cr',
     type: 'mandate',
   },
   // ── MANDATE 3: Sawasdee JLG Galleria, Noida ─────────────────────────────
   {
     bg: '#020b14',
-    tag: 'Outright Sale · Noida · ₹150 Cr · Negotiation Ready',
+    tag: 'Outright Sale · Noida · INR 150 Cr · Negotiation Ready',
     h1a: 'Sawasdee JLG',
     h1b: 'Galleria.',
-    h1c: '114 Keys · Hotel + Retail Mall · Noida',
+    h1c: '114 Keys · Integrated Hotel + Retail · Noida · Execution Scope: Full Divestment',
     sub: 'Structure-ready 114-key hotel with integrated retail mall in Sector 63, Noida. Independent hotel access, possession-ready. India Gully holds the exclusive sale mandate. Outright sale — negotiation ready.',
-    cta1: { text: 'View Mandate & Sign NDA', href: '/listings/sawasdee-jlg-noida' },
-    cta2: { text: 'Enquire via WhatsApp', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Sawasdee%20JLG%20Galleria%20Noida%20mandate' },
+    cta1: { text: 'Access Mandate Brief — Pre-Mandate Confidentiality Protocol', href: '/listings/sawasdee-jlg-noida' },
+    cta2: { text: 'Initiate Strategic Consultation', href: 'https://wa.me/919810889134?text=Hi%20Arun%2C%20interested%20in%20Sawasdee%20JLG%20Galleria%20Noida%20mandate' },
     img: '/static/mandates/sawasdee/sawasdee-cover.jpg',
-    label: 'Hotel + Mall · ₹150 Cr',
+    label: 'Hotel + Mall · INR 150 Cr',
     spoc: 'Arun Manikonda',
-    value: '₹150 Cr',
+    value: 'INR 150 Cr',
     type: 'mandate',
   },
-  // ── ADVISORY 1: Transaction Advisory ───────────────────────────────────
+  // ── ADVISORY 1: Capital Markets and Strategic Transaction Ecosystem ───────────────────────────────────
   {
     bg: '#040408',
-    tag: 'Transaction Advisory · Real Estate · Hospitality · Retail',
+    tag: 'Capital Markets and Strategic Transaction Ecosystem · Real Estate · Hospitality · Retail',
     h1a: 'India Gully',
     h1b: 'Advisory.',
-    h1c: '₹2,000 Cr+ Transacted Across Verticals',
+    h1c: 'INR 2,000 Cr+ Transacted Across Verticals',
     sub: "India's premier multi-vertical advisory — Real Estate acquisitions, Hospitality asset sales, Retail leasing, Entertainment divestments and Debt solutions. EY & CBRE co-advisory credentials. NDA-governed mandates.",
-    cta1: { text: 'View Active Mandates', href: '/listings' },
-    cta2: { text: 'Submit Your Mandate', href: '/contact' },
+    cta1: { text: 'Access Active Strategic Mandates', href: '/listings' },
+    cta2: { text: 'Initiate Mandate Submission', href: '/contact' },
     img: '/static/mandates/hero/hero-ig-advisory-skyline.jpg',
-    label: 'Transaction Advisory',
+    label: 'Capital Markets and Strategic Transaction Ecosystem',
     type: 'advisory',
   },
   // ── ADVISORY 2: Growth Equity & F&B Platform Advisory ──────────────────
@@ -112,9 +112,9 @@ const SLIDES = [
     h1c: 'F&B · Hospitality · Entertainment',
     sub: "India Gully structures and executes growth equity rounds for India's most exciting F&B platforms and hospitality brands. Proprietary deal flow. Institutional-grade information memoranda. NDA-protected pipeline.",
     cta1: { text: 'Explore Advisory Services', href: '/services' },
-    cta2: { text: 'Discuss Your Mandate', href: '/contact' },
+    cta2: { text: 'Strategic Consultation and Intake', href: '/contact' },
     img: '/static/mandates/hero/hero-fine-dining.jpg',
-    label: 'Growth Equity · F&B',
+    label: 'Portfolio Management — Growth Equity - F and B',
     type: 'advisory',
   },
   // ── ADVISORY 3: HORECA & Procurement ───────────────────────────────────
@@ -128,7 +128,7 @@ const SLIDES = [
     cta1: { text: 'Explore HORECA Services', href: '/horeca' },
     cta2: { text: 'Request a Quote', href: '/horeca#enquiry' },
     img: '/static/mandates/hero/hero-hotel-products.jpg',
-    label: 'HORECA Procurement',
+    label: 'Strategic Advisory — HORECA Institutional Procurement',
     type: 'advisory',
   },
 ]
@@ -206,7 +206,7 @@ app.get('/', async (c) => {
             <div style="display:inline-flex;align-items:center;gap:.75rem;margin-top:1.5rem;padding:.5rem 1rem .5rem .5rem;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);border:1px solid rgba(184,150,12,.25);">
               <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.78rem;flex-shrink:0;">A</div>
               <div>
-                <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.15rem;">SPOC · India Gully</div>
+                <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.15rem;">Strategic Lead · India Gully</div>
                 <div style="font-size:.78rem;font-weight:600;color:#fff;">${(s as any).spoc}</div>
               </div>
               <div style="width:1px;height:28px;background:rgba(255,255,255,.12);margin:0 .25rem;"></div>
@@ -222,7 +222,7 @@ app.get('/', async (c) => {
 
       <!-- Slide label — bottom right -->
       <div style="position:absolute;bottom:3.5rem;right:2.5rem;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;">
-        ${(s as any).type === 'mandate' ? `<div style="background:rgba(184,150,12,.85);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:.25rem;">Active Mandate · NDA Required</div>` : `<div style="background:rgba(26,58,107,.7);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.25rem;">Advisory Services</div>`}
+        ${(s as any).type === 'mandate' ? `<div style="background:rgba(184,150,12,.85);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:.25rem;">Active Mandate - Pre-Mandate Confidentiality Protocol Required</div>` : `<div style="background:rgba(26,58,107,.7);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.25rem;">Advisory Services</div>`}
         <div style="width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(184,150,12,.5));margin-left:auto;"></div>
         <span style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);">${s.label}</span>
       </div>
@@ -321,18 +321,18 @@ app.get('/', async (c) => {
 <div class="ticker" role="marquee" aria-label="India Gully services">
   <div class="ticker-tr">
     ${[
-      'Real Estate Advisory','Transaction Advisory','Retail Leasing Strategy',
+      'Real Estate Capital Markets and Strategic Transaction Ecosystem','Capital Markets and Strategic Transaction Ecosystem','Retail Leasing Strategy',
       'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
       'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
       'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      '₹1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Presence'
+      'INR 1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
     ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
     ${[
-      'Real Estate Advisory','Transaction Advisory','Retail Leasing Strategy',
+      'Real Estate Capital Markets and Strategic Transaction Ecosystem','Capital Markets and Strategic Transaction Ecosystem','Retail Leasing Strategy',
       'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
       'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
       'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      '₹1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Presence'
+      'INR 1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
     ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
   </div>
 </div>
@@ -341,11 +341,11 @@ app.get('/', async (c) => {
 <div style="position:relative;z-index:1;" id="homeStatsSection">
   <div id="homeStats">
     ${[
-      { n:'₹1,165 Cr+', l:'Advisory Pipeline',      sub:'Active mandates under advisory', icon:'chart-line' },
+      { n:'INR 1,165 Cr+', l:'Active Advisory Pipeline',      sub:'Active mandates under advisory', icon:'chart-line' },
       { n:'15+',         l:'Hotel Projects',          sub:'Pre-opening & PMC mandates', icon:'hotel' },
       { n:'30+',         l:'Retail Brand Partners',   sub:'Leasing & franchise advisory', icon:'store' },
       { n:'20+',         l:'Hospitality Brands',      sub:'Management & on-boarding', icon:'concierge-bell' },
-      { n:'Pan-India',   l:'Operations Reach',        sub:'Tier 1, 2 &amp; 3 cities', icon:'map-marked-alt' },
+      { n:'Pan-India',   l:'Operations Reach',        sub:'Tier-1, 2 &amp; 3 cities', icon:'map-marked-alt' },
     ].map((s) => `
     <div class="home-stat-cell">
       <i class="fas fa-${s.icon}" style="font-size:.7rem;color:var(--gold);opacity:.6;display:block;margin-bottom:.625rem;"></i>
@@ -367,14 +367,14 @@ app.get('/', async (c) => {
       { icon:'shield-alt',     color:'#22c55e', text:'CERT-In Compliant' },
       { icon:'check-double',   color:'#B8960C', text:'OWASP Top-10 Secure' },
       { icon:'handshake',      color:'#60a5fa', text:'EY Co-Advisory Partner' },
-      { icon:'chart-line',     color:'#B8960C', text:'₹1,165 Cr+ Active Pipeline' },
+      { icon:'chart-line',     color:'#B8960C', text:'INR 1,165 Cr+ Active Pipeline' },
       { icon:'hotel',          color:'#a78bfa', text:'15+ Hotel Projects Executed' },
       { icon:'store',          color:'#34d399', text:'35+ Retail Brand Partnerships' },
       { icon:'building',       color:'#60a5fa', text:'CBRE Co-Advisory Partner' },
       { icon:'balance-scale',  color:'#fbbf24', text:'SEBI-Framework Advisory' },
       { icon:'registered',     color:'#B8960C', text:'MCA Registered · CIN U74999DL2017PTC323237' },
       { icon:'map-marked-alt', color:'#a78bfa', text:'Pan-India · Delhi · Chandigarh · Mumbai · Kerala' },
-      { icon:'trophy',         color:'#fbbf24', text:'₹2,000 Cr+ Transactions Advised' },
+      { icon:'trophy',         color:'#fbbf24', text:'INR 2,000 Cr+ Transactions Advised' },
       { icon:'calendar-alt',   color:'#34d399', text:'Established 2017 · 8+ Years' },
       { icon:'file-contract',  color:'#B8960C', text:'Mutual NDA Framework · All Mandates' },
       { icon:'concierge-bell', color:'#a78bfa', text:'20+ Hospitality Brand Partnerships' },
@@ -382,7 +382,7 @@ app.get('/', async (c) => {
       { icon:'shield-alt',     color:'#22c55e', text:'CERT-In Compliant' },
       { icon:'check-double',   color:'#B8960C', text:'OWASP Top-10 Secure' },
       { icon:'handshake',      color:'#60a5fa', text:'EY Co-Advisory Partner' },
-      { icon:'chart-line',     color:'#B8960C', text:'₹1,165 Cr+ Active Pipeline' },
+      { icon:'chart-line',     color:'#B8960C', text:'INR 1,165 Cr+ Active Pipeline' },
       { icon:'hotel',          color:'#a78bfa', text:'15+ Hotel Projects Executed' },
       { icon:'store',          color:'#34d399', text:'35+ Retail Brand Partnerships' },
     ]).map(item => `
@@ -440,12 +440,12 @@ app.get('/', async (c) => {
   <div class="wrap">
     <div class="trust-row">
       <div class="trust-item">
-        <span class="sla-badge">24h Response</span>
-        <span>All enquiries guaranteed</span>
+        <span class="sla-badge">Immediate Diagnostic Review Window</span>
+        <span>All submissions reviewed by Executive Leadership</span>
       </div>
       <div class="trust-item">
         <i class="fas fa-shield-alt" style="color:var(--gold);"></i>
-        <span>Mutual <strong>NDA</strong> before all mandates</span>
+        <span>Pre-Mandate Confidentiality Protocol — mandatory execution before all advisory engagements</span>
       </div>
       <div class="trust-item">
         <i class="fas fa-certificate" style="color:var(--gold);"></i>
@@ -471,9 +471,9 @@ app.get('/', async (c) => {
       <!-- Left: copy -->
       <div class="fu">
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:1rem;">Pan-India Presence</p>
+        <p class="eyebrow" style="margin-bottom:1rem;">Pan-India Execution Footprint</p>
         <h2 class="h2" style="margin-bottom:1.25rem;">Active Mandates<br>Across India</h2>
-        <p class="body-lg" style="margin-bottom:2rem;color:var(--ink-soft);">India Gully operates across Tier 1, 2 and 3 markets — from Delhi NCR and Mumbai to Kasauli, Chail, Chandigarh and Jaipur. Our active mandates span 8+ cities with ₹1,165 Cr+ in combined advisory value.</p>
+        <p class="body-lg" style="margin-bottom:2rem;color:var(--ink-soft);">India Gully operates across Tier-1, 2 and 3 markets — from Delhi NCR and Mumbai to Kasauli, Chail, Chandigarh and Jaipur. Our active mandates span 8+ cities with INR 1,165 Cr+ in combined advisory value.</p>
         <!-- City list -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;">
           ${[
@@ -493,7 +493,7 @@ app.get('/', async (c) => {
           </div>`).join('')}
         </div>
         <div style="display:flex;gap:.875rem;flex-wrap:wrap;">
-          <a href="/listings" class="btn btn-g" style="font-size:.75rem;"><i class="fas fa-map-marked-alt" style="margin-right:.4rem;font-size:.65rem;"></i>View Active Mandates</a>
+          <a href="/listings" class="btn btn-g" style="font-size:.75rem;"><i class="fas fa-map-marked-alt" style="margin-right:.4rem;font-size:.65rem;"></i>Access Active Strategic Mandates</a>
           <a href="/pipeline" class="btn btn-dko" style="font-size:.75rem;"><i class="fas fa-chart-bar" style="margin-right:.4rem;font-size:.65rem;"></i>Pipeline Dashboard</a>
         </div>
       </div>
@@ -572,7 +572,7 @@ app.get('/', async (c) => {
               <circle cx="131" cy="112" r="7.5" fill="#065F46" stroke="rgba(255,255,255,.9)" stroke-width="1.5"/>
               <circle cx="131" cy="112" r="3" fill="#fff"/>
               <text x="143" y="109" class="map-pin-label">Chandigarh</text>
-              <text x="143" y="119" class="map-pin-sub">₹70 Cr</text>
+              <text x="143" y="119" class="map-pin-sub">INR 70 Cr</text>
             </g>
 
             <!-- Delhi NCR lon 77.2°E lat 28.6°N → 137,138 — pulsing gold -->
@@ -649,7 +649,7 @@ app.get('/', async (c) => {
         (function(){
           var tooltips = {
             delhi:      { title:'Delhi NCR', sub:'Prism Tower · Ambience Tower · Sawasdee JLG', val:'₹900 Cr combined', color:'#B8960C' },
-            chandigarh: { title:'Chandigarh', sub:'Hotel Rajshree & Spa · 41 Keys', val:'₹70 Cr', color:'#065F46' },
+            chandigarh: { title:'Chandigarh', sub:'Hotel Rajshree & Spa · 41 Keys', val:'INR 70 Cr', color:'#065F46' },
             himachal:   { title:'Himachal Pradesh', sub:'WelcomHeritage Kasauli · Maple Resort Chail', val:'₹75 Cr combined', color:'#1A3A6B' },
             jaipur:     { title:'Jaipur', sub:'Heritage Hotel · 43 Keys', val:'₹20 Cr', color:'#7C3AED' },
             mumbai:     { title:'Mumbai', sub:'BKC · Lower Parel · Advisory pipeline', val:'In discussion', color:'#dc2626' },
@@ -812,12 +812,12 @@ app.get('/', async (c) => {
     <!-- Why cards grid -->
     <div class="why-grid">
       ${[
-        { icon:'trophy',         color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'₹2,000+ Cr Transacted',       desc:'Landmark transactions including joint advisory with EY for the ₹1,350 Cr+ divestment of Entertainment City Limited — India\'s largest entertainment sector transaction.' },
+        { icon:'trophy',         color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'₹2,000+ Cr Transacted',       desc:'Landmark transactions including joint advisory with EY for the INR 1,350 Cr+ divestment of Entertainment City Limited — India\'s largest entertainment sector transaction.' },
         { icon:'hotel',          color:'#065F46', bg:'rgba(6,95,70,.08)',    border:'rgba(6,95,70,.18)',    title:'15+ Hotels On-Boarded',        desc:'Hotel brand selection, pre-opening management and PMC across Marriott, Radisson, Cygnett, Regenta and more — from site selection to first check-in.' },
-        { icon:'store',          color:'#1A3A6B', bg:'rgba(26,58,107,.08)', border:'rgba(26,58,107,.18)',  title:'1,40,000+ Sq Ft Leased',       desc:'Premium F&B and retail leasing at Gardens Galleria, Hyatt Andaz, AIPL Joy Street and Entertainment City — India\'s top retail destinations.' },
+        { icon:'store',          color:'#1A3A6B', bg:'rgba(26,58,107,.08)', border:'rgba(26,58,107,.18)',  title:'1,40,000+ sq. ft. Leased',       desc:'Premium F&B and retail leasing at Gardens Galleria, Hyatt Andaz, AIPL Joy Street and Entertainment City — India\'s top retail destinations.' },
         { icon:'utensils',       color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'HORECA to 15+ Properties',     desc:'End-to-end supply of FF&E, OS&E, kitchen equipment and amenities for Mahindra Holidays, Accor, CGH Earth and more across India.' },
         { icon:'handshake',      color:'#7C3AED', bg:'rgba(124,58,237,.08)', border:'rgba(124,58,237,.18)', title:'Co-Advisory with EY & CBRE',   desc:'Trusted by India\'s top professional service firms as co-advisor on complex, multi-party institutional transactions requiring deep sector expertise.' },
-        { icon:'map-marked-alt', color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'Pan-India Presence',           desc:'Active mandates in Delhi NCR, Chandigarh, Kasauli, Chail, Jaipur, Noida, Gurugram, Bengaluru, Mumbai and Kerala — Tier 1 to 3 markets.' },
+        { icon:'map-marked-alt', color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'Pan-India Execution Footprint',           desc:'Active mandates in Delhi NCR, Chandigarh, Kasauli, Chail, Jaipur, Noida, Gurugram, Bengaluru, Mumbai and Kerala — Tier-1 to 3 markets.' },
       ].map((w, wi) => `
       <div class="why-card reveal" style="transition-delay:${wi*0.07}s;">
         <div class="why-icon" style="background:${w.bg};border:1px solid ${w.border};">
@@ -1035,7 +1035,7 @@ app.get('/', async (c) => {
 
     <div class="diff-grid">
       ${[
-        { icon:'flag',      n:'01', title:'India-Deep Expertise',    desc:'Born in India. We understand local markets, regulations, culture and consumer behaviour at granular depth across Tier 1, 2 and 3 cities.' },
+        { icon:'flag',      n:'01', title:'India-Deep Expertise',    desc:'Born in India. We understand local markets, regulations, culture and consumer behaviour at granular depth across Tier-1, 2 and 3 cities.' },
         { icon:'handshake', n:'02', title:'20+ Brand Relationships', desc:'Deep relationships with every major hotel brand. We know which brand fits which project and navigate negotiations with authority.' },
         { icon:'utensils',  n:'03', title:'HORECA End-to-End',       desc:'One of the few consultants who also procure and supply, giving clients a single accountable partner from strategy to FF&E delivery.' },
         { icon:'bolt',      n:'04', title:'Execution-Led',           desc:'We stay involved through implementation, not just advisory. Turnkey delivery and hands-on project management is our differentiator.' },
@@ -1061,11 +1061,11 @@ app.get('/', async (c) => {
       <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1.5rem;">
         <div>
           <div class="gr"></div>
-          <p class="eyebrow" style="margin-bottom:.875rem;">Hospitality Partners</p>
-          <h2 class="h2">Hotel Brands We<br>Work With</h2>
+          <p class="eyebrow" style="margin-bottom:.875rem;">Hospitality Brand Ecosystem</p>
+          <h2 class="h2">Hospitality Brands We<br>Synergize With</h2>
         </div>
         <div style="max-width:380px;text-align:right;">
-          <p class="lead" style="font-size:.9375rem;margin-bottom:1.25rem;">Active relationships with India's most prominent hotel brands — from global chains to homegrown operators. Including our exclusive partner <strong>Nile Hospitality</strong>.</p>
+          <p class="lead" style="font-size:.9375rem;margin-bottom:1.25rem;">Active institutional advisory and management relationships with India's most prominent hotel brands — from global chains to homegrown operators. Including our exclusive hospitality partner <strong>Nile Hospitality</strong>.</p>
           <a href="/services#hospitality" class="btn btn-sm btn-dko">Our Hospitality Practice</a>
         </div>
       </div>
@@ -1101,8 +1101,8 @@ app.get('/', async (c) => {
       <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1.5rem;">
         <div>
           <div class="gr"></div>
-          <p class="eyebrow" style="margin-bottom:.875rem;">Retail Partners</p>
-          <h2 class="h2">Retail Brands We<br>Advise &amp; Place</h2>
+          <p class="eyebrow" style="margin-bottom:.875rem;">Retail Brand Alliance Structure</p>
+          <h2 class="h2">Retail Brand Mandates — Leasing Velocity and Placement</h2>
         </div>
         <div style="max-width:420px;text-align:right;">
           <p class="lead" style="font-size:.9375rem;margin-bottom:1.25rem;">${RETAIL_BRANDS.length}+ active retail brand relationships — F&amp;B, anchor stores, cinemas, fashion, accessories &amp; electronics.</p>
@@ -1193,11 +1193,11 @@ function filterRB(cat){
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:1rem;">
       <div>
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:.75rem;">Knowledge & Research</p>
-        <h2 class="h2" style="margin-bottom:.5rem;">Recent Insights</h2>
+        <p class="eyebrow" style="margin-bottom:.75rem;">Proprietary Advisory Intelligence</p>
+        <h2 class="h2" style="margin-bottom:.5rem;">Institutional Research and Market Intelligence</h2>
         <p style="font-size:.88rem;color:var(--ink-muted);max-width:480px;line-height:1.7;">Advisory intelligence from India Gully's active deal pipeline — sector analysis, regulatory briefings, and market forecasts.</p>
       </div>
-      <a href="/insights" class="btn btn-dko" style="flex-shrink:0;"><i class="fas fa-book-open" style="margin-right:.5rem;font-size:.7rem;"></i>All Articles</a>
+      <a href="/insights" class="btn btn-dko" style="flex-shrink:0;"><i class="fas fa-book-open" style="margin-right:.5rem;font-size:.7rem;"></i>Access Full Intelligence Library</a>
     </div>
 
     <!-- 3-column article cards -->
@@ -1244,9 +1244,9 @@ function filterRB(cat){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;" class="mob-stack">
       <div>
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:1rem;">Transaction Advisory</p>
-        <h2 class="h2" style="margin-bottom:1.5rem;">Our Advisory<br>Partners</h2>
-        <p class="lead" style="margin-bottom:2rem;">India Gully collaborates with globally recognised advisory and consulting firms, bringing institutional credibility, financial rigour and sector depth to complex mandates.</p>
+        <p class="eyebrow" style="margin-bottom:1rem;">Capital Markets and Strategic Transaction Ecosystem</p>
+        <h2 class="h2" style="margin-bottom:1.5rem;">Strategic Advisory<br>Ecosystem</h2>
+        <p class="lead" style="margin-bottom:2rem;">India Gully synergizes with globally recognized institutional advisory and consulting firms, bringing institutional credibility, financial rigour and sector depth to complex mandates.</p>
         <div style="padding:1.25rem 1.5rem;border-left:3px solid var(--gold);background:rgba(184,150,12,.04);">
           <p style="font-size:.82rem;line-height:1.8;color:var(--ink-soft);">Joint advisory with Ernst &amp; Young on the <strong style="color:var(--ink);">₹1,350+ Cr Entertainment City Limited divestment</strong> — India's largest entertainment real estate transaction.</p>
         </div>
@@ -1293,20 +1293,20 @@ function filterRB(cat){
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4rem;flex-wrap:wrap;gap:2rem;">
       <div>
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:1rem;">Track Record</p>
-        <h2 class="h2">Mandates Executed.<br>Relationships Built.</h2>
+        <p class="eyebrow" style="margin-bottom:1rem;">Transactional Record and Execution Alpha</p>
+        <h2 class="h2">Optimized Asset Divestments.<br>Execution Alpha Delivered.</h2>
       </div>
-      <a href="/works" class="btn btn-dko">View All Completed Works</a>
+      <a href="/works" class="btn btn-dko">Access Full Transactional Record</a>
     </div>
 
     <div id="trackRecord">
       ${[
-        { title:'Entertainment City Limited — Landmark Divestment',  loc:'Joint Advisory with EY · Noida, UP',      icon:'🏆', type:'Transaction Advisory', value:'₹1,350+ Cr', desc:'Served as Joint Transaction Advisors alongside EY for the 100% divestment of Entertainment City Limited. Managed end-to-end advisory for this landmark transaction — India\'s largest entertainment real estate deal.' },
-        { title:'Worlds of Wonder — Post-COVID Re-opening',          loc:'10-Acre Waterpark · Noida, UP',           icon:'🎡', type:'Operational Revival',  value:'Pan-India',  desc:"Orchestrated the strategic re-opening of India's premier waterpark following COVID-19 closure. Managed lease negotiations and operational revival for this 10-acre world-class attraction." },
-        { title:'Khubani at Hyatt Andaz Delhi',                      loc:'42,000 Sq. Ft. Dining · New Delhi',       icon:'🍽️', type:'Hospitality Leasing',  value:'42,000 Sq Ft', desc:'Negotiated and executed leasing for a signature 27,000 + 15,000 Sq. Ft. premium restaurant space within the iconic Hyatt Andaz property in New Delhi.' },
-        { title:'800 Sq. Yard Asset — Anand Lok, New Delhi',         loc:'₹65 Cr+ Exit · South Delhi',              icon:'🏛️', type:'Asset Acquisition',    value:'₹65 Cr+', desc:'Executed a strategic acquisition of a prime South Delhi property. Delivered an exceptional ₹65+ Crores exit within a 6-month turnaround — demonstrating superior deal structuring and market timing.' },
+        { title:'Entertainment City Limited — Landmark Divestment',  loc:'Joint Advisory with EY · Noida, UP',      icon:'🏆', type:'Capital Markets and Strategic Transaction Ecosystem', value:'₹1,350+ Cr', desc:'Served as Joint Transaction Advisors alongside EY for the 100% divestment of Entertainment City Limited. End-to-End Mandate Stewardship end-to-end advisory for this landmark transaction — India\'s largest entertainment real estate deal.' },
+        { title:'Worlds of Wonder — Post-COVID Re-opening',          loc:'10-Acre Waterpark · Noida, UP',           icon:'🎡', type:'Operational Revival',  value:'Pan-India',  desc:"Orchestrated the strategic re-opening of India's premier waterpark following COVID-19 closure. End-to-End Mandate Stewardship lease negotiations and operational revival for this 10-acre world-class attraction." },
+        { title:'Khubani at Hyatt Andaz Delhi',                      loc:'42,000 sq. ft.. Dining · New Delhi',       icon:'🍽️', type:'Hospitality Leasing',  value:'42,000 sq. ft.', desc:'Negotiated and executed leasing for a signature 27,000 + 15,000 sq. ft.. premium restaurant space within the iconic Hyatt Andaz property in New Delhi.' },
+        { title:'800 Sq. Yard Asset — Anand Lok, New Delhi',         loc:'INR 65 Cr+ Exit · South Delhi',              icon:'🏛️', type:'Asset Acquisition',    value:'INR 65 Cr+', desc:'Executed a strategic acquisition of a prime South Delhi property. Delivered an exceptional ₹65+ Crores exit within a 6-month turnaround — demonstrating superior deal structuring and market timing.' },
         { title:'HORECA Supply — Mahindra Holidays & Resorts',        loc:'Pan-India · Multiple Locations',          icon:'🍽️', type:'HORECA Procurement',   value:'Pan-India', desc:"Established strategic HORECA supply partnership with Mahindra Holidays & Resorts, one of India's largest leisure hospitality companies, across their pan-India resort network." },
-        { title:'Due Diligence — Adlabs Imagica for ECL',            loc:'₹500 Cr Transaction · Maharashtra',       icon:'⚖️', type:'Client-Side SPOC',     value:'₹500 Cr', desc:'Served as dedicated Client-Side SPOC for comprehensive due diligence in ECL\'s evaluation of Adlabs Imagica. Coordinated financial, legal and technical assessments for this landmark acquisition review.' },
+        { title:'Due Diligence — Adlabs Imagica for ECL',            loc:'INR 500 Cr Transaction · Maharashtra',       icon:'⚖️', type:'Client-Side SPOC',     value:'INR 500 Cr', desc:'Served as dedicated Client-Side SPOC for comprehensive due diligence in ECL\'s evaluation of Adlabs Imagica. Coordinated financial, legal and technical assessments for this landmark acquisition review.' },
       ].map((p, pi) => `
       <div class="feature-card reveal" style="padding:0;overflow:hidden;transition-delay:${pi*0.08}s;">
         <!-- Colored top strip -->
@@ -1335,10 +1335,10 @@ function filterRB(cat){
     <div style="display:grid;grid-template-columns:1fr 1.7fr;gap:5rem;align-items:start;" class="mob-stack">
       <div class="reveal-l">
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:1rem;">Leadership</p>
-        <h2 class="h2" style="margin-bottom:1.5rem;">Steered by<br>Industry Veterans</h2>
+        <p class="eyebrow" style="margin-bottom:1rem;">Executive Leadership and Mandate Custodians</p>
+        <h2 class="h2" style="margin-bottom:1.5rem;">Institutional Leadership.<br>Mandate Custodians.</h2>
         <p class="lead" style="margin-bottom:2.25rem;">Our leadership brings decades of combined experience across hospitality, real estate, retail and entertainment, having led marquee mandates for India's most prominent developers, hotel brands and institutional investors.</p>
-        <a href="/about" class="btn btn-dk">Meet the Full Team</a>
+        <a href="/about" class="btn btn-dk">Access Executive Leadership Profile</a>
         <div style="margin-top:3rem;padding:1.5rem;border:1px solid var(--border);background:rgba(184,150,12,.03);">
           <div style="font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;">Board & KMP</div>
           <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);line-height:1.5;">Three Directors. One Vision.<br>Building India's Premier Advisory Practice.</div>
@@ -1347,9 +1347,9 @@ function filterRB(cat){
 
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
         ${[
-          { name:'Arun K. Manikonda', title:'Managing Director',      sub:'Director on Board & KMP',  init:'AM', photo:'/static/team/arun-manikonda.jpg',  ph:'+91 98108 89134', em:'akm@indiagully.com', li:'https://www.linkedin.com/in/arun-kumar-manikon', bio:'Founding MD with 20+ years across hospitality, real estate and entertainment. Former MD of Entertainment City Limited, Noida. Led ₹1,350 Cr+ joint advisory with EY — India\'s largest entertainment transaction.' },
+          { name:'Arun K. Manikonda', title:'Managing Director',      sub:'Director on Board & KMP',  init:'AM', photo:'/static/team/arun-manikonda.jpg',  ph:'+91 98108 89134', em:'akm@indiagully.com', li:'https://www.linkedin.com/in/arun-kumar-manikon', bio:'Founding MD with 20+ years across hospitality, real estate and entertainment. Former MD of Entertainment City Limited, Noida. Led INR 1,350 Cr+ joint advisory with EY — India\'s largest entertainment transaction.' },
           { name:'Pavan K. Manikonda', title:'Executive Director',      sub:'Director on Board & KMP',  init:'PM', photo:'/static/team/pavan-manikonda.jpg',  ph:'+91 62825 56067', em:'pavan@indiagully.com', li:'https://www.linkedin.com/in/pavan-kumar-manikonda-49254421/', bio:'Hospitality operations leader with 18+ years across hotel management, HORECA supply and brand on-boarding. Drives business development and operational delivery across India Gully\'s advisory verticals.' },
-          { name:'Amit Jhingan',    title:'President, Real Estate',  sub:'Key Managerial Personnel', init:'AJ', photo:'/static/team/amit-jhingan.png',       ph:'+91 98999 93543', em:'amit.jhingan@indiagully.com', li:'https://www.linkedin.com/in/amit-jhingan-11631451/', bio:'Real Estate Vertical Head with 15+ years of pan-India experience. Specialist in retail leasing (1,40,000+ sq ft placed), commercial transactions and hospitality asset advisory across Delhi NCR and beyond.' },
+          { name:'Amit Jhingan',    title:'President, Real Estate',  sub:'Key Managerial Personnel', init:'AJ', photo:'/static/team/amit-jhingan.png',       ph:'+91 98999 93543', em:'amit.jhingan@indiagully.com', li:'https://www.linkedin.com/in/amit-jhingan-11631451/', bio:'Real Estate Vertical Head with 15+ years of pan-India experience. Specialist in retail leasing (1,40,000+ sq. ft. placed), commercial transactions and hospitality asset advisory across Delhi NCR and beyond.' },
         ].map((p, pi) => `
         <div class="leader-card" style="padding:1.75rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.5rem;align-items:center;transition-delay:${pi*0.1}s;border:1px solid var(--border);" onmouseover="this.style.borderColor='rgba(184,150,12,.25)'" onmouseout="this.style.borderColor='var(--border)'">
           <!-- Avatar -->
@@ -1364,7 +1364,7 @@ function filterRB(cat){
             <div style="font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;">${p.sub}</div>
             <div style="font-size:.8rem;color:var(--ink-muted);line-height:1.6;">${p.bio}</div>
           </div>
-          <!-- Contact -->
+          <!-- Direct Directorship Access -->
           <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;gap:.3rem;">
             <a href="tel:${p.ph.replace(/\s/g,'')}" style="font-size:.68rem;color:var(--ink-muted);display:flex;align-items:center;gap:.3rem;justify-content:flex-end;transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ink-muted)'"><i class="fas fa-phone" style="font-size:.58rem;color:var(--gold);"></i>${p.ph}</a>
             <a href="mailto:${p.em}" style="font-size:.68rem;color:var(--ink-muted);display:flex;align-items:center;gap:.3rem;justify-content:flex-end;transition:color .2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ink-muted)'"><i class="fas fa-envelope" style="font-size:.58rem;color:var(--gold);"></i>${p.em}</a>
@@ -1391,8 +1391,8 @@ function filterRB(cat){
 
     <!-- CTA buttons -->
     <div class="cta-flex" style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-bottom:4rem;">
-      <a href="/contact"  class="btn btn-g" style="min-width:230px;justify-content:center;padding:.9rem 2.25rem;">Submit a Mandate Enquiry</a>
-      <a href="/listings" class="btn btn-ghost-g" style="min-width:200px;justify-content:center;">View Active Mandates</a>
+      <a href="/contact"  class="btn btn-g" style="min-width:230px;justify-content:center;padding:.9rem 2.25rem;">Initiate Mandate Submission</a>
+      <a href="/listings" class="btn btn-ghost-g" style="min-width:200px;justify-content:center;">Access Active Strategic Mandates</a>
       <a href="/horeca"   class="btn btn-ghost" style="min-width:200px;justify-content:center;">HORECA Supply Enquiry</a>
     </div>
 
@@ -1423,7 +1423,7 @@ function filterRB(cat){
 
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Home', content, {
-    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
+    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. INR 1,165 Cr+ active mandate pipeline.",
     canonical: 'https://indiagully.com/',
     ogImage: 'https://indiagully.com/static/og.jpg',
     heroPreload: '/static/mandates/chail/chail-img1.jpg',
@@ -1443,7 +1443,7 @@ ${cmsZoneHtml}`
           "email": "info@indiagully.com",
           "sameAs": ["https://indiagully.com"],
           "foundingDate": "2017",
-          "knowsAbout": ["Real Estate Advisory","Hospitality Management","Retail Leasing","Entertainment Advisory","HORECA Procurement","Debt & Special Situations"]
+          "knowsAbout": ["Real Estate Capital Markets and Strategic Transaction Ecosystem","Hospitality Management","Retail Leasing","Entertainment Advisory","HORECA Procurement","Debt & Special Situations"]
         },
         {
           "@type": "WebSite",

@@ -72,7 +72,7 @@ export const VERTICALS = [
 ]
 
 export const STATS = [
-  { value: '₹1,165 Cr+', label: 'Active Mandate Pipeline' },
+  { value: 'INR 1,165 Cr+', label: 'Active Mandate Pipeline' },
   { value: '15+', label: 'Hotel Projects' },
   { value: '30+', label: 'Retail Brands' },
   { value: '20+', label: 'Hospitality Brand Partnerships' },
@@ -116,7 +116,7 @@ export const HOSPITALITY_BRANDS: Array<{ name: string; svg: string; color: strin
 
   // ── GLOBAL CHAINS (operating extensively in India) ──
   {
-    name: 'Marriott Bonvoy', color: '#8B0000', cat: 'Global Chain', catColor: '#8B0000',
+    name: 'Marriott International', color: '#8B0000', cat: 'Global Chain', catColor: '#8B0000',
     svg: svgToDataUri(bsvg({
       bg: '#8B0000', fg: '#FFFFFF', accent: '#FFD7A0',
       label: 'MARRIOTT', sub: 'BONVOY',
@@ -125,7 +125,7 @@ export const HOSPITALITY_BRANDS: Array<{ name: string; svg: string; color: strin
     }))
   },
   {
-    name: 'Radisson Hotels', color: '#003DA5', cat: 'Global Chain', catColor: '#003DA5',
+    name: 'Radisson Hotel Group', color: '#003DA5', cat: 'Global Chain', catColor: '#003DA5',
     svg: svgToDataUri(bsvg({
       bg: '#003DA5', fg: '#FFFFFF', accent: '#7EC8E3',
       label: 'RADISSON', sub: 'HOTELS & RESORTS',
@@ -134,7 +134,7 @@ export const HOSPITALITY_BRANDS: Array<{ name: string; svg: string; color: strin
     }))
   },
   {
-    name: 'IHG Hotels & Resorts', color: '#006399', cat: 'Global Chain', catColor: '#006399',
+    name: 'IHG Hotels and Resorts', color: '#006399', cat: 'Global Chain', catColor: '#006399',
     svg: svgToDataUri(bsvg({
       bg: '#006399', fg: '#FFFFFF', accent: '#A8D8EA',
       label: 'IHG', sub: 'HOTELS & RESORTS',
@@ -255,7 +255,7 @@ export const HOSPITALITY_BRANDS: Array<{ name: string; svg: string; color: strin
     }))
   },
   {
-    name: 'Cygnett Hotels', color: '#1A3A6B', cat: 'Midscale', catColor: '#7EC8E3',
+    name: 'Cygnett Hotels and Resorts', color: '#1A3A6B', cat: 'Midscale', catColor: '#7EC8E3',
     svg: svgToDataUri(bsvg({
       bg: '#1A3A6B', fg: '#FFFFFF', accent: '#7EC8E3',
       label: 'CYGNETT', sub: 'HOTELS & RESORTS',
@@ -264,7 +264,7 @@ export const HOSPITALITY_BRANDS: Array<{ name: string; svg: string; color: strin
     }))
   },
   {
-    name: 'Regenta by Royal Orchid', color: '#6B1A1A', cat: 'Midscale', catColor: '#E8C84A',
+    name: 'Regenta Hotels by Royal Orchid', color: '#6B1A1A', cat: 'Midscale', catColor: '#E8C84A',
     svg: svgToDataUri(bsvg({
       bg: '#6B1A1A', fg: '#FFFFFF', accent: '#E8C84A',
       label: 'REGENTA', sub: 'BY ROYAL ORCHID',
@@ -321,7 +321,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
   // ── F&B ──
   {
-    name: "McDonald's", color: '#DA291C', cat: 'F&B', catColor: '#FFC72C', catIcon: 'fa-burger',
+    name: "McDonald's", color: '#DA291C', cat: 'Global Gastronomy and QSR', catColor: '#FFC72C', catIcon: 'fa-burger',
     svg: svgToDataUri(bsvg({
       bg: '#DA291C', fg: '#FFC72C', accent: '#FFC72C',
       label: "McDONALD'S", sub: 'FOOD & BEVERAGE',
@@ -330,7 +330,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'KFC', color: '#F40027', cat: 'F&B', catColor: '#fff', catIcon: 'fa-drumstick-bite',
+    name: 'KFC', color: '#F40027', cat: 'Global Gastronomy and QSR', catColor: '#fff', catIcon: 'fa-drumstick-bite',
     svg: svgToDataUri(bsvg({
       bg: '#F40027', fg: '#FFFFFF', accent: '#fff',
       label: 'KFC', sub: "KENTUCKY FRIED CHICKEN",
@@ -339,7 +339,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Burger King', color: '#F5821F', cat: 'F&B', catColor: '#501E10', catIcon: 'fa-burger',
+    name: 'Burger King', color: '#F5821F', cat: 'Global Gastronomy and QSR', catColor: '#501E10', catIcon: 'fa-burger',
     svg: svgToDataUri(bsvg({
       bg: '#F5821F', fg: '#501E10', accent: '#501E10',
       label: 'BURGER', sub: 'KING',
@@ -348,7 +348,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Subway', color: '#009B48', cat: 'F&B', catColor: '#FFC709', catIcon: 'fa-sandwich',
+    name: 'Subway', color: '#009B48', cat: 'Global Gastronomy and QSR', catColor: '#FFC709', catIcon: 'fa-sandwich',
     svg: svgToDataUri(bsvg({
       bg: '#009B48', fg: '#FFC709', accent: '#FFC709',
       label: 'SUBWAY', sub: 'EAT FRESH',
@@ -357,7 +357,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Starbucks', color: '#00704A', cat: 'F&B', catColor: '#CBA258', catIcon: 'fa-mug-hot',
+    name: 'Starbucks', color: '#00704A', cat: 'Global Gastronomy and QSR', catColor: '#CBA258', catIcon: 'fa-mug-hot',
     svg: svgToDataUri(bsvg({
       bg: '#00704A', fg: '#FFFFFF', accent: '#CBA258',
       label: 'STARBUCKS', sub: 'COFFEE',
@@ -366,7 +366,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: "Domino's Pizza", color: '#006491', cat: 'F&B', catColor: '#E31837', catIcon: 'fa-pizza-slice',
+    name: "Domino's Pizza", color: '#006491', cat: 'Global Gastronomy and QSR', catColor: '#E31837', catIcon: 'fa-pizza-slice',
     svg: svgToDataUri(bsvg({
       bg: '#006491', fg: '#FFFFFF', accent: '#E31837',
       label: "DOMINO'S", sub: 'PIZZA',
@@ -375,7 +375,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Pizza Hut', color: '#EE3124', cat: 'F&B', catColor: '#fff', catIcon: 'fa-pizza-slice',
+    name: 'Pizza Hut', color: '#EE3124', cat: 'Global Gastronomy and QSR', catColor: '#fff', catIcon: 'fa-pizza-slice',
     svg: svgToDataUri(bsvg({
       bg: '#EE3124', fg: '#FFFFFF', accent: '#fff',
       label: 'PIZZA HUT', sub: 'RESTAURANTS',
@@ -384,7 +384,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: "Dunkin'", color: '#FF671F', cat: 'F&B', catColor: '#DA1884', catIcon: 'fa-circle-dot',
+    name: "Dunkin'", color: '#FF671F', cat: 'Global Gastronomy and QSR', catColor: '#DA1884', catIcon: 'fa-circle-dot',
     svg: svgToDataUri(bsvg({
       bg: '#FF671F', fg: '#FFFFFF', accent: '#DA1884',
       label: "DUNKIN'", sub: 'DONUTS & COFFEE',
@@ -393,7 +393,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Barbeque Nation', color: '#8B1A1A', cat: 'F&B', catColor: '#F5A623', catIcon: 'fa-fire',
+    name: 'Barbeque Nation', color: '#8B1A1A', cat: 'Global Gastronomy and QSR', catColor: '#F5A623', catIcon: 'fa-fire',
     svg: svgToDataUri(bsvg({
       bg: '#8B1A1A', fg: '#F5A623', accent: '#F5A623',
       label: 'BARBEQUE', sub: 'NATION',
@@ -402,7 +402,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: "Haldiram's", color: '#D4721E', cat: 'F&B', catColor: '#fff', catIcon: 'fa-bowl-food',
+    name: "Haldiram's", color: '#D4721E', cat: 'Global Gastronomy and QSR', catColor: '#fff', catIcon: 'fa-bowl-food',
     svg: svgToDataUri(bsvg({
       bg: '#D4721E', fg: '#FFFFFF', accent: '#fff',
       label: "HALDIRAM'S", sub: 'SINCE 1937',
@@ -413,7 +413,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
   // ── ANCHOR RETAIL & HYPERMARKET ──
   {
-    name: 'D-Mart', color: '#1A4B8E', cat: 'Anchor Retail', catColor: '#E8000D', catIcon: 'fa-store',
+    name: 'D-Mart', color: '#1A4B8E', cat: 'International High Street Fashion', catColor: '#E8000D', catIcon: 'fa-store',
     svg: svgToDataUri(bsvg({
       bg: '#1A4B8E', fg: '#FFFFFF', accent: '#E8000D',
       label: 'D MART', sub: 'EVERYDAY LOW PRICES',
@@ -422,7 +422,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Reliance Retail', color: '#0B316A', cat: 'Anchor Retail', catColor: '#E53935', catIcon: 'fa-store',
+    name: 'Reliance Retail', color: '#0B316A', cat: 'International High Street Fashion', catColor: '#E53935', catIcon: 'fa-store',
     svg: svgToDataUri(bsvg({
       bg: '#0B316A', fg: '#FFFFFF', accent: '#E53935',
       label: 'RELIANCE', sub: 'RETAIL · FRESH · SMART',
@@ -431,7 +431,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: "Spencer's Retail", color: '#E31837', cat: 'Anchor Retail', catColor: '#fff', catIcon: 'fa-store',
+    name: "Spencer's Retail", color: '#E31837', cat: 'International High Street Fashion', catColor: '#fff', catIcon: 'fa-store',
     svg: svgToDataUri(bsvg({
       bg: '#E31837', fg: '#FFFFFF', accent: '#fff',
       label: "SPENCER'S", sub: 'HYPER · DAILY',
@@ -440,7 +440,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'More Retail', color: '#0054A5', cat: 'Anchor Retail', catColor: '#FFC107', catIcon: 'fa-store',
+    name: 'More Retail', color: '#0054A5', cat: 'International High Street Fashion', catColor: '#FFC107', catIcon: 'fa-store',
     svg: svgToDataUri(bsvg({
       bg: '#0054A5', fg: '#FFFFFF', accent: '#FFC107',
       label: 'MORE', sub: 'SUPERMARKET · HYPERMARKET',
@@ -449,7 +449,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Lifestyle Stores', color: '#1A1A1A', cat: 'Anchor Retail', catColor: '#D4AF37', catIcon: 'fa-store',
+    name: 'Lifestyle Stores', color: '#1A1A1A', cat: 'International High Street Fashion', catColor: '#D4AF37', catIcon: 'fa-store',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A1A', fg: '#FFFFFF', accent: '#D4AF37',
       label: 'LIFESTYLE', sub: 'DEPARTMENT STORE',
@@ -460,7 +460,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
   // ── CINEMA / ENTERTAINMENT ANCHOR ──
   {
-    name: 'PVR INOX', color: '#C8001C', cat: 'Cinema', catColor: '#FFD700', catIcon: 'fa-film',
+    name: 'PVR INOX', color: '#C8001C', cat: 'Cinema and Experiential Anchors', catColor: '#FFD700', catIcon: 'fa-film',
     svg: svgToDataUri(bsvg({
       bg: '#C8001C', fg: '#FFFFFF', accent: '#FFD700',
       label: 'PVR INOX', sub: 'CINEMAS',
@@ -469,7 +469,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Cinépolis', color: '#E30613', cat: 'Cinema', catColor: '#fff', catIcon: 'fa-film',
+    name: 'Cinépolis', color: '#E30613', cat: 'Cinema and Experiential Anchors', catColor: '#fff', catIcon: 'fa-film',
     svg: svgToDataUri(bsvg({
       bg: '#E30613', fg: '#FFFFFF', accent: '#fff',
       label: 'CINÉPOLIS', sub: 'CINEMAS',
@@ -478,7 +478,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Miraj Cinemas', color: '#1A1A6B', cat: 'Cinema', catColor: '#F0C040', catIcon: 'fa-film',
+    name: 'Miraj Cinemas', color: '#1A1A6B', cat: 'Cinema and Experiential Anchors', catColor: '#F0C040', catIcon: 'fa-film',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A6B', fg: '#F0C040', accent: '#F0C040',
       label: 'MIRAJ', sub: 'CINEMAS',
@@ -489,7 +489,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
   // ── FASHION & APPAREL ──
   {
-    name: 'H&M', color: '#E50010', cat: 'Fashion & Apparel', catColor: '#fff', catIcon: 'fa-shirt',
+    name: 'H&M', color: '#E50010', cat: 'International High Street Fashion', catColor: '#fff', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#E50010', fg: '#FFFFFF', accent: '#fff',
       label: 'H&M', sub: 'FASHION & QUALITY',
@@ -498,7 +498,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Zara', color: '#1A1A1A', cat: 'Fashion & Apparel', catColor: '#D4AF37', catIcon: 'fa-shirt',
+    name: 'Zara', color: '#1A1A1A', cat: 'International High Street Fashion', catColor: '#D4AF37', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A1A', fg: '#FFFFFF', accent: '#D4AF37',
       label: 'ZARA', sub: 'INDITEX GROUP',
@@ -507,7 +507,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Uniqlo', color: '#E00012', cat: 'Fashion & Apparel', catColor: '#fff', catIcon: 'fa-shirt',
+    name: 'Uniqlo', color: '#E00012', cat: 'International High Street Fashion', catColor: '#fff', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#E00012', fg: '#FFFFFF', accent: '#fff',
       label: 'UNIQLO', sub: 'MADE FOR ALL',
@@ -516,7 +516,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Marks & Spencer', color: '#1A1A1A', cat: 'Fashion & Apparel', catColor: '#D4AF37', catIcon: 'fa-shirt',
+    name: 'Marks & Spencer', color: '#1A1A1A', cat: 'International High Street Fashion', catColor: '#D4AF37', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A1A', fg: '#FFFFFF', accent: '#D4AF37',
       label: 'M&S', sub: 'MARKS & SPENCER',
@@ -525,7 +525,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Westside', color: '#2C2C2C', cat: 'Fashion & Apparel', catColor: '#D4AF37', catIcon: 'fa-shirt',
+    name: 'Westside', color: '#2C2C2C', cat: 'International High Street Fashion', catColor: '#D4AF37', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#2C2C2C', fg: '#FFFFFF', accent: '#D4AF37',
       label: 'WESTSIDE', sub: 'TATA ENTERPRISE',
@@ -534,7 +534,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Max Fashion', color: '#E63946', cat: 'Fashion & Apparel', catColor: '#fff', catIcon: 'fa-shirt',
+    name: 'Max Fashion', color: '#E63946', cat: 'International High Street Fashion', catColor: '#fff', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#E63946', fg: '#FFFFFF', accent: '#fff',
       label: 'MAX', sub: 'FASHION',
@@ -543,7 +543,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'FabIndia', color: '#8B2500', cat: 'Fashion & Apparel', catColor: '#F5D78E', catIcon: 'fa-shirt',
+    name: 'FabIndia', color: '#8B2500', cat: 'International High Street Fashion', catColor: '#F5D78E', catIcon: 'fa-shirt',
     svg: svgToDataUri(bsvg({
       bg: '#8B2500', fg: '#F5D78E', accent: '#F5D78E',
       label: 'FABINDIA', sub: 'SINCE 1960',
@@ -552,7 +552,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Manyavar', color: '#7B0C2D', cat: 'Fashion & Apparel', catColor: '#D4AF37', catIcon: 'fa-person',
+    name: 'Manyavar', color: '#7B0C2D', cat: 'International High Street Fashion', catColor: '#D4AF37', catIcon: 'fa-person',
     svg: svgToDataUri(bsvg({
       bg: '#7B0C2D', fg: '#D4AF37', accent: '#D4AF37',
       label: 'MANYAVAR', sub: 'CELEBRATE LIFE',
@@ -561,7 +561,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'BIBA', color: '#E8374A', cat: 'Fashion & Apparel', catColor: '#fff', catIcon: 'fa-person-dress',
+    name: 'BIBA', color: '#E8374A', cat: 'International High Street Fashion', catColor: '#fff', catIcon: 'fa-person-dress',
     svg: svgToDataUri(bsvg({
       bg: '#E8374A', fg: '#FFFFFF', accent: '#fff',
       label: 'BIBA', sub: 'INDIAN ETHNIC WEAR',
@@ -572,7 +572,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
   // ── ACCESSORIES & JEWELLERY & BEAUTY ──
   {
-    name: 'Tanishq', color: '#1A1A1A', cat: 'Accessories & Beauty', catColor: '#D4AF37', catIcon: 'fa-gem',
+    name: 'Tanishq', color: '#1A1A1A', cat: 'Luxury Beauty and Apothecary', catColor: '#D4AF37', catIcon: 'fa-gem',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A1A', fg: '#D4AF37', accent: '#D4AF37',
       label: 'TANISHQ', sub: 'TATA JEWELLERY',
@@ -581,7 +581,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Nykaa', color: '#FC2779', cat: 'Accessories & Beauty', catColor: '#fff', catIcon: 'fa-spray-can-sparkles',
+    name: 'Nykaa', color: '#FC2779', cat: 'Luxury Beauty and Apothecary', catColor: '#fff', catIcon: 'fa-spray-can-sparkles',
     svg: svgToDataUri(bsvg({
       bg: '#FC2779', fg: '#FFFFFF', accent: '#fff',
       label: 'NYKAA', sub: 'BEAUTY & FASHION',
@@ -590,7 +590,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: 'Sephora', color: '#1A1A1A', cat: 'Accessories & Beauty', catColor: '#fff', catIcon: 'fa-spray-can-sparkles',
+    name: 'Sephora', color: '#1A1A1A', cat: 'Luxury Beauty and Apothecary', catColor: '#fff', catIcon: 'fa-spray-can-sparkles',
     svg: svgToDataUri(bsvg({
       bg: '#1A1A1A', fg: '#FFFFFF', accent: '#fff',
       label: 'SEPHORA', sub: 'BEAUTY',
@@ -599,7 +599,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
     }))
   },
   {
-    name: "L'Oréal Paris", color: '#1B1464', cat: 'Accessories & Beauty', catColor: '#FFD700', catIcon: 'fa-spray-can',
+    name: "L'Oréal Paris", color: '#1B1464', cat: 'Luxury Beauty and Apothecary', catColor: '#FFD700', catIcon: 'fa-spray-can',
     svg: svgToDataUri(bsvg({
       bg: '#1B1464', fg: '#FFD700', accent: '#FFD700',
       label: "L'ORÉAL", sub: 'PARIS',
@@ -660,7 +660,7 @@ export const LISTINGS = [
     locationShort: 'Gwalpahari, Gurugram',
     sector: 'Real Estate',
     sectorColor: '#1A3A6B',
-    value: '₹400 Cr',
+    value: 'INR 400 Cr',
     valueUSD: 'USD ~48 Mn',
     status: 'Reference Transaction – Due Diligence Stage',
     statusType: 'negotiation',
@@ -684,7 +684,7 @@ export const LISTINGS = [
       'Asset Classification': 'Mixed-Use Hospitality & Commercial',
       'Room Inventory': '312 Keys',
       'Metro Connectivity': '10 km from Sikanderpur Metro Station',
-      'Investment Scale': '₹400 Crore',
+      'Investment Scale': 'INR 400 Crore',
       'Transaction Type': '100% Asset Acquisition',
       'Exit Strategies': 'REIT Listing / Strata Sale',
       'Deal Status': 'Reference Transaction – Due Diligence Stage',
@@ -692,7 +692,7 @@ export const LISTINGS = [
     },
     highlights: [
       { icon: 'hotel', value: '312 Keys', label: 'Room Inventory' },
-      { icon: 'rupee-sign', value: '₹400 Cr', label: 'Asset Value' },
+      { icon: 'rupee-sign', value: 'INR 400 Cr', label: 'Asset Value' },
       { icon: 'subway', value: '10 km', label: 'Metro Connectivity' },
       { icon: 'chart-line', value: 'REIT Grade', label: 'Exit Potential' },
     ],
@@ -713,7 +713,7 @@ export const LISTINGS = [
     locationShort: 'Delhi NCR & Goa',
     sector: 'Hospitality',
     sectorColor: '#B8960C',
-    value: '₹100 Cr',
+    value: 'INR 100 Cr',
     valueUSD: 'USD ~12 Mn',
     status: 'Open for Investment – Active Fundraise',
     statusType: 'active',
@@ -737,13 +737,13 @@ export const LISTINGS = [
       'Outlets': '15+ Operating Outlets',
       'Asset Classification': 'Multi-Brand F&B Platform',
       'Transaction Type': 'Growth Equity Investment',
-      'Investment Scale': '₹100 Crore',
+      'Investment Scale': 'INR 100 Crore',
       'Deal Status': 'Open for Investment – Active Fundraise',
       'IG Contact': 'Arun Manikonda',
     },
     highlights: [
       { icon: 'utensils', value: '15+ Outlets', label: 'Operating Brands' },
-      { icon: 'rupee-sign', value: '₹100 Cr', label: 'Growth Capital' },
+      { icon: 'rupee-sign', value: 'INR 100 Cr', label: 'Growth Capital' },
       { icon: 'map-marked-alt', value: 'NCR & Goa', label: 'Markets' },
       { icon: 'chart-line', value: 'Pan-India', label: 'Rollout Potential' },
     ],
@@ -764,7 +764,7 @@ export const LISTINGS = [
     locationShort: 'Chandigarh',
     sector: 'Hospitality',
     sectorColor: '#065F46',
-    value: '₹70 Cr',
+    value: 'INR 70 Cr',
     valueUSD: 'USD ~8.4 Mn',
     status: 'Asset Sale – Actively Marketing',
     statusType: 'active',
@@ -791,13 +791,13 @@ export const LISTINGS = [
       'Room Inventory': '41 Keys',
       'Room Types': 'Super Deluxe, Family Suites, Honeymoon Suites',
       'Amenities': 'Spa, Restaurant, Bar, Conference, WiFi, Parking',
-      'Investment Scale': '₹70 Crore',
+      'Investment Scale': 'INR 70 Crore',
       'Deal Status': 'Asset Sale – Actively Marketing',
       'IG Contact': 'Amit Jhingan',
     },
     highlights: [
       { icon: 'hotel', value: '41 Keys', label: 'Room Inventory' },
-      { icon: 'rupee-sign', value: '₹70 Cr', label: 'Asset Value' },
+      { icon: 'rupee-sign', value: 'INR 70 Cr', label: 'Asset Value' },
       { icon: 'spa', value: 'Premium Spa', label: 'Wellness Amenity' },
       { icon: 'map-marker-alt', value: 'Chandigarh', label: 'Location' },
     ],
@@ -818,7 +818,7 @@ export const LISTINGS = [
     locationShort: 'Kasauli, Himachal Pradesh',
     sector: 'Heritage Hospitality',
     sectorColor: '#92400E',
-    value: '₹45 Cr',
+    value: 'INR 45 Cr',
     valueUSD: 'USD ~5.4 Mn',
     status: 'Asset Sale – Seller Mandated',
     statusType: 'active',
@@ -826,7 +826,7 @@ export const LISTINGS = [
     entity: 'ITC WelcomHeritage – Santa Roza',
     source: 'https://www.welcomheritagehotels.in/hotel-details/santa-roza-kasauli/',
     desc: "Established luxury heritage resort under ITC WelcomHeritage brand across 2 acres in scenic Kasauli at pine forest elevation. Victorian-themed architecture. 44 keys. Nirvana restaurant, Aviary bar, spa & plunge pool.",
-    longDesc: `Heritage Asset Divestiture — WelcomHeritage Santa Roza is an established luxury heritage resort under the ITC WelcomHeritage brand, sprawled across 2 acres in scenic Kasauli at pine forest elevation with Victorian-themed architecture and British-era charm.\n\nRoom categories include Deluxe (280 sq.ft.), Suites (340 sq.ft.), Cottages (420 sq.ft.), and Family Suites (1,180 sq.ft.). Premium amenities include Nirvana multi-cuisine restaurant, Aviary bar with woodland views, Milo's garden café, state-of-the-art fitness centre, spa, and plunge pool.\n\nBenefits from Himachal Pradesh tourism incentives and tax subsidies. Located 15–16 km from Mall Road and local attractions. India Gully holds the seller mandate on behalf of ITC WelcomHeritage.`,
+    longDesc: `Heritage Asset Divestiture — WelcomHeritage Santa Roza is an established luxury heritage resort under the ITC WelcomHeritage brand, sprawled across 2 acres in scenic Kasauli at pine forest elevation with Victorian-themed architecture and British-era charm.\n\nRoom categories include Deluxe (280 sq.ft.), Suites (340 sq.ft.), Cottages (420 sq.ft.), and Family Suites (1,180 sq.ft.). Premium amenities include Nirvana multi-cuisine restaurant, Aviary bar with woodland views, Milo's garden café, state-of-the-art fitness centre, spa, and plunge pool.\n\nBenefits from Himachal Pradesh tourism incentives and tax subsidies. Located 15-16 km from Mall Road and local attractions. India Gully holds the seller mandate on behalf of ITC WelcomHeritage.`,
     images: [
       // Source: sspark CDN — WelcomHeritage Santa Roza, Kasauli (India Gully seller mandate)
       '/static/mandates/gallery/img-07.jpg',
@@ -843,17 +843,17 @@ export const LISTINGS = [
       'Asset Classification': 'Luxury Heritage Resort',
       'Land Area': '2 Acres',
       'Room Inventory': '44 Keys',
-      'Room Types': 'Deluxe (280 sqft), Suites (340 sqft), Cottages (420 sqft), Family Suites (1,180 sqft)',
+      'Room Types': 'Deluxe (280 sq. ft.), Suites (340 sq. ft.), Cottages (420 sq. ft.), Family Suites (1,180 sq. ft.)',
       'Amenities': 'Nirvana Restaurant, Aviary Bar, Milo\'s Café, Spa, Plunge Pool, Fitness Centre',
-      'Investment Scale': '₹45 Crore',
+      'Investment Scale': 'INR 45 Crore',
       'HP Tourism Benefits': 'Tax Incentives & Subsidies Applicable',
-      'Distance': '15–16 km from Mall Road, Kasauli',
+      'Distance': '15-16 km from Mall Road, Kasauli',
       'Deal Status': 'Asset Sale – Seller Mandated',
       'IG Contact': 'Amit Jhingan',
     },
     highlights: [
       { icon: 'hotel', value: '44 Keys', label: 'Room Inventory' },
-      { icon: 'rupee-sign', value: '₹45 Cr', label: 'Asset Value' },
+      { icon: 'rupee-sign', value: 'INR 45 Cr', label: 'Asset Value' },
       { icon: 'leaf', value: '2 Acres', label: 'Estate Area' },
       { icon: 'crown', value: 'ITC Brand', label: 'WelcomHeritage' },
     ],
@@ -996,7 +996,7 @@ export const LISTINGS = [
     entity: 'Ambience Group (JLL Listed)',
     source: 'https://property.jll.co.in/listings/ambience-tower-shalimar-bagh-plot-no-10-b-block-community-centre',
     desc: "Grade-A commercial tower by Ambience Group in Rohini, North Delhi. 0.6 km from Rohini West Metro Station. Conversion-ready for hospitality or hybrid hotel-office use. Technical feasibility complete.",
-    longDesc: `Adaptive Reuse Opportunity — Ambience Tower is a Grade-A commercial tower developed by Ambience Pvt Ltd in Rohini, North Delhi. With excellent metro connectivity at just 0.6 km from Rohini West Metro Station, the asset enjoys strong accessibility to all major Delhi NCR micro-markets.\n\n5-star hotels, hospitals, and malls are within a 2–5 km radius. The asset is conversion-ready for hospitality or hybrid hotel-office use, with technical feasibility already completed.\n\nIdeal for developers or hotel operators seeking a value-add repositioning play in an established North Delhi location. India Gully advises on behalf of the vendor (JLL co-listed mandate).`,
+    longDesc: `Adaptive Reuse Opportunity — Ambience Tower is a Grade-A commercial tower developed by Ambience Pvt Ltd in Rohini, North Delhi. With excellent metro connectivity at just 0.6 km from Rohini West Metro Station, the asset enjoys strong accessibility to all major Delhi NCR micro-markets.\n\n5-star hotels, hospitals, and malls are within a 2-5 km radius. The asset is conversion-ready for hospitality or hybrid hotel-office use, with technical feasibility already completed.\n\nIdeal for developers or hotel operators seeking a value-add repositioning play in an established North Delhi location. India Gully advises on behalf of the vendor (JLL co-listed mandate).`,
     images: [
       // Source: JLL Listed Property — Ambience Tower, Shalimar Bagh, Rohini, North Delhi
       '/static/mandates/gallery/img-09.jpg',
@@ -1007,7 +1007,7 @@ export const LISTINGS = [
       'Location': 'Shalimar Bagh, Rohini, North Delhi',
       'Asset Classification': 'Grade-A Commercial Tower (Adaptive Reuse)',
       'Metro Connectivity': '0.6 km from Rohini West Metro Station',
-      'Nearby Infrastructure': '5-Star Hotels, Hospitals, Malls within 2–5 km',
+      'Nearby Infrastructure': '5-Star Hotels, Hospitals, Malls within 2-5 km',
       'Conversion Use': 'Hospitality / Hybrid Hotel-Office',
       'Technical Feasibility': 'Complete',
       'Investment Scale': '₹350 Crore',
@@ -1037,7 +1037,7 @@ export const LISTINGS = [
     locationShort: 'Noida, NCR',
     sector: 'Real Estate',
     sectorColor: '#7C3AED',
-    value: '₹150 Cr',
+    value: 'INR 150 Cr',
     valueUSD: 'USD ~18 Mn',
     status: 'Outright Sale – Negotiation Ready',
     statusType: 'active',
@@ -1060,13 +1060,13 @@ export const LISTINGS = [
       'Room Inventory': '114 Keys',
       'Development Status': 'Structure-Ready',
       'Hotel Access': 'Independent Access from Mall Component',
-      'Investment Scale': '₹150 Crore',
+      'Investment Scale': 'INR 150 Crore',
       'Deal Status': 'Outright Sale – Negotiation Ready',
       'IG Contact': 'Arun Manikonda',
     },
     highlights: [
       { icon: 'hotel', value: '114 Keys', label: 'Room Inventory' },
-      { icon: 'rupee-sign', value: '₹150 Cr', label: 'Asset Value' },
+      { icon: 'rupee-sign', value: 'INR 150 Cr', label: 'Asset Value' },
       { icon: 'store', value: 'Retail Mall', label: 'Integrated Component' },
       { icon: 'map-marker-alt', value: 'Noida', label: 'Location' },
     ],
@@ -1085,7 +1085,7 @@ export const TRACK_RECORD = {
   realEstate: [
     {
       title: '800 Sq. Yard Asset Takeover & Strata Sale — Anand Lok, New Delhi',
-      value: '₹65 Cr+',
+      value: 'INR 65 Cr+',
       type: 'Asset Acquisition & Strata Sale',
       desc: 'Executed a strategic acquisition of a prime South Delhi property, successfully managing the complete takeover valued at ₹50+ Crores. Delivered an exceptional ₹65+ Crores exit within a 6-month turnaround, demonstrating superior deal structuring and market timing expertise.',
       location: 'Anand Lok, South Delhi',
@@ -1101,7 +1101,7 @@ export const TRACK_RECORD = {
     },
     {
       title: 'Entertainment City Limited — Landmark Divestment Transaction',
-      value: '₹1,350 Cr+',
+      value: 'INR 1,350 Cr+',
       type: 'Joint Transaction Advisory (with EY)',
       desc: 'Served as Joint Transaction Advisors alongside EY for the 100% divestment of Entertainment City Limited. Managed end-to-end transaction advisory, complex stakeholder negotiations, deal documentation and multi-party due diligence for this landmark ₹1,350+ Crore transaction.',
       location: 'Entertainment City, Noida',
@@ -1109,7 +1109,7 @@ export const TRACK_RECORD = {
     },
     {
       title: "Lutyens' Delhi Prime Property — Ultra-Premium Residential",
-      value: '₹100 Cr+',
+      value: 'INR 100 Cr+',
       type: 'Residential Advisory',
       desc: "Facilitated the acquisition of an exclusive 1,600 Sq. Yard property in Lutyens' Delhi, India's most prestigious residential enclave. A landmark high-net-worth transaction in one of the country's most restricted real estate markets.",
       location: "Lutyens' Delhi, New Delhi",
@@ -1134,66 +1134,66 @@ export const TRACK_RECORD = {
       tags: ['F&B', 'Gurugram', 'Golf Course Road'],
     },
     {
-      title: 'Khubani at Hyatt Andaz Delhi — 42,000 Sq. Ft. Premium Dining',
-      value: '42,000 Sq. Ft.',
+      title: 'Khubani at Hyatt Andaz Delhi — 42,000 sq. ft.. Premium Dining',
+      value: '42,000 sq. ft..',
       type: 'Hospitality Leasing',
-      desc: 'Negotiated and executed leasing for a signature 27,000 + 15,000 Sq. Ft. restaurant space within the iconic Hyatt Andaz property, positioning Khubani as a landmark culinary destination in the capital.',
+      desc: 'Negotiated and executed leasing for a signature 27,000 + 15,000 sq. ft.. restaurant space within the iconic Hyatt Andaz property, positioning Khubani as a landmark culinary destination in the capital.',
       location: 'Hyatt Andaz, New Delhi',
       tags: ['Premium Dining', 'Hyatt Andaz', 'Fine Dining'],
     },
     {
-      title: 'Begum & Noor at Entertainment City — 22,000 Sq. Ft. Lifestyle F&B',
-      value: '22,000 Sq. Ft.',
+      title: 'Begum & Noor at Entertainment City — 22,000 sq. ft.. Lifestyle F&B',
+      value: '22,000 sq. ft..',
       type: 'Entertainment Leasing',
-      desc: 'Facilitated the leasing of a substantial 22,000 Sq. Ft. space for this premium dining and entertainment concept, strategically positioned within Entertainment City, Noida.',
+      desc: 'Facilitated the leasing of a substantial 22,000 sq. ft.. space for this premium dining and entertainment concept, strategically positioned within Entertainment City, Noida.',
       location: 'Entertainment City, Noida',
       tags: ['F&B', 'Entertainment City', 'Lifestyle Dining'],
     },
     {
-      title: 'Sutra at Entertainment City — 15,000 Sq. Ft. Experiential Dining',
-      value: '15,000 Sq. Ft.',
+      title: 'Sutra at Entertainment City — 15,000 sq. ft.. Experiential Dining',
+      value: '15,000 sq. ft..',
       type: 'Entertainment Leasing',
-      desc: "Secured a 15,000 Sq. Ft. prime location for Sutra's immersive dining experience, contributing to Entertainment City's vibrant F&B ecosystem.",
+      desc: "Secured a 15,000 sq. ft.. prime location for Sutra's immersive dining experience, contributing to Entertainment City's vibrant F&B ecosystem.",
       location: 'Entertainment City, Noida',
       tags: ['Experiential Dining', 'Entertainment City'],
     },
     {
-      title: 'Impulse at Gardens Galleria — 9,000 Sq. Ft. Contemporary Lounge',
-      value: '9,000 Sq. Ft.',
+      title: 'Impulse at Gardens Galleria — 9,000 sq. ft.. Contemporary Lounge',
+      value: '9,000 sq. ft..',
       type: 'Mall Leasing',
-      desc: "Executed leasing for a 9,000 Sq. Ft. premium space at Gardens Galleria, establishing Impulse as a key anchor in Noida's premier mall.",
+      desc: "Executed leasing for a 9,000 sq. ft.. premium space at Gardens Galleria, establishing Impulse as a key anchor in Noida's premier mall.",
       location: 'Gardens Galleria, Noida',
       tags: ['Lounge', 'Gardens Galleria', 'Noida'],
     },
     {
-      title: 'Dearie at Gardens Galleria — 9,000 Sq. Ft. Upscale Café',
-      value: '9,000 Sq. Ft.',
+      title: 'Dearie at Gardens Galleria — 9,000 sq. ft.. Upscale Café',
+      value: '9,000 sq. ft..',
       type: 'Mall Leasing',
-      desc: 'Negotiated favorable lease terms for a 9,000 Sq. Ft. space, enabling Dearie to establish its refined café concept in a high-footfall mall environment.',
+      desc: 'Negotiated favorable lease terms for a 9,000 sq. ft.. space, enabling Dearie to establish its refined café concept in a high-footfall mall environment.',
       location: 'Gardens Galleria, Noida',
       tags: ['Café', 'Gardens Galleria', 'Upscale'],
     },
     {
-      title: 'Maricham at Gardens Galleria — 7,000 Sq. Ft. Fine Dining',
-      value: '7,000 Sq. Ft.',
+      title: 'Maricham at Gardens Galleria — 7,000 sq. ft.. Fine Dining',
+      value: '7,000 sq. ft..',
       type: 'Mall Leasing',
-      desc: "Secured strategic positioning for Maricham's 7,000 Sq. Ft. kebab and grill specialty restaurant within the mall's premium dining zone.",
+      desc: "Secured strategic positioning for Maricham's 7,000 sq. ft.. kebab and grill specialty restaurant within the mall's premium dining zone.",
       location: 'Gardens Galleria, Noida',
       tags: ['Fine Dining', 'Gardens Galleria', 'Specialty Restaurant'],
     },
     {
-      title: 'Clinique at Gardens Galleria — 6,000 Sq. Ft. Beauty & Wellness',
-      value: '6,000 Sq. Ft.',
+      title: 'Clinique at Gardens Galleria — 6,000 sq. ft.. Beauty & Wellness',
+      value: '6,000 sq. ft..',
       type: 'Mall Leasing',
-      desc: "Facilitated leasing of 6,000 Sq. Ft. for Clinique's retail presence, enhancing the mall's premium beauty and lifestyle offering.",
+      desc: "Facilitated leasing of 6,000 sq. ft.. for Clinique's retail presence, enhancing the mall's premium beauty and lifestyle offering.",
       location: 'Gardens Galleria, Noida',
       tags: ['Beauty', 'Wellness', 'Clinique', 'Gardens Galleria'],
     },
     {
-      title: 'Big Boys Lounge at Gardens Galleria — 10,000 Sq. Ft. Entertainment',
-      value: '10,000 Sq. Ft.',
+      title: 'Big Boys Lounge at Gardens Galleria — 10,000 sq. ft.. Entertainment',
+      value: '10,000 sq. ft..',
       type: 'Mall Leasing',
-      desc: 'Executed leasing for a spacious 10,000 Sq. Ft. entertainment and gaming lounge, adding a unique experiential dimension to the mall.',
+      desc: 'Executed leasing for a spacious 10,000 sq. ft.. entertainment and gaming lounge, adding a unique experiential dimension to the mall.',
       location: 'Gardens Galleria, Noida',
       tags: ['Entertainment', 'Gaming', 'Gardens Galleria'],
     },
@@ -1291,19 +1291,19 @@ export const TRACK_RECORD = {
   entertainment: [
     {
       title: 'Due Diligence — Entertainment City Limited for Adlabs Imagica',
-      value: '₹500 Cr Transaction',
+      value: 'INR 500 Cr Transaction',
       type: 'Client-Side Due Diligence (SPOC)',
-      desc: "Served as the dedicated Client-Side Single Point of Contact for comprehensive due diligence in Entertainment City Limited's evaluation of Adlabs Imagica acquisition. Coordinated financial, legal, operational, and technical assessments for this ₹500 Crore entertainment sector transaction.",
+      desc: "Served as the dedicated Client-Side Single Point of Contact for comprehensive due diligence in Entertainment City Limited's evaluation of Adlabs Imagica acquisition. Coordinated financial, legal, operational, and technical assessments for this INR 500 Crore entertainment sector transaction.",
       location: 'Adlabs Imagica, Maharashtra',
-      tags: ['Due Diligence', 'Adlabs Imagica', 'Entertainment City', '₹500 Cr'],
+      tags: ['Due Diligence', 'Adlabs Imagica', 'Entertainment City', 'INR 500 Cr'],
     },
     {
       title: 'Entertainment City Limited — 100% Divestment (Joint with EY)',
-      value: '₹1,350 Cr+',
+      value: 'INR 1,350 Cr+',
       type: 'Joint Transaction Advisory',
       desc: 'Partnered with EY as Joint Transaction Advisors for the complete 100% divestment of Entertainment City Limited. Managed complex stakeholder negotiations, structured deal documentation, and coordinated multi-party due diligence for this landmark ₹1,350+ Crore transaction.',
       location: 'Entertainment City, Noida',
-      tags: ['Divestment', 'EY', 'Entertainment City', 'Major Transaction', '₹1,350 Cr+'],
+      tags: ['Divestment', 'EY', 'Entertainment City', 'Major Transaction', 'INR 1,350 Cr+'],
     },
     {
       title: 'Worlds of Wonder Park — Post-COVID Re-opening & Lease',
@@ -1317,11 +1317,11 @@ export const TRACK_RECORD = {
   debt: [
     {
       title: 'Entertainment City Limited — 100% Divestment as Joint Transaction Advisors alongside EY',
-      value: '₹1,350 Cr+',
+      value: 'INR 1,350 Cr+',
       type: 'Joint Transaction Advisory',
       desc: 'Partnered with EY as Joint Transaction Advisors for the complete 100% divestment of Entertainment City Limited. Managed complex stakeholder negotiations, structured deal documentation, and coordinated multi-party due diligence for this landmark ₹1,350+ Crore transaction in the entertainment and real estate sector.',
       location: 'Entertainment City, Noida',
-      tags: ['Debt Advisory', 'Special Situations', 'EY', '₹1,350 Cr+'],
+      tags: ['Debt Advisory', 'Special Situations', 'EY', 'INR 1,350 Cr+'],
     },
   ],
   horeca: [

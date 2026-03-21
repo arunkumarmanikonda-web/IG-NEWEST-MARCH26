@@ -13,8 +13,8 @@ const SERVICES = [
     desc: 'We advise developers, investors and family offices on the full real estate lifecycle, from site selection and feasibility to transaction structuring, asset management and divestment. Our real estate practice spans commercial, hospitality and mixed-use assets across India.',
     items: ['Site identification & due diligence','Development strategy & feasibility','Transaction advisory & deal structuring','Asset valuation & appraisal','Commercial lease structuring','Investment sales & divestment','Portfolio management','Regulatory & compliance advisory'],
     highlights: [
-      { v:'₹2,100 Cr', l:'Entertainment & Retail Hub, Mumbai MMR, 800,000 sq ft, 85% pre-leased' },
-      { v:'₹620 Cr',   l:'6-Property Heritage Hotel Portfolio, Rajasthan, 72% TTM occupancy' },
+      { v:'INR 2,100 Cr', l:'Entertainment & Retail Hub, Mumbai MMR, 800,000 sq. ft., 85% pre-leased' },
+      { v:'INR 620 Cr',   l:'6-property Heritage Hotel Portfolio, Rajasthan, 72% TTM occupancy' },
     ],
     partners: [] as string[],
   },
@@ -24,10 +24,10 @@ const SERVICES = [
     name: 'Retail & Leasing Strategy',
     tagline: 'Brand mix, anchor structuring, leasing advisory & franchise expansion',
     desc: 'India Gully brings 30+ active retail brand relationships and deep mall-leasing expertise to developers, destination owners and retail brands. We cover every stage, from market research and brand mix strategy to lease negotiation, fit-out coordination and franchise expansion across Tier-1 and Tier-2 cities.',
-    items: ['Retail market research & gap analysis','Brand mix strategy & category planning','Anchor & inline tenant leasing','Lease term structuring & negotiation','Fit-out coordination & design review','Signage & wayfinding strategy','Mall operations consultancy','Retail franchise expansion advisory','F&B destination advisory','Retail sales channel planning'],
+    items: ['Retail market research & gap analysis','Brand mix strategy & category planning','Anchor & inline tenant leasing','Lease term structuring & negotiation','Fit-out coordination & design review','Signage & wayfinding strategy','Mall operations consultancy','Retail Brand Expansion and Leasing Velocity Advisory','F&B destination advisory','Retail sales channel planning'],
     highlights: [
       { v:'30+',      l:'Active retail brand relationships across fashion, F&B and entertainment' },
-      { v:'15 Cities', l:'Desi Brand retail franchise expansion mandate, ₹45 Cr, 36-month payback' },
+      { v:'15 Cities', l:'Desi Brand retail franchise expansion mandate, INR 45 Cr, 36-month payback' },
     ],
     partners: ['Brand Partners'],
   },
@@ -37,7 +37,7 @@ const SERVICES = [
     name: 'Hospitality Management',
     tagline: 'Hotel management, brand on-boarding & pre-opening PMC',
     desc: 'From pre-opening planning to brand management contracts, India Gully provides end-to-end hospitality advisory, connecting developers with the right brands and ensuring seamless hotel launches. We have on-boarded 15+ hotels across Marriott, Radisson, IHG, Cygnett, Regenta and more.',
-    items: ['Pre-opening planning & management','Brand selection & on-boarding','Hotel management advisory','Revenue management & yield strategy','Staff recruitment & training','FF&E / OS&E procurement','Mock-up room execution','Asset advisory & repositioning'],
+    items: ['Pre-opening planning & management','Brand selection & on-boarding','Lifecycle Asset Management and Brand Stewardship','Revenue management & yield strategy','Staff recruitment & training','FF&E / OS&E procurement','Mock-up room execution','Asset advisory & repositioning'],
     highlights: [
       { v:'15+', l:'Hotel projects managed and advised across India' },
       { v:'20+', l:'Hospitality brand relationships. Marriott to Lemon Tree' },
@@ -47,25 +47,25 @@ const SERVICES = [
   {
     id: 'entertainment',
     icon: '🎡',
-    name: 'Entertainment Advisory',
+    name: 'Entertainment Destination and Experiential Economy Advisory',
     tagline: 'Theme parks, FECs & integrated destinations',
-    desc: 'India Gully advises on large-format entertainment destinations, from concept development and operator selection to financial feasibility, project management and revenue optimisation. Our principals bring deep hands-on experience from landmark entertainment real estate transactions in India.',
+    desc: 'India Gully advises on large-format entertainment destinations as a yield-driven experiential economy advisory practice — from Strategic Concept Engineering and operator selection to Techno-Commercial Feasibility, project management, and Lifecycle Asset Management. Our principals bring verified hands-on execution depth from landmark entertainment real estate transactions in India exceeding INR 1,350 Cr.',
     items: ['Concept development & master planning','Entertainment operator identification','Financial feasibility & business plan','Technology & AV systems advisory','Attraction design & programming','Revenue mix & yield optimisation','Integrated destination planning','Project management & commissioning'],
     highlights: [
-      { v:'₹1,350 Cr+', l:'Entertainment City Limited — 100% shareholder-consented divestment, joint advisory with EY' },
-      { v:'₹500 Cr',    l:'Adlabs Imagica acquisition due diligence advisory' },
+      { v:'INR 1,350 Cr+', l:'Entertainment City Limited — 100% shareholder-consented divestment, joint advisory with EY' },
+      { v:'INR 500 Cr',    l:'Adlabs Imagica acquisition due diligence advisory' },
     ],
     partners: [] as string[],
   },
   {
     id: 'debt',
     icon: '⚖️',
-    name: 'Debt & Special Situations',
+    name: 'Capital Markets and Special Situations',
     tagline: 'Structured debt advisory & distressed asset resolution',
-    desc: 'We advise on structured debt arrangements, distressed asset turnarounds and special situation mandates, working with lenders, investors and promoters to maximise recovery and enterprise value. Our cross-vertical expertise in hospitality, real estate and retail is a unique differentiator.',
-    items: ['Structured debt arrangement','Distressed asset resolution','IBC / NCLT process advisory','Asset monetisation','Debt restructuring & renegotiation','Promoter advisory','Lender advisory & due diligence','Special situation fund advisory'],
+    desc: 'India Gully operates an institutional-grade Capital Markets and Special Situations practice — advising on Debt Syndication, Structured Finance, NCLT Advisory, and Distressed Asset Strategy. We synergize with lenders, institutional investors, and promoters to maximize recovery and enterprise value. Our cross-vertical depth across Hospitality, Real Estate, and Retail is a differentiated institutional credit desk positioning.',
+    items: ['Debt Syndication and Structured Finance Architecture','Distressed Asset Strategy and Recovery Optimization','NCLT Advisory and Insolvency Resolution Structuring','Strategic Asset Monetisation and Capital Recycling','Debt Restructuring, Renegotiation, and Resolution','Promoter Strategic Advisory and Capital Architecture','Lender Advisory, Due Diligence, and Credit Assessment','Special Situation Fund Advisory and Deal Origination'],
     highlights: [
-      { v:'IBC', l:'IBC / NCLT process advisory for hotel and real estate assets' },
+      { v:'IBC', l:'NCLT Advisory and Insolvency Resolution Structuring for hotel and real estate assets' },
       { v:'Multi-sector', l:'Cross-vertical debt advisory leveraging hospitality, real estate and retail expertise' },
     ],
     partners: [] as string[],
@@ -136,8 +136,8 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Advisory Services</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.5rem;">Six Verticals.<br><em style="color:var(--gold);font-style:italic;">One Partner.</em></h1>
-      <p class="lead-lt" style="max-width:580px;margin-bottom:2.5rem;">Institutional-grade advisory across Real Estate, Retail, Hospitality, Entertainment, Debt &amp; HORECA, delivered by domain specialists with deep India market knowledge.</p>
+      <h1 class="h1" style="margin-bottom:1.5rem;">Six Advisory Vertical — Institutional Grades.<br><em style="color:var(--gold);font-style:italic;">One Institutional Platform.</em></h1>
+      <p class="lead-lt" style="max-width:580px;margin-bottom:2.5rem;">Institutional-grade advisory across Real Estate Transaction Structuring, Retail Leasing Velocity, Hospitality Brand Architecture, Entertainment Destination Advisory, Capital Markets and Special Situations, and HORECA Lifecycle Management — delivered by domain specialists with verified India market execution depth.</p>
       <div style="display:flex;flex-wrap:wrap;gap:.625rem;">
         ${SERVICES.map((s: any) => `<a href="#${s.id}" class="btn btn-ghost btn-sm">${s.name}</a>`).join('')}
         <a href="/horeca" class="btn btn-ghost btn-sm">HORECA Solutions</a>
@@ -159,7 +159,7 @@ ${SERVICES.map((s, i) => `
             <span style="font-size:1.65rem;">${s.icon}</span>
           </div>
           <div>
-            <span style="font-size:.58rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);">Advisory Vertical</span>
+            <span style="font-size:.58rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);">Advisory Vertical — Institutional Grade</span>
           </div>
         </div>
         <h2 class="h2" style="margin-bottom:.875rem;">${s.name}</h2>
@@ -197,12 +197,12 @@ ${SERVICES.map((s, i) => `
         </div>
 
         <div class="ig-callout" style="padding:2rem;">
-          <p style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Engage This Vertical</p>
+          <p style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Initiate Strategic Consultation and Intake</p>
           <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;margin-bottom:1.5rem;">Interested in this advisory vertical? Our leadership team reviews all submissions within 24 hours.</p>
           <div style="display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.5rem;">
-            ${[{icon:"check",t:"Board-level advisory experience"},{icon:"check",t:"Pan-India mandate pipeline"},{icon:"check",t:"24-hour response commitment"}].map(b=>`<div style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--ink-muted);"><i class="fas fa-${b.icon}" style="color:var(--gold);font-size:.6rem;flex-shrink:0;"></i>${b.t}</div>`).join('')}
+            ${[{icon:"check",t:"Boardroom-grade advisory execution depth"},{icon:"check",t:"Pan-India mandate pipeline"},{icon:"check",t:"Immediate Diagnostic Review Window commitment"}].map(b=>`<div style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--ink-muted);"><i class="fas fa-${b.icon}" style="color:var(--gold);font-size:.6rem;flex-shrink:0;"></i>${b.t}</div>`).join('')}
           </div>
-          <a href="/contact?service=${s.id}" class="btn btn-g" style="width:100%;justify-content:center;">Discuss Your Mandate <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.6rem;"></i></a>
+          <a href="/contact?service=${s.id}" class="btn btn-g" style="width:100%;justify-content:center;">Strategic Consultation and Intake <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.6rem;"></i></a>
         </div>
       </div>
     </div>
@@ -216,7 +216,7 @@ ${SERVICES.map((s, i) => `
     <div style="text-align:center;max-width:640px;margin:0 auto 3rem;">
       <div class="gr-c"></div>
       <p class="eyebrow" style="margin-bottom:.75rem;">Transaction Advisory</p>
-      <h2 class="h2">Our Advisory Partners</h2>
+      <h2 class="h2">Strategic Advisory Ecosystem and Capital Markets Network</h2>
       <p class="lead" style="margin-top:1rem;max-width:520px;margin-left:auto;margin-right:auto;">India Gully collaborates with globally recognised advisory and consulting firms on transaction mandates, bringing institutional credibility, multi-disciplinary expertise and deep financial rigour to every deal.</p>
     </div>
 
@@ -239,7 +239,7 @@ ${SERVICES.map((s, i) => `
 
     <div style="border:1px solid var(--border);padding:1.25rem 1.5rem;display:flex;gap:.75rem;align-items:flex-start;max-width:820px;margin:0 auto;">
       <i class="fas fa-handshake" style="color:var(--gold);font-size:.875rem;margin-top:.1rem;flex-shrink:0;"></i>
-      <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.8;">India Gully works alongside EY, CBRE, ANAROCK, Pipara &amp; Co and Resurgent India on select mandates where multi-disciplinary expertise, spanning financial due diligence, real estate capital markets, property consultancy, chartered accounting and investment banking, is required for complex, large-format transactions.</p>
+      <p style="font-size:.8rem;color:var(--ink-muted);line-height:1.8;">India Gully synergizes with EY, CBRE, ANAROCK, Pipara and Co, and Resurgent India on select mandates where multi-disciplinary expertise, spanning financial due diligence, real estate capital markets, property consultancy, chartered accounting and investment banking, is required for complex, large-format transactions.</p>
     </div>
   </div>
 </div>
@@ -250,7 +250,7 @@ ${SERVICES.map((s, i) => `
     <div>
       <div class="gr-lt"></div>
       <p class="eyebrow" style="margin-bottom:.75rem;">HORECA Solutions</p>
-      <h2 class="h2-lt" style="margin-bottom:1.25rem;">Complete Supply<br>Chain for Hotels</h2>
+      <h2 class="h2-lt" style="margin-bottom:1.25rem;">Lifecycle Procurement and Supply Architecture for Hospitality Assets</h2>
       <p class="lead-lt" style="margin-bottom:2rem;">Kitchen equipment, FF&amp;E, OS&amp;E, linens, uniforms and guest amenities, procured to spec, delivered on schedule.</p>
       <a href="/horeca" class="btn btn-g">Explore HORECA Solutions</a>
     </div>
@@ -269,9 +269,9 @@ ${SERVICES.map((s, i) => `
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(184,150,12,.05) 0%,transparent 70%);pointer-events:none;"></div>
   <div class="wrap" style="text-align:center;max-width:720px;margin:0 auto;position:relative;">
     <div class="gr-c"></div>
-    <p class="eyebrow-lt" style="margin-bottom:.75rem;">Work With Us</p>
-    <h2 class="h2-lt" style="margin-bottom:1.25rem;">Ready to Engage<br>India Gully?</h2>
-    <p class="lead-lt" style="max-width:520px;margin:0 auto 2.5rem;">Submit a mandate enquiry and our leadership team will respond within 24 hours.</p>
+    <p class="eyebrow-lt" style="margin-bottom:.75rem;">Initiate a Mandate Engagement</p>
+    <h2 class="h2-lt" style="margin-bottom:1.25rem;">Initiate a Confidential Mandate Engagement</h2>
+    <p class="lead-lt" style="max-width:520px;margin:0 auto 2.5rem;">Every mandate submission undergoes a clinical review by our Executive Leadership within the Immediate Diagnostic Review Window. Pre-Mandate Confidentiality Protocol executed on commencement.</p>
     <div style="display:flex;flex-wrap:wrap;gap:.875rem;justify-content:center;">
       <a href="/contact"  class="btn btn-g">Submit a Mandate Enquiry</a>
       <a href="/listings" class="btn btn-ghost-g">View Active Mandates</a>
@@ -281,7 +281,7 @@ ${SERVICES.map((s, i) => `
 
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Advisory Services', content, {
-    description: 'India Gully advisory services. Real Estate, Retail & Leasing, Hospitality Management, Entertainment Advisory, Debt & Special Situations, HORECA Solutions. Pan-India presence.',
+    description: 'India Gully advisory services. Real Estate, Retail & Leasing, Hospitality Management, Entertainment Destination and Experiential Economy Advisory, Capital Markets and Special Situations, HORECA Solutions. Pan-India presence.',
     canonical: 'https://india-gully.pages.dev/services',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     jsonLd: {
@@ -297,9 +297,9 @@ ${cmsZoneHtml}`
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Real Estate Advisory' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Retail & Leasing' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Hospitality Management' } },
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Entertainment Advisory' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Entertainment Destination and Experiential Economy Advisory' } },
 
-          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Debt & Special Situations' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Capital Markets and Special Situations' } },
           { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'HORECA Solutions' } }
         ]
       }

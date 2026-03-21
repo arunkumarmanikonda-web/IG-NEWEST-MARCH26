@@ -4,10 +4,10 @@ import { layout } from '../lib/layout'
 const app = new Hono()
 
 const STEPS = [
-  { n: '01', title: 'Requirements Brief',    desc: 'Submit your property details, category requirements, brand standards and budget envelope via the HORECA enquiry form.' },
-  { n: '02', title: 'Specification & Quote', desc: 'Our team prepares detailed specifications, vendor shortlists and a GST-inclusive quote within 5 business days.' },
-  { n: '03', title: 'Approval & PO',         desc: 'You review, approve and sign off. Purchase orders are raised with approved vendors under India Gully\'s procurement framework.' },
-  { n: '04', title: 'Delivery & Handover',   desc: 'Goods are delivered, installed and snagged against specifications. Completion certificate issued upon sign-off.' },
+  { n: '01', title: 'Institutional RFQ Brief',    desc: 'Submit your asset details, FF&amp;E and OS&amp;E category requirements, brand standard specifications, and investment quantum via the HORECA Institutional RFQ Interface.' },
+  { n: '02', title: 'Technical Specification and Structured Quote', desc: 'Our technical procurement team prepares detailed specifications, vetted vendor shortlists, and GST-inclusive quotes within the 48-hour Technical RFQ Turnaround SLA.' },
+  { n: '03', title: 'Mandate Authorization and Purchase Order',         desc: 'You review, approve and sign off. Purchase orders are raised with approved vendors under India Gully\'s procurement framework.' },
+  { n: '04', title: 'Delivery, Commissioning, and Handover',   desc: 'Goods are delivered, installed, and snagged against approved specifications. Formal Completion and Handover Certificate issued upon client sign-off.' },
 ]
 
 // ── Public HORECA home page ──────────────────────────────────────────────────
@@ -47,17 +47,17 @@ app.get('/', async (c) => {
       <div class="fu">
         <div class="gr-lt"></div>
         <p class="eyebrow" style="margin-bottom:.875rem;">HORECA Solutions</p>
-        <h1 class="h1" style="margin-bottom:1.5rem;">Complete Supply<br>Chain for<br><em style="color:var(--gold);font-style:italic;">Hotels &amp; F&amp;B</em></h1>
-        <p class="lead-lt" style="max-width:500px;margin-bottom:2rem;">Kitchen equipment, FF&amp;E, OS&amp;E, linens, uniforms and guest amenities, procured to spec, delivered on schedule for hotels and F&amp;B operators across India.</p>
+        <h1 class="h1" style="margin-bottom:1.5rem;">Lifecycle Procurement and<br>Supply Architecture for<br><em style="color:var(--gold);font-style:italic;">Hospitality and F&amp;B Assets</em></h1>
+        <p class="lead-lt" style="max-width:500px;margin-bottom:2rem;">FF&amp;E, OS&amp;E, kitchen equipment, linen, uniforms, and guest amenities — procured to institutional specification, delivered on schedule, across hotel pre-openings, renovations, and lifecycle replacement cycles.</p>
         <div style="display:flex;gap:.875rem;flex-wrap:wrap;">
           <a href="/horeca/catalogue" class="btn btn-g"><i class="fas fa-th-list" style="margin-right:.5rem;"></i>Browse Catalogue</a>
-          <a href="#enquiry" class="btn btn-ghost">Request a Quote</a>
+          <a href="#enquiry" class="btn btn-ghost">Submit Institutional RFQ</a>
         </div>
       </div>
       <div class="fu2" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07);">
         ${[
           { n:'500+',    l:'SKUs in Catalogue',   icon:'th-list' },
-          { n:'₹50 Cr+', l:'Procurement Managed', icon:'rupee-sign' },
+          { n:'INR 50 Cr+', l:'End-to-End Mandate Stewardship — Procurement Managed', icon:'rupee-sign' },
           { n:'50+',     l:'Vendor Network',       icon:'handshake' },
           { n:'15+',     l:'Hotels Supplied',      icon:'hotel' },
         ].map(s => `
@@ -102,7 +102,7 @@ app.get('/', async (c) => {
         { icon:'chair',          name:'FF&E',                  desc:'Furniture, Fixtures & Equipment to brand standard. Guest rooms, lobby, restaurant, spa.',       color:'rgba(26,58,107,.1)' },
         { icon:'utensils',       name:'OS&E',                  desc:'Operating Supplies & Equipment. Tableware, glassware, silverware, kitchen smallwares.',         color:'rgba(184,150,12,.08)' },
         { icon:'fire-alt',       name:'Kitchen Equipment',     desc:'Commercial kitchen — ranges, ovens, refrigeration, warewashing to FSSAI and brand standards.',  color:'rgba(220,38,38,.07)' },
-        { icon:'bed',            name:'Linen & Towelling',     desc:'Room linen, bath towels, pool towels to brand par stock specification (3–4× room count).',     color:'rgba(6,95,70,.07)' },
+        { icon:'bed',            name:'Linen & Towelling',     desc:'Room linen, bath towels, pool towels to brand par stock specification (3-4× room count).',     color:'rgba(6,95,70,.07)' },
         { icon:'tshirt',         name:'Uniforms',              desc:'Staff uniforms across all departments. Design, procurement, tailoring, branding and logistics.',  color:'rgba(124,58,237,.07)' },
         { icon:'gift',           name:'Guest Amenities',       desc:'Brand-approved bathroom amenities, room stationery, in-room guest kits and branded items.',    color:'rgba(146,64,14,.07)' },
         { icon:'tools',          name:'SPA & Wellness',        desc:'Spa equipment, treatment beds, wellness product ranges, fitness equipment and AV systems.',    color:'rgba(22,163,74,.07)' },

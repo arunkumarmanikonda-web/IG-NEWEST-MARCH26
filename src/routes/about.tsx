@@ -45,11 +45,11 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">About India Gully</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Celebrating<br><em style="color:var(--gold);font-style:italic;">Desiness</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
-      <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. A Delhi-based, multi-vertical enterprise advisory firm operating across Hospitality, Retail, Real Estate and Entertainment with a distinctly Indian identity.</p>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
+      <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. — a Delhi-based, multi-vertical institutional advisory platform operating across Hospitality Asset Management, Retail Leasing Velocity, Real Estate Transaction Structuring, Entertainment Destination Advisory, Capital Markets and Special Situations, with a proprietary pan-India mandate pipeline exceeding INR 2,100 Cr.</p>
       <!-- Quick stats -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
-        ${[{n:"2017",l:"Founded"},{n:"₹2,000 Cr+",l:"Transacted"},{n:"6",l:"Verticals"},{n:"Pan-India",l:"Presence"}].map(s=>`<div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;line-height:1;">${s.n}</div><div style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-top:.25rem;">${s.l}</div></div>`).join('')}
+        ${[{n:"2017",l:"Founded"},{n:"INR 2,000 Cr+",l:"Transacted"},{n:"6",l:"Verticals"},{n:"Pan-India",l:"Presence"}].map(s=>`<div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;line-height:1;">${s.n}</div><div style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-top:.25rem;">${s.l}</div></div>`).join('')}
       </div>
     </div>
   </div>
@@ -61,8 +61,8 @@ app.get('/', async (c) => {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;" class="mob-stack">
       <div class="reveal-l">
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:.875rem;">Our Purpose</p>
-        <h2 class="h2" style="margin-bottom:3rem;">Vision &amp; Mission</h2>
+        <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Mandate and Strategic Positioning</p>
+        <h2 class="h2" style="margin-bottom:3rem;">Strategic Vision and Advisory Mission</h2>
 
         <div style="border-left:3px solid var(--gold);padding:1.75rem 2rem;background:linear-gradient(135deg,rgba(184,150,12,.04),transparent);margin-bottom:1.75rem;position:relative;">
           <div style="position:absolute;top:1.5rem;left:-3px;width:3px;height:40px;background:linear-gradient(180deg,var(--gold),var(--gold-lt));"></div>
@@ -124,7 +124,7 @@ app.get('/', async (c) => {
         { year:'2021', desc:'Launched India Gully brand identity, celebrating Desiness. Deepened retail leasing practice with 30+ brand relationships across fashion, F&B and entertainment.' },
         { year:'2023', desc:'Scaled hospitality transaction advisory with high-value asset sales and acquisitions across Delhi NCR, Chandigarh and Himachal Pradesh. Debt & Special Situations vertical established. Advisory pipeline crosses ₹1,000 Cr+.' },
         { year:'2024', desc:'Digital transformation initiative. India Gully Enterprise Platform (ERP), integrated advisory management, governance and HORECA procurement system launched.' },
-        { year:'2025', desc:'₹1,165 Cr+ active advisory pipeline. Prism Tower (₹400 Cr) and Belcibo Hospitality Platform (₹100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
+        { year:'2025', desc:'INR 1,165 Cr+ active advisory pipeline. Prism Tower (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
         { year:'2026', desc:'India Gully Investor Relations portal launched. /invest page goes live for qualified institutional investors and family offices. CERT-In OWASP Top-10 security compliance achieved. Eight active mandates across five asset classes.' },
       ].map((t,i) => `
       <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;margin-bottom:2.5rem;align-items:center;">
@@ -217,10 +217,10 @@ app.get('/', async (c) => {
           <!-- Career highlights -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">
             ${[
-              { icon:'trophy',     color:'#B8960C', label:'₹1,350 Cr+', sub:'Entertainment City divestment (EY joint advisory)' },
+              { icon:'trophy',     color:'#B8960C', label:'INR 1,350 Cr+', sub:'Entertainment City divestment (EY joint advisory)' },
               { icon:'hotel',      color:'#1A3A6B', label:'15+ Hotels',   sub:'Pre-opening PMC & brand on-boarding mandates' },
-              { icon:'store',      color:'#15803d', label:'1,40,000 sq ft', sub:'Retail leased across premium destinations' },
-              { icon:'chart-line', color:'#7C3AED', label:'₹1,165 Cr+',  sub:'Active advisory pipeline under management' },
+              { icon:'store',      color:'#15803d', label:'1,40,000 sq. ft.', sub:'Retail leased across premium destinations' },
+              { icon:'chart-line', color:'#7C3AED', label:'INR 1,165 Cr+',  sub:'Active advisory pipeline under management' },
             ].map(h => `
             <div style="display:flex;gap:.75rem;align-items:flex-start;padding:1rem;background:var(--parch-dk);border:1px solid var(--border-lt);">
               <div style="width:34px;height:34px;background:${h.color}15;border:1px solid ${h.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -429,12 +429,12 @@ app.get('/', async (c) => {
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
       ${[
-        { n:'₹1,165 Cr+', label:'Active Pipeline', sub:'8 mandates across 5 asset classes', icon:'chart-bar', color:'#B8960C' },
-        { n:'₹2,000 Cr+', label:'Transactions Advised', sub:'Including ₹1,350 Cr+ Entertainment City divestment', icon:'trophy', color:'#1A3A6B' },
-        { n:'1,40,000 sq ft', label:'Retail Leased', sub:'Across Delhi NCR and Gurugram', icon:'store', color:'#15803d' },
+        { n:'INR 1,165 Cr+', label:'Active Pipeline', sub:'8 mandates across 5 asset classes', icon:'chart-bar', color:'#B8960C' },
+        { n:'INR 2,000 Cr+', label:'Transactions Advised', sub:'Including INR 1,350 Cr+ Entertainment City divestment', icon:'trophy', color:'#1A3A6B' },
+        { n:'1,40,000 sq. ft.', label:'Retail Leased', sub:'Across Delhi NCR and Gurugram', icon:'store', color:'#15803d' },
         { n:'15+', label:'Hotel Projects', sub:'PMC, pre-opening & HORECA supply', icon:'hotel', color:'#7C3AED' },
         { n:'500+ SKUs', label:'HORECA Catalogue', sub:'FF&E, OS&E, kitchen, linen, uniforms', icon:'utensils', color:'#B8960C' },
-        { n:'₹50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
+        { n:'INR 50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
         { n:'30+', label:'Retail Brands', sub:'Brand partnerships in NCR & Gurugram', icon:'tag', color:'#1A3A6B' },
         { n:'8+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
       ].map(s => `
@@ -507,10 +507,10 @@ app.get('/', async (c) => {
         <h2 class="h2" style="margin-bottom:2rem;">Selected Highlights</h2>
         <div style="display:flex;flex-direction:column;gap:1rem;">
           ${[
-            { value:'₹1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY — 100% shareholder-consented divestment with full promoter alignment, comprehensive due diligence and structured deal closure.', sector:'Entertainment', color:'#7C3AED' },
-            { value:'₹400 Cr', title:'Prism Tower, Gurugram', desc:'312-key mixed-use hospitality & commercial asset advisory mandate. REIT-grade exit potential. 10 km metro connectivity. Active transaction.', sector:'Real Estate', color:'#1A3A6B' },
-            { value:'₹70 Cr', title:'Hotel Rajshree & Spa, Chandigarh', desc:'41-key boutique hotel — full HORECA procurement refresh, operational enhancement and active asset sale advisory.', sector:'Hospitality', color:'#15803d' },
-            { value:'₹45 Cr', title:'WelcomHeritage Santa Roza, Kasauli', desc:'44-key luxury heritage resort under ITC WelcomHeritage brand. End-to-end transaction advisory and investor outreach.', sector:'Heritage Hospitality', color:'#B8960C' },
+            { value:'INR 1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY — 100% shareholder-consented divestment with full promoter alignment, comprehensive due diligence and structured deal closure.', sector:'Entertainment', color:'#7C3AED' },
+            { value:'INR 400 Cr', title:'Prism Tower, Gurugram', desc:'312-key mixed-use hospitality & commercial asset advisory mandate. REIT-grade exit potential. 10 km metro connectivity. Active transaction.', sector:'Real Estate', color:'#1A3A6B' },
+            { value:'INR 70 Cr', title:'Hotel Rajshree & Spa, Chandigarh', desc:'41-key boutique hotel — full HORECA procurement refresh, operational enhancement and active asset sale advisory.', sector:'Hospitality', color:'#15803d' },
+            { value:'INR 45 Cr', title:'WelcomHeritage Santa Roza, Kasauli', desc:'44-key luxury heritage resort under ITC WelcomHeritage brand. End-to-end transaction advisory and investor outreach.', sector:'Heritage Hospitality', color:'#B8960C' },
             { value:'₹30 Cr', title:'Maple Resort Chail, Himachal Pradesh', desc:'30-key boutique mountain resort at 2,515 metres. Owner-direct advisory and active buyer outreach for premium mountain hospitality asset.', sector:'Hospitality', color:'#065F46' },
           ].map(m => `
           <div style="padding:1.25rem;border:1px solid var(--border-lt);display:flex;gap:1rem;align-items:flex-start;transition:all .22s;" onmouseover="this.style.borderColor='rgba(184,150,12,.25)'" onmouseout="this.style.borderColor='var(--border-lt)'">

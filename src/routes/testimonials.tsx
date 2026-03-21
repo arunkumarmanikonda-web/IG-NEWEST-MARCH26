@@ -6,13 +6,13 @@ const app = new Hono()
 const TESTIMONIALS = [
   {
     id: 't1',
-    quote: 'India Gully\'s advisory team brought a level of institutional discipline to our hotel acquisition that we had not encountered with any other advisor in the Tier 2 market. Their dual expertise — real estate and hospitality — meant we didn\'t need two separate advisors.',
+    quote: 'India Gully\'s advisory team brought a level of institutional discipline to our hotel acquisition that we had not encountered with any other advisor in the Tier-2 market. Their dual expertise — real estate and hospitality — meant we didn\'t need two separate advisors.',
     name: 'Rajiv Mehra',
     role: 'Managing Director, Mehra Hospitality Group',
     sector: 'Hospitality',
     emoji: '🏨',
     location: 'Chandigarh',
-    outcome: 'Acquired 41-key boutique hotel at ₹70 Cr',
+    outcome: 'Acquired 41-key boutique hotel at INR 70 Cr',
     stars: 5,
   },
   {
@@ -28,7 +28,7 @@ const TESTIMONIALS = [
   },
   {
     id: 't3',
-    quote: 'We engaged India Gully for HORECA procurement on our 65-key mountain resort pre-opening. Their vendor relationships in the Tier 2 market are unmatched, and the 98% on-time delivery rate they promised is exactly what we experienced.',
+    quote: 'We engaged India Gully for HORECA procurement on our 65-key mountain resort pre-opening. Their vendor relationships in the Tier-2 market are unmatched, and the 98% on-time delivery rate they promised is exactly what we experienced.',
     name: 'Amit Sharma',
     role: 'Operations Head, CGH Earth Resorts',
     sector: 'HORECA',
@@ -45,7 +45,7 @@ const TESTIMONIALS = [
     sector: 'Entertainment',
     emoji: '🎡',
     location: 'Noida, NCR',
-    outcome: 'Active mandate — ₹2,100 Cr pipeline',
+    outcome: 'Active mandate — INR 2,100 Cr pipeline',
     stars: 5,
   },
   {
@@ -56,7 +56,7 @@ const TESTIMONIALS = [
     sector: 'Debt & Special Situations',
     emoji: '⚖️',
     location: 'Delhi NCR',
-    outcome: 'Completed resolution — ₹120 Cr asset',
+    outcome: 'Completed resolution — INR 120 Cr asset',
     stars: 5,
   },
   {
@@ -89,7 +89,7 @@ const TESTIMONIALS = [
     sector: 'Real Estate',
     emoji: '🏢',
     location: 'Gurugram, NCR',
-    outcome: '3 LOIs within 60 days, ₹400 Cr transaction',
+    outcome: '3 LOIs within 60 days, INR 400 Cr transaction',
     stars: 5,
   },
 ]
@@ -118,21 +118,20 @@ app.get('/', (c) => {
   <div class="container" style="max-width:1100px;margin:0 auto;padding:0 1.5rem;">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
       <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(212,174,42,.12);border:1px solid rgba(212,174,42,.3);border-radius:100px;padding:.3rem .9rem;font-size:.78rem;font-family:'DM Sans',sans-serif;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;">
-        ⭐ Client Testimonials
+        Client Mandate Outcome Testimonials
       </span>
       <span style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:100px;padding:.3rem .9rem;font-size:.78rem;font-family:'DM Sans',sans-serif;color:#4ade80;letter-spacing:.08em;text-transform:uppercase;">
         ${TESTIMONIALS.length} Verified Clients
       </span>
     </div>
     <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.8rem);color:#fff;line-height:1.08;margin-bottom:1rem;">
-      What Our Clients<br>
+      Client Mandate Outcomes and<br>
       <span style="background:linear-gradient(135deg,var(--gold),#e8c84a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-        Say About Us
+        Execution Validation
       </span>
     </h1>
     <p style="color:rgba(255,255,255,.65);font-size:clamp(1rem,1.6vw,1.18rem);max-width:560px;line-height:1.6;margin:0;font-family:'DM Sans',sans-serif;">
-      Across ₹1,165 Cr+ of active mandates and 15+ hotel projects, India Gully has built 
-      a reputation for institutional-grade advisory with deep regional expertise.
+      Across INR 1,165 Cr+ of active strategic mandates and 15+ hotel projects, India Gully has established a capital markets-ready institutional advisory practice with verified execution depth across pan-India corridors.
     </p>
   </div>
 </section>
@@ -218,7 +217,7 @@ app.get('/', (c) => {
       ${[
         { val: '5.0', label: 'Average Rating', icon: 'fa-star' },
         { val: `${TESTIMONIALS.length}+`, label: 'Verified Clients', icon: 'fa-users' },
-        { val: '₹1,165 Cr+', label: 'Mandates Advised', icon: 'fa-chart-line' },
+        { val: 'INR 1,165 Cr+', label: 'Mandates Advised', icon: 'fa-chart-line' },
         { val: '100%', label: 'NDA Compliance', icon: 'fa-shield-alt' },
       ].map(s => `
       <div>
@@ -286,14 +285,14 @@ app.get('/', (c) => {
     <!-- CTA Section -->
     <div class="ig-callout-gold" style="margin-top:3.5rem;text-align:center;">
       <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:#fff;margin-bottom:.75rem;">
-        Ready to Work With India Gully?
+        Initiate a Strategic Mandate Engagement
       </div>
       <p style="color:rgba(255,255,255,.6);font-size:.95rem;font-family:'DM Sans',sans-serif;max-width:500px;margin:0 auto 1.5rem;line-height:1.6;">
-        Join ${TESTIMONIALS.length}+ clients who have trusted India Gully for transaction advisory, 
+        Engage with India Gully — trusted by institutional clients across transaction advisory,, 
         HORECA procurement, and hospitality development across India.
       </p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a href="/contact#enquiry" class="btn btn-g">Start a Conversation</a>
+        <a href="/contact#enquiry" class="btn btn-g">Strategic Consultation and Intake</a>
         <a href="/listings" class="btn btn-ghost-g">View Active Mandates</a>
       </div>
     </div>
@@ -392,7 +391,7 @@ function filterTest(cat) {
 </script>
 `
   return c.html(layout('Client Testimonials — India Gully Advisory', html, {
-    description: 'Read what India Gully clients say about our transaction advisory, HORECA procurement, and hospitality development services across ₹1,165 Cr+ of mandates.',
+    description: 'Read what India Gully clients say about our transaction advisory, HORECA procurement, and hospitality development services across INR 1,165 Cr+ of mandates.',
     canonical: 'https://india-gully.pages.dev/testimonials',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
   }))
