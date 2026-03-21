@@ -51,7 +51,7 @@ VALUES
   ('hero.cta_primary',   'View Active Mandates',  'text', 'home', 'hero', 1, 1),
   ('hero.cta_secondary', 'Submit an Enquiry',     'text', 'home', 'hero', 1, 1),
   -- Home stats
-  ('stats.pipeline',  '₹1,165 Cr+',  'text', 'home', 'stats', 1, 1),
+  ('stats.pipeline',  '₹2,100 Cr+',  'text', 'home', 'stats', 1, 1),
   ('stats.brands',    '20+',          'text', 'home', 'stats', 1, 1),
   ('stats.hotels',    '15+',          'text', 'home', 'stats', 1, 1),
   ('stats.presence',  'Pan-India',    'text', 'home', 'stats', 1, 1),

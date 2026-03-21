@@ -460,7 +460,7 @@ app.get('/employee', (c) => {
   return c.html(layout('Employee Portal', loginPage({
     portal:'employee', title:'Employee Portal', subtitle:'HR & Operations Platform',
     accentColor:'#1A3A6B', icon:'users',
-    idLabel:'Employee ID', idPlaceholder:'IG-EMP-XXXX',
+    idLabel:'Employee Email or ID', idPlaceholder:'name@indiagully.com or IG-EMP-XXXX',
     error
   }), { noNav:true, noFooter:true }))
 })
@@ -470,7 +470,7 @@ app.get('/board', (c) => {
   return c.html(layout('Board & KMP Portal', loginPage({
     portal:'board', title:'Board & KMP Portal', subtitle:'Governance & Compliance Platform',
     accentColor:'#1E1E1E', icon:'gavel',
-    idLabel:'Director DIN or KMP ID', idPlaceholder:'DIN XXXXXXXX or IG-KMP-XXXX',
+    idLabel:'Director Email or KMP ID', idPlaceholder:'name@indiagully.com or IG-KMP-XXXX',
     error
   }), { noNav:true, noFooter:true }))
 })
