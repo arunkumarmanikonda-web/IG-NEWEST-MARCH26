@@ -16442,6 +16442,80 @@ app.get('/documents', async (c) => {
     }
   }, intervalMs)
 }
+// ── Phase T: Sales, HR, Finance live loaders ──────────────────────────────────
+;(window as any).igLoadSalesDealsLive = async function(tableBodyId?: string) {
+  try {
+    const r = await fetch('/api/sales/deals', { credentials: 'include' })
+    const d = await r.json()
+    if (!tableBodyId) return d
+    const el = document.getElementById(tableBodyId)
+    if (!el) return d
+    const deals = d.deals || []
+    el.innerHTML = deals.length ? deals.map((deal: any) => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+        <td style="padding:.6rem .75rem;font-family:monospace;font-size:.72rem;color:#fbbf24">${deal.id}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:rgba(255,255,255,.85)">${deal.name}</td>
+        <td style="padding:.6rem .75rem;font-size:.75rem;color:rgba(255,255,255,.5)">${deal.client}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;font-weight:600">${deal.value}</td>
+        <td style="padding:.6rem .75rem"><span style="font-size:.68rem;padding:.2rem .5rem;background:rgba(184,150,12,.12);color:#fbbf24;border:1px solid rgba(184,150,12,.2)">${deal.stage}</span></td>
+        <td style="padding:.6rem .75rem;font-size:.75rem;color:rgba(255,255,255,.5)">${deal.probability}%</td>
+        <td style="padding:.6rem .75rem;font-size:.72rem;color:rgba(255,255,255,.4)">${deal.close_date || '—'}</td>
+      </tr>`).join('') : '<tr><td colspan="7" style="padding:2rem;text-align:center;color:rgba(255,255,255,.3)">No deals found</td></tr>'
+    return d
+  } catch(e) { console.warn('[igLoadSalesDealsLive]', e) }
+}
+;(window as any).igLoadBankStatementLive = async function(period?: string) {
+  try {
+    const url = period ? `/api/finance/bank-statement?period=${encodeURIComponent(period)}` : '/api/finance/bank-statement'
+    const r = await fetch(url, { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadBankStatementLive]', e) }
+}
+;(window as any).igLoadPayslipsLive = async function(employeeId?: string) {
+  try {
+    const url = employeeId ? `/api/hr/payslip?employee_id=${encodeURIComponent(employeeId)}` : '/api/hr/payslip'
+    const r = await fetch(url, { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPayslipsLive]', e) }
+}
+;(window as any).igLoadLeaveSummaryLive = async function(tableBodyId?: string) {
+  try {
+    const r = await fetch('/api/hr/leave-summary', { credentials: 'include' })
+    const d = await r.json()
+    if (!tableBodyId) return d
+    const el = document.getElementById(tableBodyId)
+    if (!el) return d
+    const emps = d.employees || []
+    el.innerHTML = emps.length ? emps.map((e: any) => `
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
+        <td style="padding:.6rem .75rem;font-family:monospace;font-size:.72rem;color:#fbbf24">${e.id}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:rgba(255,255,255,.85)">${e.name}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.earned}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.casual}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.sick}</td>
+        <td style="padding:.6rem .75rem;font-size:.78rem;font-weight:700;color:#22c55e;text-align:center">${e.balance}</td>
+      </tr>`).join('') : '<tr><td colspan="6" style="padding:2rem;text-align:center;color:rgba(255,255,255,.3)">No employees found</td></tr>'
+    return d
+  } catch(e) { console.warn('[igLoadLeaveSummaryLive]', e) }
+}
+;(window as any).igLoadTdsDeclarationsLive = async function() {
+  try {
+    const r = await fetch('/api/hr/tds-declaration', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadTdsDeclarationsLive]', e) }
+}
+;(window as any).igLoadEwbLive = async function() {
+  try {
+    const r = await fetch('/api/finance/gst/ewb', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEwbLive]', e) }
+}
+;(window as any).igLoadPfEsiLive = async function() {
+  try {
+    const r = await fetch('/api/hr/compliance/pf-esi', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPfEsiLive]', e) }
+}
 
 
 
