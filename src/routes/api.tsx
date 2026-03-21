@@ -599,6 +599,15 @@ function requireRole(allowedRoles: string[], allowedPortals?: string[]) {
  * requireAnyAuth — lighter check: only validates that *any* valid session exists.
  * Used for routes accessible by all authenticated users (any role/portal).
  */
+
+/**
+ * requireAdmin — shorthand for requireSession() + requireRole(['Super Admin']).
+ * Used on admin-only endpoints.
+ */
+function requireAdmin() {
+  return [requireSession(), requireRole(['Super Admin'])]
+}
+
 function requireAnyAuth() {
   return requireSession()
 }
@@ -6787,7 +6796,7 @@ app.post('/dpdp/dfr-submit', requireSession(), requireRole(['Super Admin']), asy
         submitted_at
       ).run()
       await db.prepare(`INSERT INTO ig_audit_log (event_type, module, user_email, description, created_at)
-        VALUES ('DFR_SUBMIT','DPDP','admin@indiagully.in',?,?)`).bind(
+        VALUES ('DFR_SUBMIT','DPDP','admin@indiagully.com',?,?)`).bind(
         `DFR submission ${submission_ref} filed`, submitted_at
       ).run()
       return c.json({ success: true, source: 'D1', submission_ref, status: 'Submitted', submitted_at,
@@ -13934,7 +13943,7 @@ app.post('/cms/review-reminders', requireSession(), requireRole(['Super Admin'],
         await sendEmail((c as any).env, {
           to: email,
           subject: 'India Gully CMS — Content Pending Your Review',
-          html: `<p>You have content items pending review in the India Gully Admin CMS.</p><p><a href="https://indiagully.in/admin">Review now →</a></p>`,
+          html: `<p>You have content items pending review in the India Gully Admin CMS.</p><p><a href="https://indiagully.com/admin">Review now →</a></p>`,
         })
       } catch(_) {}
     }
@@ -13968,7 +13977,7 @@ app.post('/cms/sitemap/regenerate', requireSession(), requireRole(['Super Admin'
       success: true, url_count: totalUrls, generated_at: new Date().toISOString(),
       static_urls: staticUrls.length, dynamic_pages: dynamicPageCount,
       source: db ? 'D1' : 'static',
-      sitemap_url: 'https://indiagully.in/sitemap.xml',
+      sitemap_url: 'https://indiagully.com/sitemap.xml',
       message: `Sitemap regenerated — ${totalUrls} URLs indexed.`
     })
   } catch { return c.json({ success: false, error: 'Sitemap generation failed' }, 500) }
@@ -13985,12 +13994,12 @@ app.post('/cms/sitemap/submit-gsc', requireSession(), requireRole(['Super Admin'
           `INSERT OR IGNORE INTO ig_audit_log (id, actor, action, module, details, created_at)
            VALUES (?, 'cms-admin', 'Sitemap submitted to Google Search Console', 'CMS', ?, CURRENT_TIMESTAMP)`
         ).bind(`AUD-GSC-${Date.now()}`,
-               JSON.stringify({ sitemap_url: 'https://indiagully.in/sitemap.xml', submitted_at: submittedAt })).run()
+               JSON.stringify({ sitemap_url: 'https://indiagully.com/sitemap.xml', submitted_at: submittedAt })).run()
       } catch(_) {}
     }
     return c.json({ success: true, submitted: true, submitted_at: submittedAt,
                     source: db ? 'D1' : 'static',
-                    sitemap_url: 'https://indiagully.in/sitemap.xml',
+                    sitemap_url: 'https://indiagully.com/sitemap.xml',
                     message: 'Sitemap submitted to Google Search Console.' })
   } catch { return c.json({ success: false, error: 'GSC submission failed' }, 500) }
 })

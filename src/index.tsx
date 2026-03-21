@@ -61,7 +61,7 @@ app.use('*', async (c, next) => {
       `https://fonts.googleapis.com https://cdn.jsdelivr.net; ` +
     `font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; ` +
     `img-src 'self' data: https: https://api.qrserver.com; ` +
-    `connect-src 'self' https://india-gully.pages.dev https://indiagully.in; ` +
+    `connect-src 'self' https://india-gully.pages.dev https://indiagully.com; ` +
     `frame-ancestors 'none'; base-uri 'self'; form-action 'self';`
   )
 })
