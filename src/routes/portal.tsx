@@ -37,7 +37,8 @@ app.get('/', (c) => {
              height="36"
              style="height:36px;width:auto;max-width:200px;object-fit:contain;object-position:left center;display:block;"
              draggable="false"
-             decoding="async">
+             decoding="async"
+           onerror="this.onerror=null;this.style.display='none'" >
         <div style="font-size:.48rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-top:4px;">Enterprise Platform</div>
       </a>
       <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:2.5rem;color:#fff;margin-bottom:.75rem;">Select Your Portal</h1>
@@ -929,7 +930,8 @@ function clientShell(pageTitle: string, active: string, body: string) {
     <a href="/portal/client/dashboard" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07);display:block;">
       <img src="/assets/logo-white.png" alt="India Gully" height="26"
            style="height:26px;width:auto;max-width:170px;object-fit:contain;object-position:left center;display:block;"
-           draggable="false" decoding="async">
+           draggable="false" decoding="async"
+           onerror="this.onerror=null;this.style.display='none'" >
       <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:4px;">Client Portal</div>
     </a>
     <nav style="flex:1;padding:.75rem;overflow-y:auto;">
@@ -1374,7 +1376,8 @@ app.get('/client/invoices', async (c) => {
             <!-- INVOICE LOGO: primary dark-text lockup, read-only, no crop, no AI, lossless -->
             <img src="/assets/logo-primary.png" alt="India Gully" height="28"
                  style="height:28px;width:auto;max-width:160px;object-fit:contain;object-position:left center;display:block;margin-bottom:.4rem;"
-                 draggable="false" decoding="async">
+                 draggable="false" decoding="async"
+           onerror="this.onerror=null;this.style.display='none'" >
             <div style="font-size:.72rem;color:var(--ink-muted);line-height:1.5;">Vivacious Entertainment &amp; Hospitality Pvt. Ltd.<br>GSTIN: 07AAGCV0867P1ZN · CIN: U74999DL2017PTC323237<br>support@indiagully.com</div>
           </div>
             <div style="text-align:right;"><div id="inv-number" style="font-size:1rem;font-weight:700;color:var(--gold);"></div><div id="inv-due" style="font-size:.72rem;color:var(--ink-muted);margin-top:.25rem;"></div></div>
@@ -1819,7 +1822,8 @@ function empShell(pageTitle: string, active: string, body: string) {
     <a href="/portal/employee/dashboard" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.1);display:block;">
       <img src="/assets/logo-white.png" alt="India Gully" height="26"
            style="height:26px;width:auto;max-width:170px;object-fit:contain;object-position:left center;display:block;"
-           draggable="false" decoding="async">
+           draggable="false" decoding="async"
+           onerror="this.onerror=null;this.style.display='none'" >
       <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#93c5fd;margin-top:4px;">Employee Portal</div>
     </a>
     <nav style="flex:1;padding:.75rem;overflow-y:auto;">
@@ -2508,7 +2512,8 @@ function boardShell(pageTitle: string, active: string, body: string) {
     <a href="/portal/board/dashboard" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07);display:block;">
       <img src="/assets/logo-white.png" alt="India Gully" height="26"
            style="height:26px;width:auto;max-width:170px;object-fit:contain;object-position:left center;display:block;"
-           draggable="false" decoding="async">
+           draggable="false" decoding="async"
+           onerror="this.onerror=null;this.style.display='none'" >
       <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:4px;">Board &amp; KMP</div>
     </a>
     <nav style="flex:1;padding:.75rem;overflow-y:auto;">

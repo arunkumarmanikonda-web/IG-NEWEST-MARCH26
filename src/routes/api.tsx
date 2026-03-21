@@ -12,6 +12,8 @@ import {
 // TYPE DEFINITIONS — Cloudflare bindings
 // ─────────────────────────────────────────────────────────────────────────────
 type Bindings = {
+  // Cloudflare Pages static assets binding (serves dist/* files)
+  ASSETS: { fetch: (req: Request) => Promise<Response> }
   // KV Namespaces (wrangler.jsonc kv_namespaces)
   IG_SESSION_KV:   KVNamespace   // server-side session store
   IG_RATELIMIT_KV: KVNamespace   // per-IP rate-limit counters
