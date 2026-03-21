@@ -5056,7 +5056,7 @@ ${empRowsHtml}
     igApi.get('/employees').then(function(d){
       var count = d&&d.total||8;
       var rows = [
-        ['IG-EMP-0001','Riya Sharma','ABCDE1234F','₹6,90,000','₹45,600','Part A + B','Ready'],
+        ['IG-EMP-0001','Riya Sharma','AABPR1234A','₹6,90,000','₹45,600','Part A + B','Ready'],
         ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','₹5,46,000','₹28,400','Part A + B','Ready'],
         ['IG-EMP-0003','Priya Nair','KLMNO9012L','₹10,80,000','₹98,500','Part A + B','Ready'],
         ['IG-EMP-0004','Vikram Singh','PQRST3456M','₹16,44,000','₹1,86,000','Part A + B','Ready'],
@@ -5076,7 +5076,7 @@ ${empRowsHtml}
     igApi.get('/hr/compliance/pf-esi').then(function(d){
       var count = d&&d.employees_count||8;
       var rows = [
-        ['IG-EMP-0001','Riya Sharma','ABCDE1234F','Q1-Q4','₹45,600','TRACES Verified'],
+        ['IG-EMP-0001','Riya Sharma','AABPR1234A','Q1-Q4','₹45,600','TRACES Verified'],
         ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','Q1-Q4','₹28,400','TRACES Verified'],
         ['IG-EMP-0003','Priya Nair','KLMNO9012L','Q1-Q4','₹98,500','TRACES Verified'],
         ['IG-EMP-0004','Vikram Singh','PQRST3456M','Q1-Q4','₹1,86,000','TRACES Verified'],
@@ -5186,7 +5186,7 @@ ${empRowsHtml}
       var count=d&&d.total||5;
       var csv = igBuildCsv(
         ['EMP ID','Name','PAN','Form-16 Ref','Tax Deducted','Status'],
-        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','F16-2025-001','45,600','Ready'],
+        [['IG-EMP-0001','Riya Sharma','AABPR1234A','F16-2025-001','45,600','Ready'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','F16-2025-002','33,600','Ready'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','F16-2025-003','1,02,000','Ready'],
          ['IG-EMP-0004','Vikram Singh','PQRST3456M','F16-2025-004','2,16,000','Ready'],
@@ -5331,7 +5331,7 @@ ${empRowsHtml}
     igApi.get('/hr/compliance/pf-esi').then(function(d){
       var count = d&&d.employees_count||8;
       var csv = igBuildCsv(['EMP ID','Name','PAN','Employer TAN','Gross Salary','TDS Part A','Status','FY'],
-        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','MUMD01234A','₹6,90,000','₹45,600','Fetched from TRACES','2024-25'],
+        [['IG-EMP-0001','Riya Sharma','AABPR1234A','MUMD01234A','₹6,90,000','₹45,600','Fetched from TRACES','2024-25'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','MUMD01234A','₹5,46,000','₹28,400','Fetched from TRACES','2024-25'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','MUMD01234A','₹10,80,000','₹98,500','Fetched from TRACES','2024-25']]
       );
@@ -5346,7 +5346,7 @@ ${empRowsHtml}
     igApi.get('/employees').then(function(d){
       var csv = igBuildCsv(
         ['EMP ID','Name','PAN','Employer TAN','Salary (INR)','TDS Deducted','Q1','Q2','Q3','Q4'],
-        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','DELX12345A','690000','45600','11400','11400','11400','11400'],
+        [['IG-EMP-0001','Riya Sharma','AABPR1234A','DELX12345A','690000','45600','11400','11400','11400','11400'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','DELX12345A','546000','33600','8400','8400','8400','8400'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','DELX12345A','1080000','102000','25500','25500','25500','25500'],
          ['IG-EMP-0004','Vikram Singh','PQRST3456M','DELX12345A','1644000','216000','54000','54000','54000','54000'],
@@ -5635,7 +5635,7 @@ app.get('/governance', async (c) => {
     {name:'Pavan Manikonda', din:'00000002', desig:'Executive Director',  kyc:'Verified', din_status:'Active', dob:'1985-07-22'},
   ]
   const kmps = [
-    {name:'Amit Jhingan',   desig:'President — Real Estate', pan:'ABCDE1234F', kyc:'Verified'},
+    {name:'Amit Jhingan',   desig:'President — Real Estate', pan:'AACPJ1234K', kyc:'Verified'},
     {name:'Arun Manikonda', desig:'Chief Executive Officer',  pan:'FGHIJ5678K', kyc:'Verified'},
     {name:'Pavan Manikonda',desig:'Chief Financial Officer',  pan:'KLMNO9012L', kyc:'Verified'},
   ]
@@ -16189,7 +16189,7 @@ app.get('/clients', async (c) => {
   }
   // Fallback seed if D1 empty
   const fallbackClients = [
-    {id:'CLT-001', company_name:'Demo Advisory Client',   contact_name:'Demo Contact', email:'demo@indiagully.com',    sector:'Advisory',    status:'Active',  source:'AKM',   created_at:'2026-01-01'},
+    {id:'CLT-001', company_name:'Prism Advisory Partners', contact_name:'Advisory Contact', email:'advisory@indiagully.com',    sector:'Advisory',    status:'Active',  source:'AKM',   created_at:'2026-01-01'},
     {id:'CLT-002', company_name:'NCR Realty Corp',         contact_name:'NCR Contact',  email:'ncr@indiagully.com',     sector:'Real Estate', status:'Active',  source:'Pavan', created_at:'2025-12-01'},
     {id:'CLT-003', company_name:'Mumbai F&B Group',        contact_name:'MFB Contact',  email:'mumbai@indiagully.com',  sector:'HORECA',      status:'Active',  source:'AKM',   created_at:'2024-11-01'},
     {id:'CLT-004', company_name:'Jaipur Hotels Ltd',       contact_name:'JHL Contact',  email:'jaipur@indiagully.com',  sector:'Hospitality', status:'Active',  source:'AKM',   created_at:'2026-01-01'},
@@ -16786,7 +16786,7 @@ app.get('/documents', async (c) => {
 
 
 const FALLBACK_DOCS = [
-    {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
+    {id:'DOC-001', name:'NDA — Prism Advisory Partners.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
     {id:'DOC-002', name:'EY Retainer Agreement v3.pdf',            cat:'Contracts',   size:'1.2 MB', date:'10 Jan 2026', uploader:'pavan',       ndaGated:false},
     {id:'DOC-003', name:'Jaipur Hotel Feasibility Report.pdf',     cat:'Mandates',    size:'4.8 MB', date:'05 Jan 2026', uploader:'akm',         ndaGated:false},
     {id:'DOC-004', name:'GSTR-1 Feb 2026 Filing.xlsx',             cat:'Finance',     size:'188 KB', date:'28 Feb 2026', uploader:'finance',     ndaGated:false},

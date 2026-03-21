@@ -1014,7 +1014,7 @@ const ARTICLES = [
     readTime: '9 min read',
     body: `
 <h2>Executive Summary</h2>
-<p>India's online food delivery market crossed ₹1,00,000 Cr in annualised GMV in Q3 FY26, driven by Swiggy, Zomato, and an increasingly sophisticated set of quick-commerce platforms. Yet the physical infrastructure enabling this digital economy — the kitchen, the cold chain, the last-mile dark store — remains the least institutionalised segment of the entire value chain.</p>
+<p>India's online food delivery market crossed ₹1,00,000 Cr in annualised GMV in Q3 FY 2025-26, driven by Swiggy, Zomato, and an increasingly sophisticated set of quick-commerce platforms. Yet the physical infrastructure enabling this digital economy — the kitchen, the cold chain, the last-mile dark store — remains the least institutionalised segment of the entire value chain.</p>
 <p>India Gully's HORECA advisory practice has been advising operators, landlords, and investors on this infrastructure gap since 2023. This report synthesises our active mandate experience across 8 cloud kitchen operator clients and 3 real estate mandates involving HORECA-anchored commercial spaces.</p>
 
 <h2>1. The Market Structure in 2026</h2>

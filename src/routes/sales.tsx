@@ -808,10 +808,10 @@ app.get('/analytics', (c) => {
   <!-- KPI Grid -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Revenue Won FY26',     value:'₹18.5 Cr', sub:'vs ₹12.2 Cr FY25 (+51%)', c:'#16a34a'},
+      {label:'Revenue Won FY 2025-26',     value:'₹18.5 Cr', sub:'vs ₹12.2 Cr FY 2024-25 (+51%)', c:'#16a34a'},
       {label:'Pipeline Value',       value:'₹47.2 Cr', sub:'Weighted: ₹28.3 Cr',      c:'#B8960C'},
       {label:'Conversion Rate',      value:'14%',       sub:'6 won of 42 enquiries',   c:'#2563eb'},
-      {label:'Avg Deal Size',        value:'₹3.1 Cr',   sub:'Up from ₹2.0 Cr FY25',   c:'#7c3aed'},
+      {label:'Avg Deal Size',        value:'₹3.1 Cr',   sub:'Up from ₹2.0 Cr FY 2024-25',   c:'#7c3aed'},
     ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1.1rem;">
       <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.4rem;">${s.label}</div>
       <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:${s.c};line-height:1;margin-bottom:.25rem;">${s.value}</div>
@@ -922,7 +922,7 @@ app.get('/commission', (c) => {
   <!-- Commission KPIs -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Total Earned FY26',     value:'₹42.6L',  sub:'Across all employees',  c:'#16a34a'},
+      {label:'Total Earned FY 2025-26',     value:'₹42.6L',  sub:'Across all employees',  c:'#16a34a'},
       {label:'Pending Payout',        value:'₹8.2L',   sub:'Awaiting invoice close', c:'#d97706'},
       {label:'Avg Commission Rate',   value:'2.8%',    sub:'Of deal value',          c:'#B8960C'},
       {label:'Deals Commissioned',    value:'6',       sub:'Closed this FY',         c:'#7c3aed'},

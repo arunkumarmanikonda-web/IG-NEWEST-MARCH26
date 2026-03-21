@@ -10,7 +10,7 @@ const RECENT_INSIGHTS = [
     date: 'March 2026',
     readTime: '9 min read',
     title: 'Cloud Kitchens & Dark Stores: India\'s HORECA Infrastructure Revolution',
-    excerpt: 'India\'s online food delivery GMV crossed ₹1,00,000 Cr in Q3 FY26. We map the cloud kitchen formats, dark store real estate economics, and the investment models disrupting traditional HORECA infrastructure.',
+    excerpt: 'India\'s online food delivery GMV crossed ₹1,00,000 Cr in Q3 FY 2025-26. We map the cloud kitchen formats, dark store real estate economics, and the investment models disrupting traditional HORECA infrastructure.',
     img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
     color: '#065F46',
   },
