@@ -59,7 +59,7 @@ app.get('/', async (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Investment Opportunities</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Active<br><em style="font-style:italic;color:var(--gold);">Mandates</em></h1>
-      <p class="lead-lt" style="max-width:620px;margin-bottom:3rem;">Institutional-grade investment mandates across India's premier asset classes. All opportunities are exclusive to India Gully's advisory pipeline and strictly subject to NDA. Information Memoranda available to qualified investors, family offices and institutional buyers upon request.</p>
+      <p class="lead-lt" style="max-width:620px;margin-bottom:3rem;">NDA-governed, institutional-grade mandates across India's premier asset classes — Real Estate, Hospitality, Retail, Entertainment and Debt. All opportunities are exclusive to India Gully's advisory pipeline. Information Memoranda released only to qualified investors, PE funds, family offices and institutional buyers upon mutual NDA execution.</p>
       <!-- Filter buttons + Saved bookmarks toggle -->
       <div style="display:flex;flex-wrap:wrap;gap:.625rem;align-items:center;">
         ${['All Mandates','Hospitality','Real Estate','Heritage Hospitality','Mixed-Use'].map((f,i) => `

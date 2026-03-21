@@ -174,7 +174,7 @@ app.get('/', (c) => {
         { n: `${listings.length}`,  l: 'Active Mandates',  sub: 'Open to qualified investors' },
         { n: '5',           l: 'Sectors',                  sub: 'Diversified verticals' },
         { n: '8+',          l: 'Years',                    sub: 'Advisory track record' },
-        { n: 'INR 2,100 Cr+',  l: 'Mandate Pipeline Under Management',     sub: 'Since inception 2017' },
+        { n: 'INR 2,100 Cr+',  l: 'Mandate Pipeline Under Management',     sub: 'Active mandates across 5 asset classes' },
       ].map(s => `
       <div class="pip-kpi">
         <div class="pip-kpi-n">${s.n}</div>
@@ -367,7 +367,7 @@ app.get('/', (c) => {
 `
 
   return c.html(layout('Investor Pipeline Dashboard — India Gully', content, {
-    description: 'India Gully\'s live investor pipeline dashboard — INR 2,100 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
+    description: 'India Gully Investor Pipeline — INR 2,100 Cr+ active mandate pipeline under management. Institutional-grade mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access for qualified investors.',
     canonical: 'https://india-gully.pages.dev/pipeline',
     ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg',
     jsonLd: {

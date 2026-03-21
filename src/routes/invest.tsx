@@ -33,7 +33,7 @@ app.get('/', (c) => {
     <div class="gr-c"></div>
     <p class="eyebrow-lt" style="margin-bottom:1.25rem;">Investor Relations</p>
     <h1 class="h2-lt" style="max-width:720px;margin:0 auto 1.5rem;">Institutional-Grade Mandates.<br>Transaction-Backed Advisory.</h1>
-    <p style="font-size:1rem;line-height:1.9;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto 2.5rem;">India Gully is India's premier multi-vertical advisory firm — advising on ₹2,100 Cr+ of active mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals.</p>
+    <p style="font-size:1rem;line-height:1.9;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto 2.5rem;">India Gully is India's premier multi-vertical advisory firm — advising on ₹2,100 Cr+ of active mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. EY & CBRE co-advisory credentials. NDA-governed institutional process.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
       <a href="#pipeline" class="btn btn-g" style="min-width:200px;justify-content:center;">View Active Pipeline</a>
       <a href="#nda-request" class="btn btn-go" style="min-width:200px;justify-content:center;border-color:rgba(184,150,12,.4);color:rgba(184,150,12,.9);">Request Information</a>
@@ -67,7 +67,7 @@ app.get('/', (c) => {
     <div style="text-align:center;max-width:640px;margin:0 auto 4rem;">
       <div class="gr-c"></div>
       <p class="eyebrow" style="margin-bottom:1rem;">The India Gully Advantage</p>
-      <h2 class="h2">Why Partner With Us</h2>
+      <h2 class="h2">Why Work With India Gully</h2>
       <p class="lead" style="font-size:.95rem;margin-top:1rem;">We source, structure and advise on mandates that institutional investors and family offices typically access only through Big-4 firms — at a fraction of the cost and with deeper sector relationships.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;" class="mob-stack">
@@ -167,7 +167,7 @@ app.get('/', (c) => {
     <div style="text-align:center;margin-bottom:4rem;">
       <div class="gr-c"></div>
       <p class="eyebrow-lt" style="margin-bottom:1rem;">Track Record</p>
-      <h2 class="h2-lt">Proven Execution.<br>₹2,000+ Cr Advised.</h2>
+      <h2 class="h2-lt">Proven Execution.<br>₹2,100 Cr+ Active Pipeline.</h2>
       <p style="font-size:.95rem;color:rgba(255,255,255,.55);max-width:520px;margin:.875rem auto 0;line-height:1.8;">A selection of landmark transactions across sectors, anchoring our credibility as India's institutional advisory partner.</p>
     </div>
 
@@ -386,7 +386,7 @@ app.get('/', (c) => {
 <div class="sec-dk diff-section" style="padding:6rem 0;">
   <div class="wrap" style="text-align:center;">
     <div class="gr-c"></div>
-    <p class="eyebrow-lt" style="margin-bottom:1rem;">Your Advisory Partners</p>
+    <p class="eyebrow-lt" style="margin-bottom:1rem;">Your Strategic Partners</p>
     <h2 class="h2-lt" style="margin-bottom:3rem;">Speak Directly With Leadership</h2>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:900px;margin:0 auto;" class="mob-stack">
       ${[

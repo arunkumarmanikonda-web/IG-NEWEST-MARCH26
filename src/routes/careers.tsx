@@ -160,7 +160,7 @@ app.get('/', (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Join Us</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Careers at<br><em style="color:var(--gold);font-style:italic;">India Gully</em></h1>
-      <p class="lead-lt" style="max-width:640px;margin-bottom:2.5rem;">We are a lean, high-performance advisory firm operating at the intersection of real estate, hospitality, retail and HORECA. We look for people with intellectual curiosity, commercial hunger and the ability to get things done — regardless of background.</p>
+      <p class="lead-lt" style="max-width:640px;margin-bottom:2.5rem;">We are a lean, high-performance institutional advisory firm operating at the intersection of Real Estate, Hospitality, Retail, Entertainment and HORECA. We look for people with intellectual curiosity, commercial hunger and the ability to get things done — at the highest standards.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
         <a href="#open-positions" class="btn btn-g">View Open Positions</a>
         <a href="/contact" style="display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;padding:.75rem 0;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">
