@@ -2468,7 +2468,7 @@ app.get('/employee/profile', (c) => {
               <div><label class="ig-label">Full Name</label><input type="text" class="ig-input" value="Demo Employee" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Phone</label><input type="tel" class="ig-input" value="+91 8988 988 988" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Emergency Contact Name</label><input type="text" class="ig-input" placeholder="Emergency contact" style="font-size:.82rem;"></div>
-              <div><label class="ig-label">Emergency Contact Phone</label><input type="tel" class="ig-input" placeholder="+91 XXXXX XXXXX" style="font-size:.82rem;"></div>
+              <div><label class="ig-label">Emergency Contact Phone</label><input type="tel" class="ig-input" placeholder="Direct line or mobile" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Bank Account (for salary)</label><input type="text" class="ig-input" placeholder="XXXX XXXX XXXX" style="font-size:.82rem;"></div>
               <div><label class="ig-label">IFSC Code</label><input type="text" class="ig-input" placeholder="SBIN0000XXX" style="font-size:.82rem;"></div>
             </div>
