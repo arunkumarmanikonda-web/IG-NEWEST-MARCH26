@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node_modules/.bin/esbuild src/index.tsx --bundle --outfile=dist/_worker.js --format=esm --platform=browser --target=es2022 --external:node:* --define:process.env.NODE_ENV='\"production\"' --minify-syntax --minify-whitespace && mkdir -p dist/static && cp -r public/static/. dist/static/ && mkdir -p dist/assets && cp -r public/assets/. dist/assets/ && cp -r public/audit dist/audit 2>/dev/null || true && cp -r public/team dist/team 2>/dev/null || true && cp public/favicon.ico dist/ 2>/dev/null || true && cp public/apple-touch-icon.png dist/ 2>/dev/null || true && cp public/_headers dist/ 2>/dev/null || true",
+    "build": "node_modules/.bin/esbuild src/index.tsx --bundle --outfile=dist/_worker.js --format=esm --platform=browser --define:window=globalThis --target=es2022 --external:node:* --define:process.env.NODE_ENV='\"production\"' --minify-syntax --minify-whitespace && mkdir -p dist/static && cp -r public/static/. dist/static/ && mkdir -p dist/assets && cp -r public/assets/. dist/assets/ && cp -r public/audit dist/audit 2>/dev/null || true && cp -r public/team dist/team 2>/dev/null || true && cp public/favicon.ico dist/ 2>/dev/null || true && cp public/apple-touch-icon.png dist/ 2>/dev/null || true && cp public/_headers dist/ 2>/dev/null || true",
     "build:vite": "vite build",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist --project-name india-gully --branch main",
