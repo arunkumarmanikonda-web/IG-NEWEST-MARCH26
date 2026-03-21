@@ -1424,19 +1424,19 @@ function filterRB(cat){
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Home', content, {
     description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
-    canonical: 'https://india-gully.pages.dev/',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+    canonical: 'https://indiagully.com/',
+    ogImage: 'https://indiagully.com/static/og.jpg',
     heroPreload: '/static/mandates/chail/chail-img1.jpg',
     jsonLd: JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://india-gully.pages.dev/#organization",
+          "@id": "https://indiagully.com/#organization",
           "name": "India Gully",
           "legalName": "Vivacious Entertainment and Hospitality Pvt. Ltd.",
-          "url": "https://india-gully.pages.dev",
-          "logo": "https://india-gully.pages.dev/assets/logo-white.png",
+          "url": "https://indiagully.com",
+          "logo": "https://indiagully.com/assets/logo-white.png",
           "description": "India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions.",
           "address": { "@type": "PostalAddress", "addressLocality": "New Delhi", "addressCountry": "IN" },
           "telephone": "+918988988988",
@@ -1447,10 +1447,10 @@ ${cmsZoneHtml}`
         },
         {
           "@type": "WebSite",
-          "@id": "https://india-gully.pages.dev/#website",
-          "url": "https://india-gully.pages.dev",
+          "@id": "https://indiagully.com/#website",
+          "url": "https://indiagully.com",
           "name": "India Gully",
-          "publisher": { "@id": "https://india-gully.pages.dev/#organization" }
+          "publisher": { "@id": "https://indiagully.com/#organization" }
         }
       ]
     })

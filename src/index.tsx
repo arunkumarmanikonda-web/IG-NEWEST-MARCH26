@@ -67,7 +67,7 @@ app.use('*', async (c, next) => {
 })
 
 app.use('/api/*', cors({
-  origin: ['https://india-gully.pages.dev', 'http://localhost:3000'],
+  origin: ['https://india-gully.pages.dev', 'https://indiagully.com', 'http://localhost:3000'],
   allowMethods: ['GET', 'POST', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'X-CSRF-Token', 'Authorization'],
   credentials: true,
@@ -190,7 +190,7 @@ app.get('/legal/disclaimer', (c) => c.html(legalPage('Disclaimer', `
 
 // ── SEO: sitemap.xml ─────────────────────────────────────────────────────────
 app.get('/sitemap.xml', (c) => {
-  const BASE = 'https://india-gully.pages.dev'
+  const BASE = 'https://indiagully.com'
   const now = new Date().toISOString().split('T')[0]
 
   const staticPages = [
@@ -256,7 +256,7 @@ ${insightIds.map(id => `  <url>
 
 // ── SEO: robots.txt ──────────────────────────────────────────────────────────
 app.get('/robots.txt', (c) => {
-  const BASE = 'https://india-gully.pages.dev'
+  const BASE = 'https://indiagully.com'
   return c.text(
     `User-agent: *\nAllow: /\nDisallow: /portal/\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: ${BASE}/sitemap.xml\n`,
     200,

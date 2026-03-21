@@ -631,7 +631,7 @@ app.get('/cms', (c) => {
             <div><label class="ig-label">Hero Subheading</label><textarea class="ig-input" rows="2" style="font-size:.82rem;min-height:60px;">India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality and Entertainment.</textarea></div>
             <div><label class="ig-label">Page Body Content (HTML allowed)</label><textarea class="ig-input" rows="4" id="cms-body-${i}" style="font-size:.78rem;font-family:monospace;min-height:80px;" placeholder="<p>Page content here...</p>"></textarea></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
-              <div><label class="ig-label">OG Image URL</label><input type="text" class="ig-input" value="https://india-gully.pages.dev/static/og.jpg" style="font-size:.78rem;"></div>
+              <div><label class="ig-label">OG Image URL</label><input type="text" class="ig-input" value="https://indiagully.com/static/og.jpg" style="font-size:.78rem;"></div>
               <div><label class="ig-label">Status</label><select class="ig-input" style="font-size:.82rem;"><option>Published</option><option>Draft</option><option>Scheduled</option></select></div>
             </div>
             <div style="background:#fffbeb;border:1px solid #fde68a;padding:.75rem;font-size:.75rem;color:#78350f;display:flex;align-items:center;gap:.5rem;">
@@ -937,8 +937,8 @@ app.get('/cms', (c) => {
       <div style="background:#fff;border:1px solid var(--border);padding:1.25rem;">
         <div style="font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:.875rem;letter-spacing:.06em;text-transform:uppercase;">Sitemap & Robots</div>
         <div style="background:#f8fafc;border:1px solid var(--border);padding:.875rem;margin-bottom:.875rem;font-size:.72rem;font-family:monospace;color:var(--ink);">
-          Sitemap: https://india-gully.pages.dev/sitemap.xml<br>
-          Robots: https://india-gully.pages.dev/robots.txt<br>
+          Sitemap: https://indiagully.com/sitemap.xml<br>
+          Robots: https://indiagully.com/robots.txt<br>
           Last generated: 02 Mar 2026 · 14 URLs indexed
         </div>
         <div style="display:flex;gap:.625rem;">
@@ -9862,7 +9862,7 @@ app.get('/config', (c) => {
           {l:'Registered Address', v:'New Delhi, India',                                    t:'text'},
           {l:'Support Email',      v:'info@indiagully.com',                                 t:'email'},
           {l:'Support Phone',      v:'+91 8988 988 988',                                   t:'tel'},
-          {l:'Platform Domain',    v:'india-gully.pages.dev',                              t:'text'},
+          {l:'Platform Domain',    v:'indiagully.com',                              t:'text'},
         ].map(f=>`<div><label class="ig-label">${f.l}</label><input type="${f.t}" class="ig-input" value="${f.v}" style="font-size:.82rem;"></div>`).join('')}
         <button onclick="igSettingsSave('platform')" style="background:var(--gold);color:#fff;border:none;padding:.6rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;width:fit-content;">Save Settings</button>
       </div>
@@ -14348,7 +14348,7 @@ app.get('/api-docs', (c) => {
         {label:'Total Endpoints',value:endpoints.length.toString(),icon:'code',color:'#38bdf8'},
         {label:'Tags / Domains',value:tags.length.toString(),icon:'tag',color:'#a78bfa'},
         {label:'Auth Required',value:endpoints.filter(e=>e.auth!=='None').length.toString(),icon:'shield-alt',color:'#fbbf24'},
-        {label:'Base URL',value:'india-gully.pages.dev',icon:'globe',color:'#34d399'},
+        {label:'Base URL',value:'indiagully.com',icon:'globe',color:'#34d399'},
       ].map(s=>`<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:.875rem;">
         <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:${s.color};margin-bottom:.3rem;">${s.label}</div>
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.25rem;color:#fff;">${s.value}</div>
@@ -14446,7 +14446,7 @@ app.get('/api-docs', (c) => {
       <div>
         <div style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#e879f9;margin-bottom:.3rem;">GraphQL</div>
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:#fff;">Interactive GraphQL Playground</div>
-        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.2rem;">Endpoint: <code style="color:#a78bfa;">https://india-gully.pages.dev/api/graphql</code> · Schema Version 2025.03</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.2rem;">Endpoint: <code style="color:#a78bfa;">https://indiagully.com/api/graphql</code> · Schema Version 2025.03</div>
       </div>
       <div style="display:flex;gap:.5rem;">
         <span style="background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.4);color:#d8b4fe;font-size:.7rem;padding:.3rem .75rem;">Schema: v2025.03</span>
@@ -14635,7 +14635,7 @@ mutation CreateInvoice($input: InvoiceInput!) {
 
   // ── API Docs: Copy cURL Command ────────────────────────────────────────────
   window.igApiDocsCopyCurl = function(method, path){
-    var curl = 'curl -X '+method+' https://india-gully.pages.dev'+path+' -H "Authorization: Bearer TOKEN"';
+    var curl = 'curl -X '+method+' https://indiagully.com'+path+' -H "Authorization: Bearer TOKEN"';
     if(navigator.clipboard) navigator.clipboard.writeText(curl).catch(function(){});
     igApi.post('/admin/audit',{action:'copy_curl',method:method,path:path,module:'API Docs'}).then(function(){}).catch(function(){});
     igToast('cURL command copied to clipboard','success');
