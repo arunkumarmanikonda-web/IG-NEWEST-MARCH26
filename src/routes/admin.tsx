@@ -17404,4 +17404,152 @@ function filterEnq(type){
   } catch(e) { console.warn('[igLoadPlatformCertLive]', e) }
 }
 
+
+// ── Phase Y: D1-wired route loaders + ESG, Partner, ITOps, Innovation, FP&A, Resilience ──
+;(window as any).igLoadEsgMetricsLive = async function() {
+  try {
+    const r = await fetch('/api/esg/diversity-metrics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgMetricsLive]', e) }
+}
+;(window as any).igLoadEsgEnergyFullLive = async function() {
+  try {
+    const r = await fetch('/api/esg/energy-consumption', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgEnergyFullLive]', e) }
+}
+;(window as any).igLoadEsgSocialLive = async function() {
+  try {
+    const r = await fetch('/api/esg/social-impact', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEsgSocialLive]', e) }
+}
+;(window as any).igLoadITOpsNetworkLive = async function() {
+  try {
+    const r = await fetch('/api/itops/network-monitoring', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadITOpsNetworkLive]', e) }
+}
+;(window as any).igLoadITOpsPatchLive = async function() {
+  try {
+    const r = await fetch('/api/itops/patch-compliance', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadITOpsPatchLive]', e) }
+}
+;(window as any).igLoadITOpsBackupLive = async function() {
+  try {
+    const r = await fetch('/api/itops/backup-status', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadITOpsBackupLive]', e) }
+}
+;(window as any).igLoadPartnerDealsLive = async function() {
+  try {
+    const r = await fetch('/api/partners/deal-registration', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPartnerDealsLive]', e) }
+}
+;(window as any).igLoadPartnerChannelLive = async function() {
+  try {
+    const r = await fetch('/api/partners/channel-performance', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPartnerChannelLive]', e) }
+}
+;(window as any).igLoadPartnerMDFLive = async function() {
+  try {
+    const r = await fetch('/api/partners/mdf-utilisation', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPartnerMDFLive]', e) }
+}
+;(window as any).igLoadAIMetricsLive = async function() {
+  try {
+    const r = await fetch('/api/innovation/ai-ml-metrics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadAIMetricsLive]', e) }
+}
+;(window as any).igLoadRDSpendFullLive = async function() {
+  try {
+    const r = await fetch('/api/innovation/rd-spend', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadRDSpendFullLive]', e) }
+}
+;(window as any).igLoadFPABudgetLive = async function() {
+  try {
+    const r = await fetch('/api/fpa/budget-forecast', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadFPABudgetLive]', e) }
+}
+;(window as any).igLoadFPACashFlowLive = async function() {
+  try {
+    const r = await fetch('/api/fpa/cash-flow-projection', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadFPACashFlowLive]', e) }
+}
+;(window as any).igLoadResilienceDRLive = async function() {
+  try {
+    const r = await fetch('/api/resilience/dr-readiness', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadResilienceDRLive]', e) }
+}
+;(window as any).igLoadResilienceCapacityLive = async function() {
+  try {
+    const r = await fetch('/api/resilience/capacity-planning', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadResilienceCapacityLive]', e) }
+}
+;(window as any).igLoadPolicyTrackerLive = async function() {
+  try {
+    const r = await fetch('/api/regulatory/policy-tracker', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPolicyTrackerLive]', e) }
+}
+;(window as any).igLoadLicenseRegistryLive = async function() {
+  try {
+    const r = await fetch('/api/regulatory/license-registry', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadLicenseRegistryLive]', e) }
+}
+;(window as any).igLoadCampaignPerfLive = async function() {
+  try {
+    const r = await fetch('/api/marketing/campaign-performance', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadCampaignPerfLive]', e) }
+}
+;(window as any).igLoadLNDFullLive = async function() {
+  try {
+    const r = await fetch('/api/hr/learning-development', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadLNDFullLive]', e) }
+}
+;(window as any).igLoadSprintVelocityLive = async function() {
+  try {
+    const r = await fetch('/api/product/sprint-velocity', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadSprintVelocityLive]', e) }
+}
+;(window as any).igLoadDataQualityLive = async function() {
+  try {
+    const r = await fetch('/api/data/data-quality', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadDataQualityLive]', e) }
+}
+;(window as any).igLoadSystemLogsLive = async function(level = '', limit = 50) {
+  try {
+    const q = level ? `?level=${level}&limit=${limit}` : `?limit=${limit}`
+    const r = await fetch(`/api/system/logs${q}`, { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadSystemLogsLive]', e) }
+}
+;(window as any).igLoadEmailQueueLive = async function() {
+  try {
+    const r = await fetch('/api/system/email-queue', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadEmailQueueLive]', e) }
+}
+;(window as any).igLoadScheduledTasksLive = async function() {
+  try {
+    const r = await fetch('/api/system/scheduled-tasks', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadScheduledTasksLive]', e) }
+}
+
 export default app
