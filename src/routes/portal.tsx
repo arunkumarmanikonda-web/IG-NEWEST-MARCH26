@@ -199,7 +199,7 @@ app.get('/client', (c) => {
   return c.html(layout('Client Portal', loginPage({
     portal:'client', title:'Client Portal', subtitle:'Advisory Services Platform',
     accentColor:'#B8960C', icon:'user-tie',
-    idLabel:'Client ID or Email', idPlaceholder:'your@email.com',
+    idLabel:'Client ID or Email', idPlaceholder:'Institutional email address',
     error
   }), { noNav:true, noFooter:true }))
 })
@@ -268,7 +268,7 @@ app.get('/client/register', (c) => {
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Email Address *</label>
-              <input id="reg-email" type="email" required placeholder="your@email.com"
+              <input id="reg-email" type="email" required placeholder="Institutional email address"
                      style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                      onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
             </div>
@@ -276,7 +276,7 @@ app.get('/client/register', (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Phone / WhatsApp *</label>
-              <input id="reg-phone" type="tel" required placeholder="+91 98XXX XXXXX"
+              <input id="reg-phone" type="tel" required placeholder="Direct line or mobile"
                      style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                      onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
             </div>
@@ -572,7 +572,7 @@ app.get('/support', (c) => {
           </div>
           <div class="form-row">
             <label class="form-label">Email Address *</label>
-            <input type="email" id="sup-email" class="form-input" placeholder="your@email.com" required>
+            <input type="email" id="sup-email" class="form-input" placeholder="Institutional email address" required>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -862,7 +862,7 @@ app.get('/reset', (c) => {
           <input type="hidden" name="csrf_r" id="csrf-reset" value="">
           <div>
             <label class="ig-label">Registered Email Address</label>
-            <input type="email" name="email" class="ig-input" required placeholder="your@email.com" autocomplete="email">
+            <input type="email" name="email" class="ig-input" required placeholder="Institutional email address" autocomplete="email">
           </div>
           <div style="background:#f0f9ff;border:1px solid #bae6fd;padding:.75rem;font-size:.75rem;color:#0369a1;">
             <i class="fas fa-info-circle" style="margin-right:.35rem;"></i>For security, we never confirm whether an account exists.
@@ -978,10 +978,10 @@ function clientShell(pageTitle: string, active: string, body: string) {
         <!-- User Badge -->
         <div style="display:flex;align-items:center;gap:.625rem;">
           <div style="text-align:right;display:none;" class="r-hide">
-            <div style="font-size:.72rem;font-weight:600;color:var(--ink);">Demo Client</div>
+            <div style="font-size:.72rem;font-weight:600;color:var(--ink);">Portal User</div>
             <div style="font-size:.62rem;color:var(--ink-muted);">demo@indiagully.com</div>
           </div>
-          <div style="width:34px;height:34px;background:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Demo Client" onclick="igToast('Profile: Demo Client · demo@indiagully.com','info')">
+          <div style="width:34px;height:34px;background:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Portal User" onclick="igToast('Portal User · portal@indiagully.com','info')">
             <span style="font-family:'DM Serif Display',Georgia,serif;font-size:.8rem;color:#fff;font-weight:700;">CL</span>
           </div>
         </div>
@@ -1382,7 +1382,7 @@ app.get('/client/invoices', async (c) => {
           </div>
             <div style="text-align:right;"><div id="inv-number" style="font-size:1rem;font-weight:700;color:var(--gold);"></div><div id="inv-due" style="font-size:.72rem;color:var(--ink-muted);margin-top:.25rem;"></div></div>
           </div>
-          <div style="background:var(--parch-dk);padding:.875rem;margin-bottom:1.25rem;font-size:.82rem;"><strong>Bill To:</strong> Demo Client Org · GSTIN: 27AAACN1234D1ZI</div>
+          <div style="background:var(--parch-dk);padding:.875rem;margin-bottom:1.25rem;font-size:.82rem;"><strong>Bill To:</strong> Client Organisation · GSTIN: 07AAGCV0867P1ZN</div>
           <table style="width:100%;font-size:.82rem;border-collapse:collapse;margin-bottom:1.25rem;">
             <thead><tr style="background:var(--ink);color:#fff;"><th style="padding:.5rem .75rem;text-align:left;">Description</th><th style="padding:.5rem .75rem;text-align:right;">Amount</th><th style="padding:.5rem .75rem;text-align:right;">CGST 9%</th><th style="padding:.5rem .75rem;text-align:right;">SGST 9%</th><th style="padding:.5rem .75rem;text-align:right;">Total</th></tr></thead>
             <tbody id="inv-tbody"></tbody>
@@ -1750,7 +1750,7 @@ app.get('/client/profile', (c) => {
     <div style="display:grid;grid-template-columns:1fr 2fr;gap:1.5rem;">
       <div style="background:#fff;border:1px solid var(--border);padding:1.5rem;text-align:center;">
         <div style="width:80px;height:80px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;">C</div>
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);">Demo Client</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);">Portal User</h3>
         <p style="font-size:.78rem;color:var(--ink-muted);margin-bottom:1rem;">Client Account</p>
         <span class="badge b-gr">Active</span>
         <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
@@ -1762,7 +1762,7 @@ app.get('/client/profile', (c) => {
         <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1.25rem;">Account Details</h3>
         <div style="display:flex;flex-direction:column;gap:1rem;">
           ${[
-            { label:'Full Name',     value:'Demo Client'                     },
+            { label:'Full Name',     value:'Portal User'                     },
             { label:'Email Address', value:'demo@indiagully.com'             },
             { label:'Phone',         value:'+91 8988 988 988'               },
             { label:'Organisation',  value:'Demo Corp Pvt. Ltd.'             },
@@ -1777,7 +1777,7 @@ app.get('/client/profile', (c) => {
           <div id="client-profile-edit" class="ig-panel" style="margin-top:1rem;">
             <h4 style="font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;">Edit Account Details</h4>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
-              <div><label class="ig-label">Full Name</label><input type="text" class="ig-input" value="Demo Client" style="font-size:.82rem;"></div>
+              <div><label class="ig-label">Full Name</label><input type="text" class="ig-input" value="Portal User" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Email Address</label><input type="email" class="ig-input" value="demo@indiagully.com" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Phone</label><input type="tel" class="ig-input" value="+91 8988 988 988" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Organisation</label><input type="text" class="ig-input" value="Demo Corp Pvt. Ltd." style="font-size:.82rem;"></div>

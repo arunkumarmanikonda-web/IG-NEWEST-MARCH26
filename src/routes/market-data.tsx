@@ -33,7 +33,7 @@ const MACRO_INDICATORS = [
   { label: 'Grade-A Office Vacancy',        value: '15.8%',      sub: 'Top-6 markets, Q4 2025',            trend: 'down',  color: '#fbbf24' },
   { label: 'Office Net Absorption (FY26)',  value: '47 Mn sq. ft.', sub: '+8% vs FY25',                       trend: 'up',    color: '#4ade80' },
   { label: 'Retail Mall Vacancy',           value: '8.2%',       sub: 'Top-8 markets, H2 2025',            trend: 'down',  color: '#4ade80' },
-  { label: 'Branded Hotel Supply Pipeline', value: '1,35,000',   sub: 'Keys under development (FY26-28)',   trend: 'up',    color: '#93c5fd' },
+  { label: 'Branded Hotel Supply Pipeline', value: '1,35,000',   sub: 'Keys under development (FY 2026-28)',   trend: 'up',    color: '#93c5fd' },
   { label: 'Hotel Transaction Volume',      value: 'INR 4,800 Cr',  sub: 'H1 FY26 (deal completions)',        trend: 'up',    color: '#4ade80' },
   { label: 'RBI Repo Rate',                 value: '6.25%',      sub: 'Feb 2026 cut (-25bps)',              trend: 'down',  color: '#4ade80' },
   { label: 'INR / USD',                     value: '₹83.4',      sub: 'as of Mar 2026',                    trend: 'stable',color: '#fbbf24' },

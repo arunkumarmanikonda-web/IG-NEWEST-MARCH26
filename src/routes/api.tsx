@@ -2959,7 +2959,7 @@ app.get('/market-data', (c) => {
       grade_a_office_vacancy: '15.8%',
       office_net_absorption_fy26: '47 Mn sqft (+8% YoY)',
       retail_mall_vacancy: '8.2%',
-      branded_hotel_pipeline: '1,35,000 keys (FY26-28)',
+      branded_hotel_pipeline: '1,35,000 keys (FY 2026-28)',
       hotel_transaction_h1fy26: '₹4,800 Cr',
       rbi_repo_rate: '6.25% (Feb 2026 -25bps)',
       inr_usd: '₹83.4',
@@ -14138,7 +14138,7 @@ app.get('/compliance/it-act-ai', requireSession(), requireRole(['Super Admin'], 
 // -- WW-Round: Financial Planning & Analysis Intelligence --
 app.get('/fpa/budget-forecast', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', fy:'FY26-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', fy:'FY 2026-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback' }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/fpa/cash-flow-projection', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
@@ -14288,7 +14288,7 @@ app.get('/resilience/chaos-engineering', requireSession(), requireRole(['Super A
 })
 app.get('/resilience/capacity-planning', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', peak_utilisation_pct:84,scaling_due:'Q2 FY26-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', peak_utilisation_pct:84,scaling_due:'Q2 FY 2026-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...YY3, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/dependency-map', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
