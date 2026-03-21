@@ -50,7 +50,7 @@ function adminShell(pageTitle: string, active: string, body: string) {
     { id:'security',     icon:'shield-alt',      label:'Security Audit', g:'Platform', badge:'!' },
   ]
   const adminAlerts = [
-    {msg:'INV-2026-002 overdue — ₹1.8L from Demo Client',type:'danger',time:'2h ago'},
+    {msg:'INV-2026-002 overdue — ₹1.8L from Jaipur Heritage Holdings',type:'danger',time:'2h ago'},
     {msg:'New leave request from Amit Jhingan — Casual Leave',type:'warn',time:'3h ago'},
     {msg:'GSTR-1 due on 11 Mar 2026 — 9 days remaining',type:'warn',time:'1d ago'},
     {msg:'EY Retainer contract expiring in 30 days',type:'danger',time:'2d ago'},
@@ -509,7 +509,7 @@ app.get('/dashboard', async (c) => {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);">
       ${[
         {icon:'calendar-times', color:'#dc2626', label:'Annual Accounts Filing', sub:'Due 31 Mar 2026 · AOC-4 / MGT-7', urgency:'Urgent'},
-        {icon:'file-invoice-dollar', color:'#d97706', label:'INV-2026-002 Overdue', sub:'₹1.8L · Demo Client · 28 Feb due', urgency:'Overdue'},
+        {icon:'file-invoice-dollar', color:'#d97706', label:'INV-2026-002 Overdue', sub:'₹1.8L · Jaipur Heritage Holdings · 28 Feb due', urgency:'Overdue'},
         {icon:'file-contract',  color:'#d97706', label:'EY Advisory Retainer', sub:'Expiring 31 Mar 2026 · Renew now', urgency:'Expiring'},
         {icon:'gavel',          color:'#1E1E1E', label:'Board Meeting BM-2026-03', sub:'Scheduled 15 Mar 2026 · 11:00 AM', urgency:'Scheduled'},
         {icon:'percent',        color:'#2563eb', label:'GSTR-3B Filing', sub:'Due 20 Mar 2026 · ₹2.1L payable', urgency:'Due Soon'},
@@ -1597,7 +1597,7 @@ app.get('/users', async (c) => {
       {name:'Arun Manikonda', email:'akm@indiagully.com',        role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
       {name:'Pavan Manikonda',email:'pavan@indiagully.com',      role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
       {name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',        portal:'Board',    login:'01 Mar 2026', active:true},
-      {name:'Demo Client',    email:'demo@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
+      {name:'Jaipur Heritage Holdings',    email:'portal@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
       {name:'Demo Employee',  email:'emp@indiagully.com',        role:'Employee',    portal:'Employee', login:'01 Mar 2026', active:true},
       {name:'Demo KMP',       email:'kmp@indiagully.com',        role:'KMP',         portal:'Board',    login:'28 Feb 2026', active:true},
       {name:'Ex Employee',    email:'ex.emp@indiagully.com',     role:'Employee',    portal:'Employee', login:'01 Jan 2026', active:false},
@@ -2382,7 +2382,7 @@ app.get('/finance', async (c) => {
     <div id="new-inv-panel" class="ig-panel" style="margin-bottom:1.5rem;">
       <h4 style="font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;">New Invoice — <span id="inv-num-preview">INV-2026-004</span></h4>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
-        <div><label class="ig-label">Client</label><select class="ig-input" id="inv-client"><option>Demo Client Corp</option><option>Rajasthan Hotels Pvt Ltd</option><option>Mumbai Mall Pvt Ltd</option><option>Entertainment Ventures Ltd</option></select></div>
+        <div><label class="ig-label">Client</label><select class="ig-input" id="inv-client"><option>Jaipur Heritage Holdings Pvt. Ltd.</option><option>Rajasthan Hotels Pvt Ltd</option><option>Mumbai Mall Pvt Ltd</option><option>Entertainment Ventures Ltd</option></select></div>
         <div><label class="ig-label">Invoice Date</label><input type="date" class="ig-input" id="inv-date" value="2026-03-02"></div>
         <div><label class="ig-label">Due Date</label><input type="date" class="ig-input" id="inv-due" value="2026-03-31"></div>
         <div style="grid-column:span 2"><label class="ig-label">Description of Services</label><input type="text" class="ig-input" id="inv-desc" placeholder="Advisory Retainer — Mar 2026"></div>
@@ -3544,7 +3544,7 @@ ${invRowsHtml}
       var csv = igBuildCsv(
         ['Date','Particulars','Voucher No','Debit (INR)','Credit (INR)','Balance (INR)'],
         [['01 Feb 2026','Opening Balance','OB-001','','','5510000'],
-         ['03 Feb 2026','Advisory Fee — Demo Client','INV-2026-001','212000','','5722000'],
+         ['03 Feb 2026','Advisory Fee — Jaipur Heritage Holdings','INV-2026-001','212000','','5722000'],
          ['05 Feb 2026','Office Rent Paid','EXP-FEB-001','','45000','5677000'],
          ['10 Feb 2026','GST Challan Feb 2026','GST-FEB','','58800','5618200'],
          ['15 Feb 2026','Advisory Fee — NCR Corp','INV-2026-002','153000','','5771200'],
@@ -3846,7 +3846,7 @@ ${invRowsHtml}
         ['Valid Until',(d&&d.valid_until)||new Date(Date.now()+86400000).toISOString().slice(0,10)],
         ['Distance (km)',(d&&d.distance)||'450'],
         ['Consignor','India Gully Pvt Ltd'],
-        ['Consignee','Demo Client'],
+        ['Consignee','Jaipur Heritage Holdings'],
         ['Generated At',(d&&d.generated_at)||new Date().toISOString()]
       ]);
       igSaveFile('ewb-'+ewb+'.csv', csv, 'text/csv');
@@ -8120,7 +8120,7 @@ app.get('/contracts', async (c) => {
 }
 
 const FALLBACK_CONTRACTS = [
-    {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Demo Client Corp',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
+    {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Jaipur Heritage Holdings Pvt. Ltd.',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
     {id:'PMC-001', name:'Hotel PMC Agreement',              party:'Rajasthan Hotels',  type:'PMC',         start:'15 Feb 2026',expiry:'14 Feb 2027',status:'Active',   cls:'b-gr',signed:true},
     {id:'MND-001', name:'Retail Leasing Mandate',           party:'Mumbai Mall Pvt.', type:'Mandate',     start:'01 Dec 2025',expiry:'30 Nov 2026',status:'Active',   cls:'b-gr',signed:true},
     {id:'RET-001', name:'EY Advisory Retainer',             party:'Ernst & Young',    type:'Retainer',    start:'01 Apr 2025',expiry:'31 Mar 2026',status:'Expiring', cls:'b-g', signed:true},
@@ -9328,7 +9328,7 @@ app.get('/reports', (c) => {
         <div style="background:var(--parch-dk);border:1px solid var(--border);padding:1rem;">
           <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:.75rem;">Churn Risk Analysis</div>
           ${[
-            {client:'Demo Client Corp',      score:82, risk:'Low',    trend:'stable',   c:'#16a34a'},
+            {client:'Jaipur Heritage Holdings',      score:82, risk:'Low',    trend:'stable',   c:'#16a34a'},
             {client:'Rajasthan Hotels Ltd',  score:61, risk:'Medium', trend:'declining',c:'#d97706'},
             {client:'Mumbai Mall Pvt. Ltd.', score:45, risk:'High',   trend:'declining',c:'#dc2626'},
             {client:'L5 Resort Group',       score:91, risk:'Low',    trend:'improving',c:'#16a34a'},
@@ -9400,7 +9400,7 @@ app.get('/reports', (c) => {
       <button onclick="togglePanel('rpt-${i}')" style="background:${r.color};color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;width:100%;">Generate Report</button>
       <div id="rpt-${i}" class="ig-panel" style="margin-top:.875rem;">
         <h5 style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem;">${r.name} — Filters</h5>
-        ${r.filters.map(f=>`<div style="margin-bottom:.625rem;"><label class="ig-label">${f}</label>${f.includes('Date')||f.includes('Month')&&!f.includes('Quarter')?`<input type="month" class="ig-input" style="font-size:.82rem;">`:`<select class="ig-input" style="font-size:.82rem;"><option>All</option>${f==='Quarter'?['Q1 FY2025','Q2 FY2025','Q3 FY2025','Q4 FY2025'].map(q=>`<option>${q}</option>`).join(''):f==='Financial Year'?['FY 2024-25','FY 2023-24'].map(y=>`<option>${y}</option>`).join(''):f==='Sector'?['All','Real Estate','Hospitality','Retail','Entertainment'].map(s=>`<option>${s}</option>`).join(''):f==='Status'?['All','Active','Negotiating','Closed'].map(s=>`<option>${s}</option>`).join(''):f==='Module'?['All','Auth','CMS','Finance','HR','Governance'].map(m=>`<option>${m}</option>`).join(''):f==='User'?['All','superadmin@indiagully.com','akm@indiagully.com','pavan@indiagully.com'].map(u=>`<option>${u}</option>`).join(''):f==='Client'?['All Clients','Demo Client Corp','Rajasthan Hotels','Mumbai Mall Pvt.'].map(cl=>`<option>${cl}</option>`).join(''):''}</select>`}</div>`).join('')}
+        ${r.filters.map(f=>`<div style="margin-bottom:.625rem;"><label class="ig-label">${f}</label>${f.includes('Date')||f.includes('Month')&&!f.includes('Quarter')?`<input type="month" class="ig-input" style="font-size:.82rem;">`:`<select class="ig-input" style="font-size:.82rem;"><option>All</option>${f==='Quarter'?['Q1 FY2025','Q2 FY2025','Q3 FY2025','Q4 FY2025'].map(q=>`<option>${q}</option>`).join(''):f==='Financial Year'?['FY 2024-25','FY 2023-24'].map(y=>`<option>${y}</option>`).join(''):f==='Sector'?['All','Real Estate','Hospitality','Retail','Entertainment'].map(s=>`<option>${s}</option>`).join(''):f==='Status'?['All','Active','Negotiating','Closed'].map(s=>`<option>${s}</option>`).join(''):f==='Module'?['All','Auth','CMS','Finance','HR','Governance'].map(m=>`<option>${m}</option>`).join(''):f==='User'?['All','superadmin@indiagully.com','akm@indiagully.com','pavan@indiagully.com'].map(u=>`<option>${u}</option>`).join(''):f==='Client'?['All Clients','Jaipur Heritage Holdings','Rajasthan Hotels','Mumbai Mall Pvt.'].map(cl=>`<option>${cl}</option>`).join(''):''}</select>`}</div>`).join('')}
         <div style="display:flex;gap:.5rem;margin-top:.625rem;">
           <button onclick="igGenerateReport('${r.name}');togglePanel('rpt-${i}')" style="background:${r.color};color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem;"><i class="fas fa-download" style="font-size:.6rem;"></i>Download PDF</button>
           <button onclick="igSalesExportExcel('${r.name}')" style="background:#16a34a;color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem;"><i class="fas fa-file-excel" style="font-size:.6rem;"></i>Excel</button>

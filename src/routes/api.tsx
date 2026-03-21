@@ -14954,7 +14954,7 @@ const ADMIN_USER_STORE = new Map<string, {id:number,name:string,email:string,rol
   {id:2,name:'Arun Manikonda', email:'akm@indiagully.com',       role:'Director',   portal:'board',  active:true, created_at:'2026-01-15',last_login:'02 Mar 2026'},
   {id:3,name:'Pavan Manikonda',email:'pavan@indiagully.com',     role:'Director',   portal:'board',  active:true, created_at:'2026-01-15',last_login:'02 Mar 2026'},
   {id:4,name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',      portal:'board',  active:true, created_at:'2026-01-20',last_login:'01 Mar 2026'},
-  {id:5,name:'Demo Client',    email:'demo@indiagully.com',      role:'Client',     portal:'client', active:true, created_at:'2026-02-01',last_login:'02 Mar 2026'},
+  {id:5,name:'Jaipur Heritage Holdings',    email:'portal@indiagully.com',      role:'Client',     portal:'client', active:true, created_at:'2026-02-01',last_login:'02 Mar 2026'},
   {id:6,name:'Demo Employee',  email:'emp@indiagully.com',       role:'Employee',   portal:'employee',active:true,created_at:'2026-02-01',last_login:'01 Mar 2026'},
   {id:7,name:'Demo KMP',       email:'kmp@indiagully.com',       role:'KMP',        portal:'board',  active:true, created_at:'2026-02-10',last_login:'28 Feb 2026'},
   {id:8,name:'Ex Employee',    email:'ex.emp@indiagully.com',    role:'Employee',   portal:'employee',active:false,created_at:'2025-06-01',last_login:'01 Jan 2026'},
@@ -16095,7 +16095,7 @@ app.get('/finance/bank-statement', requireSession(), requireRole(['Super Admin']
     total_debits: 740000,
     source: 'static',
     transactions: [
-      {date:'28 Feb 2026',narration:'NEFT CREDIT - Demo Client Corp',type:'Credit',amount:250160,balance:5620000},
+      {date:'28 Feb 2026',narration:'NEFT CREDIT - Jaipur Heritage Holdings Pvt. Ltd.',type:'Credit',amount:250160,balance:5620000},
       {date:'27 Feb 2026',narration:'IMPS DEBIT - Deloitte Consulting',type:'Debit',amount:141600,balance:5369840},
       {date:'25 Feb 2026',narration:'RTGS CREDIT - Entertainment Ventures',type:'Credit',amount:320000,balance:5511440},
       {date:'22 Feb 2026',narration:'NEFT DEBIT - Office Rent Q1',type:'Debit',amount:185000,balance:5191440},
@@ -16792,7 +16792,7 @@ app.get('/risk/register', requireSession(), requireRole(['Super Admin'], ['admin
     total: 6, high: 2, medium: 3, low: 1, mitigated: 2, open: 4, risk_score: 38, source: 'static',
     risks: [
       {id:'RSK-001',category:'Regulatory',title:'GST audit trigger — high transaction volume',probability:'Medium',impact:'High',score:12,owner:'CFO',status:'Mitigating',review_date:'31 Mar 2026'},
-      {id:'RSK-002',category:'Credit',title:'Overdue receivable — Demo Client ₹1.8L',probability:'High',impact:'Medium',score:12,owner:'CEO',status:'Active',review_date:'10 Mar 2026'},
+      {id:'RSK-002',category:'Credit',title:'Overdue receivable — Jaipur Heritage Holdings ₹1.8L',probability:'High',impact:'Medium',score:12,owner:'CEO',status:'Active',review_date:'10 Mar 2026'},
       {id:'RSK-003',category:'Legal',title:'EY Retainer contract expiry',probability:'High',impact:'Medium',score:9,owner:'Legal',status:'Escalated',review_date:'20 Mar 2026'},
       {id:'RSK-004',category:'Cyber',title:'Failed login attempts from external IP',probability:'Medium',impact:'High',score:9,owner:'CISO',status:'Mitigating',review_date:'15 Mar 2026'},
     ]
