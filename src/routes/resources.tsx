@@ -23,7 +23,7 @@ const RESOURCES = [
     typeIcon: 'clipboard-check',
     typeColor:'#15803d',
     title:    'Hotel Pre-Opening HORECA Procurement Checklist',
-    desc:     'India Gully\'s master checklist for FF&E, OS&E and kitchen procurement across 8 category clusters. 500+ SKU reference guide for 40–200 key hotel openings.',
+    desc:     'India Gully\'s master checklist for FF&E, OS&E and kitchen procurement across 8 category clusters. 500+ SKU reference guide for 40-200 key hotel openings.',
     tags:     ['FF&E', 'OS&E', 'Pre-Opening', 'Procurement'],
     pages:    '18 pages',
     updated:  'February 2026',

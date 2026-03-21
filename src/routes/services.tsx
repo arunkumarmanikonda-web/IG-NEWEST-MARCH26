@@ -14,7 +14,7 @@ const SERVICES = [
     items: ['Strategic Site Acquisition & Investigative Due Diligence','Development Strategy, Feasibility Architecture & Viability Assessment','Transaction Structuring & Institutional Deal Advisory','Institutional Asset Valuation & Independent Appraisal','Capital Markets: Acquisitions & Optimized Divestment','Commercial Lease Structuring & Yield Optimization','End-to-End Portfolio Management & Asset Stewardship','Governance, Regulatory & Statutory Compliance'],
     highlights: [
       { v:'INR 2,100 Cr', l:'Entertainment & Retail Hub, Mumbai MMR, 800,000 sq. ft., 85% pre-leased' },
-      { v:'INR 620 Cr',   l:'6–Property Heritage Hotel Portfolio, Rajasthan, 72% TTM occupancy' },
+      { v:'INR 620 Cr',   l:'6-Property Heritage Hotel Portfolio, Rajasthan, 72% TTM occupancy' },
     ],
     partners: [] as string[],
   },
@@ -23,7 +23,7 @@ const SERVICES = [
     icon: '🛍️',
     name: 'Retail & Leasing Strategy',
     tagline: 'Retail intelligence, brand mix engineering, anchor structuring & franchise velocity advisory',
-    desc: 'India Gully brings 30+ curated retail brand relationships and institutional mall-leasing expertise to developers, destination owners, and retail operators. We synergize across every execution stage — from market intelligence and brand mix strategy to lease structuring, absorption rate management, fit-out coordination, and franchise expansion across Tier–1 and Tier–2 strategic growth corridors.',
+    desc: 'India Gully brings 30+ curated retail brand relationships and institutional mall-leasing expertise to developers, destination owners, and retail operators. We synergize across every execution stage — from market intelligence and brand mix strategy to lease structuring, absorption rate management, fit-out coordination, and franchise expansion across Tier-1 and Tier-2 strategic growth corridors.',
     items: ['Retail Intelligence & Opportunity Mapping','Curated Brand Mix & Category Optimization','Anchor Tenant Strategy & Inline Leasing Execution','Lease Term Structuring, Negotiation & Yield Engineering','Portfolio of Strategic Brand Alliances (30+ Active Brands)','Fit-Out Coordination, Design Review & Delivery Management','Mall Operations Consultancy & Performance Benchmarking','Leasing Velocity Advisory & Absorption Rate Management','F&B Destination Advisory & Footfall Yield Optimization','Franchise Expansion Architecture & Territory Mapping'],
     highlights: [
       { v:'30+',      l:'Active retail brand relationships across fashion, F&B and entertainment' },
@@ -116,7 +116,7 @@ app.get('/', async (c) => {
         cmsBodyHtml = (row.body_html    as string) || ''
       }
     }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
 
   /* ── CMS body override zone ──────────────────────────────────────────── */
   const cmsZoneHtml = cmsBodyHtml

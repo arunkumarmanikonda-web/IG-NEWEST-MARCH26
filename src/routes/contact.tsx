@@ -21,7 +21,7 @@ app.get('/', async (c) => {
         cmsBodyHtml = (row.body_html    as string) || ''
       }
     }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
 
   const service = c.req.query('service') || ''
   const mandate = c.req.query('mandate') || ''

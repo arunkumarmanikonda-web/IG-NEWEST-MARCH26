@@ -449,7 +449,7 @@ app.get('/dashboard', async (c) => {
       {label:'Total Headcount',  value:String(totalEmployees), trend:'All active employees', icon:'users',        href:'/admin/hr'},
       {label:'Board Meetings',   value:String(boardMeetings),  trend:'FY 2025-26 meetings',  icon:'gavel',        href:'/admin/governance'},
       {label:'Active Contracts', value:'6',                    trend:'1 expiring soon',      icon:'file-signature',href:'/admin/contracts'},
-      {label:'Open Mandates',    value:'8',                    trend:'₹1,165 Cr+ pipeline',  icon:'briefcase',    href:'/listings'},
+      {label:'Open Mandates',    value:'8',                    trend:'₹2,100 Cr+ pipeline',  icon:'briefcase',    href:'/listings'},
     ].map(s=>`<a href="${s.href}" style="text-decoration:none;"><div class="am" style="cursor:pointer;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'"><div style="display:flex;justify-content:space-between;margin-bottom:.625rem;"><span style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);">${s.label}</span><i class="fas fa-${s.icon}" style="color:var(--ink-faint);font-size:.7rem;"></i></div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--ink);line-height:1;margin-bottom:.3rem;">${s.value}</div><div style="font-size:.7rem;color:var(--ink-muted);">${s.trend}</div></div></a>`).join('')}
   </div>
 
@@ -1172,7 +1172,7 @@ app.get('/cms', (c) => {
     var variantData = {
       'Hero Headline': ['Celebrating Desiness \u2014 Where Vision Meets Advisory Excellence','India\u2019s Most Trusted Multi-Vertical Advisory Firm','From Real Estate to Hospitality \u2014 One Partner, Endless Possibilities','Pioneering Desiness: Advisory at the Intersection of Culture & Commerce','Building Tomorrow\u2019s Icons \u2014 Advisory That Goes Beyond Transactions'],
       'Service Description': ['End-to-end advisory spanning Real Estate, Retail, Hospitality and Entertainment \u2014 crafted for discerning clients who demand precision.','From site acquisition to brand positioning, our multi-vertical expertise delivers measurable outcomes across India\u2019s most dynamic sectors.','We don\u2019t just advise. We partner. Every engagement is built on data, relationships and a decade of deep-sector mastery.','India Gully\u2019s advisory practice combines market intelligence with on-ground execution \u2014 bridging strategy and reality for our clients.','Trusted by developers, hoteliers, retailers and entertainment brands alike \u2014 India Gully brings institutional-grade advisory to every mandate.'],
-      'Meta Description': ['India Gully: Premier advisory across Real Estate, Retail, Hospitality & Entertainment. \u20b91,165 Cr+ in active mandates. New Delhi.','Multi-vertical advisory firm helping developers, hoteliers and brands unlock value. Celebrating Desiness since 2017.','Expert advisory in Real Estate, Hospitality, Retail and Entertainment. Contact India Gully \u2014 New Delhi\u2019s trusted advisory partner.','From concept to completion \u2014 India Gully\u2019s advisory spans 5 verticals, 50+ mandates and a \u20b91,165 Cr active pipeline.','India Gully: Where Indian enterprise meets world-class advisory. Real Estate \u00b7 Retail \u00b7 Hospitality \u00b7 Entertainment \u00b7 HORECA.'],
+      'Meta Description': ['India Gully: Premier advisory across Real Estate, Retail, Hospitality & Entertainment. \u20b92,100 Cr+ in active mandates. New Delhi.','Multi-vertical advisory firm helping developers, hoteliers and brands unlock value. Celebrating Desiness since 2017.','Expert advisory in Real Estate, Hospitality, Retail and Entertainment. Contact India Gully \u2014 New Delhi\u2019s trusted advisory partner.','From concept to completion \u2014 India Gully\u2019s advisory spans 5 verticals, 50+ mandates and a \u20b92,100 Cr active pipeline.','India Gully: Where Indian enterprise meets world-class advisory. Real Estate \u00b7 Retail \u00b7 Hospitality \u00b7 Entertainment \u00b7 HORECA.'],
     };
     var renderVariants = function(bank){
       var html = '';
@@ -2882,8 +2882,8 @@ ${invRowsHtml}
         <div style="padding:1.25rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;">
             ${[
-              {q:'Q3 FY 2024-25 (Oct–Dec)',due:'15 Jan 2025',filed:'12 Jan 2025',tds:'₹1,24,500',s:'Filed'},
-              {q:'Q4 FY 2024-25 (Jan–Mar)',due:'31 May 2025',filed:null,         tds:'₹98,000',s:'Pending'},
+              {q:'Q3 FY 2024-25 (Oct-Dec)',due:'15 Jan 2025',filed:'12 Jan 2025',tds:'₹1,24,500',s:'Filed'},
+              {q:'Q4 FY 2024-25 (Jan-Mar)',due:'31 May 2025',filed:null,         tds:'₹98,000',s:'Pending'},
             ].map(r=>`<div style="border:1px solid ${r.s==='Filed'?'#86efac':'#fcd34d'};background:${r.s==='Filed'?'#f0fdf4':'#fffbeb'};padding:.875rem;">
               <div style="font-size:.72rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;">${r.q}</div>
               <div style="font-size:.68rem;color:var(--ink-muted);">Due: ${r.due}</div>
@@ -4221,7 +4221,7 @@ ${empRowsHtml}
         <div id="leave-req-list">
           <div style="padding:1.25rem;border-bottom:1px solid var(--border);">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
-              <div><div style="font-size:.875rem;font-weight:500;color:var(--ink);">Amit Jhingan</div><div style="font-size:.72rem;color:var(--ink-muted);margin-top:.1rem;">Casual Leave · 5 Mar – 7 Mar 2026 (3 days)</div></div>
+              <div><div style="font-size:.875rem;font-weight:500;color:var(--ink);">Amit Jhingan</div><div style="font-size:.72rem;color:var(--ink-muted);margin-top:.1rem;">Casual Leave · 5 Mar - 7 Mar 2026 (3 days)</div></div>
               <span id="lv-badge-1" class="badge b-g">Pending</span>
             </div>
             <div style="font-size:.78rem;color:var(--ink-muted);margin-bottom:.75rem;">Reason: Personal — attending family event in Chandigarh</div>
@@ -4616,7 +4616,7 @@ ${empRowsHtml}
 
   <!-- hr-pane-7: Appraisals & Performance Management -->
   <div id="hr-pane-7" style="display:none;">
-    <div class="ig-info" style="margin-bottom:1.25rem;"><i class="fas fa-star"></i><div><strong>Performance Cycle FY 2025-26:</strong> Mid-year review due 30 Sep 2026. Annual appraisal cycle runs Oct–Nov 2026. KRA setting deadline: 15 Apr 2026.</div></div>
+    <div class="ig-info" style="margin-bottom:1.25rem;"><i class="fas fa-star"></i><div><strong>Performance Cycle FY 2025-26:</strong> Mid-year review due 30 Sep 2026. Annual appraisal cycle runs Oct-Nov 2026. KRA setting deadline: 15 Apr 2026.</div></div>
     <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
       <button onclick="togglePanel('new-appraisal-panel')" style="background:#1E1E1E;color:#fff;border:none;padding:.5rem 1.1rem;font-size:.78rem;font-weight:600;cursor:pointer;"><i class="fas fa-plus" style="margin-right:.4rem;"></i>Initiate Appraisal</button>
       <button onclick="igHrSendKraForms()" style="background:none;border:1px solid var(--border);padding:.5rem 1rem;font-size:.78rem;cursor:pointer;color:var(--ink);"><i class="fas fa-bullseye" style="margin-right:.4rem;"></i>Send KRA Forms</button>
@@ -4628,7 +4628,7 @@ ${empRowsHtml}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.875rem;margin-bottom:.875rem;">
         <div><label class="ig-label">Employee</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda</option><option>Pavan Manikonda</option><option>Amit Jhingan</option></select></div>
         <div><label class="ig-label">Appraisal Type</label><select class="ig-input" style="font-size:.82rem;"><option>Annual Review</option><option>Mid-Year Review</option><option>Probation Completion</option><option>Promotion Review</option></select></div>
-        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option>FY 2024-25 (Apr 24 – Mar 25)</option><option>H1 FY 2025-26</option></select></div>
+        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option>FY 2024-25 (Apr 24 - Mar 25)</option><option>H1 FY 2025-26</option></select></div>
         <div><label class="ig-label">Reviewer</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda (CEO)</option><option>Pavan Manikonda (COO)</option></select></div>
         <div><label class="ig-label">Self-Assessment Due</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-03-31"></div>
         <div><label class="ig-label">Review Meeting Date</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-04-15"></div>
@@ -5884,7 +5884,7 @@ app.get('/governance', async (c) => {
       <table class="ig-tbl"><thead><tr><th>Due Date</th><th>Filing / Event</th><th>Form</th><th>Responsible</th><th>Penalty</th><th>Status</th><th>Action</th></tr></thead><tbody>
         ${[
           {date:'11 Mar 2026', event:'GSTR-1 — February 2026',         form:'GSTR-1',  resp:'Finance', pen:'₹200/day',  status:'Due',      cls:'b-g'},
-          {date:'15 Mar 2026', event:'Board Meeting — Q3 Review',       form:'§173',    resp:'Board',   pen:'₹5K–25K',  status:'Scheduled',cls:'b-gr'},
+          {date:'15 Mar 2026', event:'Board Meeting — Q3 Review',       form:'§173',    resp:'Board',   pen:'₹5K-25K',  status:'Scheduled',cls:'b-gr'},
           {date:'15 Mar 2026', event:'TDS Deposit — February 2026',     form:'Challan', resp:'Finance', pen:'1.5%/mo',   status:'Due',      cls:'b-g'},
           {date:'20 Mar 2026', event:'GSTR-3B — February 2026',         form:'GSTR-3B', resp:'Finance', pen:'₹50/day',   status:'Upcoming', cls:'b-dk'},
           {date:'31 Mar 2026', event:'Annual Accounts Filing',           form:'AOC-4',   resp:'CS/CFO',  pen:'₹1K/day',  status:'Upcoming', cls:'b-dk'},
@@ -7929,7 +7929,7 @@ app.get('/horeca', async (c) => {
       +'<div style="font-weight:700;margin-bottom:.75rem;">'+name+'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Category</div><div>F&B Supplier</div></div>'
-      +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Lead Time</div><div>2–3 Days</div></div>'
+      +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Lead Time</div><div>2-3 Days</div></div>'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Payment Terms</div><div>Net 30</div></div>'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">GST Registered</div><div>Yes</div></div>'
       +'</div></div>'
@@ -7945,7 +7945,7 @@ app.get('/horeca', async (c) => {
         [['RFQ No',rfqNo],['Vendor',vendor],['Requested By','India Gully Advisory LLP'],['Date',new Date().toLocaleDateString('en-IN')],['Expected Response','Within 48 hours'],['Items Requested','All active HORECA SKUs'],['Status','Sent']]);
       igSaveFile('rfq-'+vendor.replace(/\s+/g,'-').toLowerCase()+'-'+rfqNo+'.csv', csv, 'text/csv');
       igToast('RFQ '+rfqNo+' sent to '+vendor+' — acknowledgement downloaded','success');
-    }).catch(function(){ igToast('RFQ sent to '+vendor+' — response expected in 24–48h','success'); });
+    }).catch(function(){ igToast('RFQ sent to '+vendor+' — response expected in 24-48h','success'); });
   };
 
   // ── HORECA: Create PO ─────────────────────────────────────────────────────
@@ -12970,7 +12970,7 @@ window.igRiskHeatmap = function() {
     igModal('AA6: Enterprise Risk Heatmap (Top 10)',
       '<p style="font-size:.85rem"><b>Risk Level:</b> <span style="color:' + rc + ';font-weight:700">' + (rh.risk_level||'—') + '</span> &nbsp;|&nbsp; <b>Score:</b> ' + (rh.risk_score||0) + '/100 &nbsp;|&nbsp; <b>High:</b> ' + (sm.high_risks||0) + ' &nbsp;|&nbsp; <b>Medium:</b> ' + (sm.medium_risks||0) + ' &nbsp;|&nbsp; <b>Low:</b> ' + (sm.low_risks||0) + '</p>' +
       '<div style="max-height:300px;overflow-y:auto"><table style="width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.8rem"><thead><tr style="background:#f3f4f6"><th>ID</th><th>Domain</th><th>Risk</th><th>L×I</th><th>Score</th><th>Residual</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-      '<p style="font-size:.7rem;color:#6b7280;margin-top:.4rem">L=Likelihood 1–5 × I=Impact 1–5 | Score ≥12=High ≥6=Medium <6=Low</p>');
+      '<p style="font-size:.7rem;color:#6b7280;margin-top:.4rem">L=Likelihood 1-5 × I=Impact 1-5 | Score ≥12=High ≥6=Medium <6=Low</p>');
   }).catch(function(){igModal('AA6: Risk Heatmap','Session expired — log in as Super Admin')});
 };
 
@@ -14864,7 +14864,7 @@ app.get('/risk', (c) => {
     ${[
       {label:'Portfolio Value',     value:'₹8,815 Cr', sub:'6 active mandates', c:'#B8960C', icon:'chart-bar'},
       {label:'Low Risk',            value:mandates.filter(m=>m.score>=80).length.toString(), sub:'Score ≥80', c:'#16a34a', icon:'check-circle'},
-      {label:'Medium Risk',         value:mandates.filter(m=>m.score>=65&&m.score<80).length.toString(), sub:'Score 65–79', c:'#d97706', icon:'exclamation-triangle'},
+      {label:'Medium Risk',         value:mandates.filter(m=>m.score>=65&&m.score<80).length.toString(), sub:'Score 65-79', c:'#d97706', icon:'exclamation-triangle'},
       {label:'High Risk',           value:mandates.filter(m=>m.score<65).length.toString(), sub:'Score <65 — action required', c:'#dc2626', icon:'fire'},
     ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1.1rem;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
@@ -15525,7 +15525,7 @@ app.get('/compliance', async (c) => {
         {label:'Compliance Score',    value:'96%',  sub:'DPDP+Sec+Legal',    icon:'shield-alt',   color:'#16a34a'},
         {label:'Open Findings',       value:'0',    sub:'All resolved',      icon:'check-circle', color:'#16a34a'},
         {label:'Pending Actions',     value:'3',    sub:'Due within 30 days',icon:'clock',        color:'#d97706'},
-        {label:'Audit Reports',       value:'12',   sub:'FY 2025–26',        icon:'file-alt',     color:'#2563eb'},
+        {label:'Audit Reports',       value:'12',   sub:'FY 2025-26',        icon:'file-alt',     color:'#2563eb'},
       ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1rem;display:flex;align-items:center;gap:.875rem;">
         <div style="width:38px;height:38px;background:${s.color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <i class="fas fa-${s.icon}" style="color:${s.color};font-size:.875rem;"></i>
@@ -15561,7 +15561,7 @@ app.get('/compliance', async (c) => {
       </div>
       <div style="background:#fff;border:1px solid var(--border);">
         <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-          <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Regulatory Calendar — FY 2025–26</h3>
+          <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Regulatory Calendar — FY 2025-26</h3>
           <button onclick="igHrExportComplianceCal()" style="background:none;border:1px solid var(--border);padding:.25rem .6rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download"></i></button>
         </div>
         <div style="padding:1.25rem;">
@@ -16979,7 +16979,7 @@ app.get('/dpdp', (c) => {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
       <!-- Consent Analytics -->
       <div style="background:#fff;border:1px solid var(--border);">
-        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Consent Analytics (§5–§6)</h3></div>
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Consent Analytics (§5-§6)</h3></div>
         <div style="padding:1.25rem;">
           ${[
             {label:'Total Data Principals',   value:'142',  color:'#2563eb'},
@@ -17019,7 +17019,7 @@ app.get('/dpdp', (c) => {
       </div>
       <!-- Rights Requests -->
       <div style="background:#fff;border:1px solid var(--border);">
-        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Data Principal Rights Requests (§12–§16)</h3></div>
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Data Principal Rights Requests (§12-§16)</h3></div>
         <div style="padding:1.25rem;">
           ${[
             {type:'Right to Access',      total:5,  fulfilled:5, pending:0},

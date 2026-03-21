@@ -707,7 +707,7 @@ app.get('/engagements', (c) => {
           <td style="font-size:.78rem;">${e.title}</td>
           <td><span class="badge b-dk" style="font-size:.58rem;">${e.vertical}</span></td>
           <td style="font-size:.75rem;">${e.pm}</td>
-          <td style="font-size:.72rem;color:var(--ink-muted);">${e.start} – ${e.end}</td>
+          <td style="font-size:.72rem;color:var(--ink-muted);">${e.start} - ${e.end}</td>
           <td style="font-size:.82rem;font-weight:700;color:var(--gold);">${e.value}</td>
           <td>
             <div style="background:#e2e8f0;height:6px;border-radius:3px;width:80px;overflow:hidden;margin-bottom:2px;">

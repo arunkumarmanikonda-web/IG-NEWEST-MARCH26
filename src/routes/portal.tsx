@@ -309,11 +309,11 @@ app.get('/client/register', (c) => {
                       onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
                 <option value="">Select range…</option>
                 <option>Up to ₹10 Cr</option>
-                <option>₹10–25 Cr</option>
-                <option>₹25–50 Cr</option>
-                <option>₹50–100 Cr</option>
-                <option>₹100–250 Cr</option>
-                <option>₹250–500 Cr</option>
+                <option>₹10-25 Cr</option>
+                <option>₹25-50 Cr</option>
+                <option>₹50-100 Cr</option>
+                <option>₹100-250 Cr</option>
+                <option>₹250-500 Cr</option>
                 <option>Above ₹500 Cr</option>
               </select>
             </div>

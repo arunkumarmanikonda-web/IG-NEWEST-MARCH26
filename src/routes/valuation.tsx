@@ -21,7 +21,7 @@ app.get('/', (c) => {
       </span>
     </h1>
     <p style="color:rgba(255,255,255,.65);font-size:clamp(1rem,1.6vw,1.18rem);max-width:540px;line-height:1.6;margin-bottom:0;font-family:'DM Sans',sans-serif;">
-      A multi-dimensional analytical suite encompassing three institutional valuation methodologies — Income Capitalisation, Discounted Cash Flow, and Revenue-Based Approach. Calibrated against India Gully's INR 1,165 Cr+ active mandate pipeline and 2026 proprietary market intelligence benchmarks. Incorporates Risk-Adjusted WACC, Adjusted NOI computation, Vacancy &amp; CapEx Leakage modeling, and Terminal Growth Rate architecture.
+      A multi-dimensional analytical suite encompassing three institutional valuation methodologies — Income Capitalisation, Discounted Cash Flow, and Revenue-Based Approach. Calibrated against India Gully's INR 2,100 Cr+ active mandate pipeline and 2026 proprietary market intelligence benchmarks. Incorporates Risk-Adjusted WACC, Adjusted NOI computation, Vacancy &amp; CapEx Leakage modeling, and Terminal Growth Rate architecture.
     </p>
   </div>
 </section>
@@ -106,12 +106,12 @@ app.get('/', (c) => {
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem;">
               ${[
-                ['Grade-A Commercial (Central Business Districts)', '7.0%–8.5%'],
-                ['International Upscale/Luxury Hotels', '8.5%–10.5%'],
-                ['Organised Retail (Mall Format)', '8.0%–9.5%'],
-                ['Serviced Apartment / Co-Living', '9.0%–11.0%'],
-                ['Tier–2 Strategic Growth Hospitality', '10.0%–12.5%'],
-                ['Heritage &amp; Leisure Resort Assets', '9.5%–11.5%'],
+                ['Grade-A Commercial (Central Business Districts)', '7.0%-8.5%'],
+                ['International Upscale/Luxury Hotels', '8.5%-10.5%'],
+                ['Organised Retail (Mall Format)', '8.0%-9.5%'],
+                ['Serviced Apartment / Co-Living', '9.0%-11.0%'],
+                ['Tier-2 Strategic Growth Hospitality', '10.0%-12.5%'],
+                ['Heritage &amp; Leisure Resort Assets', '9.5%-11.5%'],
               ].map(([label, rate]) => `
               <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;">
                 <div style="font-size:.7rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">${label}</div>
@@ -243,7 +243,7 @@ app.get('/', (c) => {
             </div>
           </div>
           <p style="color:rgba(255,255,255,.65);font-size:.88rem;font-family:'DM Sans',sans-serif;line-height:1.6;margin-bottom:1.25rem;">
-            This engine provides institutional-grade indicative valuation outputs. For formal valuation opinions, transaction advisory mandates, or boardroom-grade reports, engage India Gully's advisory desk — active across INR 1,165 Cr+ of live mandates.
+            This engine provides institutional-grade indicative valuation outputs. For formal valuation opinions, transaction advisory mandates, or boardroom-grade reports, engage India Gully's advisory desk — active across INR 2,100 Cr+ of live mandates.
           </p>
           <a href="/contact#enquiry" class="btn btn-g" style="display:block;text-align:center;text-decoration:none;margin-bottom:.6rem;">
             Initiate Valuation Advisory Mandate
@@ -285,7 +285,7 @@ app.get('/', (c) => {
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-top:1rem;">
         ${[
-          ['INR 1,165 Cr+', 'Active strategic mandate pipeline'],
+          ['INR 2,100 Cr+', 'Active strategic mandate pipeline'],
           ['8 active', 'Live transaction mandates'],
           ['INR 2,100 Cr', 'Entertainment advisory'],
           ['15+', 'Hotel projects advised'],
@@ -510,7 +510,7 @@ calcCap();
 </script>
 `
   return c.html(layout('Property Valuation Calculator', html, {
-    description: 'Free interactive property valuation calculator using Income Capitalisation, DCF, and Revenue methods. Built on India Gully\'s active INR 1,165 Cr+ advisory intelligence across hotels, commercial, and retail real estate.',
+    description: 'Free interactive property valuation calculator using Income Capitalisation, DCF, and Revenue methods. Built on India Gully\'s active INR 2,100 Cr+ advisory intelligence across hotels, commercial, and retail real estate.',
     canonical: '/valuation',
     ogImage: 'https://hotelrajshreechandigarh.com/wp-content/uploads/2025/12/Hotel-Rajshree-5-scaled-e1765525431558.webp',
   }))

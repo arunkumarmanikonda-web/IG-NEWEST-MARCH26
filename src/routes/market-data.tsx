@@ -139,7 +139,7 @@ app.get('/', (c) => {
       </table>
     </div>
     <div style="margin-top:.75rem;font-size:.72rem;color:rgba(255,255,255,.3);font-family:'DM Sans',sans-serif;">
-      * Office rates: per sq. ft. capital value. Hotel rates: Average Room Rate. Retail: Ground-floor prime rate. Data as of Q3–Q4 FY26. Sources: JLL, CBRE, ANAROCK, STR, India Gully Research.
+      * Office rates: per sq. ft. capital value. Hotel rates: Average Room Rate. Retail: Ground-floor prime rate. Data as of Q3-Q4 FY26. Sources: JLL, CBRE, ANAROCK, STR, India Gully Research.
     </div>
   </div>
 </section>
@@ -217,7 +217,7 @@ app.get('/', (c) => {
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
         ${[
-          ['INR 1,165 Cr+', 'Active mandate pipeline', '#e8c84a'],
+          ['INR 2,100 Cr+', 'Active mandate pipeline', '#e8c84a'],
           ['8', 'Live transaction mandates', '#4ade80'],
           ['6', 'Advisory verticals', '#93c5fd'],
           ['15+', 'Hotel projects advised', '#fbbf24'],

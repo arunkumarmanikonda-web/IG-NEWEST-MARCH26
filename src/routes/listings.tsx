@@ -33,7 +33,7 @@ app.get('/', async (c) => {
         cmsBodyHtml = (row.body_html    as string) || ''
       }
     }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
 
   /* ── CMS body override zone ──────────────────────────────────────────── */
   const cmsZoneHtml = cmsBodyHtml
@@ -83,7 +83,7 @@ app.get('/', async (c) => {
   <div class="wrap" style="padding-top:0;padding-bottom:0;">
     <div id="pipelineStats">
       ${[
-        { n:'₹1,165 Cr+', l:'Total Pipeline Value',         icon:'chart-bar' },
+        { n:'₹2,100 Cr+', l:'Total Pipeline Value',         icon:'chart-bar' },
         { n:'8',           l:'Active Mandates',              icon:'folder-open' },
         { n:'5',           l:'Asset Classes',                icon:'layer-group' },
         { n:'NDA Required', l:'All Mandates · Exclusive',   icon:'lock' },
@@ -697,7 +697,7 @@ function resetFilters() {
 
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Active Mandates — India Gully Advisory Pipeline', content, {
-    description: 'India Gully active mandates — ₹1,165 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
+    description: 'India Gully active mandates — ₹2,100 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
     canonical: 'https://india-gully.pages.dev/listings',
     ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg'
   }))
@@ -1382,7 +1382,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
             ${[
               { label:'Indicative Value', value: l.value,            icon:'rupee-sign',  color:'var(--gold)' },
               { label:'Mandate Type',     value: l.mandateType,       icon:'file-alt',    color:'var(--ink)' },
-              { label:'Deal Status',      value: l.status.split('–')[0].trim(), icon:'circle', color: l.statusType==='active'?'#15803d':l.statusType==='negotiation'?'#1d4ed8':'#9333ea' },
+              { label:'Deal Status',      value: l.status.split('-')[0].trim(), icon:'circle', color: l.statusType==='active'?'#15803d':l.statusType==='negotiation'?'#1d4ed8':'#9333ea' },
             ].map(item => `
             <div style="padding:1.25rem 1rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;">
               <i class="fas fa-${item.icon}" style="color:${item.color};font-size:.75rem;margin-bottom:.5rem;display:block;opacity:.7;"></i>
@@ -1508,7 +1508,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;">
                       ${[
                         { n:'01', icon:'check-circle', title:'EOI Received', desc:'Logged & timestamped', active:true },
-                        { n:'02', icon:'user-tie',     title:'IM Dispatch',  desc:'Within 24–48 hrs' },
+                        { n:'02', icon:'user-tie',     title:'IM Dispatch',  desc:'Within 24-48 hrs' },
                         { n:'03', icon:'chart-bar',    title:'Mgmt Call',    desc:'Shortlisted investors' },
                         { n:'04', icon:'handshake',    title:'Site Visit',   desc:'Final qualified buyers' },
                       ].map(s => `
@@ -1591,7 +1591,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
             </div>
             <div style="grid-column:1/-1;">
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Ticket Size / Investment Capacity</label>
-              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr – ₹100 Cr"
+              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr - ₹100 Cr"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>

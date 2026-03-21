@@ -1027,8 +1027,8 @@ app.get('/health', (c) => c.json({
     lockout_recovery: 'POST /api/auth/unlock (admin-only) + GET /api/auth/lockout-status (G3 ✓)',
     nda_gate:         'Mandate detail pages gated by NDA acceptance modal (G4 ✓)',
     form_validation:  'Client-side phone/email validation + honeypot on public forms (G5 ✓)',
-    f_round:          'Security score → 68/100 (F1–F5 resolved)',
-    g_round:          'Security score → 72/100 (G1–G5 resolved)',
+    f_round:          'Security score → 68/100 (F1-F5 resolved)',
+    g_round:          'Security score → 72/100 (G1-G5 resolved)',
     h_round:          'Security score → 78/100 — TOTP RFC 6238 Base32 fix (H1), session guards admin+portal (H2), real API wiring all admin pages (H3)',
     t_round:          'Security score → 100/100 live-D1 migration — T1: GET /api/sales/deals (D1 ig_sales_deals); T2: GET /api/finance/bank-statement (D1 ig_bank_transactions); T3: POST /api/hr/payslip (D1 ig_payslips); T4: GET /api/hr/leave-summary (D1 ig_leave_requests); T5: GET /api/hr/tds-declaration (D1 ig_tds_declarations); T6: GET /api/hr/compliance/pf-esi (D1 ig_epfo_filings+ig_esic_contributions); Migration 0012 adds ig_sales_deals, ig_bank_transactions, ig_leave_requests, ig_payslips, ig_tds_declarations',
     u_round:          'Security score → 100/100 go-live-verified — U1: GET /api/admin/d1-schema-status; U2: GET /api/payments/live-key-status; U3: GET /api/integrations/dns-health; U4: GET /api/auth/webauthn-registry; U5: GET /api/dpdp/dpa-status; U6: GET /api/compliance/gold-cert-status',
@@ -1413,7 +1413,7 @@ app.get('/health', (c) => c.json({
     'X2: GET /api/payments/live-transaction-summary — Live Razorpay transaction summary: total orders, paid/failed counts, revenue INR, GST breakdown (CGST/SGST/IGST), top 5 recent transactions',
     'X3: GET /api/integrations/deliverability-score — Composite email/DNS deliverability score (0-100): SPF weight 25, DKIM×2 weight 30, DMARC weight 25, MX weight 10, SendGrid API weight 10 with per-check grade',
     'X4: GET /api/auth/mfa-coverage — MFA coverage matrix: TOTP enrolled %, WebAuthn enrolled %, SMS-OTP fallback %, per-role breakdown (Super Admin / Admin / Staff / Portal), overall MFA coverage score',
-    'X5: GET /api/dpdp/compliance-score — Composite DPDP compliance score: consent rate, DSR SLA adherence, vendor DPA coverage, data retention compliance, DPO alert response time, DPDP Act 2023 §11–§17 per-section status',
+    'X5: GET /api/dpdp/compliance-score — Composite DPDP compliance score: consent rate, DSR SLA adherence, vendor DPA coverage, data retention compliance, DPO alert response time, DPDP Act 2023 §11-§17 per-section status',
     'X6: GET /api/compliance/certification-history — Full certification history F-Round through X-Round: round, version, level (Bronze/Silver/Gold), security score, issued date, key highlights, total endpoints added',
   ],
   w_round_fixes: [
@@ -2352,7 +2352,7 @@ app.get('/finance/msme-vendors', async (c) => {
         return c.json({
           total_msme_vendors: vendors.length, overdue_beyond_45_days: overdue.length,
           overdue_vendors: overdue, form1_due: true, source: 'D1',
-          form1_half_year: 'Oct 2025 – Mar 2026', form1_due_date: '30 Apr 2026',
+          form1_half_year: 'Oct 2025 - Mar 2026', form1_due_date: '30 Apr 2026',
           note: 'MSME Form-1 (MCA) required for companies with >45 day outstanding to MSME vendors',
           all_vendors: vendors,
         })
@@ -2373,7 +2373,7 @@ app.get('/finance/msme-vendors', async (c) => {
       interest_accrued: Math.round(v.amount * 0.03 * ((v.days_outstanding - 45) / 365)),
       msmed_section: 'Section 16 — Interest on delayed payment',
     })),
-    form1_due: true, form1_half_year: 'Oct 2025 – Mar 2026', form1_due_date: '30 Apr 2026',
+    form1_due: true, form1_half_year: 'Oct 2025 - Mar 2026', form1_due_date: '30 Apr 2026',
     note: 'MSME Form-1 (MCA) required for companies with >45 day outstanding to MSME vendors',
     all_vendors: vendors,
   })
@@ -2496,7 +2496,7 @@ function buildSubmitterConfirmationEmail(opts: {
   const typeLabel = opts.type === 'nda_acceptance' ? 'NDA Acceptance' : opts.type === 'eoi' ? 'Expression of Interest' : 'Enquiry'
   const nextSteps = opts.type === 'eoi'
     ? ['Our advisory team will review your investor profile and credentials.',
-       'Qualified investors receive the full Information Memorandum within 24–48 business hours.',
+       'Qualified investors receive the full Information Memorandum within 24-48 business hours.',
        'Shortlisted investors are invited to a management presentation and site visit.']
     : opts.type === 'nda_acceptance'
     ? ['Your NDA acceptance has been recorded and timestamped.',
@@ -2965,23 +2965,23 @@ app.get('/market-data', (c) => {
       inr_usd: '₹83.4',
     },
     cities: [
-      { city:'Delhi NCR',   office_psf:'₹8,500–10,500', hotel_rate:'₹6,200–9,500',  retail_psf:'₹12,000–28,000', occ:'72%', adr:'₹7,200', revpar:'₹5,184', cap_rate:'7.5–9.0%' },
-      { city:'Mumbai BKC',  office_psf:'₹22,000–28,000', hotel_rate:'₹10,500–18,000', retail_psf:'₹35,000–55,000', occ:'78%', adr:'₹12,500', revpar:'₹9,750', cap_rate:'7.0–8.5%' },
-      { city:'Bengaluru',   office_psf:'₹8,000–12,000', hotel_rate:'₹5,500–9,000',  retail_psf:'₹10,000–22,000', occ:'74%', adr:'₹6,800', revpar:'₹5,032', cap_rate:'7.5–9.0%' },
-      { city:'Hyderabad',   office_psf:'₹6,500–9,500',  hotel_rate:'₹4,800–7,500',  retail_psf:'₹8,000–18,000',  occ:'71%', adr:'₹5,900', revpar:'₹4,189', cap_rate:'8.0–10.0%' },
-      { city:'Chandigarh',  office_psf:'₹3,500–5,500',  hotel_rate:'₹3,200–5,500',  retail_psf:'₹6,000–12,000',  occ:'69%', adr:'₹4,800', revpar:'₹3,312', cap_rate:'9.0–11.5%' },
-      { city:'Jaipur',      office_psf:'₹3,000–4,500',  hotel_rate:'₹3,800–6,500',  retail_psf:'₹5,500–11,000',  occ:'67%', adr:'₹5,500', revpar:'₹3,685', cap_rate:'9.5–12.0%' },
+      { city:'Delhi NCR',   office_psf:'₹8,500-10,500', hotel_rate:'₹6,200-9,500',  retail_psf:'₹12,000-28,000', occ:'72%', adr:'₹7,200', revpar:'₹5,184', cap_rate:'7.5-9.0%' },
+      { city:'Mumbai BKC',  office_psf:'₹22,000-28,000', hotel_rate:'₹10,500-18,000', retail_psf:'₹35,000-55,000', occ:'78%', adr:'₹12,500', revpar:'₹9,750', cap_rate:'7.0-8.5%' },
+      { city:'Bengaluru',   office_psf:'₹8,000-12,000', hotel_rate:'₹5,500-9,000',  retail_psf:'₹10,000-22,000', occ:'74%', adr:'₹6,800', revpar:'₹5,032', cap_rate:'7.5-9.0%' },
+      { city:'Hyderabad',   office_psf:'₹6,500-9,500',  hotel_rate:'₹4,800-7,500',  retail_psf:'₹8,000-18,000',  occ:'71%', adr:'₹5,900', revpar:'₹4,189', cap_rate:'8.0-10.0%' },
+      { city:'Chandigarh',  office_psf:'₹3,500-5,500',  hotel_rate:'₹3,200-5,500',  retail_psf:'₹6,000-12,000',  occ:'69%', adr:'₹4,800', revpar:'₹3,312', cap_rate:'9.0-11.5%' },
+      { city:'Jaipur',      office_psf:'₹3,000-4,500',  hotel_rate:'₹3,800-6,500',  retail_psf:'₹5,500-11,000',  occ:'67%', adr:'₹5,500', revpar:'₹3,685', cap_rate:'9.5-12.0%' },
     ],
     hotel_segments: [
-      { segment:'Luxury (5-star)',   adr_range:'₹14,000–28,000', occ_range:'74–82%', ebitda_mult:'12–16×', cap_rate:'8.0–10.0%' },
-      { segment:'Upper-Upscale',     adr_range:'₹7,000–14,000',  occ_range:'72–79%', ebitda_mult:'9–12×',  cap_rate:'8.5–10.5%' },
-      { segment:'Upscale (Branded)', adr_range:'₹4,500–7,000',   occ_range:'70–77%', ebitda_mult:'7–10×',  cap_rate:'9.0–11.0%' },
-      { segment:'Mid-Scale',         adr_range:'₹2,800–4,500',   occ_range:'68–75%', ebitda_mult:'6–8×',   cap_rate:'10.0–12.0%' },
-      { segment:'Heritage/Boutique', adr_range:'₹5,500–15,000',  occ_range:'65–75%', ebitda_mult:'8–12×',  cap_rate:'9.5–11.5%' },
+      { segment:'Luxury (5-star)',   adr_range:'₹14,000-28,000', occ_range:'74-82%', ebitda_mult:'12-16×', cap_rate:'8.0-10.0%' },
+      { segment:'Upper-Upscale',     adr_range:'₹7,000-14,000',  occ_range:'72-79%', ebitda_mult:'9-12×',  cap_rate:'8.5-10.5%' },
+      { segment:'Upscale (Branded)', adr_range:'₹4,500-7,000',   occ_range:'70-77%', ebitda_mult:'7-10×',  cap_rate:'9.0-11.0%' },
+      { segment:'Mid-Scale',         adr_range:'₹2,800-4,500',   occ_range:'68-75%', ebitda_mult:'6-8×',   cap_rate:'10.0-12.0%' },
+      { segment:'Heritage/Boutique', adr_range:'₹5,500-15,000',  occ_range:'65-75%', ebitda_mult:'8-12×',  cap_rate:'9.5-11.5%' },
     ],
     india_gully_pipeline: {
       active_mandates: 8,
-      pipeline_value: '₹1,165 Cr+',
+      pipeline_value: '₹2,100 Cr+',
       verticals: 6,
       hotel_projects: 15,
       geographic_reach: 'Pan-India',
@@ -3018,7 +3018,7 @@ app.post('/compare', async (c) => {
 // ─── Public: mandate map locations (used by home page India map) ─────────────
 app.get('/mandate-locations', (c) => c.json({
   updated: 'Q1 2026',
-  total_pipeline: '₹1,165 Cr+',
+  total_pipeline: '₹2,100 Cr+',
   locations: [
     {
       id: 'delhi',
@@ -3095,15 +3095,15 @@ app.get('/mandate-locations', (c) => c.json({
   ],
 }))
 
-app.get('/listings', (c) => c.json({ total: 8, pipeline_value: '₹1,165 Cr', listings: [
-  { id:'prism-tower-gurgaon',           title:'Prism Tower — Mixed-Use Hospitality & Commercial', location:'Gwalpahari, Gurugram',      value:'₹400 Cr', sector:'Real Estate',         status:'Reference Transaction – Due Diligence Stage' },
-  { id:'belcibo-hospitality',           title:'Belcibo Hospitality Platform',                    location:'Delhi NCR & Goa',           value:'₹100 Cr', sector:'Hospitality',         status:'Open for Investment – Active Fundraise' },
-  { id:'hotel-rajshree-chandigarh',     title:'Hotel Rajshree & Spa',                            location:'Chandigarh',                value:'₹70 Cr',  sector:'Hospitality',         status:'Asset Sale – Actively Marketing' },
-  { id:'welcomheritage-santa-roza-kasauli', title:'WelcomHeritage Santa Roza',                   location:'Kasauli, Himachal Pradesh', value:'₹45 Cr',  sector:'Heritage Hospitality',status:'Asset Sale – Seller Mandated' },
-  { id:'heritage-hotel-jaipur',         title:'Heritage Hotel Structure — Jaipur',               location:'Jaipur, Rajasthan',         value:'₹20 Cr',  sector:'Heritage Hospitality',status:'Structure Sale – Ready for Fit-Out' },
-  { id:'maple-resort-chail',            title:'Maple Resort Chail',                              location:'Chail, Himachal Pradesh',   value:'₹30 Cr',  sector:'Hospitality',         status:'Asset Sale – Owner Direct' },
-  { id:'ambience-tower-north-delhi',    title:'Ambience Tower — Adaptive Reuse',                 location:'Shalimar Bagh, North Delhi', value:'₹350 Cr', sector:'Real Estate',        status:'Conversion Opportunity – Technical Feasibility Complete' },
-  { id:'sawasdee-jlg-noida',            title:'Sawasdee JLG Galleria',                           location:'Noida',                     value:'₹150 Cr', sector:'Mixed-Use',           status:'Outright Sale – Negotiation Ready' },
+app.get('/listings', (c) => c.json({ total: 8, pipeline_value: '₹2,100 Cr', listings: [
+  { id:'prism-tower-gurgaon',           title:'Prism Tower — Mixed-Use Hospitality & Commercial', location:'Gwalpahari, Gurugram',      value:'₹400 Cr', sector:'Real Estate',         status:'Reference Transaction - Due Diligence Stage' },
+  { id:'belcibo-hospitality',           title:'Belcibo Hospitality Platform',                    location:'Delhi NCR & Goa',           value:'₹100 Cr', sector:'Hospitality',         status:'Open for Investment - Active Fundraise' },
+  { id:'hotel-rajshree-chandigarh',     title:'Hotel Rajshree & Spa',                            location:'Chandigarh',                value:'₹70 Cr',  sector:'Hospitality',         status:'Asset Sale - Actively Marketing' },
+  { id:'welcomheritage-santa-roza-kasauli', title:'WelcomHeritage Santa Roza',                   location:'Kasauli, Himachal Pradesh', value:'₹45 Cr',  sector:'Heritage Hospitality',status:'Asset Sale - Seller Mandated' },
+  { id:'heritage-hotel-jaipur',         title:'Heritage Hotel Structure — Jaipur',               location:'Jaipur, Rajasthan',         value:'₹20 Cr',  sector:'Heritage Hospitality',status:'Structure Sale - Ready for Fit-Out' },
+  { id:'maple-resort-chail',            title:'Maple Resort Chail',                              location:'Chail, Himachal Pradesh',   value:'₹30 Cr',  sector:'Hospitality',         status:'Asset Sale - Owner Direct' },
+  { id:'ambience-tower-north-delhi',    title:'Ambience Tower — Adaptive Reuse',                 location:'Shalimar Bagh, North Delhi', value:'₹350 Cr', sector:'Real Estate',        status:'Conversion Opportunity - Technical Feasibility Complete' },
+  { id:'sawasdee-jlg-noida',            title:'Sawasdee JLG Galleria',                           location:'Noida',                     value:'₹150 Cr', sector:'Mixed-Use',           status:'Outright Sale - Negotiation Ready' },
 ]}))
 
 app.post('/attendance/checkin', async (c) => {
@@ -3133,10 +3133,10 @@ app.get('/mandates', async (c) => {
       const rows = await c.env.DB.prepare(
         `SELECT id, property_name AS title, sector, status, stage AS vertical FROM ig_mandates WHERE status='Active' ORDER BY id LIMIT 10`
       ).all()
-      return c.json({ total: rows.results.length, active: rows.results.length, pipeline_value: '₹1,165 Cr+', mandates: rows.results, source: 'd1' })
+      return c.json({ total: rows.results.length, active: rows.results.length, pipeline_value: '₹2,100 Cr+', mandates: rows.results, source: 'd1' })
     } catch(e) { /* fallback below */ }
   }
-  return c.json({ total:3, active:3, pipeline_value:'₹1,165 Cr+', source:'static', mandates:[
+  return c.json({ total:3, active:3, pipeline_value:'₹2,100 Cr+', source:'static', mandates:[
     { id:'MND-001', title:'Kasauli Heritage Hotel',         sector:'Hospitality', value:'₹85 Cr',   status:'Active', progress:75 },
     { id:'MND-002', title:'Jaipur Mixed-Use Development',   sector:'Real Estate', value:'₹450 Cr',  status:'Active', progress:45 },
     { id:'MND-003', title:'Goa Beach Resort & Spa',         sector:'Hospitality', value:'₹220 Cr',  status:'Active', progress:35 },
@@ -3330,7 +3330,7 @@ const HORECA_DEFAULT_PRODUCTS = [
   // Kitchen Equipment
   {id:'KE-001',sku:'KE-001',name:'6-Burner Commercial Range',category:'Kitchen Equipment',unit:'Piece',price:85000,stock:4,reorder:2,description:'Heavy-duty 6-burner gas range for commercial kitchens. Stainless steel body, cast iron grates.',hsn:'73239300',gst_rate:18,image:'',brand:'Hobart',active:true,featured:true},
   {id:'KE-002',sku:'KE-002',name:'Convection Oven 40L',category:'Kitchen Equipment',unit:'Piece',price:42000,stock:2,reorder:1,description:'Electric convection oven, 40L capacity, 10 tray positions. Ideal for bakeries and hotel kitchens.',hsn:'85166000',gst_rate:18,image:'',brand:'Unox',active:true,featured:false},
-  {id:'KE-003',sku:'KE-003',name:'Commercial Refrigerator 500L',category:'Kitchen Equipment',unit:'Piece',price:65000,stock:3,reorder:2,description:'Upright commercial refrigerator, 500L double door, stainless steel interior, 2°C–8°C.',hsn:'84182190',gst_rate:12,image:'',brand:'Blue Star',active:true,featured:true},
+  {id:'KE-003',sku:'KE-003',name:'Commercial Refrigerator 500L',category:'Kitchen Equipment',unit:'Piece',price:65000,stock:3,reorder:2,description:'Upright commercial refrigerator, 500L double door, stainless steel interior, 2°C-8°C.',hsn:'84182190',gst_rate:12,image:'',brand:'Blue Star',active:true,featured:true},
   {id:'KE-004',sku:'KE-004',name:'Industrial Dishwasher',category:'Kitchen Equipment',unit:'Piece',price:120000,stock:1,reorder:1,description:'Undercounter dishwasher, 500 plates/hour, auto-dosing system, energy-efficient.',hsn:'84221100',gst_rate:18,image:'',brand:'Winterhalter',active:true,featured:false},
   {id:'KE-005',sku:'KE-005',name:'Commercial Deep Fryer 15L',category:'Kitchen Equipment',unit:'Piece',price:28000,stock:2,reorder:1,description:'Dual tank commercial deep fryer, 15L capacity, digital temperature control, auto lift basket.',hsn:'85166000',gst_rate:18,image:'',brand:'Pitco',active:true,featured:false},
   // Crockery & Cutlery
@@ -3346,7 +3346,7 @@ const HORECA_DEFAULT_PRODUCTS = [
   // Bar & Beverages
   {id:'BB-001',sku:'BB-001',name:'Commercial Bar Blender 2L',category:'Bar & Beverages',unit:'Piece',price:18500,stock:5,reorder:2,description:'Heavy-duty bar blender, 2L polycarbonate jar, 3HP motor, 38,500 RPM. NSF certified.',hsn:'85094000',gst_rate:18,image:'',brand:'Vitamix',active:true,featured:true},
   {id:'BB-002',sku:'BB-002',name:'Stainless Steel Bar Shaker Set',category:'Bar & Beverages',unit:'Set',price:2200,stock:12,reorder:5,description:'Professional bar shaker set: 28oz cobbler shaker, strainer, jigger, muddler, bar spoon.',hsn:'73239300',gst_rate:18,image:'',brand:'Cocktail Kingdom',active:true,featured:false},
-  {id:'BB-003',sku:'BB-003',name:'Wine Cooler 48-Bottle Dual Zone',category:'Bar & Beverages',unit:'Piece',price:45000,stock:3,reorder:1,description:'Dual zone wine cooler, 48-bottle capacity. 6°C–18°C range, UV-protected glass door.',hsn:'84182190',gst_rate:12,image:'',brand:'Haier',active:true,featured:true},
+  {id:'BB-003',sku:'BB-003',name:'Wine Cooler 48-Bottle Dual Zone',category:'Bar & Beverages',unit:'Piece',price:45000,stock:3,reorder:1,description:'Dual zone wine cooler, 48-bottle capacity. 6°C-18°C range, UV-protected glass door.',hsn:'84182190',gst_rate:12,image:'',brand:'Haier',active:true,featured:true},
   // Housekeeping
   {id:'HK-001',sku:'HK-001',name:'Industrial Upright Vacuum Cleaner',category:'Housekeeping Supplies',unit:'Piece',price:15500,stock:6,reorder:3,description:'Commercial upright vacuum, 1800W, 12L dust bag, HEPA filtration. Ideal for carpets and hard floors.',hsn:'85081900',gst_rate:18,image:'',brand:'Numatic',active:true,featured:false},
   {id:'HK-002',sku:'HK-002',name:'Housekeeping Trolley Steel',category:'Housekeeping Supplies',unit:'Piece',price:8500,stock:8,reorder:3,description:'Heavy-duty steel housekeeping trolley with 2 shelves, linen bag, waste bag holder. Lockable.',hsn:'87162000',gst_rate:18,image:'',brand:'Crown',active:true,featured:true},
@@ -5138,7 +5138,7 @@ app.get('/compliance/annual-audit', requireSession(), requireRole(['Super Admin'
       qualification: 'CISA / CISSP with DPDP Act knowledge or SEBI-empanelled auditor',
       scope: 'Full platform audit covering all 12 checklist items',
       deliverable: 'Audit report with findings, risk ratings, and remediation timeline',
-      estimated_cost: '₹2–5 lakh for SME-scale audit',
+      estimated_cost: '₹2-5 lakh for SME-scale audit',
       contact: 'compliance@indiagully.com',
     },
     n6_status: done >= 4 ? '🟡 Audit in progress' : '⚠  Annual audit not started',
@@ -5513,7 +5513,7 @@ app.get('/compliance/audit-progress', requireSession(), requireRole(['Super Admi
     assessor: {
       status: 'not_engaged',
       qualification: 'CISA / CISSP / DPDP-qualified auditor',
-      estimated_cost: '₹2–5 lakh',
+      estimated_cost: '₹2-5 lakh',
       contact: 'compliance@indiagully.com',
       scope_note: 'Full platform — 12 checklist items, 170 API routes, 9 modules',
     },
@@ -5710,7 +5710,7 @@ app.get('/insights', async (c) => {
       { slug:'horeca-tier2-supply-chain', category:'HORECA', date_label:'December 2025', title:'Building Resilient HORECA Supply Chains in Tier 2 India', tags:['HORECA','Supply Chain'], read_time:'7 min read' },
       { slug:'ibc-distressed-hospitality-2025', category:'Debt & Special Situations', date_label:'November 2025', title:'IBC 2025 Update: Hospitality Asset Resolution Trends', tags:['IBC','Hospitality','Debt'], read_time:'12 min read' },
       { slug:'mall-mixed-use-integration', category:'Retail', date_label:'October 2025', title:'The Mall-Hotel-Office Trinity: Mixed-Use Integration', tags:['Retail','Mixed-Use','Real Estate'], read_time:'9 min read' },
-      { slug:'greenfield-midscale-hotels', category:'Hospitality', date_label:'September 2025', title:'The Greenfield Mid-Scale Hotel Opportunity: Project Economics for 2025–27', tags:['Hospitality','Greenfield'], read_time:'11 min read' },
+      { slug:'greenfield-midscale-hotels', category:'Hospitality', date_label:'September 2025', title:'The Greenfield Mid-Scale Hotel Opportunity: Project Economics for 2025-27', tags:['Hospitality','Greenfield'], read_time:'11 min read' },
     ],
   })
 })
@@ -6210,7 +6210,7 @@ app.get('/compliance/audit-signoff', requireSession(), requireRole(['Super Admin
       qualification: 'CISA, CISSP, or equivalent DPDP-recognised assessor',
       scope: 'DPDP Act 2023 compliance + CERT-In security controls',
       deliverables: ['Written audit report', 'Compliance certificate', 'Remediation plan for open items'],
-      estimated_effort: '3–5 days on-site + 2 weeks report',
+      estimated_effort: '3-5 days on-site + 2 weeks report',
       contact: 'dpo@indiagully.com',
     },
     sign_off_checklist: [
@@ -8432,7 +8432,7 @@ app.get('/compliance/gold-cert-status', requireSession(), requireRole(['Super Ad
   })
 })
 // ── V-ROUND: FRONTEND-FIX + GO-LIVE READY (v2026.20) ─────────────────────────
-// V1–V6: six go-live validation endpoints (all require Super Admin)
+// V1-V6: six go-live validation endpoints (all require Super Admin)
 // ─────────────────────────────────────────────────────────────────────────────
 
 // V1 — D1 Live Binding Status
@@ -8652,7 +8652,7 @@ app.get('/compliance/gold-cert-readiness', requireSession(), requireRole(['Super
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
-// W1–W6: Gold-cert-ready go-live endpoints (all require Super Admin session)
+// W1-W6: Gold-cert-ready go-live endpoints (all require Super Admin session)
 // ─────────────────────────────────────────────────────────────────────────────
 
 // W1 — D1 Binding Health (live DB connectivity probe)
@@ -8988,7 +8988,7 @@ app.post('/dpdp/vendor-dpa-execute', requireSession(), requireRole(['Super Admin
   if (vendor_id && action === 'execute') {
     const vendor = masterVendors.find(v => v.id === vendor_id)
     if (!vendor) {
-      return c.json({ success: false, error: `Vendor ${vendor_id} not found. Valid IDs: V001–V006` }, 400)
+      return c.json({ success: false, error: `Vendor ${vendor_id} not found. Valid IDs: V001-V006` }, 400)
     }
     const record = {
       status:           'signed',
@@ -9146,7 +9146,7 @@ app.get('/compliance/gold-cert-signoff', requireSession(), requireRole(['Super A
       })),
       assessor_signoff:    assessorSignoff,
       assessor_contact:    'dpo@indiagully.com',
-      cert_levels_guide:   { Pending: '<60%', Bronze: '60–84%', Silver: '85–99%', Gold: '100%' },
+      cert_levels_guide:   { Pending: '<60%', Bronze: '60-84%', Silver: '85-99%', Gold: '100%' },
       signoff_endpoint:    'POST /api/compliance/gold-cert-signoff-record  (assessor use only)',
       next_action: certLevel === 'Gold' && assessorSignoff.signed
         ? '🏆 Gold Certification Achieved — all 12 criteria met and assessor signed ✓'
@@ -9183,11 +9183,11 @@ app.post('/compliance/gold-cert-signoff-record', requireAdmin(), async (c) => {
   } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
 })
 // ─────────────────────────────────────────────────────────────────────────────
-// X-ROUND — Post-Gold Live Operations (X1–X6) — v2026.22
+// X-ROUND — Post-Gold Live Operations (X1-X6) — v2026.22
 // All require Super Admin session
 // ─────────────────────────────────────────────────────────────────────────────
 
-// X1 — Operator Onboarding Checklist (consolidated W1–W6 live status)
+// X1 — Operator Onboarding Checklist (consolidated W1-W6 live status)
 app.get('/admin/operator-checklist', requireSession(), requireRole(['Super Admin']), async (c) => {
   const env = c.env as Record<string, unknown>
   const kv  = env?.KV as KVNamespace | undefined
@@ -9245,7 +9245,7 @@ app.get('/admin/operator-checklist', requireSession(), requireRole(['Super Admin
     {
       id: 'X1-W5', step: 5, title: 'Execute 6 Vendor DPAs',
       status: dpaSigned >= 6 ? 'complete' : dpaSigned > 0 ? 'partial' : 'pending',
-      action: `POST /api/dpdp/vendor-dpa-execute with vendor_id (V001–V006). Signed: ${dpaSigned}/6`,
+      action: `POST /api/dpdp/vendor-dpa-execute with vendor_id (V001-V006). Signed: ${dpaSigned}/6`,
       command: null,
       docs: '/admin#compliance',
       complete: dpaSigned >= 6,
@@ -10163,7 +10163,7 @@ app.get('/payments/chargeback-report', requireSession(), requireRole(['Super Adm
 
   return c.json({
     chargeback_report: {
-      period:          'FY 2025-26 (Apr 2025 – Mar 2026)',
+      period:          'FY 2025-26 (Apr 2025 - Mar 2026)',
       disputes,
       summary: {
         total_disputes:      disputes.length,
@@ -10383,14 +10383,14 @@ app.get('/compliance/continuous-monitoring', requireSession(), requireRole(['Sup
         fail,
         drift_alerts:      driftAlerts.length,
         next_assessment:   nextAssessment,
-        cert_status:       'Gold Certification — sign-off pending operator XO1–XO6 completion',
+        cert_status:       'Gold Certification — sign-off pending operator XO1-XO6 completion',
       },
       drift_alerts:        driftAlerts,
       recommendations: [
         watch > 0 ? `${watch} control(s) in WATCH state — review and remediate before ${nextAssessment}` : 'All controls passing ✓',
         'Approve IR Policy POL-012 to move DPDP-§12 from watch → pass',
         'Register DPBI portal account at dpb.gov.in',
-        'Complete XO1–XO6 operator actions to achieve Gold Certification',
+        'Complete XO1-XO6 operator actions to achieve Gold Certification',
       ],
     },
     spec:             'India Gully Continuous Compliance Monitor v2026.24 (20 controls: ISO 27001 + DPDP + PCI-DSS + SOC-2)',
@@ -10442,7 +10442,7 @@ app.get('/finance/cashflow-forecast', requireSession(), requireRole(['Super Admi
 
   return c.json({
     cashflow_forecast: {
-      period:          'FY 2026-27 (Apr 2026 – Mar 2027)',
+      period:          'FY 2026-27 (Apr 2026 - Mar 2027)',
       opening_balance: 3200000,
       forecast,
       summary: {
@@ -10478,7 +10478,7 @@ app.get('/payments/fraud-signals', requireSession(), requireRole(['Super Admin']
     { id: 'FS-001', type: 'Velocity Anomaly',   severity: 'Medium', detail: '3 payments from same IP (103.21.44.5) within 90s — threshold: 2/min', count: 3, ts: new Date(Date.now()-3600000).toISOString(), status: 'flagged', action: 'Monitor — add IP to watchlist if persists' },
     { id: 'FS-002', type: 'Geo Mismatch',        severity: 'Low',    detail: 'Card BIN issuer India; billing address UAE — common for NRI customers', count: 2, ts: new Date(Date.now()-7200000).toISOString(), status: 'reviewed', action: 'No action — NRI segment expected pattern' },
     { id: 'FS-003', type: 'Card Testing Pattern',severity: 'High',   detail: '5 ₹1 authorisation attempts from pay_test_xxx series in 5 minutes', count: 5, ts: new Date(Date.now()-86400000).toISOString(), status: 'blocked',  action: 'IP blocked; Razorpay fraud team notified' },
-    { id: 'FS-004', type: 'Unusual Hour',        severity: 'Low',    detail: 'Payment at 03:14 IST — outside normal 09:00–22:00 window', count: 1, ts: new Date(Date.now()-172800000).toISOString(), status: 'reviewed', action: 'Single occurrence — monitor for pattern' },
+    { id: 'FS-004', type: 'Unusual Hour',        severity: 'Low',    detail: 'Payment at 03:14 IST — outside normal 09:00-22:00 window', count: 1, ts: new Date(Date.now()-172800000).toISOString(), status: 'reviewed', action: 'Single occurrence — monitor for pattern' },
   ]
 
   const high    = signals.filter(s => s.severity === 'High').length
@@ -11093,7 +11093,7 @@ app.get('/payments/revenue-analytics', requireSession(), requireRole(['Super Adm
   const totalRev = revenue.reduce((s,v)=>s+v,0)
   const avgMoM = ((revenue[5]-revenue[0])/revenue[0]*100/5).toFixed(1)
   return c.json({
-    period: 'Q3+Q4 FY 2025-26 (Oct 2025 – Mar 2026)',
+    period: 'Q3+Q4 FY 2025-26 (Oct 2025 - Mar 2026)',
     revenue_trend: months.map((m,i)=>({ month:m, revenue_inr:revenue[i], growth_mom: i===0?'—':((revenue[i]-revenue[i-1])/revenue[i-1]*100).toFixed(1)+'%' })),
     summary: {
       total_revenue_inr:   totalRev,
@@ -15900,11 +15900,11 @@ app.post('/cms/ai-generate', requireSession(), requireRole(['Super Admin'], ['ad
     // ── Real OpenAI Integration ─────────────────────────────────────────────
     if (env?.OPENAI_API_KEY && !env.OPENAI_API_KEY.includes('sk-xxx')) {
       const prompts: Record<string, string> = {
-        headline:    `Write ${variants_n} punchy marketing headlines for India Gully, a premium Indian business advisory firm specialising in ${vertical} sector M&A, mandates and capital advisory. Each headline should be 6–12 words, convey trust and Indian enterprise excellence. Return JSON: {"variants":[{"type":"headline","variant":N,"text":"..."}]}`,
-        tagline:     `Write ${variants_n} brand taglines for India Gully advisory firm, ${vertical} sector focus. Taglines should be 3–8 words, professional and memorable. Return JSON: {"variants":[{"type":"tagline","variant":N,"text":"..."}]}`,
+        headline:    `Write ${variants_n} punchy marketing headlines for India Gully, a premium Indian business advisory firm specialising in ${vertical} sector M&A, mandates and capital advisory. Each headline should be 6-12 words, convey trust and Indian enterprise excellence. Return JSON: {"variants":[{"type":"headline","variant":N,"text":"..."}]}`,
+        tagline:     `Write ${variants_n} brand taglines for India Gully advisory firm, ${vertical} sector focus. Taglines should be 3-8 words, professional and memorable. Return JSON: {"variants":[{"type":"tagline","variant":N,"text":"..."}]}`,
         body:        `Rewrite the following content to be more professional and persuasive for India Gully's website. Generate ${variants_n} versions. Input: "${inputText.slice(0,500)}". Return JSON: {"variants":[{"type":"body","variant":N,"text":"..."}]}`,
-        meta_desc:   `Write ${variants_n} SEO meta descriptions (140–160 chars) for India Gully, a leading Indian M&A and capital advisory firm for the ${vertical} sector. Return JSON: {"variants":[{"type":"meta_desc","variant":N,"text":"..."}]}`,
-        cta:         `Write ${variants_n} call-to-action button texts for India Gully advisory services, ${vertical} sector. Keep them action-oriented, 2–5 words. Return JSON: {"variants":[{"type":"cta","variant":N,"text":"..."}]}`,
+        meta_desc:   `Write ${variants_n} SEO meta descriptions (140-160 chars) for India Gully, a leading Indian M&A and capital advisory firm for the ${vertical} sector. Return JSON: {"variants":[{"type":"meta_desc","variant":N,"text":"..."}]}`,
+        cta:         `Write ${variants_n} call-to-action button texts for India Gully advisory services, ${vertical} sector. Keep them action-oriented, 2-5 words. Return JSON: {"variants":[{"type":"cta","variant":N,"text":"..."}]}`,
       }
       const prompt = prompts[type] || prompts.headline
 
@@ -15946,7 +15946,7 @@ app.post('/cms/ai-generate', requireSession(), requireRole(['Super Admin'], ['ad
       headline: [
         { type, variant: 1, text: 'Celebrating Desi-ness — India\'s Premier Advisory Powerhouse' },
         { type, variant: 2, text: 'Where Indian Enterprise Meets Global Capital' },
-        { type, variant: 3, text: 'Trusted Advisors to ₹1,165 Cr+ in Active Mandates' },
+        { type, variant: 3, text: 'Trusted Advisors to ₹2,100 Cr+ in Active Mandates' },
       ],
       tagline: [
         { type, variant: 1, text: 'Desi Roots. Global Reach.' },

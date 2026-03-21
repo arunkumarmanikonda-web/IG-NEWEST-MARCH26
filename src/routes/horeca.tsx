@@ -29,7 +29,7 @@ app.get('/', async (c) => {
         cmsBodyHtml = (row.body_html    as string) || ''
       }
     }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
   /* ── CMS body override zone ──────────────────────────────────────────── */
   const cmsZoneHtml = cmsBodyHtml
     ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
@@ -269,8 +269,8 @@ app.get('/', async (c) => {
               <option value="">Select range</option>
               <option>Below ₹25 Lakhs</option>
               <option>₹25L to ₹1 Crore</option>
-              <option>₹1 Cr – ₹5 Crore</option>
-              <option>₹5 Cr – ₹25 Crore</option>
+              <option>₹1 Cr - ₹5 Crore</option>
+              <option>₹5 Cr - ₹25 Crore</option>
               <option>Above ₹25 Crore</option>
             </select>
           </div>
@@ -499,9 +499,9 @@ app.get('/catalogue', (c) => {
           <div style="display:flex;align-items:center;gap:.75rem;">
             <select id="cat-sort" class="ig-inp" style="font-size:.78rem;max-width:160px;" onchange="igCatFilter()">
               <option value="default">Sort: Default</option>
-              <option value="name">Name A–Z</option>
-              <option value="price_asc">Price: Low–High</option>
-              <option value="price_desc">Price: High–Low</option>
+              <option value="name">Name A-Z</option>
+              <option value="price_asc">Price: Low-High</option>
+              <option value="price_desc">Price: High-Low</option>
               <option value="stock_asc">Stock: Low First</option>
               <option value="featured">Featured First</option>
             </select>
@@ -1462,9 +1462,9 @@ app.get('/portal', (c) => {
         </div>
         <select id="portal-sort" class="ig-input" style="max-width:160px;font-size:.78rem;" onchange="igPortalRender()">
           <option value="">Sort: Default</option>
-          <option value="name">Name A–Z</option>
-          <option value="price_asc">Price: Low–High</option>
-          <option value="price_desc">Price: High–Low</option>
+          <option value="name">Name A-Z</option>
+          <option value="price_asc">Price: Low-High</option>
+          <option value="price_desc">Price: High-Low</option>
           <option value="featured">Featured First</option>
         </select>
         <span id="portal-result-count" style="font-size:.75rem;color:#64748b;white-space:nowrap;"></span>

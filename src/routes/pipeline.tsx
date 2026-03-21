@@ -367,14 +367,14 @@ app.get('/', (c) => {
 `
 
   return c.html(layout('Investor Pipeline Dashboard — India Gully', content, {
-    description: 'India Gully\'s live investor pipeline dashboard — INR 1,165 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
+    description: 'India Gully\'s live investor pipeline dashboard — INR 2,100 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
     canonical: 'https://india-gully.pages.dev/pipeline',
     ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Investor Pipeline Dashboard — India Gully',
-      description: 'Live advisory pipeline of INR 1,165 Cr+ across Real Estate, Hospitality, and Debt verticals.',
+      description: 'Live advisory pipeline of INR 2,100 Cr+ across Real Estate, Hospitality, and Debt verticals.',
       url: 'https://india-gully.pages.dev/pipeline',
       publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://india-gully.pages.dev' }
     }
