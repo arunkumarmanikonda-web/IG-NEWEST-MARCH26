@@ -45,7 +45,7 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">About India Gully</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em></h1>
       <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. — a Delhi-based, multi-vertical institutional advisory platform operating across Hospitality Asset Management, Retail Leasing Velocity, Real Estate Transaction Structuring, Entertainment Destination Advisory, Capital Markets and Special Situations, with a proprietary pan-India mandate pipeline exceeding INR 2,100 Cr.</p>
       <!-- Quick stats -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
