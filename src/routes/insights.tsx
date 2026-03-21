@@ -1522,15 +1522,15 @@ function filterInsights(cat) {
 
   return c.html(layout('Insights & Research — India Gully', content, {
     description: 'India Gully Insights \u2014 thought leadership, market research and sector analysis across hospitality, real estate, retail, entertainment, HORECA, and debt & special situations advisory.',
-    canonical: 'https://india-gully.pages.dev/insights',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+    canonical: 'https://indiagully.com/insights',
+    ogImage: 'https://indiagully.com/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: 'Insights & Research \u2014 India Gully',
       description: 'Thought leadership and market research from India Gully\u2019s advisory practice.',
-      url: 'https://india-gully.pages.dev/insights',
-      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://india-gully.pages.dev' }
+      url: 'https://indiagully.com/insights',
+      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
     }
   }))
 })
@@ -1601,19 +1601,19 @@ app.get('/:id', (c) => {
         <!-- Social share row -->
         <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem;">
           <span style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-right:.25rem;">Share</span>
-          <a href="https://twitter.com/intent/tweet?url=https://india-gully.pages.dev/insights/${article.id}&text=${encodeURIComponent(article.title + ' — India Gully Research')}&via=IndiaGully" target="_blank" rel="noopener" title="Share on X / Twitter"
+          <a href="https://twitter.com/intent/tweet?url=https://indiagully.com/insights/${article.id}&text=${encodeURIComponent(article.title + ' — India Gully Research')}&via=IndiaGully" target="_blank" rel="noopener" title="Share on X / Twitter"
              style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#000;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
             <i class="fab fa-x-twitter" style="font-size:.72rem;"></i>X / Twitter
           </a>
-          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://india-gully.pages.dev/insights/${article.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://indiagully.com/insights/${article.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
              style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#0A66C2;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
             <i class="fab fa-linkedin-in" style="font-size:.72rem;"></i>LinkedIn
           </a>
-          <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' — India Gully Research https://india-gully.pages.dev/insights/' + article.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
+          <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' — India Gully Research https://indiagully.com/insights/' + article.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
              style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#25D366;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
             <i class="fab fa-whatsapp" style="font-size:.72rem;"></i>WhatsApp
           </a>
-          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://india-gully.pages.dev/insights/${article.id}').then(function(){igToast('Link copied!','success')}).catch(function(){igToast('Copy link manually','info')})" title="Copy link"
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://indiagully.com/insights/${article.id}').then(function(){igToast('Link copied!','success')}).catch(function(){igToast('Copy link manually','info')})" title="Copy link"
              style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--parch-dk);color:var(--ink);border:1px solid var(--border);cursor:pointer;border-radius:4px;transition:all .2s;" onmouseover="this.style.background='var(--gold-pale)'" onmouseout="this.style.background='var(--parch-dk)'">
             <i class="fas fa-link" style="font-size:.72rem;color:var(--gold);"></i>Copy Link
           </button>
@@ -1870,7 +1870,7 @@ ${relatedArticles.length ? `
   return c.html(layout(article.title, content, {
     description: article.excerpt,
     ogImage: CAT_IMAGES[article.category],
-    canonical: `https://india-gully.pages.dev/insights/${article.id}`,
+    canonical: `https://indiagully.com/insights/${article.id}`,
     jsonLd: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -1880,21 +1880,21 @@ ${relatedArticles.length ? `
           description: article.excerpt,
           image: CAT_IMAGES[article.category],
           datePublished: article.date,
-          author: { '@type': 'Organization', name: 'India Gully Research', url: 'https://india-gully.pages.dev' },
+          author: { '@type': 'Organization', name: 'India Gully Research', url: 'https://indiagully.com' },
           publisher: {
             '@type': 'Organization', name: 'India Gully',
-            logo: { '@type': 'ImageObject', url: 'https://india-gully.pages.dev/assets/logo-white.png' }
+            logo: { '@type': 'ImageObject', url: 'https://indiagully.com/assets/logo-white.png' }
           },
-          mainEntityOfPage: { '@type': 'WebPage', '@id': `https://india-gully.pages.dev/insights/${article.id}` },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': `https://indiagully.com/insights/${article.id}` },
           keywords: article.tags.join(', '),
           articleSection: article.category,
         },
         {
           '@type': 'BreadcrumbList',
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://india-gully.pages.dev/' },
-            { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://india-gully.pages.dev/insights' },
-            { '@type': 'ListItem', position: 3, name: article.title, item: `https://india-gully.pages.dev/insights/${article.id}` },
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://indiagully.com/insights' },
+            { '@type': 'ListItem', position: 3, name: article.title, item: `https://indiagully.com/insights/${article.id}` },
           ]
         }
       ]

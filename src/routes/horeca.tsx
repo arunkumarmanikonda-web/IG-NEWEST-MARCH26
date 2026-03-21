@@ -356,7 +356,7 @@ app.get('/', async (c) => {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Integrated HORECA Procurement &amp; Supply Chain Orchestration', content, {
     description: 'India Gully Integrated HORECA Procurement &amp; Supply Chain Orchestration — kitchen equipment, FF&E, OS&E, linens, uniforms and guest amenities for hotels and F&B operators across India.',
-    canonical: 'https://india-gully.pages.dev/horeca'
+    canonical: 'https://indiagully.com/horeca'
   }))
 })
 
@@ -1364,7 +1364,7 @@ document.addEventListener('DOMContentLoaded', igCatLoad);
 `
   return c.html(layout('HORECA Product Catalogue', content, {
     description: 'India Gully HORECA product catalogue — browse 500+ SKUs across kitchen equipment, crockery, linen, bar, housekeeping, furniture, technology and safety. Download CSV or PDF.',
-    canonical: 'https://india-gully.pages.dev/horeca/catalogue'
+    canonical: 'https://indiagully.com/horeca/catalogue'
   }))
 })
 

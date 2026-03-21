@@ -437,13 +437,13 @@ function igContactAjax() {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Contact & Enquiry', content, {
     description: 'Contact India Gully, submit a mandate enquiry, HORECA RFQ or advisory request. Our leadership team responds within 24 hours.',
-    canonical: 'https://india-gully.pages.dev/contact',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+    canonical: 'https://indiagully.com/contact',
+    ogImage: 'https://indiagully.com/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'ContactPage',
       name: 'Contact India Gully',
-      url: 'https://india-gully.pages.dev/contact',
+      url: 'https://indiagully.com/contact',
       description: 'Initiate a confidential mandate enquiry or HORECA RFQ. 24-hour diagnostic acknowledgment. Pre-Mandate Confidentiality Protocol executed on engagement commencement.',
       mainEntity: {
         '@type': 'Organization',

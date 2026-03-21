@@ -307,7 +307,7 @@ function sortCity(by) {
 `
   return c.html(layout('India Real Estate & Hospitality Market Data', html, {
     description: 'India market intelligence dashboard: city-wise office, hotel and retail rates, hotel segment benchmarks, macro indicators and transaction activity as of March 2026.',
-    canonical: '/market-data',
+    canonical: 'https://indiagully.com/market-data',
   }))
 })
 

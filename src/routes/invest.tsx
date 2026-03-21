@@ -440,19 +440,19 @@ function filterInvest(sector) {
 `
   return c.html(layout('Investor Relations — Active Pipeline & Mandates', content, {
     description: 'India Gully Investor Relations — ₹2,100 Cr+ active advisory pipeline across Real Estate, Hospitality, Retail, Entertainment and Debt. Institutional-grade mandates. Request Information Memorandum.',
-    canonical: 'https://india-gully.pages.dev/invest',
-    ogImage: 'https://india-gully.pages.dev/static/og-invest.jpg',
+    canonical: 'https://indiagully.com/invest',
+    ogImage: 'https://indiagully.com/static/og-invest.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Investor Relations — India Gully',
-      url: 'https://india-gully.pages.dev/invest',
+      url: 'https://indiagully.com/invest',
       description: 'Active investment mandates and advisory pipeline for qualified institutional investors and family offices.',
       publisher: {
         '@type': 'Organization',
         name: 'India Gully',
         legalName: 'Vivacious Entertainment and Hospitality Pvt. Ltd.',
-        url: 'https://india-gully.pages.dev',
+        url: 'https://indiagully.com',
         telephone: '+918988988988',
         email: 'info@indiagully.com'
       }

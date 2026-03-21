@@ -698,8 +698,8 @@ function resetFilters() {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Active Mandates — India Gully Advisory Pipeline', content, {
     description: 'India Gully active mandates — ₹2,100 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
-    canonical: 'https://india-gully.pages.dev/listings',
-    ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg'
+    canonical: 'https://indiagully.com/listings',
+    ogImage: 'https://indiagully.com/static/og-listings.jpg'
   }))
 })
 
@@ -1826,22 +1826,22 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <!-- Share row -->
           <div style="display:flex;justify-content:center;gap:.5rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.07);">
             <span style="font-size:.58rem;color:rgba(255,255,255,.3);align-self:center;margin-right:.2rem;text-transform:uppercase;letter-spacing:.1em;">Share</span>
-            <a href="https://twitter.com/intent/tweet?url=https://india-gully.pages.dev/listings/${l.id}&text=${encodeURIComponent(l.title + ' — Active Mandate, India Gully Advisory')}" target="_blank" rel="noopener" title="Share on X/Twitter"
+            <a href="https://twitter.com/intent/tweet?url=https://indiagully.com/listings/${l.id}&text=${encodeURIComponent(l.title + ' — Active Mandate, India Gully Advisory')}" target="_blank" rel="noopener" title="Share on X/Twitter"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-x-twitter" style="font-size:.62rem;"></i>
             </a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://india-gully.pages.dev/listings/${l.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://indiagully.com/listings/${l.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='#0A66C2';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-linkedin-in" style="font-size:.62rem;"></i>
             </a>
-            <a href="https://wa.me/?text=${encodeURIComponent(l.title + ' — Active Mandate https://india-gully.pages.dev/listings/' + l.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
+            <a href="https://wa.me/?text=${encodeURIComponent(l.title + ' — Active Mandate https://indiagully.com/listings/' + l.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='#25D366';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-whatsapp" style="font-size:.62rem;"></i>
             </a>
-            <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://india-gully.pages.dev/listings/${l.id}').then(function(){igToast('Link copied!','success')}).catch(function(){})" title="Copy link"
+            <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://indiagully.com/listings/${l.id}').then(function(){igToast('Link copied!','success')}).catch(function(){})" title="Copy link"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;"
                onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fas fa-link" style="font-size:.62rem;"></i>
@@ -2068,7 +2068,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
   return c.html(layout(listing.title, content, {
     description: `${listing.title}, ${listing.location}, ${listing.value}, India Gully exclusive transaction advisory mandate.`,
     ogImage: (listing as any).images?.[0],
-    canonical: `https://india-gully.pages.dev/listings/${listing.id}`,
+    canonical: `https://indiagully.com/listings/${listing.id}`,
     jsonLd: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -2077,15 +2077,15 @@ ${l.id === 'prism-tower-gurgaon' ? `
           name: listing.title,
           description: `${listing.desc} — ${listing.location} — ${listing.value}`,
           address: { '@type': 'PostalAddress', addressLocality: listing.location, addressCountry: 'IN' },
-          url: `https://india-gully.pages.dev/listings/${listing.id}`,
-          image: (listing as any).images?.[0] || 'https://india-gully.pages.dev/static/og.jpg',
+          url: `https://indiagully.com/listings/${listing.id}`,
+          image: (listing as any).images?.[0] || 'https://indiagully.com/static/og.jpg',
         },
         {
           '@type': 'BreadcrumbList',
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://india-gully.pages.dev/' },
-            { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://india-gully.pages.dev/listings' },
-            { '@type': 'ListItem', position: 3, name: listing.title, item: `https://india-gully.pages.dev/listings/${listing.id}` },
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://indiagully.com/listings' },
+            { '@type': 'ListItem', position: 3, name: listing.title, item: `https://indiagully.com/listings/${listing.id}` },
           ]
         }
       ]
