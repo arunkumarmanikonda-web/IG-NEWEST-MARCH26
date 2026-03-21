@@ -979,7 +979,7 @@ function clientShell(pageTitle: string, active: string, body: string) {
         <div style="display:flex;align-items:center;gap:.625rem;">
           <div style="text-align:right;display:none;" class="r-hide">
             <div style="font-size:.72rem;font-weight:600;color:var(--ink);">Portal User</div>
-            <div style="font-size:.62rem;color:var(--ink-muted);">demo@indiagully.com</div>
+            <div style="font-size:.62rem;color:var(--ink-muted);">portal@indiagully.com</div>
           </div>
           <div style="width:34px;height:34px;background:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Portal User" onclick="igToast('Portal User · portal@indiagully.com','info')">
             <span style="font-family:'DM Serif Display',Georgia,serif;font-size:.8rem;color:#fff;font-weight:700;">CL</span>
@@ -1268,7 +1268,7 @@ app.get('/client/proposals', (c) => {
           var cell = document.getElementById('prop-status-'+idx);
           if(cell) cell.innerHTML = '<span class="badge b-gr">Signed</span>';
           if(btn) btn.remove();
-          fetch('/api/contracts/esign/send-envelope',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({document_name:docName,signers:[{name:'Client',email:'demo@indiagully.com'}],subject:'Signature Request: '+docName})}).then(function(){}).catch(function(){});
+          fetch('/api/contracts/esign/send-envelope',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({document_name:docName,signers:[{name:'Client',email:'portal@indiagully.com'}],subject:'Signature Request: '+docName})}).then(function(){}).catch(function(){});
           igToast(docName+' signed electronically. Confirmation sent to akm@indiagully.com','success');
         }, 1500);
       });
@@ -1763,9 +1763,9 @@ app.get('/client/profile', (c) => {
         <div style="display:flex;flex-direction:column;gap:1rem;">
           ${[
             { label:'Full Name',     value:'Portal User'                     },
-            { label:'Email Address', value:'demo@indiagully.com'             },
+            { label:'Email Address', value:'portal@indiagully.com'             },
             { label:'Phone',         value:'+91 8988 988 988'               },
-            { label:'Organisation',  value:'Demo Corp Pvt. Ltd.'             },
+            { label:'Organisation',  value:'Jaipur Heritage Holdings Pvt. Ltd.'             },
             { label:'GST Number',    value:'07XXXXXXXXXXX1ZX'               },
             { label:'PAN Number',    value:'[REDACTED-PAN]'                     },
           ].map(f => `
@@ -1778,9 +1778,9 @@ app.get('/client/profile', (c) => {
             <h4 style="font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;">Edit Account Details</h4>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
               <div><label class="ig-label">Full Name</label><input type="text" class="ig-input" value="Portal User" style="font-size:.82rem;"></div>
-              <div><label class="ig-label">Email Address</label><input type="email" class="ig-input" value="demo@indiagully.com" style="font-size:.82rem;"></div>
+              <div><label class="ig-label">Email Address</label><input type="email" class="ig-input" value="portal@indiagully.com" style="font-size:.82rem;"></div>
               <div><label class="ig-label">Phone</label><input type="tel" class="ig-input" value="+91 8988 988 988" style="font-size:.82rem;"></div>
-              <div><label class="ig-label">Organisation</label><input type="text" class="ig-input" value="Demo Corp Pvt. Ltd." style="font-size:.82rem;"></div>
+              <div><label class="ig-label">Organisation</label><input type="text" class="ig-input" value="Jaipur Heritage Holdings Pvt. Ltd." style="font-size:.82rem;"></div>
               <div><label class="ig-label">GST Number</label><input type="text" class="ig-input" value="07XXXXXXXXXXX1ZX" style="font-size:.82rem;"></div>
               <div><label class="ig-label">PAN Number</label><input type="text" class="ig-input" value="[REDACTED-PAN]" style="font-size:.82rem;"></div>
             </div>

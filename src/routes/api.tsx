@@ -2140,7 +2140,7 @@ app.post('/hr/epfo/ecr', async (c) => {
     const employees = [
       { uan:'100000000001', name:'RAVI KUMAR',   epf_wages:45000, eps_wages:15000, epf_contrib:5400,  eps_contrib:1800, diff:3600  },
       { uan:'100000000002', name:'PRIYA SINGH',  epf_wages:38000, eps_wages:15000, epf_contrib:4560,  eps_contrib:1800, diff:2760  },
-      { uan:'100000000003', name:'AMIT SHARMA',  epf_wages:35000, eps_wages:15000, epf_contrib:4200,  eps_contrib:1800, diff:2400  },
+      { uan:'100000000003', name:'PAVAN MANIKONDA',  epf_wages:35000, eps_wages:15000, epf_contrib:4200,  eps_contrib:1800, diff:2400  },
     ]
 
     // EPFO ECR v2.0 format
@@ -2210,7 +2210,7 @@ app.get('/hr/esic/statement', async (c) => {
     esic_reg_no: 'E-31/DL/0000000001',
     employees_covered: 1,
     eligible_employees: [
-      { ip_no:'0000000001', name:'AMIT SHARMA', gross:35000, esic_emp:263, esic_er:1138, total_contribution:1401 },
+      { ip_no:'0000000001', name:'PAVAN MANIKONDA', gross:35000, esic_emp:263, esic_er:1138, total_contribution:1401 },
     ],
     total_employer_share: 1138, total_employee_share: 263, total_remittance: 1401,
     due_date: '15 Mar 2026', portal: 'https://esic.gov.in',
@@ -17183,7 +17183,7 @@ app.get('/hr/form16/generate', requireSession(), async (c) => {
   }
   return c.json({
     success: true, fiscal_year, source: 'static',
-    employee: { name: 'AMIT SHARMA', pan: 'ABCDE1234F', designation: 'President' },
+    employee: { name: 'AMIT JHINGAN', pan: 'AACPJ1234K', designation: 'President — Real Estate' },
     gross_salary: 420000, tds_deducted: 42000,
     form16_ref: `F16-STATIC-${fiscal_year}`,
     generated_at: new Date().toISOString(),
