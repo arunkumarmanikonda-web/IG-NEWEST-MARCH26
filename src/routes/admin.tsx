@@ -16517,6 +16517,94 @@ app.get('/documents', async (c) => {
   } catch(e) { console.warn('[igLoadPfEsiLive]', e) }
 }
 
+// ── Phase U: Analytics, Admin Users, DPDP, Compliance live loaders ────────────
+;(window as any).igLoadKpiDashboardLive = async function(containerId?: string) {
+  try {
+    const r = await fetch('/api/executive/kpi-dashboard', { credentials: 'include' })
+    const d = await r.json()
+    if (containerId && d.metrics?.length) {
+      const el = document.getElementById(containerId)
+      if (el) el.innerHTML = d.metrics.map((k: any) => `
+        <div style="padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto auto;gap:.5rem;align-items:center;">
+          <div><span style="font-size:.72rem;color:rgba(255,255,255,.4);">${k.department}</span> · <span style="font-size:.8rem;color:#fff;font-weight:600;">${k.metric_name}</span></div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.5);">${k.actual_label || k.actual_value} / ${k.target_label || k.target_value}</div>
+          <div style="font-size:.72rem;font-weight:700;color:${(k.pct_complete||0)>=90?'#22c55e':(k.pct_complete||0)>=70?'#fbbf24':'#ef4444'};">${Math.round(k.pct_complete||0)}%</div>
+        </div>`).join('')
+    }
+    return d
+  } catch(e) { console.warn('[igLoadKpiDashboardLive]', e) }
+}
+;(window as any).igLoadErpDashboardLive = async function() {
+  try {
+    const r = await fetch('/api/finance/erp-dashboard', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadErpDashboardLive]', e) }
+}
+;(window as any).igLoadTdsTrackerLive = async function(tableBodyId?: string) {
+  try {
+    const r = await fetch('/api/finance/tds-tracker', { credentials: 'include' })
+    const d = await r.json()
+    if (tableBodyId && d.deductees?.length) {
+      const el = document.getElementById(tableBodyId)
+      if (el) el.innerHTML = d.deductees.map((t: any) => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+          <td style="padding:.6rem .8rem;font-size:.78rem;color:#fff;">${t.name}</td>
+          <td style="padding:.6rem .8rem;font-size:.75rem;color:rgba(255,255,255,.6);">${t.section}</td>
+          <td style="padding:.6rem .8rem;font-size:.78rem;color:#fbbf24;text-align:right;">₹${(t.tds_deducted||0).toLocaleString()}</td>
+          <td style="padding:.6rem .8rem;">
+            <span style="font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:.2rem .55rem;${t.filing_status==='filed'?'background:rgba(34,197,94,.12);color:#22c55e;':t.filing_status==='overdue'?'background:rgba(239,68,68,.12);color:#ef4444;':'background:rgba(251,191,36,.1);color:#fbbf24;'}">${(t.filing_status||'—').toUpperCase()}</span>
+          </td>
+        </tr>`).join('')
+    }
+    return d
+  } catch(e) { console.warn('[igLoadTdsTrackerLive]', e) }
+}
+;(window as any).igLoadPipelineAnalyticsLive = async function() {
+  try {
+    const r = await fetch('/api/sales/pipeline-analytics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPipelineAnalyticsLive]', e) }
+}
+;(window as any).igLoadComplianceSignoffsLive = async function() {
+  try {
+    const r = await fetch('/api/compliance/signoffs', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadComplianceSignoffsLive]', e) }
+}
+;(window as any).igLoadAdminUsersLive = async function(tableBodyId?: string) {
+  try {
+    const r = await fetch('/api/admin/users', { credentials: 'include' })
+    const d = await r.json()
+    if (tableBodyId && d.users?.length) {
+      const el = document.getElementById(tableBodyId)
+      if (el) el.innerHTML = d.users.map((u: any) => `
+        <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
+          <td style="padding:.6rem .8rem;font-size:.8rem;color:#fff;font-weight:600;">${u.name}</td>
+          <td style="padding:.6rem .8rem;font-size:.75rem;color:rgba(255,255,255,.6);">${u.email}</td>
+          <td style="padding:.6rem .8rem;font-size:.72rem;color:#fbbf24;">${u.role}</td>
+          <td style="padding:.6rem .8rem;font-size:.72rem;color:rgba(255,255,255,.4);">${u.portal}</td>
+          <td style="padding:.6rem .8rem;">
+            <span style="font-size:.65rem;font-weight:700;padding:.2rem .55rem;${u.active?'background:rgba(34,197,94,.12);color:#22c55e;':'background:rgba(239,68,68,.1);color:#ef4444;'}">${u.active?'ACTIVE':'INACTIVE'}</span>
+          </td>
+          <td style="padding:.6rem .8rem;font-size:.7rem;color:rgba(255,255,255,.3);">${u.last_login||'—'}</td>
+        </tr>`).join('')
+    }
+    return d
+  } catch(e) { console.warn('[igLoadAdminUsersLive]', e) }
+}
+;(window as any).igLoadGrievancesLive = async function() {
+  try {
+    const r = await fetch('/api/dpdp/grievances', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadGrievancesLive]', e) }
+}
+;(window as any).igLoadMarketIntelLive = async function(key = 'india_hospitality_2026q1') {
+  try {
+    const r = await fetch(`/api/data/market-intelligence?key=${encodeURIComponent(key)}`, { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadMarketIntelLive]', e) }
+}
+
 
 
 const FALLBACK_DOCS = [
