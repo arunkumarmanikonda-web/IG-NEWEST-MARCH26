@@ -305,7 +305,7 @@ app.get('/api/mandate-locations', (c) => {
   c.header('Cache-Control', 'public, max-age=3600')
   return c.json({
     updated: 'Q1 2026',
-    total_value: '₹1,165 Cr+',
+    total_value: '₹2,100 Cr+',
     total_mandates: 8,
     locations: [
       {

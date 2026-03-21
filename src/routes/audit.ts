@@ -148,7 +148,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
     <div class="section-title"><i class="fas fa-star"></i> 1. Executive Summary</div>
     <div class="card">
       <p style="font-size:.88rem;margin-bottom:1rem;">
-        The India Gully Enterprise Platform has undergone nine consecutive security and functional audit rounds (A–I),
+        The India Gully Enterprise Platform has undergone nine consecutive security and functional audit rounds (A-I),
         progressing from a score of <strong>28/100</strong> in A-Round to <strong>88/100</strong> in I-Round.
         The platform now operates a production-grade multi-portal system serving three distinct user classes:
         super-admin, enterprise client (board/director), and employee — each with isolated authentication flows,
@@ -398,7 +398,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
 
   <!-- 8. ALL RESOLVED ITEMS & Q-ROUND ROADMAP -->
   <div class="section">
-    <div class="section-title"><i class="fas fa-list-check"></i> 8. W–CC-Round Items — Gold Certification through Analytics Intelligence</div>
+    <div class="section-title"><i class="fas fa-list-check"></i> 8. W-CC-Round Items — Gold Certification through Analytics Intelligence</div>
     <div class="card">
       <table class="ig-tbl">
         <thead><tr><th>ID</th><th>Item</th><th>Priority</th><th>Effort</th></tr></thead>
@@ -415,7 +415,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
             ['J2','Integrations — Razorpay HMAC webhook, GET /api/integrations/health, live secrets panel in admin','RESOLVED','0h'],
             ['J3','D1 remote deploy — migration 0003 applied locally; scripts/create-d1-remote.sh ready for D1:Edit token','RESOLVED','0h'],
             ['J4','@simplewebauthn/server — full FIDO2 register/complete with attestation + authenticate/complete with counter','RESOLVED','0h'],
-            ['J5','Insights — 12 real case-study articles (2024–2026); D1-backed GET /api/insights + /api/insights/:slug with view count','RESOLVED','0h'],
+            ['J5','Insights — 12 real case-study articles (2024-2026); D1-backed GET /api/insights + /api/insights/:slug with view count','RESOLVED','0h'],
             ['K1','D1 K-Round activation — migration 0004 (R2 metadata, DPDP v2 tables); create-d1-remote.sh updated with K3 R2 step','RESOLVED','0h'],
             ['K2','Live secrets — scripts/set-secrets.sh created; wrangler secret put commands documented for Razorpay/SendGrid/Twilio','RESOLVED','0h'],
             ['K3','R2 Document Store — POST /api/documents/upload, GET /api/documents, GET /api/documents/:key, DELETE; ig_documents + access log D1 tables','RESOLVED','0h'],
@@ -452,7 +452,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
             ['P3','GET /api/integrations/sendgrid/dns-validate — live DNS lookup for CNAME/DKIM/SPF + indiagully.com verification','RESOLVED','0h'],
             ['P4','GET /api/auth/webauthn/passkey-guide — FIDO2 guide, supported authenticators, QR enrollment roadmap','RESOLVED','0h'],
             ['P5','GET /api/dpdp/dfr-finalise — DFR 8/12 final checklist, DPB portal readiness, processor DPA tracker','RESOLVED','0h'],
-            ['P6','GET /api/compliance/audit-signoff — 6-domain sign-off form (36 checks), assessor requirements, SO-01–SO-10','RESOLVED','0h'],
+            ['P6','GET /api/compliance/audit-signoff — 6-domain sign-off form (36 checks), assessor requirements, SO-01-SO-10','RESOLVED','0h'],
             // Q-Round items (all resolved)
             ['Q1','GET /api/admin/secrets-status — live secrets health: 8 secrets, infra bindings (D1/R2/KV) status','RESOLVED','0h'],
             ['Q2','GET /api/payments/receipt/:id — Razorpay order receipt with GST breakdown, HSN/SAC, IGST computation','RESOLVED','0h'],
@@ -465,17 +465,17 @@ const AUDIT_HTML = `<!DOCTYPE html>
             ['R2','GET /api/payments/razorpay-health — live Razorpay API probe: GET /v1/orders?count=1, latency, key mode detection','RESOLVED','0h'],
             ['R3','GET /api/integrations/email-health — SendGrid API probe + DKIM DoH check + deliverability score /100','RESOLVED','0h'],
             ['R4','GET /api/auth/webauthn/credential-store — D1 ig_webauthn_credentials table health, per-user credential count','RESOLVED','0h'],
-            ['R5','GET /api/dpdp/dpa-tracker — 6-processor DPA execution tracker (DPA-01–DPA-06), deadlines, priority, overdue flags','RESOLVED','0h'],
-            ['R6','GET /api/compliance/cert-registry — cert history O/P/Q/R-Round, current Bronze/Silver/Gold score, Gold-path GR-01–GR-06','RESOLVED','0h'],
+            ['R5','GET /api/dpdp/dpa-tracker — 6-processor DPA execution tracker (DPA-01-DPA-06), deadlines, priority, overdue flags','RESOLVED','0h'],
+            ['R6','GET /api/compliance/cert-registry — cert history O/P/Q/R-Round, current Bronze/Silver/Gold score, Gold-path GR-01-GR-06','RESOLVED','0h'],
             // S-Round items (all resolved)
             ['S1','GET /api/admin/live-config — live runtime config snapshot: 5 sections, 29 configs, green/warning/error tally','RESOLVED','0h'],
             ['S2','GET /api/payments/gateway-status — payment gateway status board: mode, API alive, compliance checks, feature matrix','RESOLVED','0h'],
             ['S3','GET /api/integrations/stack-health — full 11-integration stack health: CF/Razorpay/SendGrid/Twilio/DocuSign/Platform','RESOLVED','0h'],
             ['S4','GET /api/auth/session-analytics — auth analytics: active sessions, role breakdown, auth method matrix, security metrics','RESOLVED','0h'],
             ['S5','GET /api/dpdp/consent-analytics — DPDP consent analytics: 15-item checklist, purpose breakdown, compliance %','RESOLVED','0h'],
-            ['S6','GET /api/compliance/gap-analysis — weighted gap analysis: 6-domain scorecard, cert level, Gold-path roadmap G1–G6','RESOLVED','0h'],
+            ['S6','GET /api/compliance/gap-analysis — weighted gap analysis: 6-domain scorecard, cert level, Gold-path roadmap G1-G6','RESOLVED','0h'],
             // T-Round items (all resolved)
-            ['T1','GET /api/admin/go-live-checklist — 20-item production go-live checklist: infra (GL-01–05), payments (GL-06–09), email (GL-10–13), compliance (GL-14–17), security (GL-18–20)','RESOLVED','0h'],
+            ['T1','GET /api/admin/go-live-checklist — 20-item production go-live checklist: infra (GL-01-05), payments (GL-06-09), email (GL-10-13), compliance (GL-14-17), security (GL-18-20)','RESOLVED','0h'],
             ['T2','GET /api/payments/transaction-log — paginated Razorpay webhook log with GST breakdown (D1-backed + demo fallback)','RESOLVED','0h'],
             ['T3','GET /api/integrations/webhook-health — Razorpay + SendGrid webhook status, last-event age, 5-step setup guide','RESOLVED','0h'],
             ['T4','GET /api/auth/mfa-status — MFA enrolment board: TOTP/WebAuthn counts (D1), Email OTP, SMS OTP, 5-method matrix','RESOLVED','0h'],
@@ -500,7 +500,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
             // W-Round items (all resolved)
             ['W1','GET /api/admin/d1-binding-health — live D1 probe: binding detection, per-table SELECT COUNT(*), migration diff, step-by-step bind guide','RESOLVED','0h'],
             ['W2','POST /api/payments/razorpay-live-test — ₹1 dry-run order, PCI-DSS 12/12 checklist, HMAC webhook readiness, setup_commands','RESOLVED','0h'],
-            ['W3','GET /api/integrations/dns-deliverability-live — real DNS-over-HTTPS (Cloudflare 1.1.1.1): SPF/DKIM×2/DMARC/MX + grade A+–F + copy-paste DNS records','RESOLVED','0h'],
+            ['W3','GET /api/integrations/dns-deliverability-live — real DNS-over-HTTPS (Cloudflare 1.1.1.1): SPF/DKIM×2/DMARC/MX + grade A+-F + copy-paste DNS records','RESOLVED','0h'],
             ['W4','GET /api/auth/webauthn-credential-store — KV credential store, RP config validator (6 checks), enrollment guide, authenticator list','RESOLVED','0h'],
             ['W5','POST /api/dpdp/vendor-dpa-execute — mark DPA as executed (KV-persisted), signed_date/expiry/reference, 6-vendor registry, DPDP §8(3)','RESOLVED','0h'],
             ['W6','GET /api/compliance/gold-cert-signoff — 12-criteria weighted matrix (100 pts), KV-live data (D1/KV/secrets), cert_level Gold/Silver/Bronze','RESOLVED','0h'],
@@ -508,9 +508,9 @@ const AUDIT_HTML = `<!DOCTYPE html>
             // X-Round endpoints (all resolved)
             ['X1','GET /api/admin/operator-checklist — 6-step operator onboarding wizard: D1 binding, Razorpay, DNS, WebAuthn, DPAs, Gold sign-off per-step status + action_url','RESOLVED','0h'],
             ['X2','GET /api/payments/live-transaction-summary — live Razorpay orders from D1: total/paid/failed counts, GST 18% breakdown (CGST+SGST), top-5 recent transactions','RESOLVED','0h'],
-            ['X3','GET /api/integrations/deliverability-score — composite 0-100 score: SPF×25 + DKIM×30 + DMARC×25 + MX×10 + SendGrid×10, per-check grade A–F, recommendations','RESOLVED','0h'],
+            ['X3','GET /api/integrations/deliverability-score — composite 0-100 score: SPF×25 + DKIM×30 + DMARC×25 + MX×10 + SendGrid×10, per-check grade A-F, recommendations','RESOLVED','0h'],
             ['X4','GET /api/auth/mfa-coverage — MFA coverage matrix: TOTP enrolled %, WebAuthn enrolled %, per-role (Super Admin/Admin/Staff/Portal), overall grade','RESOLVED','0h'],
-            ['X5','GET /api/dpdp/compliance-score — composite DPDP score: §11–§17 + DPA coverage, consent rate, DSR SLA %, vendor DPA coverage, grade A–D','RESOLVED','0h'],
+            ['X5','GET /api/dpdp/compliance-score — composite DPDP score: §11-§17 + DPA coverage, consent rate, DSR SLA %, vendor DPA coverage, grade A-D','RESOLVED','0h'],
             ['X6','GET /api/compliance/certification-history — full F→X timeline: round, version, level (Bronze/Silver/Gold), score, endpoints, key highlights, Gold cert ID','RESOLVED','0h'],
             // Y-Round endpoints (all resolved)
             ['Y1','GET /api/admin/platform-health-dashboard — runtime snapshot: component status, D1/KV latency, secrets vault, Razorpay mode, overall operational/degraded/outage','RESOLVED','0h'],
@@ -529,18 +529,18 @@ const AUDIT_HTML = `<!DOCTYPE html>
             ['Z2','GET /api/payments/chargeback-report — chargeback & dispute register: open/won/lost counts, amounts, RBI chargeback ratio (must be <1%), reason codes','RESOLVED','0h'],
             ['Z3','GET /api/integrations/webhook-health — webhook delivery health: 24h event log, success rate, retry queue, HMAC verification for Razorpay/SendGrid/Twilio','RESOLVED','0h'],
             ['Z4','GET /api/auth/privilege-audit — PAM audit: 7-day Super Admin action log, unusual-hour access flags, least-privilege gap analysis, quarterly review date','RESOLVED','0h'],
-            ['Z5','GET /api/dpdp/breach-simulation — DPDP §12 tabletop: 72h notification timeline, CERT-In template, readiness score A–C, gap list, strength evidence','RESOLVED','0h'],
+            ['Z5','GET /api/dpdp/breach-simulation — DPDP §12 tabletop: 72h notification timeline, CERT-In template, readiness score A-C, gap list, strength evidence','RESOLVED','0h'],
             ['Z6','GET /api/compliance/continuous-monitoring — 20 controls across ISO 27001/DPDP/PCI-DSS/SOC-2: pass/watch/fail, drift alerts, next assessment 2026-06-01','RESOLVED','0h'],
             // Z-Round operator actions
             ['ZO1','Approve IR Policy POL-012 — moves DPDP §12 from watch → pass in Z6 continuous monitor','High','1h'],
             ['ZO2','Register DPBI portal account at dpb.gov.in — required for §12 breach notification readiness','High','2h'],
             ['ZO3','Draft data principal breach notification template — required for Z5 readiness Grade A','Medium','2h'],
-            ['ZO4','Complete YO1–YO4 first — all operator actions cascade from D1 bind and Razorpay live setup','High','8h'],
+            ['ZO4','Complete YO1-YO4 first — all operator actions cascade from D1 bind and Razorpay live setup','High','8h'],
             // AA-Round endpoints (all resolved)
             ['AA1','GET /api/finance/cashflow-forecast — 12-month FY 2026-27 rolling cashflow: monthly inflow/outflow/net, cumulative balance, burn rate, runway months, bull/base/bear scenarios','RESOLVED','0h'],
-            ['AA2','GET /api/payments/fraud-signals — real-time fraud signals: velocity anomaly, geo mismatch, card-testing, unusual hour — severity High/Medium/Low, RBI fraud score 0–100','RESOLVED','0h'],
+            ['AA2','GET /api/payments/fraud-signals — real-time fraud signals: velocity anomaly, geo mismatch, card-testing, unusual hour — severity High/Medium/Low, RBI fraud score 0-100','RESOLVED','0h'],
             ['AA3','GET /api/integrations/api-gateway-metrics — per-route P50/P95/P99 latency, error rate, RPS, top consumers, slow-route ranking, rate-limit config summary','RESOLVED','0h'],
-            ['AA4','GET /api/auth/zero-trust-scorecard — NIST SP 800-207 maturity: 5 pillars (Identity/Devices/Network/Data/Apps), 13 controls, grade A–D, maturity level Advanced/Intermediate','RESOLVED','0h'],
+            ['AA4','GET /api/auth/zero-trust-scorecard — NIST SP 800-207 maturity: 5 pillars (Identity/Devices/Network/Data/Apps), 13 controls, grade A-D, maturity level Advanced/Intermediate','RESOLVED','0h'],
             ['AA5','GET /api/dpdp/data-map — 14-category DPDP data inventory: processing purpose, legal basis §7(a-e)/§8(7), retention period, cross-border flags, DPO review status','RESOLVED','0h'],
             ['AA6','GET /api/compliance/risk-heatmap — 18 risks × 6 domains (Financial/Operational/Legal/Tech/Reputational/Compliance), L×I matrix, mitigation owner, residual risk score','RESOLVED','0h'],
             // AA-Round operator actions
@@ -559,7 +559,7 @@ const AUDIT_HTML = `<!DOCTYPE html>
             ['BBO1','Disable dormant accounts (U007, U008) — BB4 identity-lifecycle health: action-required → healthy','High','1h'],
             ['BBO2','Enforce MFA for Legal role (U005) — BB4 no_mfa_active count 2 → 0','High','0.5h'],
             ['BBO3','Approve DocuSign cross-border DPA — BB5 data-residency §16 pending 1 → 0; dpo_signoff true','Medium','2h'],
-            ['BBO4','Complete AAO1–AAO4 first — all BB operator actions cascade from prior round completions','High','8h'],
+            ['BBO4','Complete AAO1-AAO4 first — all BB operator actions cascade from prior round completions','High','8h'],
             // CC-Round endpoints (all resolved)
             ['CC1','GET /api/finance/tax-analytics — FY 2025-26 tax analytics: GST CGST/SGST ₹1.89L, TDS §192/194J/194C, advance tax 4 qtrs, effective rate 22.4%, Form 26AS reconciled','RESOLVED','0h'],
             ['CC2','GET /api/payments/revenue-analytics — Q3+Q4 revenue: total ₹26.1L, top-10 mandates, MoM growth, ARPU, payment mix (UPI 62%), churn risk scoring','RESOLVED','0h'],
