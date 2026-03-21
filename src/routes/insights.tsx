@@ -1458,7 +1458,7 @@ app.get('/', (c) => {
           </div>
           <div>
             <label style="display:block;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.35rem;">Email Address *</label>
-            <input type="email" name="email" required placeholder="your@email.com"
+            <input type="email" name="email" required placeholder="Work email address"
                    style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.75rem 1rem;font-size:.875rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
           </div>
@@ -1717,7 +1717,7 @@ app.get('/:id', (c) => {
         <p style="font-size:.78rem;color:var(--ink-soft);margin-bottom:1rem;line-height:1.6;">New insights from active mandates, direct to your inbox.</p>
         <div id="sub-form-wrap">
           <div style="display:flex;flex-direction:column;gap:.625rem;">
-            <input type="email" id="sub-email" placeholder="your@email.com"
+            <input type="email" id="sub-email" placeholder="Work email address"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.7rem .875rem;font-size:.82rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;background:#fff;color:var(--ink);"
                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"
                    onkeydown="if(event.key==='Enter'){event.preventDefault();igSubscribe();}">

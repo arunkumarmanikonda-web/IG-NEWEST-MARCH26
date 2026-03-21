@@ -777,25 +777,25 @@ app.get('/:id', (c) => {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.625rem;">
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Full Name *</label>
-            <input id="nda-name" type="text" placeholder="e.g. Rajesh Kumar" required autocomplete="name"
+            <input id="nda-name" type="text" placeholder="Legal full name" required autocomplete="name"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Email Address *</label>
-            <input id="nda-email" type="email" placeholder="your@email.com" required autocomplete="email"
+            <input id="nda-email" type="email" placeholder="Institutional email address" required autocomplete="email"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Phone / WhatsApp *</label>
-            <input id="nda-phone" type="tel" placeholder="+91 98XXX XXXXX" required autocomplete="tel"
+            <input id="nda-phone" type="tel" placeholder="Direct line or mobile" required autocomplete="tel"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Organisation / Fund *</label>
-            <input id="nda-org" type="text" placeholder="e.g. XYZ Family Office" required autocomplete="organization"
+            <input id="nda-org" type="text" placeholder="Fund / Family Office / Developer" required autocomplete="organization"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
@@ -1567,13 +1567,13 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <div id="eoi-form" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Full Name *</label>
-              <input id="eoi-name" type="text" placeholder="Your full name" autocomplete="name"
+              <input id="eoi-name" type="text" placeholder="Legal full name" autocomplete="name"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Email Address *</label>
-              <input id="eoi-email" type="email" placeholder="your@email.com" autocomplete="email"
+              <input id="eoi-email" type="email" placeholder="Institutional email address" autocomplete="email"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
@@ -1585,13 +1585,13 @@ ${l.id === 'prism-tower-gurgaon' ? `
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Phone / WhatsApp *</label>
-              <input id="eoi-phone" type="tel" placeholder="+91 XXXXX XXXXX" autocomplete="tel"
+              <input id="eoi-phone" type="tel" placeholder="Direct line or mobile" autocomplete="tel"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
             <div style="grid-column:1/-1;">
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Ticket Size / Investment Capacity</label>
-              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr - ₹100 Cr"
+              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr - ₹500 Cr"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
@@ -1612,7 +1612,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
             </div>
             <div style="grid-column:1/-1;">
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Brief Note / Interest Statement</label>
-              <textarea id="eoi-message" rows="3" placeholder="Please describe your investment thesis, timeline, and specific interest in this mandate…"
+              <textarea id="eoi-message" rows="3" placeholder="Investment thesis, proposed ticket size, timeline and any specific interest in this mandate"
                         style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;transition:border-color .2s;"
                         onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"></textarea>
             </div>

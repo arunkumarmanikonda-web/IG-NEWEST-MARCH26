@@ -314,7 +314,7 @@ app.get('/', (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label class="ig-lbl">Full Name *</label>
-              <input type="text" name="name" class="ig-inp" required placeholder="Rajesh Kumar">
+              <input type="text" name="name" class="ig-inp" required placeholder="Legal full name">
             </div>
             <div>
               <label class="ig-lbl">Organisation *</label>
@@ -324,11 +324,11 @@ app.get('/', (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label class="ig-lbl">Email Address *</label>
-              <input type="email" name="email" class="ig-inp" required placeholder="you@example.com">
+              <input type="email" name="email" class="ig-inp" required placeholder="Institutional email address">
             </div>
             <div>
               <label class="ig-lbl">Phone / WhatsApp</label>
-              <input type="tel" name="phone" class="ig-inp" placeholder="+91 98XXX XXXXX">
+              <input type="tel" name="phone" class="ig-inp" placeholder="Direct line or mobile">
             </div>
           </div>
           <div>
@@ -365,7 +365,7 @@ app.get('/', (c) => {
           </div>
           <div>
             <label class="ig-lbl">Specific Mandate Interest</label>
-            <textarea name="message" class="ig-inp" rows="3" placeholder="Mention any specific mandates or sectors you'd like more information on. We will match you with the most relevant opportunities."></textarea>
+            <textarea name="message" class="ig-inp" rows="3" placeholder="Preferred sectors, target ticket size, and any mandate or geography preferences"></textarea>
           </div>
           <div style="display:flex;align-items:flex-start;gap:.5rem;">
             <input type="checkbox" name="nda_consent" id="nda-consent-ir" required style="margin-top:.2rem;accent-color:var(--gold);flex-shrink:0;">

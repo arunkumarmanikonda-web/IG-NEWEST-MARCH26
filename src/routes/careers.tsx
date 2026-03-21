@@ -282,25 +282,25 @@ app.get('/', (c) => {
       <div style="display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.25rem;">
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Full Name *</label>
-          <input id="apply-name" type="text" placeholder="Your full name" autocomplete="name"
+          <input id="apply-name" type="text" placeholder="Full legal name" autocomplete="name"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Email Address *</label>
-          <input id="apply-email" type="email" placeholder="your@email.com" autocomplete="email"
+          <input id="apply-email" type="email" placeholder="Professional email address" autocomplete="email"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Phone / WhatsApp *</label>
-          <input id="apply-phone" type="tel" placeholder="+91 98XXX XXXXX" autocomplete="tel"
+          <input id="apply-phone" type="tel" placeholder="Mobile number" autocomplete="tel"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">LinkedIn Profile</label>
-          <input id="apply-linkedin" type="url" placeholder="https://linkedin.com/in/yourname"
+          <input id="apply-linkedin" type="url" placeholder="https://linkedin.com/in/your-profile"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>

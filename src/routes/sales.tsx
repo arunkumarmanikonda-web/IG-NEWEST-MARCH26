@@ -686,7 +686,7 @@ app.get('/pipeline', (c) => {
 // ── ENGAGEMENTS ───────────────────────────────────────────────────────────────
 app.get('/engagements', (c) => {
   const engagements = [
-    {id:'ENG-001',client:'Demo Client Corp',   title:'Advisory Retainer 2026',       vertical:'Real Estate',  start:'01 Jan 2026',end:'31 Dec 2026',value:'₹6.0 Cr',status:'Active',   progress:25,pm:'Amit Jhingan'},
+    {id:'ENG-001',client:'Jaipur Heritage Holdings',   title:'Advisory Retainer 2026',       vertical:'Real Estate',  start:'01 Jan 2026',end:'31 Dec 2026',value:'₹6.0 Cr',status:'Active',   progress:25,pm:'Amit Jhingan'},
     {id:'ENG-002',client:'Rajasthan Hotels',   title:'Hotel Pre-Opening PMC',         vertical:'Hospitality',  start:'15 Feb 2026',end:'14 Feb 2027',value:'₹45 L',  status:'Active',   progress:45,pm:'Arun Manikonda'},
     {id:'ENG-003',client:'Entertainment Vent.',title:'Entertainment Feasibility',     vertical:'Entertainment',start:'01 Mar 2025',end:'31 Aug 2026',value:'₹4.5 Cr',status:'Active',   progress:20,pm:'Arun Manikonda'},
     {id:'ENG-004',client:'Mumbai Mall Corp',   title:'Retail Leasing Mandate',        vertical:'Real Estate',  start:'01 Dec 2024',end:'30 Nov 2026',value:'₹2.1 Cr',status:'Active',   progress:75,pm:'Amit Jhingan'},

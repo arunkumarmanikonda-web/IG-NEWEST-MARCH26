@@ -330,7 +330,7 @@ app.get('/', (c) => {
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Email Address *</label>
-          <input id="res-email" type="email" placeholder="your@email.com" autocomplete="email"
+          <input id="res-email" type="email" placeholder="Work email address" autocomplete="email"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
