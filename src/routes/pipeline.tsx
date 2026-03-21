@@ -152,9 +152,9 @@ app.get('/', (c) => {
     <div style="text-align:center;max-width:780px;margin:0 auto;" class="fu">
       <div style="display:inline-flex;align-items:center;gap:.875rem;background:rgba(184,150,12,.1);border:1px solid rgba(184,150,12,.22);padding:.4rem 1.1rem;margin-bottom:1.75rem;">
         <span style="width:8px;height:8px;background:#16a34a;border-radius:50%;animation:pulse 2s infinite;display:block;"></span>
-        <span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);">Live Investor Pipeline</span>
+        <span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);">Live Mandate Pipeline</span>
       </div>
-      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;line-height:1.1;margin-bottom:1.25rem;">INR 1,165 Cr+ Active<br><em style="color:var(--gold);font-style:italic;">Advisory Pipeline</em></h1>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.2rem,5vw,3.5rem);color:#fff;line-height:1.1;margin-bottom:1.25rem;">INR 2,100 Cr+ Active<br><em style="color:var(--gold);font-style:italic;">Strategic Mandate Pipeline</em></h1>
       <p style="font-size:1rem;color:rgba(255,255,255,.55);line-height:1.85;max-width:620px;margin:0 auto 2.5rem;">India Gully's live mandate pipeline across Real Estate, Hospitality, Debt & Special Situations — updated continuously from active advisory engagements.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="#timeline" class="btn btn-g" style="min-width:180px;justify-content:center;"><i class="fas fa-stream" style="margin-right:.5rem;font-size:.72rem;"></i>View Timeline</a>
@@ -170,11 +170,11 @@ app.get('/', (c) => {
   <div class="wrap" style="padding:0;">
     <div class="pip-kpi-grid">
       ${[
-        { n: 'INR 1,165 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
+        { n: 'INR 2,100 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
         { n: `${listings.length}`,  l: 'Active Mandates',  sub: 'Open to qualified investors' },
         { n: '5',           l: 'Sectors',                  sub: 'Diversified verticals' },
         { n: '8+',          l: 'Years',                    sub: 'Advisory track record' },
-        { n: 'INR 2,000 Cr+',  l: 'Transactions Advised',     sub: 'Since inception 2017' },
+        { n: 'INR 2,100 Cr+',  l: 'Mandate Pipeline Under Management',     sub: 'Since inception 2017' },
       ].map(s => `
       <div class="pip-kpi">
         <div class="pip-kpi-n">${s.n}</div>
@@ -189,8 +189,8 @@ app.get('/', (c) => {
 <div class="sec-wh" id="analytics" style="padding-top:5rem;padding-bottom:5rem;">
   <div class="wrap">
     <div style="text-align:center;margin-bottom:3.5rem;" class="fu">
-      <p style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Portfolio Analytics</p>
-      <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:2rem;color:var(--ink);margin-bottom:.75rem;">Pipeline at a Glance</h2>
+      <p style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Strategic Portfolio Analytics</p>
+      <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:2rem;color:var(--ink);margin-bottom:.75rem;">Mandate Pipeline at a Glance</h2>
       <p style="font-size:.9rem;color:var(--ink-muted);max-width:520px;margin:0 auto;">Sector diversification, deal-size distribution and stage breakdown across all active mandates.</p>
     </div>
 
@@ -332,10 +332,10 @@ app.get('/', (c) => {
       <div style="position:relative;">
         <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(184,150,12,.12);border:1px solid rgba(184,150,12,.25);padding:.35rem .9rem;margin-bottom:1.5rem;">
           <i class="fas fa-shield-alt" style="color:var(--gold);font-size:.7rem;"></i>
-          <span style="font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);">NDA-Protected Access</span>
+          <span style="font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);">Pre-Mandate Confidentiality Protocol</span>
         </div>
         <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.6rem,3vw,2.25rem);color:#fff;margin-bottom:1rem;max-width:560px;margin-left:auto;margin-right:auto;">Access Full Investment<br>Memoranda & Teaser Decks</h2>
-        <p style="font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.85;max-width:500px;margin:0 auto 2rem;">Qualified investors, family offices and PE funds may request detailed IMs, financial models and site data under India Gully's standard mutual NDA framework.</p>
+        <p style="font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.85;max-width:500px;margin:0 auto 2rem;">Qualified investors, family offices and PE funds may request detailed IMs, financial models and site data under India Gully's Pre-Mandate Confidentiality Protocol framework.</p>
         <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;">
           <a href="/listings" class="btn btn-g" style="min-width:200px;justify-content:center;"><i class="fas fa-file-contract" style="margin-right:.5rem;font-size:.72rem;"></i>View & Accept NDA</a>
           <a href="/contact?service=Investor+Relations" class="btn btn-go" style="min-width:200px;justify-content:center;border-color:rgba(184,150,12,.4);color:rgba(184,150,12,.9);"><i class="fas fa-envelope" style="margin-right:.5rem;font-size:.72rem;"></i>Direct Enquiry</a>
@@ -359,7 +359,7 @@ app.get('/', (c) => {
 <!-- ══ DISCLOSURE ═════════════════════════════════════════════════════════════ -->
 <div style="background:#f8f5ef;border-top:1px solid var(--border);padding:2rem 0;">
   <div class="wrap" style="max-width:860px;text-align:center;">
-    <p style="font-size:.68rem;color:var(--ink-faint);line-height:1.75;"><strong style="color:var(--ink-soft);">Pipeline Disclosure:</strong> Mandate values reflect advisory engagement scopes and indicative transaction sizes. Actual transaction values may differ. This page is for qualified investor use only and does not constitute a public offer or solicitation. All mandates are subject to NDA and India Gully's standard engagement terms. India Gully is registered under MCA: CIN U74999DL2017PTC323237 · GSTIN 07AAGCV0867P1ZN.</p>
+    <p style="font-size:.68rem;color:var(--ink-faint);line-height:1.75;"><strong style="color:var(--ink-soft);">Mandate Pipeline Disclosure:</strong> Mandate values reflect advisory engagement scopes and indicative transaction sizes. Actual transaction values may differ. This page is for qualified investor use only and does not constitute a public offer or solicitation. All mandates are subject to NDA and India Gully's standard engagement terms. India Gully is registered under MCA: CIN U74999DL2017PTC323237 · GSTIN 07AAGCV0867P1ZN.</p>
   </div>
 </div>
 

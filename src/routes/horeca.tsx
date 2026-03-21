@@ -46,7 +46,7 @@ app.get('/', async (c) => {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
       <div class="fu">
         <div class="gr-lt"></div>
-        <p class="eyebrow" style="margin-bottom:.875rem;">HORECA Solutions</p>
+        <p class="eyebrow" style="margin-bottom:.875rem;">Integrated HORECA Procurement &amp; Supply Chain Orchestration</p>
         <h1 class="h1" style="margin-bottom:1.5rem;">Lifecycle Procurement and<br>Supply Architecture for<br><em style="color:var(--gold);font-style:italic;">Hospitality and F&amp;B Assets</em></h1>
         <p class="lead-lt" style="max-width:500px;margin-bottom:2rem;">FF&amp;E, OS&amp;E, kitchen equipment, linen, uniforms, and guest amenities — procured to institutional specification, delivered on schedule, across hotel pre-openings, renovations, and lifecycle replacement cycles.</p>
         <div style="display:flex;gap:.875rem;flex-wrap:wrap;">
@@ -225,7 +225,7 @@ app.get('/', async (c) => {
             </div>
             <div style="flex:1;min-width:0;">
               <div style="font-size:.82rem;font-weight:600;color:#fff;margin-bottom:.1rem;">Pavan Manikonda</div>
-              <div style="font-size:.7rem;color:rgba(255,255,255,.4);">Executive Director · HORECA Solutions</div>
+              <div style="font-size:.7rem;color:rgba(255,255,255,.4);">Executive Director · Integrated HORECA Procurement &amp; Supply Chain Orchestration</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:.35rem;align-items:flex-end;">
               <a href="tel:+916282556067" style="font-size:.72rem;color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;gap:.35rem;" onmouseover="this.style.color='#34d399'" onmouseout="this.style.color='rgba(255,255,255,.5)'"><i class="fas fa-phone" style="font-size:.6rem;"></i>+91 62825 56067</a>
@@ -354,8 +354,8 @@ app.get('/', async (c) => {
   </div>
 </div>
 ${cmsZoneHtml}`
-  return c.html(layout(cmsTitle || 'HORECA Solutions', content, {
-    description: 'India Gully HORECA Solutions — kitchen equipment, FF&E, OS&E, linens, uniforms and guest amenities for hotels and F&B operators across India.',
+  return c.html(layout(cmsTitle || 'Integrated HORECA Procurement &amp; Supply Chain Orchestration', content, {
+    description: 'India Gully Integrated HORECA Procurement &amp; Supply Chain Orchestration — kitchen equipment, FF&E, OS&E, linens, uniforms and guest amenities for hotels and F&B operators across India.',
     canonical: 'https://india-gully.pages.dev/horeca'
   }))
 })
@@ -369,7 +369,7 @@ app.get('/catalogue', (c) => {
   <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(184,150,12,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,150,12,.04) 1px,transparent 1px);background-size:48px 48px;"></div>
   <div class="wrap" style="position:relative;">
     <p style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,150,12,.8);margin-bottom:.75rem;">
-      <a href="/horeca" style="color:inherit;text-decoration:none;">HORECA Solutions</a> <span style="color:rgba(255,255,255,.3);margin:0 .4rem;">/</span> Product Catalogue
+      <a href="/horeca" style="color:inherit;text-decoration:none;">Integrated HORECA Procurement &amp; Supply Chain Orchestration</a> <span style="color:rgba(255,255,255,.3);margin:0 .4rem;">/</span> Product Catalogue
     </p>
     <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;">
       <div>
@@ -586,7 +586,7 @@ app.get('/catalogue', (c) => {
         <i class="fas fa-file-invoice" style="color:#fff;font-size:.8rem;"></i>
       </div>
       <div>
-        <p style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-bottom:.1rem;">HORECA Solutions</p>
+        <p style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-bottom:.1rem;">Integrated HORECA Procurement &amp; Supply Chain Orchestration</p>
         <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:#fff;margin:0;">Quick RFQ</h3>
       </div>
     </div>
@@ -1223,7 +1223,7 @@ function igCatDownloadPDF() {
     + '<div class="no-print" style="text-align:center;padding:12px;background:#f0fdf4;border:1px solid #a7f3d0;font-size:13px;font-family:Arial;margin-bottom:12px;">'
     + '✅ &nbsp;PDF brochure ready — click <strong>Print / Save as PDF</strong> in your browser to save. <button onclick="window.print()" style="margin-left:12px;background:#B8960C;color:#fff;border:none;padding:6px 16px;cursor:pointer;font-size:13px;font-weight:700;">🖨 Print / Save PDF</button></div>'
     + '<div class="cover"><div style="display:flex;justify-content:space-between;align-items:flex-start;">'
-    + '<div><div style="font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-bottom:6px;">India Gully · HORECA Solutions Division</div>'
+    + '<div><div style="font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-bottom:6px;">India Gully · Integrated HORECA Procurement &amp; Supply Chain Orchestration Division</div>'
     + '<div style="font-family:Georgia,serif;font-size:26px;color:#fff;line-height:1.15;margin-bottom:4px;">HORECA Product<br>Catalogue</div>'
     + '<div style="font-size:9px;color:rgba(255,255,255,.5);">Kitchen Equipment · FF&E · OS&E · Linen · Uniforms · Guest Amenities</div>'
     + '<div class="badge-row"><span class="badge">' + products.length + ' Products</span><span class="badge">' + Object.keys(catMap).length + ' Categories</span><span class="badge">GST Inclusive</span></div></div>'

@@ -46,11 +46,11 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Contact &amp; RFQ</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Let's Work<br><em style="color:var(--gold);font-style:italic;">Together</em></h1>
-      <p class="lead-lt" style="max-width:540px;margin-bottom:2.5rem;">Submit a mandate enquiry, HORECA RFQ or general inquiry. Our leadership team reviews all submissions within 24 hours.</p>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Strategic Partnership &amp; Mandate Intake</h1>
+      <p class="lead-lt" style="max-width:540px;margin-bottom:2.5rem;">Initiate a confidential mandate enquiry, strategic advisory intake, or HORECA procurement RFQ. Every submission is received under a Pre-Mandate Confidentiality Protocol and reviewed by Executive Leadership within the Immediate Diagnostic Review Window — 24-hour acknowledgment, guaranteed.</p>
       <!-- Response commitments -->
       <div style="display:flex;flex-wrap:wrap;gap:1.5rem;">
-        ${[{icon:"bolt",t:"Accelerated Diagnostic","s":"Immediate Executive Review Window"},{icon:"shield-alt",t:"Fiduciary Discretion","s":"Pre-Mandate Confidentiality Protocol"},{icon:"user-tie",t:"Executive Oversight","s":"Direct to Managing Director"}].map(i=>`<div style="display:flex;align-items:center;gap:.625rem;"><div class="ig-icon-box-sm"><i class="fas fa-${i.icon}" style="color:var(--gold);font-size:.65rem;"></i></div><div><div style="font-size:.78rem;font-weight:600;color:#fff;">${i.t}</div><div style="font-size:.67rem;color:rgba(255,255,255,.45);">${i.s}</div></div></div>`).join('')}
+        ${[{icon:"bolt",t:"Accelerated Diagnostic","s":"Immediate Diagnostic Review Window"},{icon:"shield-alt",t:"Fiduciary Discretion","s":"Pre-Mandate Confidentiality Protocol"},{icon:"user-tie",t:"Executive Oversight","s":"Direct to Managing Director"}].map(i=>`<div style="display:flex;align-items:center;gap:.625rem;"><div class="ig-icon-box-sm"><i class="fas fa-${i.icon}" style="color:var(--gold);font-size:.65rem;"></i></div><div><div style="font-size:.78rem;font-weight:600;color:#fff;">${i.t}</div><div style="font-size:.67rem;color:rgba(255,255,255,.45);">${i.s}</div></div></div>`).join('')}
       </div>
     </div>
   </div>
@@ -444,7 +444,7 @@ ${cmsZoneHtml}`
       '@type': 'ContactPage',
       name: 'Contact India Gully',
       url: 'https://india-gully.pages.dev/contact',
-      description: 'Submit a mandate enquiry or HORECA RFQ. 24h response guaranteed.',
+      description: 'Initiate a confidential mandate enquiry or HORECA RFQ. 24-hour diagnostic acknowledgment. Pre-Mandate Confidentiality Protocol executed on engagement commencement.',
       mainEntity: {
         '@type': 'Organization',
         name: 'India Gully',

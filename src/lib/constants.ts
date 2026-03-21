@@ -72,7 +72,7 @@ export const VERTICALS = [
 ]
 
 export const STATS = [
-  { value: 'INR 1,165 Cr+', label: 'Active Mandate Pipeline' },
+  { value: 'INR 1,165 Cr+', label: 'Mandate Pipeline Under Management' },
   { value: '15+', label: 'Hotel Projects' },
   { value: '30+', label: 'Retail Brands' },
   { value: '20+', label: 'Hospitality Brand Partnerships' },
@@ -1385,7 +1385,7 @@ export const TRACK_RECORD = {
       title: 'HORECA Supplies — Cygnett Hotels (Multiple Locations)',
       value: 'Multi-City Supply',
       type: 'HORECA Procurement',
-      desc: 'Secured comprehensive HORECA supply agreement with Cygnett Hotels & Resorts, supporting their rapid expansion across tier-2 and tier-3 cities with standardised hospitality supplies.',
+      desc: 'Secured comprehensive HORECA supply agreement with Cygnett Hotels and Resorts, supporting their rapid expansion across tier-2 and tier-3 cities with standardised hospitality supplies.',
       location: 'Multiple Tier-2/3 Cities',
       tags: ['Cygnett Hotels', 'HORECA', 'Tier-2', 'Tier-3'],
     },

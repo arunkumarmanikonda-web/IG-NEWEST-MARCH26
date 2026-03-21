@@ -21,7 +21,7 @@ app.get('/', (c) => {
       </span>
     </h1>
     <p style="color:rgba(255,255,255,.65);font-size:clamp(1rem,1.6vw,1.18rem);max-width:540px;line-height:1.6;margin-bottom:0;font-family:'DM Sans',sans-serif;">
-      Three institutional valuation methodologies in one engine — Income Capitalisation, Discounted Cash Flow, and Revenue-Based Approach. Built on India Gully's active advisory intelligence across INR 1,165 Cr+ of live mandates, with Risk-Adjusted WACC, Adjusted NOI, and Vacancy and CapEx leakage modeling.
+      A multi-dimensional analytical suite encompassing three institutional valuation methodologies — Income Capitalisation, Discounted Cash Flow, and Revenue-Based Approach. Calibrated against India Gully's INR 1,165 Cr+ active mandate pipeline and 2026 proprietary market intelligence benchmarks. Incorporates Risk-Adjusted WACC, Adjusted NOI computation, Vacancy &amp; CapEx Leakage modeling, and Terminal Growth Rate architecture.
     </p>
   </div>
 </section>
@@ -106,12 +106,12 @@ app.get('/', (c) => {
             </div>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.5rem;">
               ${[
-                ['Grade-A Commercial', '7.0-8.5%'],
-                ['Branded Hotel', '8.5-10.5%'],
-                ['Shopping Mall', '8.0-9.5%'],
-                ['Service Apartment', '9.0-11.0%'],
-                ['Tier-2 Hotel', '10.0-12.5%'],
-                ['Heritage Resort', '9.5-11.5%'],
+                ['Grade-A Commercial (Central Business Districts)', '7.0%–8.5%'],
+                ['International Upscale/Luxury Hotels', '8.5%–10.5%'],
+                ['Organised Retail (Mall Format)', '8.0%–9.5%'],
+                ['Serviced Apartment / Co-Living', '9.0%–11.0%'],
+                ['Tier–2 Strategic Growth Hospitality', '10.0%–12.5%'],
+                ['Heritage &amp; Leisure Resort Assets', '9.5%–11.5%'],
               ].map(([label, rate]) => `
               <div style="background:rgba(255,255,255,.04);border-radius:6px;padding:.4rem .6rem;">
                 <div style="font-size:.7rem;color:rgba(255,255,255,.5);font-family:'DM Sans',sans-serif;">${label}</div>
