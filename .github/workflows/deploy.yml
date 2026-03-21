@@ -22,20 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build worker
-        run: |
-          mkdir -p dist/static
-          cp -r public/static/. dist/static/ 2>/dev/null || true
-          npx esbuild src/index.tsx \
-            --bundle \
-            --outfile=dist/_worker.js \
-            --format=esm \
-            --platform=browser \
-            --target=es2022 \
-            --external:node:* \
-            --define:process.env.NODE_ENV='"production"' \
-            --minify-syntax \
-            --minify-whitespace
+      - name: Build (full — worker + all static assets)
+        run: npm run build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
