@@ -1649,7 +1649,7 @@ app.get('/:id', (c) => {
         <p style="font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:1rem;">Our research draws directly from active advisory mandates — real transactions, real data, no theoretical models.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
           ${[
-            { n: '8+', l: 'Yrs Advisory' },
+            { n: '9+', l: 'Yrs Advisory' },
             { n: '40+', l: 'Contracts' },
             { n: '₹2,100 Cr', l: 'Pipeline' },
             { n: '6', l: 'Sectors' },

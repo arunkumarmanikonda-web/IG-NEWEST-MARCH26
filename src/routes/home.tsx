@@ -375,7 +375,7 @@ app.get('/', async (c) => {
       { icon:'registered',     color:'#B8960C', text:'MCA Registered · CIN U74999DL2017PTC323237' },
       { icon:'map-marked-alt', color:'#a78bfa', text:'Pan-India · Delhi · Chandigarh · Mumbai · Kerala' },
       { icon:'trophy',         color:'#fbbf24', text:'INR 2,000 Cr+ Transactions Advised' },
-      { icon:'calendar-alt',   color:'#34d399', text:'Established 2017 · 8+ Years' },
+      { icon:'calendar-alt',   color:'#34d399', text:'Established 2017 · 9+ Years' },
       { icon:'file-contract',  color:'#B8960C', text:'Mutual NDA Framework · All Mandates' },
       { icon:'concierge-bell', color:'#a78bfa', text:'20+ Hospitality Brand Partnerships' },
     ].concat([

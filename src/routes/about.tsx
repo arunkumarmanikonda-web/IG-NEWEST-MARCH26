@@ -109,7 +109,7 @@ app.get('/', async (c) => {
       <div class="gr-c"></div>
       <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Trajectory</p>
       <h2 class="h2">The India Gully Trajectory:<br>From Vision to Force</h2>
-      <p class="lead" style="margin-top:1.25rem;">Eight years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
+      <p class="lead" style="margin-top:1.25rem;">Nine years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
     </div>
 
     <div style="position:relative;max-width:920px;margin:0 auto;">
@@ -436,7 +436,7 @@ app.get('/', async (c) => {
         { n:'500+ SKUs', label:'HORECA Catalogue', sub:'FF&E, OS&E, kitchen, linen, uniforms', icon:'utensils', color:'#B8960C' },
         { n:'INR 50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
         { n:'30+', label:'Retail Brands', sub:'Brand partnerships in NCR & Gurugram', icon:'tag', color:'#1A3A6B' },
-        { n:'8+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
+        { n:'9+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
       ].map(s => `
       <div class="reveal" style="padding:2rem;border:1px solid var(--border-lt);text-align:center;transition:all .28s;position:relative;overflow:hidden;" onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.transform='translateY(0)'">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${s.color},transparent);opacity:0;transition:opacity .3s;" class="num-top"></div>

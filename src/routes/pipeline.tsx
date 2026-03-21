@@ -8,8 +8,7 @@ const app = new Hono()
 // Sector breakdown for donut chart
 const SECTOR_DATA = [
   { sector: 'Real Estate',          value: 900, color: '#1A3A6B', pct: 77.3 },
-  { sector: 'Hospitality',          value: 245, color: '#065F46', pct: 21.1 },
-  { sector: 'Debt & Special',       value: 20,  color: '#b91c1c', pct: 1.7  },
+  { sector: 'Hospitality',          value: 265, color: '#065F46', pct: 22.7 },
 ]
 
 // Status stages
@@ -173,8 +172,8 @@ app.get('/', (c) => {
         { n: 'INR 2,100 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
         { n: `${listings.length}`,  l: 'Active Mandates',  sub: 'Open to qualified investors' },
         { n: '5',           l: 'Sectors',                  sub: 'Diversified verticals' },
-        { n: '8+',          l: 'Years',                    sub: 'Advisory track record' },
-        { n: 'INR 2,100 Cr+',  l: 'Mandate Pipeline Under Management',     sub: 'Active mandates across 5 asset classes' },
+        { n: '9+',          l: 'Years',                    sub: 'Advisory track record since 2017' },
+        { n: 'INR 2,000 Cr+', l: 'Track Record',                          sub: 'Total transactions advised' },
       ].map(s => `
       <div class="pip-kpi">
         <div class="pip-kpi-n">${s.n}</div>

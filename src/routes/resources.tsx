@@ -218,7 +218,7 @@ app.get('/', (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Knowledge Hub</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Resources &amp;<br><em style="color:var(--gold);font-style:italic;">Downloads</em></h1>
-      <p class="lead-lt" style="max-width:640px;margin-bottom:3rem;">Practical guides, templates, checklists and research drawn from India Gully's 8+ years of boots-on-the-ground execution across HORECA procurement, real estate transactions, hospitality advisory and regulatory compliance.</p>
+      <p class="lead-lt" style="max-width:640px;margin-bottom:3rem;">Practical guides, templates, checklists and research drawn from India Gully's 9+ years of boots-on-the-ground execution across HORECA procurement, real estate transactions, hospitality advisory and regulatory compliance.</p>
       <!-- Stats row -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
         ${[
@@ -485,7 +485,7 @@ document.getElementById('res-modal').addEventListener('click', function(e){
 `
 
   return c.html(layout('Resources & Downloads', content, {
-    description: 'India Gully Knowledge Hub — free guides, checklists, templates and research covering HORECA procurement, hotel feasibility, real estate valuation and hospitality advisory. Download practical tools built from 8+ years of advisory experience.',
+    description: 'India Gully Knowledge Hub — free guides, checklists, templates and research covering HORECA procurement, hotel feasibility, real estate valuation and hospitality advisory. Download practical tools built from 9+ years of advisory experience.',
     canonical: 'https://india-gully.pages.dev/resources'
   }))
 })
