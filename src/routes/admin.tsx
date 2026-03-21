@@ -2883,7 +2883,7 @@ ${invRowsHtml}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;">
             ${[
               {q:'Q3 FY 2024-25 (Oct-Dec)',due:'15 Jan 2025',filed:'12 Jan 2025',tds:'₹1,24,500',s:'Filed'},
-              {q:'Q4 FY 2024-25 (Jan-Mar)',due:'31 May 2025',filed:null,         tds:'₹98,000',s:'Pending'},
+              {q:'Q4 FY 2024-25 (Jan-Mar)',due:'31 May 2025',filed:'30 May 2025',         tds:'₹98,000',s:'Pending'},
             ].map(r=>`<div style="border:1px solid ${r.s==='Filed'?'#86efac':'#fcd34d'};background:${r.s==='Filed'?'#f0fdf4':'#fffbeb'};padding:.875rem;">
               <div style="font-size:.72rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;">${r.q}</div>
               <div style="font-size:.68rem;color:var(--ink-muted);">Due: ${r.due}</div>
@@ -2892,7 +2892,7 @@ ${invRowsHtml}
               <span class="badge ${r.s==='Filed'?'b-gr':'b-g'}" style="font-size:.6rem;">${r.s}</span>
             </div>`).join('')}
           </div>
-          <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:.625rem;">Vendor-Wise TDS Summary — Q4 FY 2024-25</div>
+          <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:.625rem;">Vendor-Wise TDS Summary — Q4 FY 2024-25 (Historical)</div>
           <table class="ig-tbl"><thead><tr><th>Vendor</th><th>PAN</th><th>Section</th><th>Payment</th><th>TDS Rate</th><th>TDS Amt</th><th>Form 16A</th></tr></thead><tbody>
             ${[
               {v:'ABC Consultants Pvt',pan:'AAAAA1234A',sec:'194J',pay:'₹5.5L',rate:'10%',tds:'₹55,000',f16a:true},
@@ -2940,7 +2940,7 @@ ${invRowsHtml}
               </div>
             </div>`).join('')}
           </div>
-          <button onclick="igFinInitiateFyClose()" style="background:var(--ink);color:#fff;border:none;padding:.55rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:1rem;width:100%;"><i class="fas fa-lock" style="margin-right:.4rem;"></i>Initiate FY 2024-25 Close</button>
+          <button onclick="igFinInitiateFyClose()" style="background:var(--ink);color:#fff;border:none;padding:.55rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:1rem;width:100%;"><i class="fas fa-lock" style="margin-right:.4rem;"></i>Initiate FY 2025-26 Close</button>
         </div>
       </div>
     </div>
@@ -3754,7 +3754,7 @@ ${invRowsHtml}
 
   // ── Finance: Initiate FY Close ───────────────────────────────────────────
   window.igFinInitiateFyClose = function(){
-    igConfirm('Initiate FY 2024-25 year-end closing? This will require CFO approval.',function(){
+    igConfirm('Initiate FY 2025-26 year-end closing? This will require CFO approval.',function(){
       igToast('Triggering year-end closing workflow…','info');
       igApi.post('/finance/fy-close',{fy:'2024-25'}).then(function(){
         igToast('Year-end closing workflow triggered — CFO approval required','success');
@@ -3943,8 +3943,8 @@ ${invRowsHtml}
          ['Delta Consulting','DLDC78901D','194C','Q3 FY25-26','₹1,80,000','₹3,600','28 Jan 2026','Deposited']]
       );
       igSaveFile('26AS-FY2024-25-'+new Date().toISOString().slice(0,10)+'.csv', csv, 'text/csv');
-      igToast('26AS data refreshed from TRACES — downloaded for FY 2024-25','success');
-    }).catch(function(){ igToast('26AS data refreshed from TRACES for FY 2024-25','success'); });
+      igToast('26AS data refreshed from TRACES — downloaded for FY 2025-26','success');
+    }).catch(function(){ igToast('26AS data refreshed from TRACES for FY 2025-26','success'); });
   };
 
   // ── Finance: Escalate 26AS Mismatch ──────────────────────────────────────
@@ -4628,7 +4628,7 @@ ${empRowsHtml}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.875rem;margin-bottom:.875rem;">
         <div><label class="ig-label">Employee</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda</option><option>Pavan Manikonda</option><option>Amit Jhingan</option></select></div>
         <div><label class="ig-label">Appraisal Type</label><select class="ig-input" style="font-size:.82rem;"><option>Annual Review</option><option>Mid-Year Review</option><option>Probation Completion</option><option>Promotion Review</option></select></div>
-        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option>FY 2024-25 (Apr 24 - Mar 25)</option><option>H1 FY 2025-26</option></select></div>
+        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option selected>FY 2025-26 (Apr 25 - Mar 26)</option><option>FY 2024-25 (Apr 24 - Mar 25)</option></select></div>
         <div><label class="ig-label">Reviewer</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda (CEO)</option><option>Pavan Manikonda (COO)</option></select></div>
         <div><label class="ig-label">Self-Assessment Due</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-03-31"></div>
         <div><label class="ig-label">Review Meeting Date</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-04-15"></div>
@@ -4642,14 +4642,14 @@ ${empRowsHtml}
     <!-- Appraisal Status Table -->
     <div style="background:#fff;border:1px solid var(--border);margin-bottom:1.5rem;">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Appraisal Tracker — FY 2024-25</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Appraisal Tracker — FY 2025-26</h3>
         <button onclick="igHrExportAppraisal()" style="background:none;border:1px solid var(--border);padding:.3rem .75rem;font-size:.68rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download" style="margin-right:.3rem;"></i>Export</button>
       </div>
       <table class="ig-tbl"><thead><tr><th>Employee</th><th>Type</th><th>Period</th><th>Self-Assessment</th><th>Manager Review</th><th>Rating</th><th>Increment</th><th>Status</th><th>Action</th></tr></thead><tbody>
         ${[
-          {name:'Amit Jhingan',   type:'Annual',   period:'FY 2024-25', self:'Submitted',  mgr:'Completed', rating:4.2, incr:'12%',  cls:'b-gr', status:'Completed'},
-          {name:'Pavan Manikonda',type:'Annual',   period:'FY 2024-25', self:'Submitted',  mgr:'In Review',  rating:4.0, incr:'—',   cls:'b-g',  status:'In Progress'},
-          {name:'Arun Manikonda', type:'Annual',   period:'FY 2024-25', self:'Pending',    mgr:'Pending',    rating:'—', incr:'—',   cls:'b-dk', status:'Pending'},
+          {name:'Amit Jhingan',   type:'Annual',   period:'FY 2025-26', self:'Submitted',  mgr:'Completed', rating:4.2, incr:'12%',  cls:'b-gr', status:'Completed'},
+          {name:'Pavan Manikonda',type:'Annual',   period:'FY 2025-26', self:'Submitted',  mgr:'In Review',  rating:4.0, incr:'—',   cls:'b-g',  status:'In Progress'},
+          {name:'Arun Manikonda', type:'Annual',   period:'FY 2025-26', self:'Pending',    mgr:'Pending',    rating:'—', incr:'—',   cls:'b-dk', status:'Pending'},
         ].map(a=>`<tr>
           <td style="font-weight:500;">${a.name}</td>
           <td><span class="badge b-dk" style="font-size:.6rem;">${a.type}</span></td>
@@ -4669,7 +4669,7 @@ ${empRowsHtml}
     <!-- Performance Rating Distribution -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
       <div style="background:#fff;border:1px solid var(--border);padding:1.25rem;">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Rating Distribution — FY 2024-25</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Rating Distribution — FY 2025-26</h3>
         ${[
           {rating:'5 — Exceptional',  count:0, pct:0,  color:'#16a34a'},
           {rating:'4 — Exceeds Exp.', count:2, pct:67, color:'#22c55e'},
@@ -5052,7 +5052,7 @@ ${empRowsHtml}
     });
   };
   window.igHrGenForm16All = function(){
-    igToast('Generating Form-16 bundle for FY 2024-25…','info');
+    igToast('Generating Form-16 bundle for FY 2025-26…','info');
     igApi.get('/employees').then(function(d){
       var count = d&&d.total||8;
       var rows = [
@@ -5068,7 +5068,7 @@ ${empRowsHtml}
     }).catch(function(){
       var csv = igBuildCsv(['EMP ID','Employee Name','PAN','Form 16','Status'],[['ALL','All Employees','—','Part A + B','Generated']]);
       igSaveFile('form-16-all-employees-fy2024-25.csv', csv, 'text/csv');
-      igToast('Form-16 bundle generated for FY 2024-25','success');
+      igToast('Form-16 bundle generated for FY 2025-26','success');
     });
   };
   window.igHrGenForm16PartA = function(){
@@ -5337,7 +5337,7 @@ ${empRowsHtml}
       );
       igSaveFile('traces-part-a-fy2024-25.csv', csv, 'text/csv');
       igToast('Part A data fetched from TRACES — '+count+' employees — CSV downloaded','success');
-    }).catch(function(){ igToast('Part A data fetched from TRACES for FY 2024-25 — 8 employees','success'); });
+    }).catch(function(){ igToast('Part A data fetched from TRACES for FY 2025-26 — 8 employees','success'); });
   };
 
   // ── HR: Download All Part A ──────────────────────────────────────────────
@@ -5495,7 +5495,7 @@ ${empRowsHtml}
     igToast('Loading Form-16 Part B preview…','info');
     igModal('Form-16 Part B Preview',
       '<div style="padding:1.25rem;font-size:.82rem;">'
-      +'<div style="font-weight:700;margin-bottom:.75rem;">Form 16 — Part B (FY 2024-25)</div>'
+      +'<div style="font-weight:700;margin-bottom:.75rem;">Form 16 — Part B (FY 2025-26)</div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Gross Salary</span><span>₹7,20,000</span></div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Standard Deduction</span><span>₹50,000</span></div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Taxable Salary</span><span>₹6,70,000</span></div>'
@@ -5941,7 +5941,7 @@ app.get('/governance', async (c) => {
           ${[
             {doc:'Board Resolution — Q4 Financials',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'10 Mar 2025', signed:0},
             {doc:'Advisory Agreement — Hotel Rajshree (MND-003)',  signers:['Amit Jhingan'],                       due:'12 Mar 2026', signed:1},
-            {doc:'Annual Return MGT-7 (FY 2024-25)',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Sep 2025', signed:0},
+            {doc:'Annual Return MGT-7 (FY 2025-26)',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Sep 2025', signed:0},
             {doc:'Financial Statements (AOC-4)',        signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Oct 2025', signed:0},
           ].map(d=>`<div style="border:1px solid var(--border);padding:.875rem;margin-bottom:.5rem;background:var(--parch-dk);">
             <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.3rem;">${d.doc}</div>
@@ -5960,7 +5960,7 @@ app.get('/governance', async (c) => {
     <!-- Digital Director Attendance -->
     <div style="background:#fff;border:1px solid var(--border);">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Director Digital Attendance — Board Meetings FY 2024-25</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Director Digital Attendance — Board Meetings FY 2025-26</h3>
       </div>
       <div style="padding:1.25rem;overflow-x:auto;">
         <table class="ig-tbl"><thead><tr><th>Director / KMP</th><th>BM-01 (15 Jan)</th><th>BM-02 (15 Feb)</th><th>BM-03 (05 Mar)</th><th>Attendance %</th><th>Min. Required</th><th>Status</th></tr></thead><tbody>
@@ -6035,7 +6035,7 @@ app.get('/governance', async (c) => {
           <button onclick="igGovDraftNotice('SS-2')" style="background:var(--gold);color:#fff;border:none;padding:.35rem .75rem;font-size:.72rem;font-weight:600;cursor:pointer;"><i class="fas fa-plus" style="margin-right:.3rem;"></i>Draft Notice</button>
         </div>
         <div style="padding:1.25rem;">
-          <div class="ig-warn" style="margin-bottom:1rem;"><i class="fas fa-calendar-times"></i><div>Annual General Meeting for FY 2024-25 due by <strong>30 September 2025</strong>. Plan for August 2025.</div></div>
+          <div class="ig-warn" style="margin-bottom:1rem;"><i class="fas fa-calendar-times"></i><div>Annual General Meeting for FY 2025-26 due by <strong>30 September 2026</strong>. Plan for August 2026.</div></div>
           ${[
             {ref:'AGM-2024', date:'25 Sep 2024', type:'AGM', notice_days:21, quorum:'Quorum met (2 members present)', s:'Completed', compliant:true},
             {ref:'EGM-2024-01', date:'15 Nov 2024', type:'EGM', notice_days:14, quorum:'Quorum met (2 members present)', s:'Completed', compliant:true},
@@ -6137,7 +6137,7 @@ app.get('/governance', async (c) => {
           <div id="resolution-drafts" style="padding:1rem;display:flex;flex-direction:column;gap:.75rem;">
             <div style="background:#f8f9fa;border:1px solid var(--border);padding:.875rem;">
               <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;margin-bottom:.3rem;">Ordinary Resolution #1</div>
-              <p style="font-size:.78rem;color:var(--ink);margin-bottom:.4rem;">"RESOLVED THAT the audited financial statements of the Company for the FY 2024-25 be and are hereby adopted."</p>
+              <p style="font-size:.78rem;color:var(--ink);margin-bottom:.4rem;">"RESOLVED THAT the audited financial statements of the Company for the FY 2025-26 be and are hereby adopted."</p>
               <div style="display:flex;gap:.4rem;">
                 <span style="font-size:.62rem;background:#ede9fe;color:#5b21b6;padding:2px 6px;">Ordinary Resolution</span>
                 <span style="font-size:.62rem;background:#dcfce7;color:#166534;padding:2px 6px;">Draft Ready</span>
@@ -6185,7 +6185,7 @@ app.get('/governance', async (c) => {
   var agItemCnt2 = 0;
   var agendaItems = [
     {type:'routine',text:'Confirmation of Notice & Quorum'},
-    {type:'routine',text:'Adoption of Financial Statements FY 2024-25'},
+    {type:'routine',text:'Adoption of Financial Statements FY 2025-26'},
     {type:'resolution',text:'Investment approval under Section 186 — up to ₹5 Crore'},
   ];
   function igRenderAgendaBuilder(){
@@ -9212,7 +9212,7 @@ app.get('/reports', (c) => {
       <canvas id="pipeline-chart" height="140"></canvas>
     </div>
     <div style="background:#fff;border:1px solid var(--border);padding:1.25rem;">
-      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Monthly Revenue Trend — FY 2024-25</h3>
+      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Monthly Revenue Trend — FY 2025-26</h3>
       <canvas id="trend-chart" height="140"></canvas>
     </div>
   </div>
@@ -14668,28 +14668,28 @@ mutation CreateInvoice($input: InvoiceInput!) {
 // ── KPI / OKR TRACKER (/admin/kpi) ────────────────────────────────────────────
 app.get('/kpi', (c) => {
   const okrs = [
-    { dept:'Finance',    obj:'Achieve ₹15 Cr revenue in FY 2025',     progress:82, owner:'Arun Manikonda',
+    { dept:'Finance',    obj:'Achieve ₹15 Cr revenue in FY 2026',     progress:82, owner:'Arun Manikonda',
       krs:[
         {label:'Advisory revenue MTD',      target:'₹12.4L/mo',  actual:'₹12.4L', pct:100},
         {label:'Invoice collection rate',   target:'>90%',         actual:'87%',    pct:87},
         {label:'EBITDA margin',             target:'>35%',         actual:'37.1%',  pct:100},
         {label:'GST compliance — on time',  target:'100%',         actual:'100%',   pct:100},
       ], color:'#2563eb' },
-    { dept:'Sales',      obj:'Close ₹25 Cr in new engagements FY25',  progress:70, owner:'Amit Jhingan',
+    { dept:'Sales',      obj:'Close ₹25 Cr in new engagements FY26',  progress:70, owner:'Amit Jhingan',
       krs:[
         {label:'Pipeline value',            target:'₹50 Cr+',      actual:'₹52.4 Cr',pct:100},
         {label:'Lead to proposal rate',     target:'>50%',         actual:'43%',    pct:86},
         {label:'Proposals won',             target:'6 deals',      actual:'3 deals',pct:50},
         {label:'Avg deal closure time',     target:'<90 days',     actual:'104 days',pct:87},
       ], color:'#B8960C' },
-    { dept:'HR',         obj:'Hire 5 key roles, 0% attrition FY25',   progress:60, owner:'Pavan Manikonda',
+    { dept:'HR',         obj:'Hire 5 key roles, 0% attrition FY26',   progress:60, owner:'Pavan Manikonda',
       krs:[
         {label:'Positions filled',          target:'5',            actual:'2',      pct:40},
         {label:'Employee satisfaction NPS', target:'>40',          actual:'52',     pct:100},
         {label:'Training hours/employee',   target:'40h/yr',       actual:'28h',    pct:70},
         {label:'Payroll accuracy',          target:'100%',         actual:'100%',   pct:100},
       ], color:'#7c3aed' },
-    { dept:'Governance', obj:'100% statutory compliance, 4 board mtgs',progress:75, owner:'Arun Manikonda',
+    { dept:'Governance', obj:'100% statutory compliance, 4 board meetings',progress:75, owner:'Arun Manikonda',
       krs:[
         {label:'Board meetings held',       target:'4/year',       actual:'2',      pct:50},
         {label:'ROC filings on time',       target:'100%',         actual:'100%',   pct:100},
@@ -14727,7 +14727,7 @@ app.get('/kpi', (c) => {
         </div>
         <div>
           <div style="font-size:.85rem;font-weight:700;color:var(--ink);">${o.dept} — ${o.obj}</div>
-          <div style="font-size:.68rem;color:var(--ink-muted);">Owner: ${o.owner} · FY 2024-25</div>
+          <div style="font-size:.68rem;color:var(--ink-muted);">Owner: ${o.owner} · FY 2025-26</div>
         </div>
       </div>
       <div style="text-align:right;">
@@ -15042,7 +15042,7 @@ const FALLBACK_LEADS = [
   <!-- KPI Row -->
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Total Pipeline',  value:'₹3,275 Cr', trend:'6 active leads', c:'#d97706'},
+      {label:'Total Pipeline',  value:'₹2,100 Cr+', trend:'6 active leads', c:'#d97706'},
       {label:'Proposals Sent',  value:'3',          trend:'This month',     c:'#2563eb'},
       {label:'Win Rate',        value:'62%',         trend:'↑ +5% vs last Q',c:'#16a34a'},
       {label:'Avg Deal Size',   value:'₹546 Cr',    trend:'FY 2025-26',    c:'#7c3aed'},
