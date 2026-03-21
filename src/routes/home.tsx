@@ -151,7 +151,7 @@ app.get('/', async (c) => {
         cmsBodyHtml = (row.body_html    as string) || ''
       }
     }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
 
   /* ── CMS body override zone ──────────────────────────────────────────── */
   const cmsZoneHtml = cmsBodyHtml
@@ -325,14 +325,14 @@ app.get('/', async (c) => {
       'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
       'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
       'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      'INR 1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
+      'INR 2,100 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
     ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
     ${[
       'Real Estate Capital Markets and Strategic Transaction Ecosystem','Capital Markets and Strategic Transaction Ecosystem','Retail Leasing Strategy',
       'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
       'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
       'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      'INR 1,165 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
+      'INR 2,100 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
     ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
   </div>
 </div>
@@ -341,7 +341,7 @@ app.get('/', async (c) => {
 <div style="position:relative;z-index:1;" id="homeStatsSection">
   <div id="homeStats">
     ${[
-      { n:'INR 1,165 Cr+', l:'Active Advisory Pipeline',      sub:'Active mandates under advisory', icon:'chart-line' },
+      { n:'INR 2,100 Cr+', l:'Active Advisory Pipeline',      sub:'Active mandates under advisory', icon:'chart-line' },
       { n:'15+',         l:'Hotel Projects',          sub:'Pre-opening & PMC mandates', icon:'hotel' },
       { n:'30+',         l:'Retail Brand Partners',   sub:'Leasing & franchise advisory', icon:'store' },
       { n:'20+',         l:'Hospitality Brands',      sub:'Management & on-boarding', icon:'concierge-bell' },
@@ -367,7 +367,7 @@ app.get('/', async (c) => {
       { icon:'shield-alt',     color:'#22c55e', text:'CERT-In Compliant' },
       { icon:'check-double',   color:'#B8960C', text:'OWASP Top-10 Secure' },
       { icon:'handshake',      color:'#60a5fa', text:'EY Co-Advisory Partner' },
-      { icon:'chart-line',     color:'#B8960C', text:'INR 1,165 Cr+ Active Pipeline' },
+      { icon:'chart-line',     color:'#B8960C', text:'INR 2,100 Cr+ Active Pipeline' },
       { icon:'hotel',          color:'#a78bfa', text:'15+ Hotel Projects Executed' },
       { icon:'store',          color:'#34d399', text:'35+ Retail Brand Partnerships' },
       { icon:'building',       color:'#60a5fa', text:'CBRE Co-Advisory Partner' },
@@ -382,7 +382,7 @@ app.get('/', async (c) => {
       { icon:'shield-alt',     color:'#22c55e', text:'CERT-In Compliant' },
       { icon:'check-double',   color:'#B8960C', text:'OWASP Top-10 Secure' },
       { icon:'handshake',      color:'#60a5fa', text:'EY Co-Advisory Partner' },
-      { icon:'chart-line',     color:'#B8960C', text:'INR 1,165 Cr+ Active Pipeline' },
+      { icon:'chart-line',     color:'#B8960C', text:'INR 2,100 Cr+ Active Pipeline' },
       { icon:'hotel',          color:'#a78bfa', text:'15+ Hotel Projects Executed' },
       { icon:'store',          color:'#34d399', text:'35+ Retail Brand Partnerships' },
     ]).map(item => `
@@ -473,7 +473,7 @@ app.get('/', async (c) => {
         <div class="gr"></div>
         <p class="eyebrow" style="margin-bottom:1rem;">Pan-India Execution Footprint</p>
         <h2 class="h2" style="margin-bottom:1.25rem;">Active Mandates<br>Across India</h2>
-        <p class="body-lg" style="margin-bottom:2rem;color:var(--ink-soft);">India Gully operates across Tier-1, 2 and 3 markets — from Delhi NCR and Mumbai to Kasauli, Chail, Chandigarh and Jaipur. Our active mandates span 8+ cities with INR 1,165 Cr+ in combined advisory value.</p>
+        <p class="body-lg" style="margin-bottom:2rem;color:var(--ink-soft);">India Gully operates across Tier-1, 2 and 3 markets — from Delhi NCR and Mumbai to Kasauli, Chail, Chandigarh and Jaipur. Our active mandates span 8+ cities with INR 2,100 Cr+ in combined advisory value.</p>
         <!-- City list -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:2rem;">
           ${[
@@ -817,7 +817,7 @@ app.get('/', async (c) => {
         { icon:'store',          color:'#1A3A6B', bg:'rgba(26,58,107,.08)', border:'rgba(26,58,107,.18)',  title:'1,40,000+ sq. ft. Leased',       desc:'Premium F&B and retail leasing at Gardens Galleria, Hyatt Andaz, AIPL Joy Street and Entertainment City — India\'s top retail destinations.' },
         { icon:'utensils',       color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'HORECA to 15+ Properties',     desc:'End-to-end supply of FF&E, OS&E, kitchen equipment and amenities for Mahindra Holidays, Accor, CGH Earth and more across India.' },
         { icon:'handshake',      color:'#7C3AED', bg:'rgba(124,58,237,.08)', border:'rgba(124,58,237,.18)', title:'Co-Advisory with EY & CBRE',   desc:'Trusted by India\'s top professional service firms as co-advisor on complex, multi-party institutional transactions requiring deep sector expertise.' },
-        { icon:'map-marked-alt', color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'Pan-India Execution Footprint',           desc:'Active mandates in Delhi NCR, Chandigarh, Kasauli, Chail, Jaipur, Noida, Gurugram, Bengaluru, Mumbai and Kerala — Tier–1 to 3 markets.' },
+        { icon:'map-marked-alt', color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'Pan-India Execution Footprint',           desc:'Active mandates in Delhi NCR, Chandigarh, Kasauli, Chail, Jaipur, Noida, Gurugram, Bengaluru, Mumbai and Kerala — Tier-1 to 3 markets.' },
       ].map((w, wi) => `
       <div class="why-card reveal" style="transition-delay:${wi*0.07}s;">
         <div class="why-icon" style="background:${w.bg};border:1px solid ${w.border};">
@@ -1423,7 +1423,7 @@ function filterRB(cat){
 
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Home', content, {
-    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. INR 1,165 Cr+ active mandate pipeline.",
+    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. INR 2,100 Cr+ active mandate pipeline.",
     canonical: 'https://indiagully.com/',
     ogImage: 'https://indiagully.com/static/og.jpg',
     heroPreload: '/static/mandates/chail/chail-img1.jpg',

@@ -11,7 +11,7 @@ const POSITIONS = [
     title:    'Analyst — Transaction Advisory & Investments',
     type:     'Full-Time',
     location: 'New Delhi (Hybrid)',
-    exp:      '0–2 years',
+    exp:      '0-2 years',
     tags:     ['Real Estate', 'Financial Modelling', 'Advisory'],
     summary:  'Support senior advisors on live real estate and hospitality transaction mandates. Build financial models, prepare Information Memoranda, coordinate due diligence and manage client data rooms.',
     responsibilities: [
@@ -39,11 +39,11 @@ const POSITIONS = [
     title:    'Executive — HORECA Procurement & Supply Chain',
     type:     'Full-Time',
     location: 'New Delhi / Pan-India Travel',
-    exp:      '2–5 years',
+    exp:      '2-5 years',
     tags:     ['HORECA', 'Procurement', 'Vendor Management'],
     summary:  'Drive end-to-end HORECA procurement for hotel pre-opening and renovation mandates. Manage vendor relationships, RFQ processes, PO execution and quality assurance across FF&E, OS&E, kitchen and uniform categories.',
     responsibilities: [
-      'End-to-end procurement management for hotel pre-opening projects (40–200 keys)',
+      'End-to-end procurement management for hotel pre-opening projects (40-200 keys)',
       'Vendor identification, RFQ preparation and competitive evaluation',
       'Negotiating pricing, delivery terms and quality commitments with vendors',
       'PO placement, delivery tracking and on-site quality inspection',
@@ -52,10 +52,10 @@ const POSITIONS = [
       'Client communication: weekly procurement status reports',
     ],
     requirements: [
-      '2–5 years in hospitality procurement, F&B supply chain or HORECA sales',
+      '2-5 years in hospitality procurement, F&B supply chain or HORECA sales',
       'Knowledge of FF&E, OS&E, kitchen equipment, linen and uniform categories',
       'Strong negotiation skills and a network of qualified hotel suppliers',
-      'Comfort with pan-India travel (30–40% travel expected)',
+      'Comfort with pan-India travel (30-40% travel expected)',
       'Proficiency in procurement software / Excel; ERP familiarity is a plus',
       'Hotel pre-opening experience preferred',
     ],
@@ -68,7 +68,7 @@ const POSITIONS = [
     title:    'Manager — Business Development (Mandates & Clients)',
     type:     'Full-Time',
     location: 'New Delhi + Client Locations',
-    exp:      '4–8 years',
+    exp:      '4-8 years',
     tags:     ['Business Development', 'Real Estate', 'Client Management'],
     summary:  'Drive mandate origination and client development for India Gully\'s transaction advisory, HORECA and hospitality services. Own the BD pipeline, deepen existing client relationships and build new ones across family offices, developers, hotel owners and institutional investors.',
     responsibilities: [
@@ -80,7 +80,7 @@ const POSITIONS = [
       'Representing India Gully at industry events, conferences and networking forums',
     ],
     requirements: [
-      '4–8 years in real estate advisory, hotel brokerage, investment banking or related sectors',
+      '4-8 years in real estate advisory, hotel brokerage, investment banking or related sectors',
       'Existing relationships with hotel owners, developers or investors is a strong plus',
       'Strong presentation and interpersonal skills',
       'Track record of mandate origination or deal sourcing',
@@ -96,7 +96,7 @@ const POSITIONS = [
     title:    'Executive — Digital Marketing & Content',
     type:     'Full-Time',
     location: 'New Delhi (Hybrid)',
-    exp:      '1–3 years',
+    exp:      '1-3 years',
     tags:     ['Digital Marketing', 'Content', 'SEO'],
     summary:  'Own India Gully\'s digital marketing — website content, LinkedIn presence, insights publication, SEO and performance campaigns. Translate complex advisory services into compelling content for investors, hotel owners and HORECA operators.',
     responsibilities: [
@@ -108,7 +108,7 @@ const POSITIONS = [
       'Coordinating photoshoots and videography for mandate listings and company content',
     ],
     requirements: [
-      '1–3 years in digital marketing, content marketing or editorial roles',
+      '1-3 years in digital marketing, content marketing or editorial roles',
       'Strong writing skills — comfortable with financial and business content',
       'SEO proficiency (keyword research, on-page, analytics)',
       'LinkedIn organic growth experience preferred',
@@ -122,7 +122,7 @@ const POSITIONS = [
     dept:     'Research & Analytics',
     deptColor:'#065F46',
     title:    'Research Intern — Real Estate & Hospitality',
-    type:     'Internship (3–6 months)',
+    type:     'Internship (3-6 months)',
     location: 'New Delhi (In-Office)',
     exp:      'Student / Fresh Graduate',
     tags:     ['Internship', 'Research', 'Hospitality'],
@@ -320,7 +320,7 @@ app.get('/', (c) => {
               onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--ink)'">
         <i class="fas fa-paper-plane" style="font-size:.65rem;"></i>Submit Application
       </button>
-      <p style="font-size:.62rem;color:var(--ink-faint);margin-top:.75rem;text-align:center;line-height:1.6;">We review every application personally. If we see a fit, expect a call within 5–7 business days. careers@indiagully.com · CIN: U74999DL2017PTC323237</p>
+      <p style="font-size:.62rem;color:var(--ink-faint);margin-top:.75rem;text-align:center;line-height:1.6;">We review every application personally. If we see a fit, expect a call within 5-7 business days. careers@indiagully.com · CIN: U74999DL2017PTC323237</p>
     </div>
   </div>
 </div>

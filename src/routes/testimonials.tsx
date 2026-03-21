@@ -131,7 +131,7 @@ app.get('/', (c) => {
       </span>
     </h1>
     <p style="color:rgba(255,255,255,.65);font-size:clamp(1rem,1.6vw,1.18rem);max-width:560px;line-height:1.6;margin:0;font-family:'DM Sans',sans-serif;">
-      Across INR 1,165 Cr+ of active strategic mandates and 15+ hotel projects, India Gully has established a capital markets-ready institutional advisory practice with verified execution depth across pan-India corridors.
+      Across INR 2,100 Cr+ of active strategic mandates and 15+ hotel projects, India Gully has established a capital markets-ready institutional advisory practice with verified execution depth across pan-India corridors.
     </p>
   </div>
 </section>
@@ -217,7 +217,7 @@ app.get('/', (c) => {
       ${[
         { val: '5.0', label: 'Average Rating', icon: 'fa-star' },
         { val: `${TESTIMONIALS.length}+`, label: 'Verified Clients', icon: 'fa-users' },
-        { val: 'INR 1,165 Cr+', label: 'Mandates Advised', icon: 'fa-chart-line' },
+        { val: 'INR 2,100 Cr+', label: 'Mandates Advised', icon: 'fa-chart-line' },
         { val: '100%', label: 'NDA Compliance', icon: 'fa-shield-alt' },
       ].map(s => `
       <div>
@@ -391,7 +391,7 @@ function filterTest(cat) {
 </script>
 `
   return c.html(layout('Client Testimonials — India Gully Advisory', html, {
-    description: 'Read what India Gully clients say about our transaction advisory, HORECA procurement, and hospitality development services across INR 1,165 Cr+ of mandates.',
+    description: 'Read what India Gully clients say about our transaction advisory, HORECA procurement, and hospitality development services across INR 2,100 Cr+ of mandates.',
     canonical: 'https://india-gully.pages.dev/testimonials',
     ogImage: 'https://india-gully.pages.dev/static/og.jpg',
   }))
