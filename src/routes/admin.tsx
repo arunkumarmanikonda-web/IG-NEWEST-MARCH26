@@ -17323,4 +17323,85 @@ function filterEnq(type){
   return c.html(layout('Enquiry Inbox', adminShell('Enquiry Inbox', 'enquiries', body), {noNav:true, noFooter:true}))
 })
 
+
+// ── Phase X: Notifications, API Keys, Feature Flags, Support Tickets, Export, Webhooks, Platform ──
+;(window as any).igLoadNotificationsLive = async function() {
+  try {
+    const r = await fetch('/api/notifications', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadNotificationsLive]', e) }
+}
+;(window as any).igLoadApiKeysLive = async function() {
+  try {
+    const r = await fetch('/api/settings/api-keys', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadApiKeysLive]', e) }
+}
+;(window as any).igLoadFeatureFlagsLive = async function() {
+  try {
+    const r = await fetch('/api/settings/feature-flags', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadFeatureFlagsLive]', e) }
+}
+;(window as any).igLoadSupportTicketsLive = async function() {
+  try {
+    const r = await fetch('/api/support/tickets', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadSupportTicketsLive]', e) }
+}
+;(window as any).igLoadExportJobsLive = async function() {
+  try {
+    const r = await fetch('/api/export/jobs', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadExportJobsLive]', e) }
+}
+;(window as any).igLoadOutboundWebhooksLive = async function() {
+  try {
+    const r = await fetch('/api/settings/webhooks', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadOutboundWebhooksLive]', e) }
+}
+;(window as any).igLoadPlatformHealthLive = async function() {
+  try {
+    const r = await fetch('/api/platform/health-dashboard', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPlatformHealthLive]', e) }
+}
+;(window as any).igLoadDeploymentsLive = async function() {
+  try {
+    const r = await fetch('/api/infra/deployments', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadDeploymentsLive]', e) }
+}
+;(window as any).igLoadKpiZZ1Live = async function() {
+  try {
+    const r = await fetch('/api/kpi/dashboard', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadKpiZZ1Live]', e) }
+}
+;(window as any).igLoadBoardPackLive = async function() {
+  try {
+    const r = await fetch('/api/executive/board-pack', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadBoardPackLive]', e) }
+}
+;(window as any).igLoadInvestorMetricsLive = async function() {
+  try {
+    const r = await fetch('/api/executive/investor-metrics', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadInvestorMetricsLive]', e) }
+}
+;(window as any).igLoadStrategicInitiativesLive = async function() {
+  try {
+    const r = await fetch('/api/executive/strategic-initiatives', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadStrategicInitiativesLive]', e) }
+}
+;(window as any).igLoadPlatformCertLive = async function() {
+  try {
+    const r = await fetch('/api/compliance/platform-certification', { credentials: 'include' })
+    return await r.json()
+  } catch(e) { console.warn('[igLoadPlatformCertLive]', e) }
+}
+
 export default app
