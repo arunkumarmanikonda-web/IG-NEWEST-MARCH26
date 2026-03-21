@@ -13990,7 +13990,7 @@ app.get('/dpdp/employee-data-rights', requireSession(), requireRole(['Super Admi
   const FALLBACK_TT5 = { round:'TT', endpoint:'TT5', generated:new Date().toISOString(),
     pii_fields_mapped:142, right_to_access_requests:12, pending:8, fulfilled:4,
     pii_categories:[ {cat:'Identity (PAN/Aadhaar)',fields:8,encrypted:true},{cat:'Financial (CTC/bank)',fields:12,encrypted:true},{cat:'Contact',fields:6,encrypted:false},{cat:'Health/biometric',fields:4,encrypted:true} ],
-    pending_requests:[ {emp:'IG-EMP-0028',request:'Access payslips FY25-26',days_pending:18},{emp:'IG-EMP-0041',request:'Correct bank account',days_pending:6} ],
+    pending_requests:[ {emp:'IG-EMP-0028',request:'Access payslips FY 2025-26',days_pending:18},{emp:'IG-EMP-0041',request:'Correct bank account',days_pending:6} ],
     storage:'fallback', timestamp:new Date().toISOString() }
   return c.json({ ...FALLBACK_TT5, storage:'fallback', generated:new Date().toISOString() })
 })
@@ -14191,7 +14191,7 @@ app.get('/dpdp/financial-data-classification', requireSession(), requireRole(['S
 })
 app.get('/compliance/roc-filings', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', generated: new Date().toISOString(), total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY25-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', generated: new Date().toISOString(), total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY 2025-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -17367,7 +17367,7 @@ app.get('/mandate-analytics', async (c) => {
     } catch (_) { /* D1 unavailable — fall through */ }
   }
   return c.json({
-    success: true, total_mandates: 8, active_mandates: 6, pipeline_value_cr: 1165,
+    success: true, total_mandates: 8, active_mandates: 6, pipeline_value_cr: 2100,
     by_sector: [
       { sector:'Hospitality', count: 4, value: 770 },
       { sector:'Real Estate', count: 2, value: 350 },

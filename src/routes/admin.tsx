@@ -899,7 +899,7 @@ app.get('/cms', (c) => {
         ${[
           {page:'Home',     title:'India Gully — Celebrating Desiness',        kw:'real estate advisory, hospitality consulting, India', score:87},
           {page:'About',    title:'About India Gully — Leadership & Mission',   kw:'Arun Manikonda, India Gully team, advisory firm',    score:82},
-          {page:'Listings', title:'Active Mandates — India Gully',              kw:'investment mandates, ₹1165 Cr pipeline, India',     score:79},
+          {page:'Listings', title:'Active Mandates — India Gully',              kw:'investment mandates, ₹2,100 Cr+ pipeline, India',     score:79},
           {page:'HORECA',   title:'HORECA Solutions — India Gully',             kw:'hotel procurement, restaurant supplies, HORECA India',score:91},
           {page:'Services', title:'Advisory Services — India Gully',            kw:'real estate services, retail advisory India',         score:75},
           {page:'Contact',  title:'Contact India Gully — Get In Touch',         kw:'India Gully contact, advisory enquiry Delhi',         score:68},
@@ -3731,11 +3731,11 @@ ${invRowsHtml}
     igToast('Preparing 26Q return for Q4…','info');
     igApi.post('/finance/tds/prepare',{form:'26Q',quarter:'Q4'}).then(function(d){
       var csv = igBuildCsv(['Deductee','PAN','Amount Paid','TDS Rate','TDS Deducted','Section','Quarter'],
-        [['Vendor A Pvt Ltd','AABCV1234A','₹2,50,000','10%','₹25,000','194C','Q4 FY25-26'],
-         ['Consultant B','BBXCK5678B','₹1,80,000','10%','₹18,000','194J','Q4 FY25-26'],
-         ['Service Provider C','CCCSP9012C','₹3,40,000','2%','₹6,800','194C','Q4 FY25-26'],
-         ['Contractor D','DDCTR3456D','₹1,20,000','1%','₹1,200','194C','Q4 FY25-26'],
-         ['Freelancer E','EEEFL7890E','₹85,000','10%','₹8,500','194J','Q4 FY25-26']]
+        [['Vendor A Pvt Ltd','AABCV1234A','₹2,50,000','10%','₹25,000','194C','Q4 FY 2025-26'],
+         ['Consultant B','BBXCK5678B','₹1,80,000','10%','₹18,000','194J','Q4 FY 2025-26'],
+         ['Service Provider C','CCCSP9012C','₹3,40,000','2%','₹6,800','194C','Q4 FY 2025-26'],
+         ['Contractor D','DDCTR3456D','₹1,20,000','1%','₹1,200','194C','Q4 FY 2025-26'],
+         ['Freelancer E','EEEFL7890E','₹85,000','10%','₹8,500','194J','Q4 FY 2025-26']]
       );
       igSaveFile('26Q-Q4-FY2025-26-return.csv', csv, 'text/csv');
       igToast('26Q return for Q4 prepared & downloaded — review before filing on TRACES','success');
@@ -3937,10 +3937,10 @@ ${invRowsHtml}
     igToast('Fetching latest 26AS from TRACES…','info');
     igApi.get('/finance/tds/26as').then(function(d){
       var csv = igBuildCsv(['Deductor','TAN','Section','Quarter','Gross Amount','TDS Amount','Date','Status'],
-        [['Client Co Alpha','DLCA12345A','194J','Q3 FY25-26','₹5,00,000','₹50,000','15 Jan 2026','Deposited'],
-         ['Beta Services LLP','MHBS67890B','194C','Q3 FY25-26','₹3,20,000','₹6,400','20 Jan 2026','Deposited'],
-         ['Gamma Corp','KAGA34567C','194J','Q3 FY25-26','₹2,10,000','₹21,000','25 Jan 2026','Deposited'],
-         ['Delta Consulting','DLDC78901D','194C','Q3 FY25-26','₹1,80,000','₹3,600','28 Jan 2026','Deposited']]
+        [['Client Co Alpha','DLCA12345A','194J','Q3 FY 2025-26','₹5,00,000','₹50,000','15 Jan 2026','Deposited'],
+         ['Beta Services LLP','MHBS67890B','194C','Q3 FY 2025-26','₹3,20,000','₹6,400','20 Jan 2026','Deposited'],
+         ['Gamma Corp','KAGA34567C','194J','Q3 FY 2025-26','₹2,10,000','₹21,000','25 Jan 2026','Deposited'],
+         ['Delta Consulting','DLDC78901D','194C','Q3 FY 2025-26','₹1,80,000','₹3,600','28 Jan 2026','Deposited']]
       );
       igSaveFile('26AS-FY2024-25-'+new Date().toISOString().slice(0,10)+'.csv', csv, 'text/csv');
       igToast('26AS data refreshed from TRACES — downloaded for FY 2025-26','success');
@@ -9315,7 +9315,7 @@ app.get('/reports', (c) => {
           {label:'FY26 Forecast',  value:'₹1.58 Cr/mo', sub:'Avg monthly target',      c:'#B8960C'},
           {label:'Growth CAGR',    value:'+28%',          sub:'vs FY25 actual',          c:'#16a34a'},
           {label:'Churn Risk',     value:'Low (12%)',     sub:'2 at-risk client accounts',c:'#d97706'},
-          {label:'Model Accuracy', value:'87.3%',         sub:'Backtested on FY24-25',   c:'#2563eb'},
+          {label:'Model Accuracy', value:'87.3%',         sub:'Backtested on FY 2024-25',   c:'#2563eb'},
         ].map(s=>`<div style="background:var(--parch-dk);border:1px solid var(--border);padding:.875rem;">
           <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">${s.label}</div>
           <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.4rem;color:${s.c};">${s.value}</div>
