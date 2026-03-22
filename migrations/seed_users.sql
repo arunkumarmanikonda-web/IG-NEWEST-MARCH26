@@ -11,7 +11,7 @@ INSERT OR IGNORE INTO ig_users
    role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
 VALUES
   ('superadmin@indiagully.com',
-   '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',
+   '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
    'ig-salt-admin-v3-2026', 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ', 1,
    'Super Admin', 'admin', '/admin/dashboard',
    1, 0, ''),
