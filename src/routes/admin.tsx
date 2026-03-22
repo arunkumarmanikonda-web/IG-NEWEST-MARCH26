@@ -111,6 +111,11 @@ function adminShell(pageTitle: string, active: string, body: string) {
             </div>`).join('')}
           </div>
         </div>
+        <!-- Dark Mode Toggle -->
+        <button id="adm-dark-btn" onclick="igAdmToggleDark()" title="Toggle Light/Dark Mode"
+          style="background:none;border:1px solid var(--border);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <i id="adm-dark-icon" class="fas fa-moon" style="font-size:.72rem;color:var(--ink-muted);"></i>
+        </button>
         <div style="display:flex;align-items:center;gap:.5rem;">
           <span style="font-size:.68rem;color:var(--ink-muted);">superadmin</span>
           <div style="width:32px;height:32px;background:#6B1A1A;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Super Admin" onclick="igAdmShowProfile()">
@@ -278,6 +283,24 @@ window.igAdmClearAlerts = function(){
 };
 
 // ── Admin Shell: Show Super Admin Profile ─────────────────────────────────────
+window.igAdmToggleDark = function(){
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  var newTheme = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  try{ localStorage.setItem('ig_dark_mode', newTheme === 'dark' ? '1' : '0'); }catch(e){}
+  var icon = document.getElementById('adm-dark-icon');
+  if(icon){ icon.className = 'fas fa-' + (newTheme === 'dark' ? 'sun' : 'moon'); icon.style.color = newTheme === 'dark' ? '#B8960C' : 'var(--ink-muted)'; }
+  igToast('Switched to ' + (newTheme === 'dark' ? 'Dark' : 'Light') + ' mode', 'success');
+};
+/* Sync dark mode icon on load */
+(function(){
+  try{
+    var isDark = localStorage.getItem('ig_dark_mode') === '1' || document.documentElement.getAttribute('data-theme') === 'dark';
+    var icon = document.getElementById('adm-dark-icon');
+    if(icon && isDark){ icon.className = 'fas fa-sun'; icon.style.color = '#B8960C'; }
+  }catch(e){}
+})();
 window.igAdmShowProfile = function(){
   igModal('Super Admin Profile',
     '<div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;">'
