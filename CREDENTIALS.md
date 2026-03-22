@@ -49,6 +49,12 @@
 
 ---
 
+## 🌐 Production Admin URL
+
+**https://indiagully.com/admin** — Super Admin Portal
+
+---
+
 ## 🚀 Apply to Live D1 (Run once in PowerShell from project root)
 
 ```powershell
