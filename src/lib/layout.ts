@@ -13,7 +13,7 @@ export function layout(title: string, content: string, opts?: {
   heroPreload?: string    // optional above-fold image URL to preload with high priority
 }) {
   const desc = opts?.description || "India Gully — Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions."
-  const ogImg = opts?.ogImage || 'https://india-gully.pages.dev/static/og.jpg'
+  const ogImg = opts?.ogImage || 'https://indiagully.com/static/og.jpg'
 
   return `<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
