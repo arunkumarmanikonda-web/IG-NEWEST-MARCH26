@@ -2062,27 +2062,29 @@ app.get('/governance/registers', async (c) => {
   }
 
   if (db) {
-    // D1 mode — count from ig_statutory_registers
-    const rows = await db.prepare(
-      `SELECT register_type, COUNT(*) as cnt, MAX(created_at) as last_updated FROM ig_statutory_registers GROUP BY register_type`
-    ).all()
-    const d1Map: Record<string, { cnt: number; last_updated: string }> = {}
-    for (const r of (rows.results as Array<Record<string, unknown>>)) {
-      d1Map[r.register_type as string] = {
-        cnt: Number(r.cnt),
-        last_updated: r.last_updated as string,
+    try {
+      // D1 mode — count from ig_statutory_registers
+      const rows = await db.prepare(
+        `SELECT register_type, COUNT(*) as cnt, MAX(created_at) as last_updated FROM ig_statutory_registers GROUP BY register_type`
+      ).all()
+      const d1Map: Record<string, { cnt: number; last_updated: string }> = {}
+      for (const r of (rows.results as Array<Record<string, unknown>>)) {
+        d1Map[r.register_type as string] = {
+          cnt: Number(r.cnt),
+          last_updated: r.last_updated as string,
+        }
       }
-    }
-    const registers = Object.keys(REGISTER_SCHEMA).map(type => ({
-      type,
-      label: type.replace('-', ' ').replace(/\b\w/g, x => x.toUpperCase()),
-      fields: REGISTER_SCHEMA[type],
-      count: d1Map[type]?.cnt || 0,
-      last_updated: d1Map[type]?.last_updated || null,
-      companies_act_section: actSection[type] || '—',
-      storage: 'D1',
-    }))
-    return c.json({ registers, total: registers.length, storage: 'Cloudflare D1' })
+      const registers = Object.keys(REGISTER_SCHEMA).map(type => ({
+        type,
+        label: type.replace('-', ' ').replace(/\b\w/g, x => x.toUpperCase()),
+        fields: REGISTER_SCHEMA[type],
+        count: d1Map[type]?.cnt || 0,
+        last_updated: d1Map[type]?.last_updated || null,
+        companies_act_section: actSection[type] || '—',
+        storage: 'D1',
+      }))
+      return c.json({ registers, total: registers.length, storage: 'Cloudflare D1' })
+    } catch(_) { /* fall through to in-memory */ }
   }
 
   // In-memory fallback
@@ -4372,11 +4374,13 @@ let CMS_APPROVAL_NEXT_ID = 1
 /** GET /api/cms/pages — List all CMS pages (admin only) */
 app.get('/cms/pages', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT id, slug, title, meta_title, meta_desc, status, version, author, updated_at, published_at
-       FROM ig_cms_pages ORDER BY updated_at DESC`
-    ).all()
-    return c.json({ success: true, pages: rows.results, storage: 'D1' })
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT id, slug, title, meta_title, meta_desc, status, version, author, updated_at, published_at
+         FROM ig_cms_pages ORDER BY updated_at DESC`
+      ).all()
+      return c.json({ success: true, pages: rows.results, storage: 'D1' })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback — fully functional CRUD
   const pages = Array.from(CMS_PAGES_STORE.values()).sort((a, b) =>
@@ -4389,15 +4393,17 @@ app.get('/cms/pages', requireSession(), requireRole(['Super Admin']), async (c) 
 app.get('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async (c) => {
   const id = c.req.param('id')
   if (c.env?.DB) {
-    const row = id.startsWith('/') || id.includes('-')
-      ? await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE slug = ?`).bind(id).first()
-      : await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(Number(id)).first()
-    if (!row) return c.json({ success: false, error: 'Page not found' }, 404)
-    const versions = await c.env.DB.prepare(
-      `SELECT version, status, changed_by, change_note, created_at
-       FROM ig_cms_page_versions WHERE page_id = ? ORDER BY version DESC LIMIT 10`
-    ).bind((row as any).id).all()
-    return c.json({ success: true, page: row, versions: versions.results })
+    try {
+      const row = id.startsWith('/') || id.includes('-')
+        ? await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE slug = ?`).bind(id).first()
+        : await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(Number(id)).first()
+      if (!row) return c.json({ success: false, error: 'Page not found' }, 404)
+      const versions = await c.env.DB.prepare(
+        `SELECT version, status, changed_by, change_note, created_at
+         FROM ig_cms_page_versions WHERE page_id = ? ORDER BY version DESC LIMIT 10`
+      ).bind((row as any).id).all()
+      return c.json({ success: true, page: row, versions: versions.results })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const numId = Number(id)
@@ -4576,13 +4582,15 @@ app.post('/cms/pages/:id/reject', requireSession(), requireRole(['Super Admin'])
 /** GET /api/cms/approvals — List pending approvals */
 app.get('/cms/approvals', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT a.id, a.approval_ref, a.change_note, a.submitted_by, a.status, a.created_at,
-              p.slug, p.title
-       FROM ig_cms_approvals a JOIN ig_cms_pages p ON p.id = a.page_id
-       WHERE a.status = 'pending' ORDER BY a.created_at DESC`
-    ).all()
-    return c.json({ success: true, approvals: rows.results })
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT a.id, a.approval_ref, a.change_note, a.submitted_by, a.status, a.created_at,
+                p.slug, p.title
+         FROM ig_cms_approvals a JOIN ig_cms_pages p ON p.id = a.page_id
+         WHERE a.status = 'pending' ORDER BY a.created_at DESC`
+      ).all()
+      return c.json({ success: true, approvals: rows.results })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const pending = Array.from(CMS_APPROVALS_STORE.values())
