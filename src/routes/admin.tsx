@@ -962,8 +962,7 @@ app.get('/cms', (c) => {
           {label:'Primary Logo',    file:'logo-primary.png',  bg:'#FAF8F3', desc:'Light backgrounds — website, documents, presentations',   w:1024,h:239},
           {label:'White Logo',      file:'logo-white.png',    bg:'#111111', desc:'Dark backgrounds — sidebar, footer, dark-mode UI',         w:1024,h:239},
           {label:'Hologram Mark',   file:'logo-hologram.png', bg:'#1a1a2e', desc:'Favicon master — hologram calligraphic mark (do not use as general logo)', w:275,h:424},
-        ].map(a=
-           onerror="this.onerror=null;this.style.display='none'" >`<div style="border:1px solid var(--border);overflow:hidden;">
+        ].map(a=>`<div style="border:1px solid var(--border);overflow:hidden;">
           <div style="background:${a.bg};padding:1.5rem;display:flex;align-items:center;justify-content:center;min-height:90px;">
             <img src="/assets/${a.file}"
                  alt="${a.label}"
@@ -1077,8 +1076,7 @@ app.get('/cms', (c) => {
             {name:'indiagully-deck.pdf',size:'4.2 MB',dim:'—',        type:'doc',   locked:false, bg:'#fef9f0', file:''},
             {name:'advisory-brochure.pdf',size:'2.1 MB',dim:'—',      type:'doc',   locked:false, bg:'#f0fdf4', file:''},
             {name:'social-banner-1.png',size:'85 KB',dim:'1080×1080', type:'image', locked:false, bg:'#f0f4ff', file:''},
-          ].map(a=
-           onerror="this.onerror=null;this.style.display='none'" >`<div style="background:#fff;border:1px solid ${a.locked?'#fde68a':'var(--border)'};overflow:hidden;position:relative;">
+          ].map(a=>`<div style="background:#fff;border:1px solid ${a.locked?'#fde68a':'var(--border)'};overflow:hidden;position:relative;">
             ${a.locked?'<div style="position:absolute;top:.4rem;right:.4rem;background:#d97706;color:#fff;font-size:.5rem;font-weight:700;padding:1px 5px;letter-spacing:.06em;z-index:2;">LOCKED</div>':''}
             <div style="background:${a.bg};height:70px;display:flex;align-items:center;justify-content:center;">
               ${a.file?`<img src="/assets/${a.file}" alt="${a.name}" style="max-height:50px;max-width:80%;object-fit:contain;pointer-events:none;" draggable="false">`:`<i class="fas fa-${a.type==='doc'?'file-pdf':a.type==='icon'?'globe':'image'}" style="font-size:1.5rem;color:#94a3b8;"></i>`}
@@ -17292,7 +17290,7 @@ app.get('/enquiries', async (c) => {
     </div>`).join('')}
   </div>
 
-  ${!kvAvailable ? `
+  ${dataSource === 'demo' ? `
   <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.2);display:flex;gap:.75rem;align-items:flex-start;">
     <i class="fas fa-info-circle" style="color:#fbbf24;margin-top:.1rem;flex-shrink:0;"></i>
     <div>
