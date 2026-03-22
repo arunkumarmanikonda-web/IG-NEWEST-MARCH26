@@ -15,28 +15,73 @@
 -- ig_payroll_runs table created in migration 0018
 
 -- ── Seed: ig_users ────────────────────────────────────────────────────────────
-INSERT OR IGNORE INTO ig_users
+-- INSERT OR REPLACE ensures re-running this migration keeps passwords current
+INSERT OR REPLACE INTO ig_users
   (identifier, password_hash, password_salt, totp_secret, totp_enabled,
    role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
 VALUES
+  -- 1. Super Admin | Password: India@5327** | TOTP: CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ
   ('superadmin@indiagully.com',
-   '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
+   '531e7f8d58df22dc04f4883380c7def8ea1f7a548938d62065d46cf1c011ec1c',
    'ig-salt-admin-v3-2026', 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ', 1,
-   'Super Admin', 'admin', '/admin/dashboard', 1, 0, ''),
+   'Super Admin', 'admin', '/admin/dashboard', 1, 1, 0, ''),
 
+  -- 2. Arun Manikonda (MD/Board) | Password: Arun@IG2026 | TOTP: ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ
+  ('akm@indiagully.com',
+   'cdd6bc852a717f91b12f69240f31e79a2395c0fc78933c1085a09898f9dbe5ad',
+   'ig-salt-board-akm-2026', 'ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ', 1,
+   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
+
+  -- 3. Pavan Manikonda (ED/Board) | Password: Pavan@IG2026 | TOTP: OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO
+  ('pavan@indiagully.com',
+   '1acec72c5694e8b9422a5dc4f53619e640df99c78d7ea50f265433a888b9c69c',
+   'ig-salt-board-pavan-2026', 'OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO', 1,
+   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
+
+  -- 4. Amit Jhingan (President/Board) | Password: Amit@IG2026 | TOTP: BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR
+  ('amit.jhingan@indiagully.com',
+   '93a39866cc13631cdc12d38c762869938bfcee2a649250c4952bce79ebebd836',
+   'ig-salt-board-amit-2026', 'BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR', 1,
+   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
+
+  -- 5. Atul Rana (Head Sales/Employee) | Password: Atul@IG2026# | TOTP: GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU
+  ('atul.rana@indiagully.com',
+   'f1868b84e10fb9ba07c183969b669591a82e97f55927cc1ef7fbf8d7bb1d8066',
+   'ig-salt-emp-atul-2026', 'GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU', 1,
+   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 0, ''),
+
+  -- 6. HR Manager | Password: HR@IG2026# | TOTP: 6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z
+  ('hr@indiagully.com',
+   'b00b260813234b492e7d553c6baf9db49dff4cf30e3260cfb1d841ae1331508f',
+   'ig-salt-hr-2026', '6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z', 1,
+   'Employee', 'employee', '/admin/hr', 1, 1, 0, ''),
+
+  -- 7. Finance CFO | Password: Finance@IG2026# | TOTP: INRLENYXGKG66B4G7PVWZFG7NQLRJHUD
+  ('finance@indiagully.com',
+   'bea826a65411a726a511dfe3e9cc22f230e71854a74d923b8967724f98eedad7',
+   'ig-salt-finance-2026', 'INRLENYXGKG66B4G7PVWZFG7NQLRJHUD', 1,
+   'Employee', 'employee', '/admin/finance', 1, 1, 0, ''),
+
+  -- 8. Legal CS | Password: Legal@IG2026# | TOTP: CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5
+  ('legal@indiagully.com',
+   '255f716a8d4c3476776ed5b2971806991ea67083befba1f311ab255270bb70ab',
+   'ig-salt-legal-2026', 'CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5', 1,
+   'Employee', 'employee', '/admin/governance', 1, 1, 0, ''),
+
+  -- Demo / QA (testing only)
   ('demo@indiagully.com',
-   '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',
-   'ig-salt-client-v3-2026', '' , 0,
+   '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
+   'ig-salt-client-v3-2026', 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU', 1,
    'Client', 'client', '/portal/client/dashboard', 1, 1, 1, ''),
 
   ('IG-EMP-0001',
-   '2327d437979646c3a1dd2535776f7b2998528832264450ce3a82ce1c335b59d4',
-   'ig-salt-emp-v3-2026', '' , 0,
+   '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
+   'ig-salt-emp-v3-2026', 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67', 1,
    'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 1, ''),
 
   ('IG-KMP-0001',
-   'd436a3bf72ea09c74d7f778ecbc32fcd0c54db0d2cd2c3ecc352c1cb994be876',
-   'ig-salt-board-v3-2026', '' , 0,
+   '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
+   'ig-salt-board-v3-2026', 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN', 1,
    'Board', 'board', '/portal/board/dashboard', 1, 1, 1, '');
 
 INSERT OR IGNORE INTO ig_cms_pages
