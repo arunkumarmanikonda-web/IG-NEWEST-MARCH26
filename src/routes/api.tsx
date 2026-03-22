@@ -2105,17 +2105,19 @@ app.get('/governance/registers/:type', async (c) => {
   const db = c.env?.DB
 
   if (db) {
-    const rows = await db.prepare(
-      `SELECT * FROM ig_statutory_registers WHERE register_type = ? ORDER BY created_at DESC`
-    ).bind(type).all()
-    return c.json({
-      type,
-      fields: REGISTER_SCHEMA[type],
-      entries: rows.results,
-      count: rows.results.length,
-      companies_act: 'Maintained under Companies Act 2013',
-      storage: 'Cloudflare D1',
-    })
+    try {
+      const rows = await db.prepare(
+        `SELECT * FROM ig_statutory_registers WHERE register_type = ? ORDER BY created_at DESC`
+      ).bind(type).all()
+      return c.json({
+        type,
+        fields: REGISTER_SCHEMA[type],
+        entries: rows.results,
+        count: rows.results.length,
+        companies_act: 'Maintained under Companies Act 2013',
+        storage: 'Cloudflare D1',
+      })
+    } catch(_) { /* fall through to in-memory */ }
   }
 
   const entries = REGISTER_STORE.get(type) || []
@@ -4455,28 +4457,30 @@ app.put('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async 
   const newStatus = (session.role === 'admin' && reqStatus === 'published') ? 'published' : 'draft'
 
   if (c.env?.DB) {
-    const existing = await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
-    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-    const newVersion = (existing.version || 1) + 1
-    await c.env.DB.prepare(
-      `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`
-    ).bind(id, existing.version, existing.title, existing.body_html, existing.status, session.user, change_note || 'Draft update').run()
-    await c.env.DB.prepare(
-      `UPDATE ig_cms_pages SET
-         title=COALESCE(?,title), meta_title=COALESCE(?,meta_title), meta_desc=COALESCE(?,meta_desc),
-         og_image=COALESCE(?,og_image), hero_headline=COALESCE(?,hero_headline),
-         hero_subheading=COALESCE(?,hero_subheading), body_html=COALESCE(?,body_html),
-         status=?, version=?, author=?, updated_at=CURRENT_TIMESTAMP
-       WHERE id=?`
-    ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newStatus, newVersion, session.user, id).run()
-    if (newStatus === 'published') {
+    try {
+      const existing = await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
+      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+      const newVersion = (existing.version || 1) + 1
       await c.env.DB.prepare(
-        `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note) VALUES (?, ?, ?, ?, 'published', ?, ?)`
-      ).bind(id, newVersion, title || existing.title, body_html || existing.body_html, session.user, 'Published directly by Super Admin').run()
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, newStatus === 'published' ? 'CMS_PAGE_PUBLISHED' : 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
-    return c.json({ success: true, page_id: id, version: newVersion, status: newStatus })
+        `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(id, existing.version, existing.title, existing.body_html, existing.status, session.user, change_note || 'Draft update').run()
+      await c.env.DB.prepare(
+        `UPDATE ig_cms_pages SET
+           title=COALESCE(?,title), meta_title=COALESCE(?,meta_title), meta_desc=COALESCE(?,meta_desc),
+           og_image=COALESCE(?,og_image), hero_headline=COALESCE(?,hero_headline),
+           hero_subheading=COALESCE(?,hero_subheading), body_html=COALESCE(?,body_html),
+           status=?, version=?, author=?, updated_at=CURRENT_TIMESTAMP
+         WHERE id=?`
+      ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newStatus, newVersion, session.user, id).run()
+      if (newStatus === 'published') {
+        await c.env.DB.prepare(
+          `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note) VALUES (?, ?, ?, ?, 'published', ?, ?)`
+        ).bind(id, newVersion, title || existing.title, body_html || existing.body_html, session.user, 'Published directly by Super Admin').run()
+      }
+      await kvAuditLog(c.env?.IG_AUDIT_KV, newStatus === 'published' ? 'CMS_PAGE_PUBLISHED' : 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
+      return c.json({ success: true, page_id: id, version: newVersion, status: newStatus })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4504,14 +4508,16 @@ app.post('/cms/pages/:id/submit', requireSession(), requireRole(['Super Admin'])
   const approval_ref = `APR-${Date.now().toString(36).toUpperCase()}`
 
   if (c.env?.DB) {
-    const existing = await c.env.DB.prepare(`SELECT id, slug, title FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
-    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-    await c.env.DB.prepare(
-      `INSERT INTO ig_cms_approvals (page_id, approval_ref, change_note, submitted_by) VALUES (?, ?, ?, ?)`
-    ).bind(id, approval_ref, change_note || 'Content update', session.user).run()
-    await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='pending', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_SUBMITTED', session.user, 'N/A', approval_ref)
-    return c.json({ success: true, approval_ref, status: 'pending', page_id: id })
+    try {
+      const existing = await c.env.DB.prepare(`SELECT id, slug, title FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
+      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+      await c.env.DB.prepare(
+        `INSERT INTO ig_cms_approvals (page_id, approval_ref, change_note, submitted_by) VALUES (?, ?, ?, ?)`
+      ).bind(id, approval_ref, change_note || 'Content update', session.user).run()
+      await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='pending', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_SUBMITTED', session.user, 'N/A', approval_ref)
+      return c.json({ success: true, approval_ref, status: 'pending', page_id: id })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4529,16 +4535,18 @@ app.post('/cms/pages/:id/approve', requireSession(), requireRole(['Super Admin']
   const id = Number(c.req.param('id'))
 
   if (c.env?.DB) {
-    const existing = await c.env.DB.prepare(`SELECT id, slug FROM ig_cms_pages WHERE id=?`).bind(id).first() as any
-    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-    await c.env.DB.prepare(
-      `UPDATE ig_cms_pages SET status='published', approved_by=?, approved_at=CURRENT_TIMESTAMP, published_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE id=?`
-    ).bind(session.user, id).run()
-    await c.env.DB.prepare(
-      `UPDATE ig_cms_approvals SET status='approved', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
-    ).bind(session.user, id).run()
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_PUBLISHED', session.user, 'N/A', existing.slug)
-    return c.json({ success: true, page_id: id, slug: existing.slug, status: 'published', published_at: new Date().toISOString() })
+    try {
+      const existing = await c.env.DB.prepare(`SELECT id, slug FROM ig_cms_pages WHERE id=?`).bind(id).first() as any
+      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+      await c.env.DB.prepare(
+        `UPDATE ig_cms_pages SET status='published', approved_by=?, approved_at=CURRENT_TIMESTAMP, published_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE id=?`
+      ).bind(session.user, id).run()
+      await c.env.DB.prepare(
+        `UPDATE ig_cms_approvals SET status='approved', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
+      ).bind(session.user, id).run()
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_PUBLISHED', session.user, 'N/A', existing.slug)
+      return c.json({ success: true, page_id: id, slug: existing.slug, status: 'published', published_at: new Date().toISOString() })
+    } catch(_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
