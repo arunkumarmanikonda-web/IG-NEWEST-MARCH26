@@ -12,10 +12,9 @@ INSERT OR IGNORE INTO ig_users
 VALUES
   ('superadmin@indiagully.com',
    '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',
-   'ig-salt-admin-v3-2026',
-   '' , 0,
+   'ig-salt-admin-v3-2026', 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ', 1,
    'Super Admin', 'admin', '/admin/dashboard',
-   1, 1, 1, ''),
+   1, 0, ''),
 
   ('demo@indiagully.com',
    '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',
