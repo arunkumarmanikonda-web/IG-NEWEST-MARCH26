@@ -39,68 +39,38 @@ VALUES
    'Board', 'board', '/portal/board/dashboard',
    1, 1, 0, '');
 
--- Riya Sharma (Sr. Analyst — IG-EMP-0001)
+
+
+
+
+
+-- Atul Rana (Head Sales - Entertainment Business — IG-EMP-0001)
 INSERT OR IGNORE INTO ig_users
   (identifier, password_hash, password_salt, totp_secret, totp_enabled,
    role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
 VALUES
-  ('riya.sharma@indiagully.com',
-   '4c35abafbb488fa51e15f1a746099bfd7d7ec8293ab0a233977e70dae42bfcce',
-   'ig-salt-emp-riya-2026',
-   'KXXBLMSFAGYVVPJLRCSYYU2YXKFBQK4P', 0,
+  ('atul.rana@indiagully.com',
+   'f807bec8e89aedf0ee9cdf5210b493a07c688008a9e2edae3ec55ccc47870b57',
+   'ig-salt-emp-atul-2026',
+   'GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU', 0,
    'Employee', 'employee', '/portal/employee/dashboard',
    1, 1, 0, '');
 
--- Arjun Mehta (Associate — IG-EMP-0002)
-INSERT OR IGNORE INTO ig_users
-  (identifier, password_hash, password_salt, totp_secret, totp_enabled,
-   role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
-VALUES
-  ('arjun.mehta@indiagully.com',
-   'f00f76cb2f14ec6e26b45c23300a38f4daf536ef4e3f1d4beda177ce9546f19c',
-   'ig-salt-emp-arjun-2026',
-   'TJFZKNKFM2XVQD6V27UF4WRZ6A2XGMUC', 0,
-   'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 0, '');
-
--- Priya Nair (Manager Operations — IG-EMP-0003)
-INSERT OR IGNORE INTO ig_users
-  (identifier, password_hash, password_salt, totp_secret, totp_enabled,
-   role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
-VALUES
-  ('priya.nair@indiagully.com',
-   'b961dc06f0b5bcf2473e3cc3e5da475b338b862a06a40dec21740d6287c655d6',
-   'ig-salt-emp-priya-2026',
-   'U5NSCSZIM2SPOFJ4FUFSOEIUVXMDXOAX', 0,
-   'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 0, '');
-
--- Vikram Singh (Director Advisory — IG-EMP-0004)
-INSERT OR IGNORE INTO ig_users
-  (identifier, password_hash, password_salt, totp_secret, totp_enabled,
-   role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
-VALUES
-  ('vikram.singh@indiagully.com',
-   '9e6f7542c174e7ca61cdb6ba5686c17ee67d306668ed4783e3e566e6b97c3cce',
-   'ig-salt-emp-vikram-2026',
-   'AWHPPL7JBEUQSBHWABDFVVUSBSGDT34S', 0,
-   'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 0, '');
-
--- Neha Joshi (Analyst — IG-EMP-0005)
-INSERT OR IGNORE INTO ig_users
-  (identifier, password_hash, password_salt, totp_secret, totp_enabled,
-   role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
-VALUES
-  ('neha.joshi@indiagully.com',
-   '30e7d94acd85b97577b1c51f1fbf46bfb3e3a4a97cc6f9510cb43ad3d1a99bf7',
-   'ig-salt-emp-neha-2026',
-   'BMU6MPUFDPHFVIAFAKFOO5C46MMCOIRA', 0,
-   'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 0, '');
-
--- Update seed_users CMS stat to match live KPI (₹2,100 Cr+)
-UPDATE ig_cms_content SET value='₹2,100 Cr+' WHERE key='stats.pipeline';
+-- Create ig_cms_content if not exists (may be created later in seed_users.sql too)
+CREATE TABLE IF NOT EXISTS ig_cms_content (
+  id           INTEGER  PRIMARY KEY AUTOINCREMENT,
+  key          TEXT     UNIQUE NOT NULL,
+  value        TEXT     NOT NULL DEFAULT '',
+  content_type TEXT     NOT NULL DEFAULT 'text',
+  page         TEXT,
+  section      TEXT,
+  is_published INTEGER  NOT NULL DEFAULT 1,
+  version      INTEGER  NOT NULL DEFAULT 1,
+  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+-- Update or insert CMS stat
+INSERT OR REPLACE INTO ig_cms_content (key, value, content_type, is_published, version)
+VALUES ('stats.pipeline', '₹2,100 Cr+', 'text', 1, 1);
 
 -- Deactivate generic placeholder identifiers (IG-EMP-0001 etc.) in favour of real emails
 -- Keep is_active=0 so they can still be referenced in audit logs

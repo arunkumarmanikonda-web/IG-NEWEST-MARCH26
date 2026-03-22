@@ -8,32 +8,32 @@
 
 -- ── 1. KPI Records seed (24 metrics, FY 2025-26 Q4) ─────────────────────────
 INSERT OR IGNORE INTO ig_kpi_records
-  (id, department, metric_name, target_value, actual_value, target_label, actual_label, unit, period, pct_complete)
+  (department, metric_name, target_value, actual_value, target_label, actual_label, unit, period, pct_complete)
 VALUES
-  ('KPI-001','Sales',       'Monthly Recurring Revenue',   85.0,  78.4,  '₹85L',   '₹78.4L',  'INR Lakh', 'FY2025-26 Q4', 92.2),
-  ('KPI-002','Sales',       'New Deals Closed',            12.0,  9.0,   '12',     '9',        'count',    'FY2025-26 Q4', 75.0),
-  ('KPI-003','Sales',       'Win Rate',                    40.0,  34.0,  '40%',    '34%',      'percent',  'FY2025-26 Q4', 85.0),
-  ('KPI-004','Sales',       'Pipeline Coverage Ratio',     3.5,   2.8,   '3.5x',   '2.8x',     'ratio',    'FY2025-26 Q4', 80.0),
-  ('KPI-005','Finance',     'Revenue (YTD)',                4.5,   4.2,   '₹4.5Cr', '₹4.2Cr',   'INR Cr',   'FY2025-26 Q4', 93.3),
-  ('KPI-006','Finance',     'EBITDA Margin',               28.0,  26.2,  '28%',    '26.2%',    'percent',  'FY2025-26 Q4', 93.6),
-  ('KPI-007','Finance',     'Cash Runway (months)',        18.0,  14.0,  '18m',    '14m',      'months',   'FY2025-26 Q4', 77.8),
-  ('KPI-008','Finance',     'Debtor Days',                 35.0,  42.0,  '35d',    '42d',      'days',     'FY2025-26 Q4', 83.3),
-  ('KPI-009','HR',          'Headcount',                   55.0,  47.0,  '55',     '47',       'count',    'FY2025-26 Q4', 85.5),
-  ('KPI-010','HR',          'Attrition Rate',              12.0,  14.2, '12%',    '14.2%',    'percent',  'FY2025-26 Q4', 84.5),
-  ('KPI-011','HR',          'Employee Billability',        80.0,  74.0,  '80%',    '74%',      'percent',  'FY2025-26 Q4', 92.5),
-  ('KPI-012','HR',          'Training Completion',         90.0,  82.0,  '90%',    '82%',      'percent',  'FY2025-26 Q4', 91.1),
-  ('KPI-013','Engineering', 'Sprint Velocity (pts)',       48.0,  52.0,  '48pts',  '52pts',    'points',   'FY2025-26 Q4',100.0),
-  ('KPI-014','Engineering', 'Bug Escape Rate',             5.0,   3.2,   '<5%',    '3.2%',     'percent',  'FY2025-26 Q4',100.0),
-  ('KPI-015','Engineering', 'Uptime SLA',                  99.9,  99.97, '99.9%',  '99.97%',   'percent',  'FY2025-26 Q4',100.0),
-  ('KPI-016','Engineering', 'P1 Incident Response (hrs)',  2.0,   1.4,   '<2h',    '1.4h',     'hours',    'FY2025-26 Q4',100.0),
-  ('KPI-017','HORECA',      'FSSAI Compliance Score',      95.0,  92.0,  '95%',    '92%',      'percent',  'FY2025-26 Q4', 96.8),
-  ('KPI-018','HORECA',      'Active Hotel Projects',       18.0,  15.0,  '18',     '15',       'count',    'FY2025-26 Q4', 83.3),
-  ('KPI-019','Compliance',  'Compliance Calendar Adherence',98.0, 94.0,  '98%',    '94%',      'percent',  'FY2025-26 Q4', 95.9),
-  ('KPI-020','Compliance',  'DPDP Consent Rate',           100.0, 98.4,  '100%',   '98.4%',    'percent',  'FY2025-26 Q4', 98.4),
-  ('KPI-021','Marketing',   'Organic Traffic (monthly)',   15000.0,12840.0,'15K',  '12.8K',    'visitors', 'FY2025-26 Q4', 85.6),
-  ('KPI-022','Marketing',   'Lead Conversion Rate',        8.0,   6.4,   '8%',     '6.4%',     'percent',  'FY2025-26 Q4', 80.0),
-  ('KPI-023','Support',     'CSAT Score',                  4.5,   4.2,   '4.5/5',  '4.2/5',    'score',    'FY2025-26 Q4', 93.3),
-  ('KPI-024','Support',     'Avg Resolution Time (hrs)',   6.0,   6.4,   '<6h',    '6.4h',     'hours',    'FY2025-26 Q4', 93.8);
+  ('Sales',       'Monthly Recurring Revenue',   85.0,  78.4,  '₹85L',   '₹78.4L',  'INR Lakh', 'FY2025-26 Q4', 92.2),
+  ('Sales',       'New Deals Closed',            12.0,  9.0,   '12',     '9',        'count',    'FY2025-26 Q4', 75.0),
+  ('Sales',       'Win Rate',                    40.0,  34.0,  '40%',    '34%',      'percent',  'FY2025-26 Q4', 85.0),
+  ('Sales',       'Pipeline Coverage Ratio',     3.5,   2.8,   '3.5x',   '2.8x',     'ratio',    'FY2025-26 Q4', 80.0),
+  ('Finance',     'Revenue (YTD)',                4.5,   4.2,   '₹4.5Cr', '₹4.2Cr',   'INR Cr',   'FY2025-26 Q4', 93.3),
+  ('Finance',     'EBITDA Margin',               28.0,  26.2,  '28%',    '26.2%',    'percent',  'FY2025-26 Q4', 93.6),
+  ('Finance',     'Cash Runway (months)',        18.0,  14.0,  '18m',    '14m',      'months',   'FY2025-26 Q4', 77.8),
+  ('Finance',     'Debtor Days',                 35.0,  42.0,  '35d',    '42d',      'days',     'FY2025-26 Q4', 83.3),
+  ('HR',          'Headcount',                   55.0,  47.0,  '55',     '47',       'count',    'FY2025-26 Q4', 85.5),
+  ('HR',          'Attrition Rate',              12.0,  14.2, '12%',    '14.2%',    'percent',  'FY2025-26 Q4', 84.5),
+  ('HR',          'Employee Billability',        80.0,  74.0,  '80%',    '74%',      'percent',  'FY2025-26 Q4', 92.5),
+  ('HR',          'Training Completion',         90.0,  82.0,  '90%',    '82%',      'percent',  'FY2025-26 Q4', 91.1),
+  ('Engineering', 'Sprint Velocity (pts)',       48.0,  52.0,  '48pts',  '52pts',    'points',   'FY2025-26 Q4',100.0),
+  ('Engineering', 'Bug Escape Rate',             5.0,   3.2,   '<5%',    '3.2%',     'percent',  'FY2025-26 Q4',100.0),
+  ('Engineering', 'Uptime SLA',                  99.9,  99.97, '99.9%',  '99.97%',   'percent',  'FY2025-26 Q4',100.0),
+  ('Engineering', 'P1 Incident Response (hrs)',  2.0,   1.4,   '<2h',    '1.4h',     'hours',    'FY2025-26 Q4',100.0),
+  ('HORECA',      'FSSAI Compliance Score',      95.0,  92.0,  '95%',    '92%',      'percent',  'FY2025-26 Q4', 96.8),
+  ('HORECA',      'Active Hotel Projects',       18.0,  15.0,  '18',     '15',       'count',    'FY2025-26 Q4', 83.3),
+  ('Compliance',  'Compliance Calendar Adherence',98.0, 94.0,  '98%',    '94%',      'percent',  'FY2025-26 Q4', 95.9),
+  ('Compliance',  'DPDP Consent Rate',           100.0, 98.4,  '100%',   '98.4%',    'percent',  'FY2025-26 Q4', 98.4),
+  ('Marketing',   'Organic Traffic (monthly)',   15000.0,12840.0,'15K',  '12.8K',    'visitors', 'FY2025-26 Q4', 85.6),
+  ('Marketing',   'Lead Conversion Rate',        8.0,   6.4,   '8%',     '6.4%',     'percent',  'FY2025-26 Q4', 80.0),
+  ('Support',     'CSAT Score',                  4.5,   4.2,   '4.5/5',  '4.2/5',    'score',    'FY2025-26 Q4', 93.3),
+  ('Support',     'Avg Resolution Time (hrs)',   6.0,   6.4,   '<6h',    '6.4h',     'hours',    'FY2025-26 Q4', 93.8);
 
 -- ── 2. Market Intelligence Cache seed ────────────────────────────────────────
 INSERT OR IGNORE INTO ig_market_data_cache (data_key, data_json, source, valid_until) VALUES
