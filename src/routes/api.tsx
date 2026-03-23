@@ -3240,10 +3240,13 @@ app.get('/invoices', requireAnyAuth(), async (c) => {
 // Phase 19E: POST /invoices — create invoice in D1
 app.post('/invoices', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   try {
-    const body = await c.req.json().catch(async () => {
+    let body: any
+    try {
+      body = await c.req.json()
+    } catch {
       const fd = await c.req.parseBody() as Record<string,string>
-      return fd
-    })
+      body = fd
+    }
     const { client_name, description, amount, gst_rate = '18', due_date, sac_code = '998313' } = body as any
     if (!client_name || !amount) return c.json({ success: false, error: 'client_name and amount are required' }, 400)
 
@@ -3255,11 +3258,13 @@ app.post('/invoices', requireSession(), requireRole(['Super Admin'], ['admin']),
     const dueDt    = due_date || new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10)
 
     if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT INTO ig_invoices (invoice_number, client_name, description, sac_code, amount_net, amount_gst, amount_gross, status, due_date, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft', ?, datetime('now'))`
-      ).bind(invNo, client_name, description || '', sac_code, amtNet, amtGst, amtGross, dueDt).run()
-      return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'd1' })
+      try {
+        await c.env.DB.prepare(
+          `INSERT INTO ig_invoices (invoice_number, client_name, description, sac_code, amount_net, amount_gst, amount_gross, status, due_date, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft', ?, datetime('now'))`
+        ).bind(invNo, client_name, description || '', sac_code, amtNet, amtGst, amtGross, dueDt).run()
+        return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'd1' })
+      } catch (_) { /* fall through to memory */ }
     }
     return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'memory' })
   } catch (e: any) {
@@ -5801,15 +5806,17 @@ app.delete('/documents/:key{.+}', requireSession(), requireRole(['Super Admin'])
 /** GET /api/insights — List published insights articles */
 app.get('/insights', async (c) => {
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT id, slug, category, date_label, title, excerpt, tags, read_time, author, view_count, created_at
-       FROM ig_insights WHERE status='published' ORDER BY created_at DESC`
-    ).all()
-    const articles = (rows.results || []).map((r: any) => ({
-      ...r,
-      tags: JSON.parse(r.tags || '[]'),
-    }))
-    return c.json({ success: true, articles, total: articles.length, source: 'D1' })
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT id, slug, category, date_label, title, excerpt, tags, read_time, author, view_count, created_at
+         FROM ig_insights WHERE status='published' ORDER BY created_at DESC`
+      ).all()
+      const articles = (rows.results || []).map((r: any) => ({
+        ...r,
+        tags: JSON.parse(r.tags || '[]'),
+      }))
+      return c.json({ success: true, articles, total: articles.length, source: 'D1' })
+    } catch (_) { /* fall through to static fallback */ }
   }
   // Fallback — static data matching ARTICLES in insights.tsx
   return c.json({
@@ -5831,15 +5838,27 @@ app.get('/insights', async (c) => {
 app.get('/insights/:slug', async (c) => {
   const slug = c.req.param('slug')
   if (c.env?.DB) {
-    const article = await c.env.DB.prepare(`SELECT * FROM ig_insights WHERE slug=? AND status='published'`).bind(slug).first() as any
-    if (!article) return c.json({ success: false, error: 'Article not found' }, 404)
-    // Increment view count async
-    c.executionCtx?.waitUntil(
-      c.env.DB.prepare(`UPDATE ig_insights SET view_count=view_count+1 WHERE slug=?`).bind(slug).run()
-    )
-    return c.json({ success: true, article: { ...article, tags: JSON.parse(article.tags || '[]') } })
+    try {
+      const article = await c.env.DB.prepare(`SELECT * FROM ig_insights WHERE slug=? AND status='published'`).bind(slug).first() as any
+      if (!article) return c.json({ success: false, error: 'Article not found' }, 404)
+      // Increment view count async
+      c.executionCtx?.waitUntil(
+        c.env.DB.prepare(`UPDATE ig_insights SET view_count=view_count+1 WHERE slug=?`).bind(slug).run().catch(() => {})
+      )
+      return c.json({ success: true, article: { ...article, tags: JSON.parse(article.tags || '[]') }, source: 'D1' })
+    } catch (_) { /* fall through to lightweight static fallback */ }
   }
-  return c.json({ success: false, error: 'D1 not available' }, 503)
+  const fallbackArticles = [
+    { slug:'india-realty-2026-outlook', category:'Real Estate', date_label:'February 2026', title:'India Real Estate 2026: Commercial & Hospitality Convergence', excerpt:"As hybrid work reshapes demand for Grade-A office space, India's commercial real estate is converging with hospitality-grade amenities.", tags:['Real Estate','Commercial','Hospitality','2026'], read_time:'10 min read' },
+    { slug:'entertainment-zone-regulatory-india', category:'Entertainment', date_label:'January 2026', title:'Navigating the Entertainment Zone Regulatory Landscape in India', excerpt:"India's entertainment real estate sector sits at the intersection of multiple regulatory frameworks, town planning, fire safety, excise and consumer protection laws.", tags:['Entertainment','Regulatory','Real Estate','Compliance'], read_time:'8 min read' },
+    { slug:'horeca-tier2-supply-chain', category:'HORECA', date_label:'December 2025', title:'Building Resilient HORECA Supply Chains in Tier 2 India', excerpt:'The rapid expansion of branded hospitality into Tier 2 and Tier 3 cities is exposing critical gaps in HORECA supply chains.', tags:['HORECA','Supply Chain','Tier 2','Operations'], read_time:'7 min read' },
+    { slug:'ibc-distressed-hospitality-2025', category:'Debt & Special Situations', date_label:'November 2025', title:'IBC 2025 Update: Hospitality Asset Resolution Trends', excerpt:'The 2025 IBC amendment and NCLT capacity expansion have accelerated resolution timelines for distressed hospitality assets.', tags:['IBC','NCLT','Distressed Assets','Hospitality','Debt'], read_time:'12 min read' },
+    { slug:'mall-mixed-use-integration', category:'Retail', date_label:'October 2025', title:'The Mall-Hotel-Office Trinity: Mixed-Use Integration', excerpt:'Mixed-use integration is reshaping how retail, office and hospitality assets create value together.', tags:['Retail','Mixed-Use','Real Estate'], read_time:'9 min read' },
+    { slug:'greenfield-midscale-hotels', category:'Hospitality', date_label:'September 2025', title:'The Greenfield Mid-Scale Hotel Opportunity: Project Economics for 2025-27', excerpt:"India's mid-scale hotel opportunity is increasingly attractive where land economics, brand fit and operating discipline align.", tags:['Hospitality','Greenfield'], read_time:'11 min read' },
+  ]
+  const article = fallbackArticles.find((a) => a.slug === slug)
+  if (article) return c.json({ success: true, article, source: 'static' })
+  return c.json({ success: false, error: 'Article not found' }, 404)
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -15542,6 +15561,7 @@ app.post('/cms/pages/:id/seo', requireSession(), requireRole(['Super Admin'], ['
     const body = await c.req.json() as Record<string, unknown>
     const savedAt = new Date().toISOString()
     const db = (c as any).env?.DB
+    let source = 'static'
     if (db) {
       try {
         // Try to update meta_title / meta_desc if columns exist, else update content JSON
@@ -15555,11 +15575,12 @@ app.post('/cms/pages/:id/seo', requireSession(), requireRole(['Super Admin'], ['
           await db.prepare(
             `UPDATE ig_cms_pages SET content = ?, updated_at = ? WHERE id = ?`
           ).bind(JSON.stringify(content), savedAt, existing.id).run()
+          source = 'D1'
         }
       } catch(_) { /* non-fatal */ }
     }
     return c.json({ success: true, page_id: id, page: body.page, saved_at: savedAt,
-                    source: db ? 'D1' : 'static',
+                    source,
                     message: `SEO tags for page ${id} saved.` })
   } catch { return c.json({ success: false, error: 'SEO save failed' }, 500) }
 })
@@ -18569,6 +18590,7 @@ app.post('/dpdp/consent/withdraw', async (c) => {
     const ip             = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown'
     const scope          = withdraw_all ? ['all'] : (purposes || [])
 
+    let storage = 'response-only'
     if (c.env?.DB) {
       try {
         // Mark consents as withdrawn in D1
@@ -18610,6 +18632,7 @@ app.post('/dpdp/consent/withdraw', async (c) => {
           `User ${user_id} withdrew ${withdraw_all ? 'ALL consents' : `consent for: ${scope.join(', ')}`}. Ref: ${withdrawal_ref}`,
           withdrawal_ref
         ).run().catch(() => {})
+        storage = 'D1'
       } catch (_) { /* D1 unavailable */ }
     }
 
@@ -18623,7 +18646,7 @@ app.post('/dpdp/consent/withdraw', async (c) => {
       withdrawn_purposes: withdraw_all ? 'all' : scope,
       withdraw_all: !!withdraw_all,
       withdrawn_at: now,
-      storage: c.env?.DB ? 'D1' : 'response-only',
+      storage,
       dpdp_section: 'Section 6(3) — Right to Withdraw Consent',
       dpo_notified: true,
       dpo_contact: 'dpo@indiagully.com',
@@ -18748,23 +18771,27 @@ app.post('/dpdp/rights/access', async (c) => {
     if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
     const ref = `RR-ACCESS-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
     const now = new Date().toISOString(); const deadline = new Date(Date.now() + 30*24*60*60*1000).toISOString()
+    let storage = 'response-only'
     if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-           (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-         VALUES (?, ?, 'access', ?, 'pending', 30, ?, ?, ?)`
-      ).bind(ref, user_id, details || 'Access request', deadline, now, now).run().catch(() => {
-        c.env!.DB!.prepare(
-          `INSERT OR IGNORE INTO ig_dpdp_rights (ref, user_id, action, status, details, ip_address, deadline, created_at)
-           VALUES (?, ?, 'access', 'Received', ?, ?, ?, ?)`
-        ).bind(ref, user_id, details || '', ip, deadline, now).run()
-      })
-      await c.env.DB.prepare(
-        `INSERT INTO ig_dpo_alerts (alert_type, severity, title, body, entity_ref) VALUES ('rights_request','info',?,?,?)`
-      ).bind(`Rights Access — ${user_id}`, `User ${user_id} requested data access. Ref: ${ref}`, ref).run().catch(() => {})
+      try {
+        await c.env.DB.prepare(
+          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
+             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
+           VALUES (?, ?, 'access', ?, 'pending', 30, ?, ?, ?)`
+        ).bind(ref, user_id, details || 'Access request', deadline, now, now).run().catch(() => {
+          c.env!.DB!.prepare(
+            `INSERT OR IGNORE INTO ig_dpdp_rights (ref, user_id, action, status, details, ip_address, deadline, created_at)
+             VALUES (?, ?, 'access', 'Received', ?, ?, ?, ?)`
+          ).bind(ref, user_id, details || '', ip, deadline, now).run()
+        })
+        await c.env.DB.prepare(
+          `INSERT INTO ig_dpo_alerts (alert_type, severity, title, body, entity_ref) VALUES ('rights_request','info',?,?,?)`
+        ).bind(`Rights Access — ${user_id}`, `User ${user_id} requested data access. Ref: ${ref}`, ref).run().catch(() => {})
+        storage = 'D1'
+      } catch (_) { /* fall back to response-only */ }
     }
     await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_ACCESS', user_id, ip, ref)
-    return c.json({ success: true, ref, user_id, action: 'access', status: 'Received', sla_days: 30, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 11 — Right of Access', storage: c.env?.DB ? 'D1' : 'response-only' })
+    return c.json({ success: true, ref, user_id, action: 'access', status: 'Received', sla_days: 30, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 11 — Right of Access', storage })
   } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
 })
 
@@ -18775,20 +18802,24 @@ app.post('/dpdp/rights/correct', async (c) => {
     if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
     const ref = `RR-CORRECT-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
     const now = new Date().toISOString(); const deadline = new Date(Date.now() + 15*24*60*60*1000).toISOString()
+    let storage = 'response-only'
     if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-           (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-         VALUES (?, ?, 'correct', ?, 'pending', 15, ?, ?, ?)`
-      ).bind(ref, user_id, JSON.stringify({ field, current_value, correct_value, details }), deadline, now, now).run().catch(() => {
-        c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'correct','Received',?,?,?,?)`)
-          .bind(ref, user_id, details || '', ip, deadline, now).run()
-      })
-      await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','info',?,?,?)`)
-        .bind(`Rights Correct — ${user_id}`, `Correction request: ${field || 'field'} by ${user_id}. Ref: ${ref}`, ref).run().catch(() => {})
+      try {
+        await c.env.DB.prepare(
+          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
+             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
+           VALUES (?, ?, 'correct', ?, 'pending', 15, ?, ?, ?)`
+        ).bind(ref, user_id, JSON.stringify({ field, current_value, correct_value, details }), deadline, now, now).run().catch(() => {
+          c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'correct','Received',?,?,?,?)`)
+            .bind(ref, user_id, details || '', ip, deadline, now).run()
+        })
+        await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','info',?,?,?)`)
+          .bind(`Rights Correct — ${user_id}`, `Correction request: ${field || 'field'} by ${user_id}. Ref: ${ref}`, ref).run().catch(() => {})
+        storage = 'D1'
+      } catch (_) { /* fall back to response-only */ }
     }
     await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_CORRECT', user_id, ip, ref)
-    return c.json({ success: true, ref, user_id, action: 'correct', field: field || 'unspecified', status: 'Received', sla_days: 15, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 12 — Right to Correction', storage: c.env?.DB ? 'D1' : 'response-only' })
+    return c.json({ success: true, ref, user_id, action: 'correct', field: field || 'unspecified', status: 'Received', sla_days: 15, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 12 — Right to Correction', storage })
   } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
 })
 
@@ -18799,17 +18830,21 @@ app.post('/dpdp/rights/erase', async (c) => {
     if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
     const ref = `RR-ERASE-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
     const now = new Date().toISOString(); const deadline = new Date(Date.now() + 30*24*60*60*1000).toISOString()
+    let storage = 'response-only'
     if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-           (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-         VALUES (?, ?, 'erase', ?, 'pending', 30, ?, ?, ?)`
-      ).bind(ref, user_id, `Erasure of: ${scope || 'all data'}. Reason: ${reason || 'not provided'}`, deadline, now, now).run().catch(() => {
-        c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'erase','Received',?,?,?,?)`)
-          .bind(ref, user_id, reason || '', ip, deadline, now).run()
-      })
-      await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','high',?,?,?)`)
-        .bind(`⚠️ Erasure Request — ${user_id}`, `User ${user_id} requested data erasure. Scope: ${scope || 'all'}. Ref: ${ref}. Due: ${deadline}`, ref).run().catch(() => {})
+      try {
+        await c.env.DB.prepare(
+          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
+             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
+           VALUES (?, ?, 'erase', ?, 'pending', 30, ?, ?, ?)`
+        ).bind(ref, user_id, `Erasure of: ${scope || 'all data'}. Reason: ${reason || 'not provided'}`, deadline, now, now).run().catch(() => {
+          c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'erase','Received',?,?,?,?)`)
+            .bind(ref, user_id, reason || '', ip, deadline, now).run()
+        })
+        await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','high',?,?,?)`)
+          .bind(`⚠️ Erasure Request — ${user_id}`, `User ${user_id} requested data erasure. Scope: ${scope || 'all'}. Ref: ${ref}. Due: ${deadline}`, ref).run().catch(() => {})
+        storage = 'D1'
+      } catch (_) { /* fall back to response-only */ }
     }
     await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_ERASE', user_id, ip, ref)
     return c.json({
@@ -18818,7 +18853,7 @@ app.post('/dpdp/rights/erase', async (c) => {
       status: 'Received', sla_days: 30, deadline,
       dpo_contact: 'dpo@indiagully.com',
       dpdp_section: 'Section 13 — Right of Erasure',
-      storage: c.env?.DB ? 'D1' : 'response-only',
+      storage,
       note: 'Statutory retention obligations (e.g., GST, Companies Act) may prevent immediate erasure of certain records.',
     })
   } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
