@@ -14,6 +14,32 @@ const CAT_IMAGES: Record<string, string> = {
   'Retail': '/static/mandates/chail/chail-slider2.jpg',
   'Hospitality': '/static/mandates/chandigarh/chandigarh-img1.webp',
 }
+const ARTICLE_IMAGES: Record<string, string> = {
+  'india-realty-2026-outlook': '/static/insights/india-realty-2026-outlook.jpg',
+  'entertainment-zone-regulatory-india': '/static/insights/entertainment-zone-regulatory-india.jpg',
+  'horeca-tier2-supply-chain': '/static/insights/horeca-tier2-supply-chain.jpg',
+  'ibc-distressed-hospitality-2025': '/static/insights/ibc-distressed-hospitality-2025.jpg',
+  'mall-mixed-use-integration': '/static/insights/mall-mixed-use-integration.jpg',
+  'greenfield-midscale-hotels': '/static/insights/greenfield-midscale-hotels.jpg',
+  'india-hospitality-2024': '/static/insights/india-hospitality-2024.jpg',
+  'entertainment-destinations-india': '/static/insights/entertainment-destinations-india.jpg',
+  'horeca-procurement-strategy': '/static/insights/horeca-procurement-strategy.jpg',
+  'debt-special-situations-hospitality': '/static/insights/debt-special-situations-hospitality.jpg',
+  'retail-leasing-malls-india': '/static/insights/retail-leasing-malls-india.jpg',
+  'greenfield-hotel-development': '/static/insights/greenfield-hotel-development.jpg',
+  'mall-hotel-office-trinity': '/static/insights/mall-hotel-office-trinity.jpg',
+  'horeca-tier2-supply-chain-deep-dive': '/static/insights/horeca-tier2-supply-chain-deep-dive.jpg',
+  'retail-leasing-trends-india-2026': '/static/insights/retail-leasing-trends-india-2026.jpg',
+  'debt-special-situations-india-hospitality-2026': '/static/insights/debt-special-situations-india-hospitality-2026.jpg',
+  'horeca-cloud-kitchen-india-2026': '/static/insights/horeca-cloud-kitchen-india-2026.jpg',
+  'india-hospitality-brand-strategy-2026': '/static/insights/india-hospitality-brand-strategy-2026.jpg',
+  'entertainment-destination-development-india-2026': '/static/insights/entertainment-destination-development-india-2026.jpg',
+}
+
+const getArticleImage = (article: { id: string; category: string }) =>
+  ARTICLE_IMAGES[article.id] ||
+  getArticleImage(article)||
+  '/static/mandates/chandigarh/chandigarh-img2.webp'
 
 
 // ── ARTICLES ─────────────────────────────────────────────────────────────────
