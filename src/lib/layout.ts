@@ -1803,6 +1803,62 @@ const SCRIPTS = (_nonce?: string) => `
   updNav();
   window.addEventListener('scroll', updNav, {passive:true});
 
+  /* SECURITY BOOTSTRAP — session validation + CSRF propagation */
+  (function(){
+    var originalFetch = window.fetch ? window.fetch.bind(window) : null;
+    if(!originalFetch) return;
+    function sameOriginUrl(input){
+      try {
+        var raw = typeof input === 'string' ? input : (input && input.url) || '';
+        var url = new URL(raw, window.location.origin);
+        return url.origin === window.location.origin ? url : null;
+      } catch(e){ return null; }
+    }
+    function getCsrfToken(){
+      try {
+        return sessionStorage.getItem('ig_csrf_session') || sessionStorage.getItem('ig_csrf_admin') || sessionStorage.getItem('ig_csrf_client') || sessionStorage.getItem('ig_csrf_employee') || sessionStorage.getItem('ig_csrf_board') || '';
+      } catch(e){ return ''; }
+    }
+    function setCsrfToken(token){
+      if(!token) return;
+      try { sessionStorage.setItem('ig_csrf_session', token); } catch(e){}
+    }
+    function markRequestFailure(){ window.__igLastRequestFailedAt = Date.now(); }
+    window.fetch = function(input, init){
+      var requestInit = Object.assign({}, init || {});
+      var url = sameOriginUrl(input);
+      var method = String((requestInit.method || (typeof input !== 'string' && input && input.method) || 'GET')).toUpperCase();
+      var isApi = !!(url && url.pathname.indexOf('/api/') === 0);
+      if(url && isApi && ['POST','PUT','PATCH','DELETE'].indexOf(method) !== -1){
+        var headers = new Headers(requestInit.headers || (typeof input !== 'string' && input && input.headers) || {});
+        var csrfToken = getCsrfToken();
+        if(csrfToken && !headers.has('X-CSRF-Token')) headers.set('X-CSRF-Token', csrfToken);
+        requestInit.headers = headers;
+        if(!requestInit.credentials) requestInit.credentials = 'include';
+      }
+      return originalFetch(input, requestInit).then(function(res){
+        var nextToken = res.headers.get('X-CSRF-Token');
+        if(nextToken) setCsrfToken(nextToken);
+        if(url && isApi && !res.ok) markRequestFailure();
+        return res;
+      }).catch(function(err){
+        if(url && isApi) markRequestFailure();
+        throw err;
+      });
+    };
+
+    var path = window.location.pathname || '/';
+    var protectedRoute = path.indexOf('/admin/') === 0 || /^\/portal\/(client|employee|board)\//.test(path);
+    if(!protectedRoute) return;
+    originalFetch('/api/auth/session',{credentials:'include'})
+      .then(function(r){ if(!r.ok) throw new Error('session'); return r.json(); })
+      .then(function(d){ if(d && d.csrf_token) setCsrfToken(d.csrf_token); })
+      .catch(function(){
+        var fallbackPath = path.indexOf('/admin/') === 0 ? '/admin?error=Session+expired.+Please+log+in.' : '/portal';
+        window.location.replace(fallbackPath);
+      });
+  })();
+
   /* SCROLL PROGRESS BAR */
   var prog = document.getElementById('ig-scroll-prog');
   if(prog){
@@ -1865,20 +1921,34 @@ const SCRIPTS = (_nonce?: string) => `
 
   /* ANIMATED COUNTERS */
   (function(){
+    function splitCounter(raw){
+      var trimmed = String(raw || '').trim();
+      var match = trimmed.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
+      if(!match) return null;
+      return { prefix: match[1] || '', number: match[2] || '0', suffix: (match[3] || '').trim() };
+    }
+    function formatCounter(prefix, value, suffix, isInteger){
+      var formatted = isInteger
+        ? Math.round(value).toLocaleString('en-IN')
+        : value.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+      return prefix + formatted + (suffix ? ' ' + suffix : '');
+    }
     function animCount(el){
-      var raw = el.getAttribute('data-target') || el.textContent;
-      var prefix = raw.match(/^[₹$€£]*/)[0];
-      var suffix = raw.replace(/^[₹$€£\d,.\s]+/,'');
-      var num = parseFloat(raw.replace(/[^0-9.]/g,'')) || 0;
-      if(!num){ return; }
-      var start = 0, dur = 1600, step = 16;
+      var raw = (el.getAttribute('data-target') || el.textContent || '').trim();
+      var parts = splitCounter(raw);
+      if(!parts) return;
+      var num = parseFloat(parts.number.replace(/,/g,'')) || 0;
+      if(!num){ el.textContent = raw; return; }
+      var isInteger = parts.number.indexOf('.') === -1;
+      var start = 0, dur = 1400, step = 16;
+      el.textContent = formatCounter(parts.prefix, 0, parts.suffix, isInteger);
       var t = setInterval(function(){
         start += step;
         var p = Math.min(start/dur, 1);
         var ease = 1 - Math.pow(1-p, 3);
-        var cur = Math.round(ease * num * 10) / 10;
-        el.textContent = prefix + (Number.isInteger(cur) ? cur.toLocaleString('en-IN') : cur.toLocaleString('en-IN')) + suffix;
-        if(p >= 1){ el.textContent = raw; clearInterval(t); }
+        var cur = isInteger ? Math.round(ease * num) : Math.round(ease * num * 10) / 10;
+        el.textContent = formatCounter(parts.prefix, cur, parts.suffix, isInteger);
+        if(p >= 1){ el.textContent = formatCounter(parts.prefix, num, parts.suffix, isInteger); clearInterval(t); }
       }, step);
     }
     var counters = document.querySelectorAll('.count-up');
@@ -1952,6 +2022,7 @@ const SCRIPTS = (_nonce?: string) => `
       try {
         var fd = new FormData(form);
         var res = await fetch(action || '/api/enquiry', {method:'POST', body:fd});
+        if(!res.ok) throw new Error('submit_failed');
         btn.innerHTML = '<i class="fas fa-check" style="margin-right:.4rem;"></i>Submitted \u2014 We will be in touch';
         btn.style.cssText += ';background:#15803d!important;border-color:#15803d!important;';
         setTimeout(function(){ btn.innerHTML=orig; btn.disabled=false; btn.style.background=''; btn.style.borderColor=''; }, 4500);
@@ -1990,6 +2061,10 @@ const SCRIPTS = (_nonce?: string) => `
 
   /* ── TOAST NOTIFICATIONS ──────────────────────────────────────────────── */
   window.igToast = function(msg, type){
+    if(type === 'success' && window.__igLastRequestFailedAt && (Date.now() - window.__igLastRequestFailedAt) < 800){
+      type = 'error';
+      msg = 'Request failed. Please retry.';
+    }
     var el = document.createElement('div');
     el.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:'+(type==='error'?'#dc2626':type==='warn'?'#d97706':'#15803d')+';color:#fff;padding:.75rem 1.25rem;font-size:.82rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.25);max-width:360px;line-height:1.5;display:flex;align-items:center;gap:.6rem;';
     var icon = document.createElement('i');

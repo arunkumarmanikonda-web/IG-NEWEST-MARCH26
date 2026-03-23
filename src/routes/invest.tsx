@@ -309,7 +309,9 @@ app.get('/', (c) => {
       <div style="background:var(--parch);border:1px solid var(--border);padding:2.5rem;">
         <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.5rem;">Investor Information Request</h3>
         <p style="font-size:.78rem;color:var(--ink-muted);margin-bottom:2rem;">Complete the form below. All enquiries are kept strictly confidential.</p>
-        <form class="ig-form" action="/api/enquiry" method="POST" style="display:flex;flex-direction:column;gap:1rem;">
+        <div id="invest-form-success" style="display:none;background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.22);color:#166534;padding:.9rem 1rem;font-size:.78rem;line-height:1.7;margin-bottom:1rem;"></div>
+        <div id="invest-form-error" style="display:none;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:.9rem 1rem;font-size:.78rem;line-height:1.7;margin-bottom:1rem;"></div>
+        <form class="ig-form" id="investor-request-form" onsubmit="return igInvestorAjax(event)" style="display:flex;flex-direction:column;gap:1rem;">
           <input type="hidden" name="type" value="investor_ir">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
@@ -371,7 +373,7 @@ app.get('/', (c) => {
             <input type="checkbox" name="nda_consent" id="nda-consent-ir" required style="margin-top:.2rem;accent-color:var(--gold);flex-shrink:0;">
             <label for="nda-consent-ir" style="font-size:.72rem;color:var(--ink-soft);line-height:1.6;cursor:pointer;">I agree to execute a mutual NDA with India Gully (Vivacious Entertainment and Hospitality Pvt. Ltd.) prior to receiving any confidential information.</label>
           </div>
-          <button type="submit" class="btn btn-g" style="width:100%;justify-content:center;padding:.9rem;font-size:.8rem;">
+          <button type="submit" id="investor-submit-btn" class="btn btn-g" style="width:100%;justify-content:center;padding:.9rem;font-size:.8rem;">
             <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Investor Enquiry
           </button>
           <p style="font-size:.68rem;color:var(--ink-faint);text-align:center;"><i class="fas fa-lock" style="color:var(--gold);font-size:.6rem;margin-right:.3rem;"></i>Your information is never shared. All responses protected by NDA.</p>
@@ -421,6 +423,93 @@ app.get('/', (c) => {
 </div>
 
 <script>
+function igInvestorAjax(event) {
+  if (event) event.preventDefault();
+  var form = document.getElementById('investor-request-form');
+  if (!form) return false;
+  var fd = new FormData(form);
+  var successEl = document.getElementById('invest-form-success');
+  var errorEl = document.getElementById('invest-form-error');
+  var btn = document.getElementById('investor-submit-btn');
+  var name = String(fd.get('name') || '').trim();
+  var company = String(fd.get('company') || '').trim();
+  var email = String(fd.get('email') || '').trim();
+  var phone = String(fd.get('phone') || '').trim();
+  var investorType = String(fd.get('investor_type') || '').trim();
+  var ticketSize = String(fd.get('ticket_size') || '').trim();
+  var message = String(fd.get('message') || '').trim();
+  var nda = !!fd.get('nda_consent');
+  var sectors = fd.getAll('sectors').map(function(v){ return String(v).trim(); }).filter(Boolean);
+
+  if (successEl) successEl.style.display = 'none';
+  if (errorEl) errorEl.style.display = 'none';
+
+  function showError(msg) {
+    if (!errorEl) return;
+    errorEl.innerHTML = '<i class="fas fa-exclamation-circle" style="margin-right:.4rem;"></i>' + msg;
+    errorEl.style.display = 'block';
+  }
+
+  if (!name || name.length < 2) { showError('Please enter your full name.'); return false; }
+  if (!company || company.length < 2) { showError('Please enter your organisation or fund name.'); return false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showError('Please enter a valid institutional email address.'); return false; }
+  if (phone && phone.replace(/[^0-9+]/g, '').length < 10) { showError('Please enter a valid phone / WhatsApp number.'); return false; }
+  if (!investorType) { showError('Please select your investor type.'); return false; }
+  if (!nda) { showError('Please confirm the NDA acknowledgement before submitting.'); return false; }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right:.5rem;"></i>Submitting Investor Enquiry…';
+  }
+
+  fetch('/api/enquiry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'investor_ir',
+      name: name,
+      company: company,
+      email: email,
+      phone: phone,
+      investorType: investorType,
+      ticketSize: ticketSize,
+      vertical: sectors.join(', '),
+      message: message,
+      source: 'investor_relations_page'
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (!d || !d.success) {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Investor Enquiry';
+      }
+      showError((d && d.error) || 'Submission failed. Please email info@indiagully.com.');
+      return;
+    }
+    form.reset();
+    if (successEl) {
+      successEl.innerHTML = '<i class="fas fa-check-circle" style="margin-right:.45rem;color:#16a34a;"></i><strong>Investor enquiry received.</strong> Reference: <strong>' + (d.ref || 'IG-ENQ') + '</strong>. Our team will respond within 24 business hours.';
+      successEl.style.display = 'block';
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Investor Enquiry';
+    }
+  })
+  .catch(function(){
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Investor Enquiry';
+    }
+    showError('Network error. Please email info@indiagully.com or call +91 8988 988 988.');
+  });
+
+  return false;
+}
+
 function filterInvest(sector) {
   var cards = document.querySelectorAll('#investGrid .mandate-card');
   var btns = document.querySelectorAll('.isect-btn');
