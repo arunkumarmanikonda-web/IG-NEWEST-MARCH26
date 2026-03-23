@@ -3853,12 +3853,16 @@ app.post('/auth/totp/enrol/remove', requireSession(), async (c) => {
   if (!confirm) return c.json({ success: false, error: 'Confirmation required.' }, 400)
 
   if (c.env?.DB) {
-    await c.env.DB.prepare(
-      `DELETE FROM ig_totp_devices WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-    ).bind(identifier).run()
-    await c.env.DB.prepare(
-      `UPDATE ig_users SET totp_enabled = 0, totp_secret = NULL WHERE identifier = ?`
-    ).bind(identifier).run()
+    try {
+      await c.env.DB.prepare(
+        `DELETE FROM ig_totp_devices WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+      ).bind(identifier).run()
+      await c.env.DB.prepare(
+        `UPDATE ig_users SET totp_enabled = 0, totp_secret = NULL WHERE identifier = ?`
+      ).bind(identifier).run()
+    } catch (err) {
+      console.error('[TOTP REMOVE] D1 error:', err)
+    }
   }
   await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_DEVICE_REMOVED', identifier, 'N/A', 'SUCCESS')
   return c.json({ success: true, message: 'TOTP device removed. You will be required to re-enrol on next login.' })
@@ -3871,12 +3875,18 @@ app.get('/auth/totp/enrol/status', requireSession(), async (c) => {
   let enrolled = false; let device_count = 0
 
   if (c.env?.DB) {
-    const row = await c.env.DB.prepare(
-      `SELECT COUNT(*) AS cnt FROM ig_totp_devices
-       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?) AND confirmed = 1`
-    ).bind(identifier).first() as any
-    device_count = row?.cnt || 0
-    enrolled = device_count > 0
+    try {
+      const row = await c.env.DB.prepare(
+        `SELECT COUNT(*) AS cnt FROM ig_totp_devices
+         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?) AND confirmed = 1`
+      ).bind(identifier).first() as any
+      device_count = row?.cnt || 0
+      enrolled = device_count > 0
+    } catch (_) {
+      const u = USER_STORE[identifier]
+      enrolled = !!u?.totp_secret
+      device_count = enrolled ? 1 : 0
+    }
   } else {
     const u = USER_STORE[identifier]
     enrolled = !!u?.totp_secret
@@ -3900,14 +3910,18 @@ app.post('/auth/webauthn/register/begin', requireSession(), async (c) => {
   // Collect existing credential IDs for this user (exclude allowCredentials)
   let existingCreds: { id: string; transports?: string[] }[] = []
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT credential_id, transports FROM ig_webauthn_credentials
-       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-    ).bind(identifier).all() as { results: any[] }
-    existingCreds = (rows.results || []).map((r: any) => ({
-      id: r.credential_id,
-      transports: r.transports ? JSON.parse(r.transports) : undefined,
-    }))
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT credential_id, transports FROM ig_webauthn_credentials
+         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+      ).bind(identifier).all() as { results: any[] }
+      existingCreds = (rows.results || []).map((r: any) => ({
+        id: r.credential_id,
+        transports: r.transports ? JSON.parse(r.transports) : undefined,
+      }))
+    } catch (err) {
+      console.error('[WEBAUTHN REGISTER BEGIN] D1 error:', err)
+    }
   }
 
   // Generate registration options using @simplewebauthn/server
@@ -4021,14 +4035,18 @@ app.post('/auth/webauthn/authenticate/begin', requireSession(), async (c) => {
 
   let allowCredentials: { id: string; transports?: string[] }[] = []
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT credential_id, transports FROM ig_webauthn_credentials
-       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-    ).bind(identifier).all() as { results: any[] }
-    allowCredentials = (rows.results || []).map((r: any) => ({
-      id: r.credential_id,
-      transports: r.transports ? JSON.parse(r.transports) : undefined,
-    }))
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT credential_id, transports FROM ig_webauthn_credentials
+         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+      ).bind(identifier).all() as { results: any[] }
+      allowCredentials = (rows.results || []).map((r: any) => ({
+        id: r.credential_id,
+        transports: r.transports ? JSON.parse(r.transports) : undefined,
+      }))
+    } catch (err) {
+      console.error('[WEBAUTHN AUTH BEGIN] D1 error:', err)
+    }
   }
 
   const options = await generateAuthenticationOptions({
@@ -4071,11 +4089,17 @@ app.post('/auth/webauthn/authenticate/complete', requireSession(), async (c) => 
     return c.json({ success: false, error: 'D1 database not available for credential lookup.' }, 503)
   }
 
-  const credRow = await c.env.DB.prepare(
-    `SELECT credential_id, public_key, counter, transports
-     FROM ig_webauthn_credentials
-     WHERE credential_id = ? AND user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-  ).bind(body.id, identifier).first() as any
+  let credRow: any = null
+  try {
+    credRow = await c.env.DB.prepare(
+      `SELECT credential_id, public_key, counter, transports
+       FROM ig_webauthn_credentials
+       WHERE credential_id = ? AND user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+    ).bind(body.id, identifier).first() as any
+  } catch (err: any) {
+    console.error('[WEBAUTHN AUTH] Credential lookup error:', err)
+    return c.json({ success: false, error: 'Credential lookup failed.' }, 500)
+  }
 
   if (!credRow) {
     return c.json({ success: false, error: 'Credential not found.' }, 404)
@@ -4568,12 +4592,14 @@ app.post('/cms/pages/:id/reject', requireSession(), requireRole(['Super Admin'])
   const { reason } = await c.req.json() as { reason?: string }
 
   if (c.env?.DB) {
-    await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
-    await c.env.DB.prepare(
-      `UPDATE ig_cms_approvals SET status='rejected', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
-    ).bind(session.user, id).run()
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_REJECTED', session.user, 'N/A', String(id))
-    return c.json({ success: true, page_id: id, status: 'rejected', reason: reason || 'No reason provided' })
+    try {
+      await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
+      await c.env.DB.prepare(
+        `UPDATE ig_cms_approvals SET status='rejected', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
+      ).bind(session.user, id).run()
+      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_REJECTED', session.user, 'N/A', String(id))
+      return c.json({ success: true, page_id: id, status: 'rejected', reason: reason || 'No reason provided' })
+    } catch (_) { /* fall through to in-memory */ }
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4698,11 +4724,13 @@ app.post('/payments/webhook', async (c) => {
 /** GET /api/payments/webhooks — List recent webhook events (admin only) */
 app.get('/payments/webhooks', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT id, event, order_id, payment_id, signature_valid, processed, created_at
-       FROM ig_razorpay_webhooks ORDER BY created_at DESC LIMIT 50`
-    ).all()
-    return c.json({ success: true, webhooks: rows.results, count: rows.results.length })
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT id, event, order_id, payment_id, signature_valid, processed, created_at
+         FROM ig_razorpay_webhooks ORDER BY created_at DESC LIMIT 50`
+      ).all()
+      return c.json({ success: true, webhooks: rows.results, count: rows.results.length })
+    } catch (_) { /* fall through to empty state */ }
   }
   return c.json({ success: true, webhooks: [], note: 'D1 not provisioned — webhook log unavailable' })
 })
@@ -18259,14 +18287,18 @@ app.post('/auth/webauthn/register-begin', requireSession(), async (c) => {
   const identifier = session.user
   let existingCreds: { id: string; transports?: string[] }[] = []
   if (c.env?.DB) {
-    const rows = await c.env.DB.prepare(
-      `SELECT credential_id, transports FROM ig_webauthn_credentials
-       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-    ).bind(identifier).all() as { results: any[] }
-    existingCreds = (rows.results || []).map((r: any) => ({
-      id: r.credential_id,
-      transports: r.transports ? JSON.parse(r.transports) : undefined,
-    }))
+    try {
+      const rows = await c.env.DB.prepare(
+        `SELECT credential_id, transports FROM ig_webauthn_credentials
+         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+      ).bind(identifier).all() as { results: any[] }
+      existingCreds = (rows.results || []).map((r: any) => ({
+        id: r.credential_id,
+        transports: r.transports ? JSON.parse(r.transports) : undefined,
+      }))
+    } catch (err) {
+      console.error('[WEBAUTHN REGISTER-BEGIN ALIAS] D1 error:', err)
+    }
   }
   const options = await generateRegistrationOptions({
     rpName: RP_NAME, rpID: RP_ID,
