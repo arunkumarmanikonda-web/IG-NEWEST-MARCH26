@@ -709,6 +709,19 @@ app.get('/:id', (c) => {
   const listing = LISTINGS.find((l: any) => l.id === id)
   if (!listing) return c.redirect('/listings')
   const l = listing as any
+  const detailSeo = id === 'hotel-rajshree-chandigarh'
+    ? {
+        title: 'Hotel Rajshree Chandigarh Asset Sale | 41-Key Boutique Hotel',
+        description: 'Explore Hotel Rajshree & Spa, a 41-key boutique hotel with spa and wellness facilities in Chandigarh. India Gully advisory mandate with NDA-based investor access.',
+        h1: 'Hotel Rajshree Chandigarh: 41-Key Boutique Hotel Asset Sale',
+        subtitle: 'Boutique Hotel with Spa & Wellness · 41 Keys · Chandigarh',
+      }
+    : {
+        title: listing.title,
+        description: `${listing.title}, ${listing.location}, ${listing.value}, India Gully exclusive transaction advisory mandate.`,
+        h1: l.title,
+        subtitle: l.subtitle,
+      }
 
   // Other mandates for the "More Mandates" section
   const others = LISTINGS.filter((x: any) => x.id !== id).slice(0, 3)
@@ -1220,8 +1233,8 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <span style="background:${ss.bg};color:${ss.text};border:1px solid ${ss.border};font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .7rem;">${l.status}</span>
           <span style="font-size:.75rem;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:.35rem;"><i class="fas fa-map-marker-alt" style="color:var(--gold);font-size:.6rem;"></i>${l.location}</span>
         </div>
-        <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.75rem,4vw,3rem);color:#fff;line-height:1.1;margin-bottom:.5rem;">${l.title}</h1>
-        <p style="font-size:1rem;color:var(--gold);font-weight:400;">${l.subtitle}</p>
+        <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.75rem,4vw,3rem);color:#fff;line-height:1.1;margin-bottom:.5rem;">${detailSeo.h1}</h1>
+        <p style="font-size:1rem;color:var(--gold);font-weight:400;">${detailSeo.subtitle}</p>
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:3rem;color:var(--gold);line-height:1;">${l.value}</div>
@@ -2065,32 +2078,47 @@ ${l.id === 'prism-tower-gurgaon' ? `
 </script>
 `
 
-  return c.html(layout(listing.title, content, {
-    description: `${listing.title}, ${listing.location}, ${listing.value}, India Gully exclusive transaction advisory mandate.`,
-    ogImage: (listing as any).images?.[0],
-    canonical: `https://indiagully.com/listings/${listing.id}`,
-    jsonLd: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'RealEstateListing',
-          name: listing.title,
-          description: `${listing.desc} — ${listing.location} — ${listing.value}`,
-          address: { '@type': 'PostalAddress', addressLocality: listing.location, addressCountry: 'IN' },
+return c.html(layout(detailSeo.title, content, {
+  description: detailSeo.description,
+  ogImage: (listing as any).images?.[0],
+  canonical: `https://indiagully.com/listings/${listing.id}`,
+  jsonLd: {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'RealEstateListing',
+        name: detailSeo.h1,
+        description: detailSeo.description,
+        address: { '@type': 'PostalAddress', addressLocality: listing.location, addressCountry: 'IN' },
+        url: `https://indiagully.com/listings/${listing.id}`,
+        image: (listing as any).images?.[0] || 'https://indiagully.com/static/og.jpg',
+        numberOfRooms: id === 'hotel-rajshree-chandigarh' ? '41' : undefined,
+        category: listing.sector,
+        seller: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' },
+        offers: id === 'hotel-rajshree-chandigarh' ? {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          price: '700000000',
+          availability: 'https://schema.org/InStock',
           url: `https://indiagully.com/listings/${listing.id}`,
-          image: (listing as any).images?.[0] || 'https://indiagully.com/static/og.jpg',
-        },
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
-            { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://indiagully.com/listings' },
-            { '@type': 'ListItem', position: 3, name: listing.title, item: `https://indiagully.com/listings/${listing.id}` },
-          ]
-        }
-      ]
-    }
-  }))
+        } : undefined,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+          { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://indiagully.com/listings' },
+          { '@type': 'ListItem', position: 3, name: detailSeo.h1, item: `https://indiagully.com/listings/${listing.id}` },
+        ]
+      },
+      {
+        '@type': 'Organization',
+        name: 'India Gully',
+        url: 'https://indiagully.com'
+      }
+    ]
+  }
+}))
 })
 
 export default app
