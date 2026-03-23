@@ -1277,6 +1277,33 @@ function catBadge(cat: string) {
 
 const ALL_CATS = ['All', 'Real Estate', 'Hospitality', 'Entertainment', 'Retail', 'HORECA', 'Debt & Special Situations']
 
+const INSIGHTS_HUB_SEO = {
+  title: 'India Real Estate, Hospitality & Retail Insights',
+  description: 'Expert insights on Indian real estate, hospitality, retail leasing, HORECA and special situations. Explore India Gully market reports, transaction perspectives and investment analysis.',
+  h1: 'India Gully Insights: Real Estate, Hospitality & Retail Analysis',
+  intro: 'India Gully Insights publishes market analysis on Indian real estate, hospitality, retail leasing, HORECA, mixed-use development and special situations. Our reports combine advisory experience, transaction context and sector research to help investors, developers, landlords and operators understand market opportunities across India.'
+}
+
+const ARTICLE_SEO_OVERRIDES: Record<string, {
+  title: string
+  description: string
+  h1: string
+  intro: string
+}> = {
+  'india-realty-2026-outlook': {
+    title: 'India Real Estate 2026 Outlook | Commercial & Hospitality Convergence',
+    description: 'India Gully’s 2026 real estate outlook explores hybrid work, hospitality-grade office design, mixed-use value creation and city-wise investment trends across India.',
+    h1: 'India Real Estate 2026 Outlook: Commercial & Hospitality Convergence',
+    intro: 'India’s commercial real estate sector is entering a new phase where hospitality-grade amenities, hybrid work patterns and mixed-use design are reshaping asset performance. This India Gully outlook outlines the structural drivers, investment logic and city-level opportunities likely to define 2026.'
+  },
+  'retail-leasing-trends-india-2026': {
+    title: 'India Retail Leasing Trends 2026 | Mall Hierarchy & Omnichannel Strategy',
+    description: 'Read India Gully’s 2026 retail leasing outlook covering mall hierarchy, premiumisation, international brand entry and omnichannel retail strategy in India.',
+    h1: 'India Retail Leasing Trends 2026: Mall Hierarchy, Premiumisation & Omnichannel',
+    intro: 'India’s organised retail landscape is splitting between top-performing destination malls and weaker transitional assets. This India Gully report explains the new mall hierarchy, leasing demand, international brand entry, premiumisation and omnichannel economics shaping retail real estate in 2026.'
+  }
+}
+
 // ── INSIGHTS INDEX ─────────────────────────────────────────────────────────
 app.get('/', (c) => {
   const featured = ARTICLES[0]
@@ -1334,8 +1361,8 @@ app.get('/', (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Insights &amp; Research</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.5rem;">Thought Leadership<br><em style="color:var(--gold);font-style:italic;">from the Field</em></h1>
-      <p class="lead-lt" style="max-width:600px;margin-bottom:2.75rem;">Market research, sector analysis and operational insights from India Gully's advisory practice — drawn from active mandates across hospitality, real estate, retail and entertainment.</p>
+      <h1 class="h1" style="margin-bottom:1.5rem;">${INSIGHTS_HUB_SEO.h1}</h1>
+      <p class="lead-lt" style="max-width:680px;margin-bottom:2.75rem;">${INSIGHTS_HUB_SEO.intro}</p>
       <!-- Category Filter Buttons -->
       <div id="insightFilterRow" class="ins-filter-row" role="group" aria-label="Filter articles by category">
         ${ALL_CATS.map((cat: string, i: number) => `
@@ -1361,8 +1388,25 @@ app.get('/', (c) => {
   </div>
 </div>
 
+<!-- ══ FEATURED LINKS ═══════════════════════════════════════════════════ -->
+<div class="sec-wh" style="padding-top:2.5rem;padding-bottom:0;">
+  <div class="wrap">
+    <div style="background:#fff;border:1px solid var(--border-lt);padding:1.5rem 1.75rem;display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;align-items:start;" class="mob-stack feature-card">
+      <div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.65rem;">Featured Market Coverage</div>
+        <p style="font-size:.86rem;color:var(--ink-soft);line-height:1.8;margin:0;">Explore India Gully’s most important research across commercial real estate, hospitality, mixed-use development and organised retail in India.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="/insights/india-realty-2026-outlook" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">India Real Estate 2026 Outlook</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+        <a href="/insights/retail-leasing-trends-india-2026" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">India Retail Leasing Trends 2026</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+        <a href="/insights/debt-special-situations-india-hospitality-2026" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">Distressed Hospitality Assets in India 2026</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FEATURED ARTICLE ════════════════════════════════════════════════ -->
-<div class="sec-wh" id="insightsContent" style="padding-top:6rem;">
+<div class="sec-wh" id="insightsContent" style="padding-top:3rem;">
   <div class="wrap">
 
     <!-- Featured Card — editorial magazine layout -->
@@ -1520,17 +1564,36 @@ function filterInsights(cat) {
 </script>
 `
 
-  return c.html(layout('Insights & Research — India Gully', content, {
-    description: 'India Gully Insights \u2014 thought leadership, market research and sector analysis across hospitality, real estate, retail, entertainment, HORECA, and debt & special situations advisory.',
+  return c.html(layout(INSIGHTS_HUB_SEO.title, content, {
+    description: INSIGHTS_HUB_SEO.description,
     canonical: 'https://indiagully.com/insights',
     ogImage: 'https://indiagully.com/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: 'Insights & Research \u2014 India Gully',
-      description: 'Thought leadership and market research from India Gully\u2019s advisory practice.',
-      url: 'https://indiagully.com/insights',
-      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          name: INSIGHTS_HUB_SEO.title,
+          headline: INSIGHTS_HUB_SEO.h1,
+          description: INSIGHTS_HUB_SEO.description,
+          url: 'https://indiagully.com/insights',
+          isPartOf: { '@type': 'WebSite', name: 'India Gully', url: 'https://indiagully.com' },
+          about: [
+            { '@type': 'Thing', name: 'Indian real estate' },
+            { '@type': 'Thing', name: 'Hospitality advisory' },
+            { '@type': 'Thing', name: 'Retail leasing' },
+            { '@type': 'Thing', name: 'HORECA' }
+          ],
+          publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://indiagully.com/insights' }
+          ]
+        }
+      ]
     }
   }))
 })
@@ -1543,6 +1606,12 @@ app.get('/:id', (c) => {
 
   const relatedArticles = ARTICLES.filter(a => a.id !== id && (a.category === article.category || a.tags.some((t: string) => article.tags.includes(t)))).slice(0, 3)
   const catImg = CAT_IMAGES[article.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'
+  const seo = ARTICLE_SEO_OVERRIDES[article.id] || {
+    title: article.title,
+    description: article.excerpt,
+    h1: article.title,
+    intro: article.excerpt,
+  }
 
   const content = `
 <!-- Phase 11D: Reading progress bar -->
@@ -1566,8 +1635,8 @@ app.get('/:id', (c) => {
         <span style="font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.06em;">${article.date}</span>
         <span style="font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.06em;"><i class="fas fa-clock" style="margin-right:.35rem;font-size:.6rem;color:var(--gold);"></i>${article.readTime}</span>
       </div>
-      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2rem,4.5vw,3.25rem);color:#fff;line-height:1.12;margin-bottom:1.5rem;">${article.title}</h1>
-      <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.75;max-width:700px;">${article.excerpt}</p>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2rem,4.5vw,3.25rem);color:#fff;line-height:1.12;margin-bottom:1.5rem;">${seo.h1}</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.75;max-width:700px;">${seo.intro}</p>
     </div>
     <!-- Tags -->
     <div style="margin-top:1.75rem;display:flex;flex-wrap:wrap;gap:.4rem;">
@@ -1867,8 +1936,8 @@ ${relatedArticles.length ? `
 </script>
 `
 
-  return c.html(layout(article.title, content, {
-    description: article.excerpt,
+  return c.html(layout(seo.title, content, {
+    description: seo.description,
     ogImage: CAT_IMAGES[article.category],
     canonical: `https://indiagully.com/insights/${article.id}`,
     jsonLd: {
@@ -1876,25 +1945,28 @@ ${relatedArticles.length ? `
       '@graph': [
         {
           '@type': 'Article',
-          headline: article.title,
-          description: article.excerpt,
+          headline: seo.h1,
+          alternativeHeadline: article.title,
+          description: seo.description,
           image: CAT_IMAGES[article.category],
           datePublished: article.date,
           author: { '@type': 'Organization', name: 'India Gully Research', url: 'https://indiagully.com' },
           publisher: {
             '@type': 'Organization', name: 'India Gully',
+            url: 'https://indiagully.com',
             logo: { '@type': 'ImageObject', url: 'https://indiagully.com/assets/logo-white.png' }
           },
           mainEntityOfPage: { '@type': 'WebPage', '@id': `https://indiagully.com/insights/${article.id}` },
           keywords: article.tags.join(', '),
           articleSection: article.category,
+          about: article.tags.map((tag: string) => ({ '@type': 'Thing', name: tag }))
         },
         {
           '@type': 'BreadcrumbList',
           itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
             { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://indiagully.com/insights' },
-            { '@type': 'ListItem', position: 3, name: article.title, item: `https://indiagully.com/insights/${article.id}` },
+            { '@type': 'ListItem', position: 3, name: seo.h1, item: `https://indiagully.com/insights/${article.id}` }
           ]
         }
       ]
