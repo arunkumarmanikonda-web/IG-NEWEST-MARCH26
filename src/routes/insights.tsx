@@ -7,19 +7,14 @@ const app = new Hono()
 // All images sourced from active India Gully mandate properties only.
 // No generic stock / Unsplash images used.
 const CAT_IMAGES: Record<string, string> = {
-  // Hotel Rajshree & Spa, Chandigarh — Real Estate / Commercial article header
-  'Real Estate':             '/static/mandates/chandigarh/chandigarh-img2.webp',
-  // WelcomHeritage Santa Roza, Kasauli — Heritage & Entertainment context
-  'Entertainment':           'https://www.welcomheritagehotels.in/wp-content/uploads/2024/09/santa-roza-overview.jpg',
-  // Hotel Rajshree interior — HORECA / F&B procurement context
-  'HORECA':                  '/static/mandates/chandigarh/chandigarh-img1.webp',
-  // Maple Resort Chail — mountain asset, suitable for Debt / Special Situations
-  'Debt & Special Situations':'/static/mandates/chail/chail-slider1.jpg',
-  // Maple Resort exterior — Retail / leasing context
-  'Retail':                  '/static/mandates/chail/chail-slider2.jpg',
-  // WelcomHeritage Santa Roza — Hospitality article header
-  'Hospitality':             'https://www.welcomheritagehotels.in/wp-content/uploads/2024/09/santa-roza-room.jpg',
+  'Real Estate': '/static/mandates/chandigarh/chandigarh-img2.webp',
+  'Entertainment': '/static/mandates/chail/chail-slider2.jpg',
+  'HORECA': '/static/mandates/chandigarh/chandigarh-img1.webp',
+  'Debt & Special Situations': '/static/mandates/chail/chail-slider1.jpg',
+  'Retail': '/static/mandates/chail/chail-slider2.jpg',
+  'Hospitality': '/static/mandates/chandigarh/chandigarh-img1.webp',
 }
+
 
 // ── ARTICLES ─────────────────────────────────────────────────────────────────
 const ARTICLES = [
