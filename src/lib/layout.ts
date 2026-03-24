@@ -89,8 +89,6 @@ tailwind.config = {
 </script>
 <!-- Load Tailwind CDN async — runs after config object is set above -->
 <script src="https://cdn.tailwindcss.com" defer></script>
-<!-- JS capability flag: lets CSS keep content visible if later scripts fail -->
-<script>document.documentElement.classList.add('js');</script>
 <!-- DARK MODE: early init — defaults to LIGHT; only switches to dark if user explicitly enabled it -->
 <script>
 (function(){
@@ -1244,19 +1242,13 @@ body{overflow-x:hidden;}
 @media(max-width:560px){#trackRecord{grid-template-columns:1fr;}}
 
 /* ── Scroll-reveal ────────────────────────────── */
-/* Default state stays visible so content never disappears if a later script fails. */
-.reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast{opacity:1;transform:none;}
-html.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-html.js .reveal.visible{opacity:1;transform:translateY(0);}
-html.js .reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-html.js .reveal-l.visible{opacity:1;transform:translateX(0);}
-html.js .reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-html.js .reveal-r.visible{opacity:1;transform:translateX(0);}
-html.js .reveal-scale{opacity:0;transform:scale(.95);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
-html.js .reveal-scale.visible{opacity:1;transform:scale(1);}
-/* Faster reveal variant */
-html.js .reveal-fast{opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);}
-html.js .reveal-fast.visible{opacity:1;transform:translateY(0);}
+/* Hard-fix: keep reveal sections visible at all times so content can never blank out. */
+.reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast,
+.reveal.visible,.reveal-l.visible,.reveal-r.visible,.reveal-scale.visible,.reveal-fast.visible{
+  opacity:1;
+  transform:none;
+  transition:none;
+}
 
 /* ── Listing detail ──────────────────────────── */
 .listing-detail-grid{display:grid;grid-template-columns:1fr 390px;gap:4rem;align-items:start;}
