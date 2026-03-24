@@ -2530,3 +2530,725 @@ ${relatedArticles.length ? `
 })
 
 export default app
+ revenue; highest contribution margin</li>
+</ol>
+<p>India Gully's revenue model for a ₹15 Cr standalone FEC (25,000 sq ft, 3 entertainment formats + F&B) projects stabilised Year 3 revenue of ₹6-8 Cr against operating cost of ₹3.5-4.5 Cr, implying EBITDA of ₹2-3.5 Cr (30-45% margin) and a project-level IRR of 18-26% over a 7-year horizon.</p>
+
+<h3>Valuation Methodology</h3>
+<p>Entertainment real estate requires a bespoke valuation approach that blends real estate and operating business methodologies:</p>
+<ul>
+  <li><strong>DCF on stabilised cash flows</strong>: Primary methodology for operational properties; discount rate 14-18% for entertainment assets reflecting operating risk premium</li>
+  <li><strong>EV/EBITDA comparable</strong>: Benchmarked against listed entertainment operators (PVR Inox, Wonderla) at 10-16x EBITDA; applicable to scaled multi-location operators</li>
+  <li><strong>Real estate residual value</strong>: For owned property entertainment assets, land and building value provides floor value; applicable when operating business value is impaired</li>
+</ul>
+
+<h2>3. Operator Selection and Partnership Structures</h2>
+<p>Unlike hotels where the brand/operator market is well-structured, entertainment operators in India operate a fragmented, largely domestic market. India Gully's operator partnership framework:</p>
+
+<h3>Option A: Operator-Managed Model</h3>
+<p>Developer builds and owns the asset; experienced operator manages for a management fee (typically 8-15% of revenue + 20-25% of EBITDA over hurdle). Best for developers without entertainment operating capability. Risk: operator dependency; quality of operators is highly variable in India's entertainment space.</p>
+
+<h3>Option B: Revenue Share Lease</h3>
+<p>Developer leases space to operator on revenue share basis (typically base rent + 12-20% of gross revenue). Lower risk for developer; operator retains upside. Best for developer-landlords seeking income certainty. India Gully has structured 2 such arrangements in the past 12 months.</p>
+
+<h3>Option C: Franchise Model</h3>
+<p>International entertainment franchise brands (Kidzania, Bounce, Clip 'n Climb) provide brand, operating manual, and marketing for an upfront franchise fee (₹1.5-8 Cr) plus ongoing royalty (3-6% of revenue). Best for operators without brand development budget but seeking a proven concept. International franchise availability in India is growing: Kidzania (Delhi), Bounce (Bengaluru, Gurgaon), Sky Zone (Mumbai announced).</p>
+
+<h2>4. India Gully's Entertainment Advisory Practice</h2>
+<p>India Gully's entertainment advisory practice provides end-to-end support for entertainment destination developers and operators:</p>
+<ul>
+  <li><strong>Feasibility and concept study</strong>: Market demand analysis, concept selection, revenue modelling, capex benchmarking, and financial projections</li>
+  <li><strong>Operator / franchise selection</strong>: India Gully maintains relationships with 20+ entertainment operators and franchise brands across format categories</li>
+  <li><strong>Real estate advisory</strong>: Site selection, landlord negotiation (for leased formats), and property acquisition advisory for owned-format developments</li>
+  <li><strong>Regulatory navigation</strong>: Fire safety, occupancy, FSSAI, and excise licensing across the relevant state regulatory framework</li>
+  <li><strong>Capital raise</strong>: Structuring and placing entertainment destination projects with family offices and HNI investors seeking alternative real estate exposure</li>
+</ul>
+`,
+  },
+]
+
+// Category colour map
+const CAT_COLOR: Record<string, { bg: string; text: string; border: string }> = {
+  'Real Estate':              { bg: 'rgba(26,58,107,.1)',   text: '#1A3A6B',  border: 'rgba(26,58,107,.2)' },
+  'Entertainment':            { bg: 'rgba(124,58,237,.09)', text: '#7C3AED',  border: 'rgba(124,58,237,.2)' },
+  'HORECA':                   { bg: 'rgba(22,163,74,.08)',  text: '#15803d',  border: 'rgba(22,163,74,.2)' },
+  'Debt & Special Situations':{ bg: 'rgba(220,38,38,.07)',  text: '#b91c1c',  border: 'rgba(220,38,38,.18)' },
+  'Retail':                   { bg: 'rgba(184,150,12,.1)',  text: '#B8960C',  border: 'rgba(184,150,12,.25)' },
+  'Hospitality':              { bg: 'rgba(6,95,70,.08)',    text: '#065F46',  border: 'rgba(6,95,70,.2)' },
+}
+
+function catBadge(cat: string) {
+  const c = CAT_COLOR[cat] || { bg: 'rgba(184,150,12,.1)', text: '#B8960C', border: 'rgba(184,150,12,.25)' }
+  return `<span style="background:${c.bg};color:${c.text};border:1px solid ${c.border};font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .6rem;">${cat}</span>`
+}
+
+const ALL_CATS = ['All', 'Real Estate', 'Hospitality', 'Entertainment', 'Retail', 'HORECA', 'Debt & Special Situations']
+
+const INSIGHTS_HUB_SEO = {
+  title: 'India Real Estate, Hospitality & Retail Insights',
+  description: 'Expert insights on Indian real estate, hospitality, retail leasing, HORECA and special situations. Explore India Gully market reports, transaction perspectives and investment analysis.',
+  h1: 'India Gully Insights: Real Estate, Hospitality & Retail Analysis',
+  intro: 'India Gully Insights publishes market analysis on Indian real estate, hospitality, retail leasing, HORECA, mixed-use development and special situations. Our reports combine advisory experience, transaction context and sector research to help investors, developers, landlords and operators understand market opportunities across India.'
+}
+
+const ARTICLE_SEO_OVERRIDES: Record<string, {
+  title: string
+  description: string
+  h1: string
+  intro: string
+}> = {
+  'india-realty-2026-outlook': {
+    title: 'India Real Estate 2026 Outlook | Commercial & Hospitality Convergence',
+    description: 'India Gully’s 2026 real estate outlook explores hybrid work, hospitality-grade office design, mixed-use value creation and city-wise investment trends across India.',
+    h1: 'India Real Estate 2026 Outlook: Commercial & Hospitality Convergence',
+    intro: 'India’s commercial real estate sector is entering a new phase where hospitality-grade amenities, hybrid work patterns and mixed-use design are reshaping asset performance. This India Gully outlook outlines the structural drivers, investment logic and city-level opportunities likely to define 2026.'
+  },
+  'retail-leasing-trends-india-2026': {
+    title: 'India Retail Leasing Trends 2026 | Mall Hierarchy & Omnichannel Strategy',
+    description: 'Read India Gully’s 2026 retail leasing outlook covering mall hierarchy, premiumisation, international brand entry and omnichannel retail strategy in India.',
+    h1: 'India Retail Leasing Trends 2026: Mall Hierarchy, Premiumisation & Omnichannel',
+    intro: 'India’s organised retail landscape is splitting between top-performing destination malls and weaker transitional assets. This India Gully report explains the new mall hierarchy, leasing demand, international brand entry, premiumisation and omnichannel economics shaping retail real estate in 2026.'
+  }
+}
+
+// ── INSIGHTS INDEX ─────────────────────────────────────────────────────────
+app.get('/', (c) => {
+  const featured = ARTICLES[0]
+  const rest = ARTICLES.slice(1)
+
+  const content = `
+<style>
+.ins-filter-row{display:flex;flex-wrap:wrap;gap:.5rem;}
+.ins-filter-btn{padding:.5rem 1.1rem;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);cursor:pointer;transition:all .25s;white-space:nowrap;backdrop-filter:blur(4px);}
+.ins-filter-btn:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8);}
+.ins-filter-btn.active{border-color:var(--gold);background:var(--gold);color:#fff;}
+.ins-filter-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;}
+.ins-card{background:#fff;border:1px solid var(--border-lt);display:flex;flex-direction:column;overflow:hidden;transition:border-color .28s,box-shadow .28s,transform .28s;position:relative;}
+.ins-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .28s;}
+.ins-card:hover{border-color:rgba(184,150,12,.3);box-shadow:0 16px 52px rgba(0,0,0,.1);transform:translateY(-5px);}
+.ins-card:hover::before{opacity:1;}
+.ins-card__img{height:200px;overflow:hidden;position:relative;background:#111;flex-shrink:0;}
+.ins-card__img img{width:100%;height:100%;object-fit:cover;transition:transform 6s cubic-bezier(.4,0,.2,1);}
+.ins-card:hover .ins-card__img img{transform:scale(1.05);}
+.ins-card__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,rgba(0,0,0,.08) 60%,transparent 100%);}
+.ins-card__meta{position:absolute;bottom:.875rem;left:.875rem;right:.875rem;display:flex;align-items:flex-end;justify-content:space-between;}
+.ins-card__body{padding:1.75rem;flex:1;display:flex;flex-direction:column;}
+.ins-card__title{font-family:'DM Serif Display',Georgia,serif;font-size:1.12rem;color:var(--ink);line-height:1.28;margin-bottom:.75rem;flex:1;}
+.ins-card__excerpt{font-size:.82rem;color:var(--ink-muted);line-height:1.75;margin-bottom:1.1rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.ins-card__tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.1rem;}
+.ins-card__tag{background:rgba(10,10,10,.04);color:var(--ink-soft);border:1px solid var(--border);font-size:.57rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;}
+.ins-card__read{display:inline-flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);transition:gap .2s;margin-top:auto;}
+.ins-card__read:hover{gap:.65rem;}
+.ins-stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid rgba(255,255,255,.05);}
+.ins-stat{padding:1.75rem 2rem;border-right:1px solid rgba(255,255,255,.05);text-align:center;transition:background .22s;}
+.ins-stat:hover{background:rgba(184,150,12,.04);}
+.ins-stat__n{font-family:'DM Serif Display',Georgia,serif;font-size:1.9rem;color:var(--gold);line-height:1;margin-bottom:.35rem;letter-spacing:-.02em;}
+.ins-stat__l{font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.42);}
+@media(max-width:860px){.insight-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){
+  .insight-grid{grid-template-columns:1fr;}
+  .ins-filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .ins-filter-row::-webkit-scrollbar{display:none;}
+  .ins-filter-btn{flex-shrink:0;}
+  .ins-stats-bar{grid-template-columns:repeat(2,1fr);}
+  .ins-stat{padding:1.25rem 1rem;}
+  .ins-stat__n{font-size:1.5rem;}
+}
+</style>
+
+<!-- ══ INSIGHTS HERO ════════════════════════════════════════════════════ -->
+<div class="hero-dk">
+  <div class="hero-dk-grid"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 70% 40%,rgba(184,150,12,.05) 0%,transparent 55%);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(to bottom,transparent,var(--ink));pointer-events:none;"></div>
+  <div class="wrap" style="position:relative;">
+    <div style="max-width:720px;" class="fu">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+        <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
+        <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Insights &amp; Research</span>
+      </div>
+      <h1 class="h1" style="margin-bottom:1.5rem;">${INSIGHTS_HUB_SEO.h1}</h1>
+      <p class="lead-lt" style="max-width:680px;margin-bottom:2.75rem;">${INSIGHTS_HUB_SEO.intro}</p>
+      <div id="insightFilterRow" class="ins-filter-row" role="group" aria-label="Filter articles by category">
+        ${ALL_CATS.map((cat: string, i: number) => `
+        <button onclick="filterInsights('${cat}')" data-cat="${cat}"
+                class="ins-filter-btn${i === 0 ? ' active' : ''}"
+                aria-pressed="${i === 0 ? 'true' : 'false'}">${cat}</button>`).join('')}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--ink-mid);border-bottom:1px solid rgba(255,255,255,.05);">
+  <div class="wrap" style="padding:0;">
+    <div class="ins-stats-bar">
+      ${[
+        { n: '19', l: 'In-Depth Articles' },
+        { n: '6',  l: 'Sectors Covered' },
+        { n: '₹2,100 Cr+', l: 'Active Pipeline' },
+        { n: '2024-26', l: 'Research Period' },
+      ].map((s: any) => `<div class="ins-stat"><div class="ins-stat__n">${s.n}</div><div class="ins-stat__l">${s.l}</div></div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<div class="sec-wh" style="padding-top:2.5rem;padding-bottom:0;">
+  <div class="wrap">
+    <div style="background:#fff;border:1px solid var(--border-lt);padding:1.5rem 1.75rem;display:grid;grid-template-columns:1.2fr 1fr;gap:1.5rem;align-items:start;" class="mob-stack feature-card">
+      <div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.65rem;">Featured Market Coverage</div>
+        <p style="font-size:.86rem;color:var(--ink-soft);line-height:1.8;margin:0;">Explore India Gully’s most important research across commercial real estate, hospitality, mixed-use development and organised retail in India.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="/insights/india-realty-2026-outlook" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">India Real Estate 2026 Outlook</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+        <a href="/insights/retail-leasing-trends-india-2026" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">India Retail Leasing Trends 2026</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+        <a href="/insights/debt-special-situations-india-hospitality-2026" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem 1rem;border:1px solid var(--border);text-decoration:none;color:var(--ink);background:var(--parch);" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'"><span style="font-weight:600;line-height:1.5;">Distressed Hospitality Assets in India 2026</span><i class="fas fa-arrow-right" style="color:var(--gold);"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-wh" id="insightsContent" style="padding-top:3rem;">
+  <div class="wrap">
+
+    <div id="featuredArticle" data-cat="${featured.category}"
+         style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border-lt);overflow:hidden;margin-bottom:4rem;transition:all .3s;position:relative;"
+         class="mob-stack feat-card feature-card"
+         onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.boxShadow='none'">
+      <div style="position:relative;min-height:380px;overflow:hidden;background:#111;">
+        <img src="${getArticleImage(featured)}"
+             alt="${featured.title}"
+             style="width:100%;height:100%;object-fit:cover;transition:transform 8s cubic-bezier(.4,0,.2,1);" loading="eager"
+             onerror="this.onerror=null;this.src='/static/mandates/chandigarh/chandigarh-img2.webp';"
+             onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.45) 0%,rgba(0,0,0,.1) 100%);"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 50%);"></div>
+        <div style="position:absolute;top:1.5rem;left:1.5rem;">${catBadge(featured.category)}</div>
+        <div style="position:absolute;top:1.5rem;right:1.5rem;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);color:rgba(255,255,255,.7);font-size:.6rem;font-weight:600;letter-spacing:.08em;padding:.28rem .7rem;display:flex;align-items:center;gap:.35rem;"><i class="fas fa-clock" style="font-size:.52rem;color:var(--gold);"></i>${featured.readTime}</div>
+        <div style="position:absolute;bottom:1.5rem;left:1.5rem;font-size:.65rem;color:rgba(255,255,255,.5);letter-spacing:.08em;">${featured.date}</div>
+      </div>
+      <div style="padding:3.25rem;display:flex;flex-direction:column;justify-content:center;background:#fff;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem;">
+          <span style="font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.2);padding:.22rem .65rem;">Featured Article</span>
+          <span style="font-size:.6rem;color:var(--ink-faint);letter-spacing:.08em;">${featured.readTime}</span>
+        </div>
+        <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.5rem,2.4vw,2rem);color:var(--ink);line-height:1.18;margin-bottom:1.1rem;">${featured.title}</h2>
+        <p style="font-size:.9rem;color:var(--ink-soft);line-height:1.85;margin-bottom:2rem;">${featured.excerpt}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2rem;">
+          ${featured.tags.map((t: string) => `<span style="background:rgba(10,10,10,.04);color:var(--ink-soft);border:1px solid var(--border);font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.18rem .55rem;">${t}</span>`).join('')}
+        </div>
+        <a href="/insights/${featured.id}" class="btn btn-g" style="align-self:flex-start;">Read Full Article <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.62rem;"></i></a>
+      </div>
+    </div>
+    <style>@media(max-width:640px){.feat-card{grid-template-columns:1fr!important;}.feat-card>div:first-child{min-height:240px!important;}}</style>
+
+    <div class="insight-grid" id="articleGrid">
+      ${rest.map((a, i) => `
+      <article class="ins-card" data-cat="${a.category}" style="animation:fadeUp .5s ease ${i * 0.06}s both;">
+        <div class="ins-card__img">
+          <img src="${getArticleImage(a)}"
+               alt="${a.title}" loading="lazy"
+               onerror="this.onerror=null;this.src='/static/mandates/chandigarh/chandigarh-img2.webp';">
+          <div class="ins-card__overlay"></div>
+          <div style="position:absolute;top:.875rem;left:.875rem;">${catBadge(a.category)}</div>
+          <div class="ins-card__meta">
+            <span style="font-size:.62rem;color:rgba(255,255,255,.6);letter-spacing:.06em;">${a.date}</span>
+            <span style="font-size:.62rem;color:rgba(255,255,255,.5);letter-spacing:.04em;display:flex;align-items:center;gap:.3rem;"><i class="fas fa-clock" style="font-size:.52rem;color:var(--gold);"></i>${a.readTime}</span>
+          </div>
+        </div>
+        <div class="ins-card__body">
+          <h3 class="ins-card__title">${a.title}</h3>
+          <p class="ins-card__excerpt">${a.excerpt}</p>
+          <div class="ins-card__tags">
+            ${a.tags.slice(0, 3).map((t: string) => `<span class="ins-card__tag">${t}</span>`).join('')}
+          </div>
+          <a href="/insights/${a.id}" class="ins-card__read">Read Article <i class="fas fa-arrow-right" style="font-size:.6rem;"></i></a>
+        </div>
+      </article>`).join('')}
+    </div>
+  </div>
+</div>
+
+<div class="sec-pd" id="subscribe">
+  <div class="wrap">
+    <div style="background:var(--ink);padding:4rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;" class="mob-stack">
+      <div>
+        <div class="gr-lt"></div>
+        <p class="eyebrow" style="margin-bottom:.75rem;">Stay Informed</p>
+        <h2 class="h2-lt" style="margin-bottom:1rem;">Subscribe to<br>India Gully Insights</h2>
+        <p class="lead-lt" style="font-size:.9rem;">Receive our sector research, market updates and mandate alerts directly — for qualified investors, developers and industry professionals.</p>
+        <div style="margin-top:2rem;display:flex;flex-direction:column;gap:.75rem;">
+          ${[
+            { icon: 'newspaper', text: 'Monthly sector research reports' },
+            { icon: 'bell', text: 'New mandate alerts (NDA-protected)' },
+            { icon: 'chart-line', text: 'Market outlook and deal commentary' },
+          ].map(b => `
+          <div style="display:flex;align-items:center;gap:.875rem;">
+            <div style="width:32px;height:32px;background:rgba(184,150,12,.15);border:1px solid rgba(184,150,12,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fas fa-${b.icon}" style="color:var(--gold);font-size:.72rem;"></i>
+            </div>
+            <span style="font-size:.82rem;color:rgba(255,255,255,.65);">${b.text}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <form class="ig-form" method="POST" action="/api/subscribe" style="display:flex;flex-direction:column;gap:1rem;">
+          <div>
+            <label style="display:block;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.35rem;">Your Name</label>
+            <input type="text" name="name" required placeholder="Full name"
+                   style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.75rem 1rem;font-size:.875rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
+                   onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+          </div>
+          <div>
+            <label style="display:block;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.35rem;">Email Address *</label>
+            <input type="email" name="email" required placeholder="Work email address"
+                   style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.75rem 1rem;font-size:.875rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
+                   onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+          </div>
+          <div>
+            <label style="display:block;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.35rem;">Professional Role</label>
+            <select name="role"
+                    style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.75rem 1rem;font-size:.875rem;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;cursor:pointer;"
+                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+              <option value="" style="background:#111;color:#fff;">Select your role</option>
+              <option style="background:#111;color:#fff;">Developer / Promoter</option>
+              <option style="background:#111;color:#fff;">Institutional Investor</option>
+              <option style="background:#111;color:#fff;">Family Office</option>
+              <option style="background:#111;color:#fff;">Hotel / Hospitality Professional</option>
+              <option style="background:#111;color:#fff;">Retail Brand / Operator</option>
+              <option style="background:#111;color:#fff;">Advisor / Consultant</option>
+              <option style="background:#111;color:#fff;">Other</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-g" style="width:100%;justify-content:center;padding:.875rem;">
+            <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Subscribe to Insights
+          </button>
+          <p style="font-size:.68rem;color:rgba(255,255,255,.45);line-height:1.6;">By subscribing you agree to receive occasional research updates and mandate alerts from India Gully. We respect your privacy and you can unsubscribe at any time.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterInsights(cat) {
+  var cards = document.querySelectorAll('.ins-card');
+  var featured = document.getElementById('featuredArticle');
+  var btns = document.querySelectorAll('.ins-filter-btn');
+  var grid = document.getElementById('articleGrid');
+
+  btns.forEach(function(b) {
+    var isActive = b.dataset.cat === cat;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+
+  if (featured) {
+    var showFeat = (cat === 'All' || featured.dataset.cat === cat);
+    featured.style.display = showFeat ? '' : 'none';
+  }
+
+  var visibleCount = 0;
+  cards.forEach(function(card) {
+    var match = cat === 'All' || card.dataset.cat === cat;
+    card.style.display = match ? '' : 'none';
+    if (match) visibleCount++;
+  });
+
+  var empty = document.getElementById('insightsEmpty');
+  if (empty) empty.style.display = visibleCount === 0 ? 'block' : 'none';
+}
+</script>
+`
+
+  return c.html(layout(INSIGHTS_HUB_SEO.title, content, {
+    description: INSIGHTS_HUB_SEO.description,
+    canonical: 'https://indiagully.com/insights',
+    ogImage: 'https://indiagully.com/static/og.jpg',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          name: INSIGHTS_HUB_SEO.title,
+          headline: INSIGHTS_HUB_SEO.h1,
+          description: INSIGHTS_HUB_SEO.description,
+          url: 'https://indiagully.com/insights',
+          isPartOf: { '@type': 'WebSite', name: 'India Gully', url: 'https://indiagully.com' },
+          about: [
+            { '@type': 'Thing', name: 'Indian real estate' },
+            { '@type': 'Thing', name: 'Hospitality advisory' },
+            { '@type': 'Thing', name: 'Retail leasing' },
+            { '@type': 'Thing', name: 'HORECA' }
+          ],
+          publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://indiagully.com/insights' }
+          ]
+        }
+      ]
+    }
+  }))
+})
+
+// ── ARTICLE DETAIL ────────────────────────────────────────────────────────────
+app.get('/:id', (c) => {
+  const id = c.req.param('id')
+  const article = ARTICLES.find(a => a.id === id)
+  if (!article) return c.redirect('/insights')
+
+  const relatedArticles = ARTICLES.filter(a => a.id !== id && (a.category === article.category || a.tags.some((t: string) => article.tags.includes(t)))).slice(0, 3)
+  const catImg = getArticleImage(article)
+  const articleImage = `https://indiagully.com${getArticleImage(article)}`
+  const seo = ARTICLE_SEO_OVERRIDES[article.id] || {
+    title: article.title,
+    description: article.excerpt,
+    h1: article.title,
+    intro: article.excerpt,
+  }
+
+  const content = `
+<div id="article-progress" style="position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--gold),#D4AE2A);z-index:9999;transition:width .1s linear;pointer-events:none;"></div>
+
+<div style="background:var(--ink);position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;">
+    <img loading="lazy" src="${catImg}" alt="${article.title}" style="width:100%;height:100%;object-fit:cover;opacity:.18;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(8,8,8,.96) 0%,rgba(8,8,8,.75) 100%);"></div>
+  </div>
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(184,150,12,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(184,150,12,.04) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;"></div>
+  <div class="wrap" style="position:relative;padding-top:8rem;padding-bottom:4rem;max-width:900px;">
+    <a href="/insights" style="display:inline-flex;align-items:center;gap:.5rem;font-size:.75rem;color:rgba(255,255,255,.4);margin-bottom:2rem;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.4)'">
+      <i class="fas fa-arrow-left" style="font-size:.65rem;"></i> Back to Insights
+    </a>
+    <div class="fu">
+      <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        ${catBadge(article.category)}
+        <span style="font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.06em;">${article.date}</span>
+        <span style="font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.06em;"><i class="fas fa-clock" style="margin-right:.35rem;font-size:.6rem;color:var(--gold);"></i>${article.readTime}</span>
+      </div>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2rem,4.5vw,3.25rem);color:#fff;line-height:1.12;margin-bottom:1.5rem;">${seo.h1}</h1>
+      <p style="font-size:1rem;color:rgba(255,255,255,.6);line-height:1.75;max-width:700px;">${seo.intro}</p>
+    </div>
+    <div style="margin-top:1.75rem;display:flex;flex-wrap:wrap;gap:.4rem;">
+      ${article.tags.map((t: string) => `<span style="background:rgba(184,150,12,.12);color:var(--gold);border:1px solid rgba(184,150,12,.22);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.22rem .6rem;">${t}</span>`).join('')}
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--parch);padding:5rem 0;">
+  <div class="wrap" style="display:grid;grid-template-columns:1fr 320px;gap:4rem;align-items:start;max-width:1200px;" class="listing-layout">
+
+    <article>
+      <div style="font-size:.9375rem;line-height:1.9;color:var(--ink-soft);">
+        <style>
+        article h2{font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--ink);margin:2.5rem 0 1rem;line-height:1.2;}
+        article h3{font-family:'DM Serif Display',Georgia,serif;font-size:1.2rem;color:var(--ink);margin:1.75rem 0 .75rem;}
+        article p{margin-bottom:1.25rem;}
+        article ul,article ol{margin:.875rem 0 1.25rem;padding-left:1.5rem;}
+        article li{margin-bottom:.5rem;line-height:1.75;}
+        article strong{color:var(--ink);font-weight:600;}
+        article blockquote{border-left:3px solid var(--gold);margin:2rem 0;padding:1rem 1.5rem;background:var(--parch-dk);font-family:'DM Serif Display',Georgia,serif;font-size:1.15rem;font-style:italic;line-height:1.6;color:var(--ink);}
+        </style>
+        ${article.body}
+      </div>
+
+      <div style="margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem;">
+          <span style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);margin-right:.25rem;">Share</span>
+          <a href="https://twitter.com/intent/tweet?url=https://indiagully.com/insights/${article.id}&text=${encodeURIComponent(article.title + ' — India Gully Research')}&via=IndiaGully" target="_blank" rel="noopener" title="Share on X / Twitter"
+             style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#000;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-x-twitter" style="font-size:.72rem;"></i>X / Twitter
+          </a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://indiagully.com/insights/${article.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
+             style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#0A66C2;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-linkedin-in" style="font-size:.72rem;"></i>LinkedIn
+          </a>
+          <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' — India Gully Research https://indiagully.com/insights/' + article.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
+             style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#25D366;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-whatsapp" style="font-size:.72rem;"></i>WhatsApp
+          </a>
+          <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://indiagully.com/insights/${article.id}').then(function(){igToast('Link copied!','success')}).catch(function(){igToast('Copy link manually','info')})" title="Copy link"
+             style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--parch-dk);color:var(--ink);border:1px solid var(--border);cursor:pointer;border-radius:4px;transition:all .2s;" onmouseover="this.style.background='var(--gold-pale)'" onmouseout="this.style.background='var(--parch-dk)'">
+            <i class="fas fa-link" style="font-size:.72rem;color:var(--gold);"></i>Copy Link
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.25rem;">
+          <div style="font-size:.78rem;color:var(--ink-muted);">Published by <strong style="color:var(--ink);">India Gully Research</strong> · ${article.date} · <span style="color:var(--gold);"><i class="fas fa-clock" style="font-size:.68rem;"></i> ${article.readTime}</span></div>
+          <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+            <a href="/contact?service=${article.category}" class="btn btn-dk" style="font-size:.72rem;padding:.6rem 1.25rem;">Discuss With Our Team</a>
+            <a href="/insights" class="btn btn-go" style="font-size:.72rem;padding:.6rem 1.25rem;">All Insights</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div style="position:sticky;top:calc(var(--nav-h) + 1.5rem);display:flex;flex-direction:column;gap:1.25rem;" class="listing-sidebar">
+
+      <div style="background:linear-gradient(135deg,var(--ink) 0%,#1a1a2e 100%);border:1px solid rgba(184,150,12,.2);padding:1.5rem;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(184,150,12,.12) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;">
+          <div style="width:52px;height:52px;background:linear-gradient(135deg,var(--gold) 0%,#8A6E08 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'DM Serif Display',Georgia,serif;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:.04em;">IG</div>
+          <div>
+            <div style="font-size:.78rem;font-weight:700;color:#fff;letter-spacing:.02em;">India Gully Research</div>
+            <div style="font-size:.65rem;color:rgba(255,255,255,.5);margin-top:.2rem;line-height:1.4;">Transaction-Backed Advisory Practice</div>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;">
+              <span style="font-size:.58rem;background:rgba(184,150,12,.18);color:var(--gold);border:1px solid rgba(184,150,12,.3);padding:.15rem .5rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;">${article.category}</span>
+              <span style="font-size:.6rem;color:rgba(255,255,255,.35);"><i class="fas fa-clock" style="font-size:.55rem;color:var(--gold);margin-right:.25rem;"></i>${article.readTime}</span>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:.7rem;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:1rem;">Our research draws directly from active advisory mandates — real transactions, real data, no theoretical models.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+          ${[
+            { n: '9+', l: 'Yrs Advisory' },
+            { n: '40+', l: 'Contracts' },
+            { n: '₹2,100 Cr', l: 'Pipeline' },
+            { n: '6', l: 'Sectors' },
+          ].map((s: any) => `<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:.6rem .75rem;text-align:center;">
+            <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--gold);line-height:1;">${s.n}</div>
+            <div style="font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.2rem;">${s.l}</div>
+          </div>`).join('')}
+        </div>
+        <div style="font-size:.62rem;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.06);padding-top:.75rem;display:flex;align-items:center;justify-content:space-between;">
+          <span><i class="fas fa-calendar-alt" style="color:var(--gold);font-size:.52rem;margin-right:.3rem;"></i>${article.date}</span>
+          <span>India Gully · CIN U74999DL2017PTC323237</span>
+        </div>
+      </div>
+
+      <div style="background:var(--parch);border:1px solid var(--border);padding:1.25rem;" id="toc-box">
+        <p style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;"><i class="fas fa-list" style="color:var(--gold);"></i>Contents</p>
+        <div id="toc-list" style="display:flex;flex-direction:column;gap:.4rem;">
+          <span style="font-size:.75rem;color:var(--ink-faint);">Loading…</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--border);padding:1.5rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);">
+          <div style="width:38px;height:38px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-landmark" style="color:var(--gold);font-size:.8rem;"></i>
+          </div>
+          <div>
+            <div style="font-size:.875rem;font-weight:700;color:var(--ink);">India Gully Research</div>
+            <div style="font-size:.7rem;color:var(--ink-muted);">Transaction-Backed Insights</div>
+          </div>
+        </div>
+        <p style="font-size:.78rem;color:var(--ink-soft);line-height:1.75;">Our research is drawn directly from active advisory mandates, not secondary databases. Every insight reflects real-world transaction experience.</p>
+      </div>
+
+      ${relatedArticles.length ? `
+      <div style="background:#fff;border:1px solid var(--border);padding:1.5rem;">
+        <p style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:1rem;">Related Articles</p>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          ${relatedArticles.map((r: any) => `
+          <a href="/insights/${r.id}" style="display:flex;flex-direction:column;gap:.35rem;padding-bottom:1rem;border-bottom:1px solid var(--border);text-decoration:none;" onmouseover="this.querySelector('h4').style.color='var(--gold)'" onmouseout="this.querySelector('h4').style.color='var(--ink)'">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+              ${catBadge(r.category)}
+              <span style="font-size:.62rem;color:var(--ink-faint);">${r.readTime}</span>
+            </div>
+            <h4 style="font-family:'DM Serif Display',Georgia,serif;font-size:.9rem;color:var(--ink);line-height:1.3;transition:color .2s;">${r.title}</h4>
+            <span style="font-size:.68rem;color:var(--gold);font-weight:600;letter-spacing:.06em;">Read →</span>
+          </a>`).join('')}
+        </div>
+      </div>` : ''}
+
+      <div style="background:var(--ink);padding:1.5rem;">
+        <p style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.75rem;">Advisory Enquiry</p>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:#fff;margin-bottom:.75rem;line-height:1.3;">Discuss ${article.category} Opportunities</h3>
+        <p style="font-size:.75rem;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:1.25rem;">Our advisory team brings active mandate experience to every client conversation.</p>
+        <a href="/contact?service=${encodeURIComponent(article.category)}" class="btn btn-g" style="width:100%;justify-content:center;display:flex;">Get in Touch <i class="fas fa-arrow-right" style="margin-left:.4rem;font-size:.65rem;"></i></a>
+      </div>
+
+      <div style="background:var(--parch-dk);border:1px solid var(--border);padding:1.5rem;" id="subscribe-box">
+        <p style="font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;"><i class="fas fa-bell" style="color:var(--gold);margin-right:.35rem;font-size:.55rem;"></i>Stay Updated</p>
+        <p style="font-size:.78rem;color:var(--ink-soft);margin-bottom:1rem;line-height:1.6;">New insights from active mandates, direct to your inbox.</p>
+        <div id="sub-form-wrap">
+          <div style="display:flex;flex-direction:column;gap:.625rem;">
+            <input type="email" id="sub-email" placeholder="Work email address"
+                   style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.7rem .875rem;font-size:.82rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;background:#fff;color:var(--ink);"
+                   onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();igSubscribe();}">
+            <button onclick="igSubscribe()" id="sub-btn" class="btn btn-dk" style="width:100%;justify-content:center;font-size:.72rem;cursor:pointer;border:none;"><i class="fas fa-paper-plane" style="margin-right:.4rem;font-size:.62rem;"></i>Subscribe</button>
+          </div>
+        </div>
+        <div id="sub-success" style="display:none;background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.3);padding:.875rem;text-align:center;">
+          <i class="fas fa-check-circle" style="color:#16a34a;font-size:1.25rem;display:block;margin-bottom:.4rem;"></i>
+          <p style="font-size:.78rem;color:#15803d;font-weight:600;">Subscribed!</p>
+          <p style="font-size:.7rem;color:var(--ink-muted);margin-top:.2rem;">You'll receive our next insight.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+${relatedArticles.length ? `
+<div class="sec-pc" style="padding-top:3.5rem;padding-bottom:3.5rem;">
+  <div class="wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+      <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.5rem;color:var(--ink);">More from India Gully Research</h2>
+      <a href="/insights" class="btn btn-dko" style="font-size:.72rem;">All Insights</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+      ${relatedArticles.map((r: any) => `
+      <a href="/insights/${r.id}" style="display:block;background:#fff;border:1px solid var(--border);overflow:hidden;transition:all .25s;text-decoration:none;"
+         onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 8px 28px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
+        <div style="height:140px;overflow:hidden;position:relative;background:#1a1a1a;">
+          <img src="${getArticleImage(r)}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy"
+               onerror="this.onerror=null;this.src='/static/mandates/chandigarh/chandigarh-img2.webp';">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent);"></div>
+          <div style="position:absolute;top:.75rem;left:.75rem;">${catBadge(r.category)}</div>
+        </div>
+        <div style="padding:1.1rem;">
+          <h4 style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--ink);margin-bottom:.4rem;line-height:1.3;">${r.title}</h4>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;">
+            <span style="font-size:.68rem;color:var(--ink-faint);">${r.date}</span>
+            <span style="font-size:.68rem;color:var(--gold);font-weight:600;">Read →</span>
+          </div>
+        </div>
+      </a>`).join('')}
+    </div>
+  </div>
+</div>` : ''}
+
+<script>
+(function() {
+  var progBar = document.getElementById('article-progress');
+  if (progBar) {
+    window.addEventListener('scroll', function() {
+      var st = window.scrollY || document.documentElement.scrollTop;
+      var dh = document.documentElement.scrollHeight - window.innerHeight;
+      progBar.style.width = (dh > 0 ? Math.min(100, (st / dh) * 100) : 0) + '%';
+    }, { passive: true });
+  }
+
+  var tocList = document.getElementById('toc-list');
+  var articleEl = document.querySelector('article');
+  var tocLinks = [];
+  var tocHeadings = [];
+  if (tocList && articleEl) {
+    var headings = articleEl.querySelectorAll('h2, h3');
+    if (headings.length > 0) {
+      var tocHtml = '';
+      var hIdx = 0;
+      headings.forEach(function(h) {
+        var id = 'toc-' + (hIdx++);
+        h.id = id;
+        var indent = h.tagName === 'H3' ? 'padding-left:1.25rem;' : '';
+        var size = h.tagName === 'H3' ? '.72rem' : '.78rem';
+        var weight = h.tagName === 'H3' ? '400' : '600';
+        tocHtml += '<a href="#' + id + '" data-toc="' + id + '" style="display:block;font-size:' + size + ';font-weight:' + weight + ';color:var(--ink-soft);line-height:1.45;padding:.28rem 0 .28rem .625rem;text-decoration:none;transition:all .18s;border-left:2px solid transparent;' + indent + '" onmouseover="if(!this.classList.contains(\\'toc-active\\')){this.style.color=\\'var(--gold)\\';this.style.borderLeftColor=\\'rgba(184,150,12,.4)\\'}" onmouseout="if(!this.classList.contains(\\'toc-active\\')){this.style.color=\\'var(--ink-soft)\\';this.style.borderLeftColor=\\'transparent\\'}">' + h.textContent + '</a>';
+        tocHeadings.push(h);
+      });
+      tocList.innerHTML = tocHtml;
+      tocLinks = Array.from(tocList.querySelectorAll('a[data-toc]'));
+    } else {
+      var tocBox = document.getElementById('toc-box');
+      if (tocBox) tocBox.style.display = 'none';
+    }
+  }
+
+  if (tocLinks.length > 0) {
+    function updateActiveToc() {
+      var scrollY = window.scrollY + 100;
+      var activeIdx = 0;
+      for (var i = 0; i < tocHeadings.length; i++) {
+        if (tocHeadings[i].getBoundingClientRect().top + window.scrollY - 120 <= scrollY) {
+          activeIdx = i;
+        }
+      }
+      tocLinks.forEach(function(link, idx) {
+        if (idx === activeIdx) {
+          link.classList.add('toc-active');
+          link.style.color = 'var(--gold)';
+          link.style.borderLeftColor = 'var(--gold)';
+          link.style.fontWeight = '700';
+        } else {
+          link.classList.remove('toc-active');
+          link.style.color = 'var(--ink-soft)';
+          link.style.borderLeftColor = 'transparent';
+          link.style.fontWeight = '';
+        }
+      });
+    }
+    window.addEventListener('scroll', updateActiveToc, { passive: true });
+    updateActiveToc();
+  }
+
+  window.igSubscribe = function() {
+    var email = (document.getElementById('sub-email') || {}).value || '';
+    email = email.trim();
+    if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email)) {
+      var inp = document.getElementById('sub-email');
+      if (inp) { inp.style.borderColor = '#dc2626'; setTimeout(function(){ inp.style.borderColor = 'var(--border)'; }, 2000); }
+      return;
+    }
+    var btn = document.getElementById('sub-btn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="margin-right:.4rem;"></i>Subscribing…'; }
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, source: 'insights_sidebar', article: window.location.pathname })
+    }).then(function(r){ return r.json(); }).then(function(){
+      var wrap = document.getElementById('sub-form-wrap');
+      var suc = document.getElementById('sub-success');
+      if (wrap) wrap.style.display = 'none';
+      if (suc) suc.style.display = 'block';
+    }).catch(function(){
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:.4rem;font-size:.62rem;"></i>Subscribe'; }
+    });
+  };
+
+  try {
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'pageview', page: window.location.pathname, ref: document.referrer })
+    }).catch(function(){});
+  } catch(e) {}
+})();
+</script>
+`
+
+  return c.html(layout(seo.title, content, {
+    description: seo.description,
+    ogImage: articleImage,
+    canonical: `https://indiagully.com/insights/${article.id}`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Article',
+          headline: seo.h1,
+          alternativeHeadline: article.title,
+          description: seo.description,
+          image: articleImage,
+          datePublished: article.date,
+          author: { '@type': 'Organization', name: 'India Gully Research', url: 'https://indiagully.com' },
+          publisher: {
+            '@type': 'Organization', name: 'India Gully',
+            url: 'https://indiagully.com',
+            logo: { '@type': 'ImageObject', url: 'https://indiagully.com/assets/logo-white.png' }
+          },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': `https://indiagully.com/insights/${article.id}` },
+          keywords: article.tags.join(', '),
+          articleSection: article.category,
+          about: article.tags.map((tag: string) => ({ '@type': 'Thing', name: tag }))
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+            { '@type': 'ListItem', position: 2, name: 'Insights', item: 'https://indiagully.com/insights' },
+            { '@type': 'ListItem', position: 3, name: seo.h1, item: `https://indiagully.com/insights/${article.id}` }
+          ]
+        }
+      ]
+    }
+  }))
+})
+
+export default app

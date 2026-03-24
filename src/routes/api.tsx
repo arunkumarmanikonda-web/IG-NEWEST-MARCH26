@@ -319,41 +319,6 @@ function getSessionFromCookie(cookieHeader: string | null): string | null {
   return match ? match[1] : null
 }
 
-function getCookieValue(cookieHeader: string | null, name: string): string | null {
-  if (!cookieHeader) return null
-  const safeName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const match = cookieHeader.match(new RegExp('(?:^|;\\s*)' + safeName + '=([^;]+)'))
-  return match ? decodeURIComponent(match[1]) : null
-}
-
-function getPreSessionFromCookie(cookieHeader: string | null): string | null {
-  return getCookieValue(cookieHeader, 'ig_pre_session')
-}
-
-async function validatePreSessionCSRF(c: any, submittedToken?: string | null): Promise<boolean> {
-  const preSessionId = getPreSessionFromCookie(c.req.header('Cookie') || '')
-  if (!preSessionId || !submittedToken) return false
-  const expected = csrfGet(preSessionId)
-  if (!expected) return false
-  return safeEqual(submittedToken, expected)
-}
-
-function isUnsafeMethod(method: string): boolean {
-  return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(String(method || '').toUpperCase())
-}
-
-async function requireCsrfForSessionRequest(c: any): Promise<Response | null> {
-  if (!isUnsafeMethod(c.req.method)) return null
-  const sessionId = c.get('sessionId') || getSessionFromCookie(c.req.header('Cookie') || '')
-  if (!sessionId) return c.json({ error: 'Authentication required', code: 'NO_SESSION' }, 401)
-  const csrfHeader = c.req.header('X-CSRF-Token') || c.req.header('x-csrf-token') || ''
-  const valid = await validateCSRFFromSession(csrfHeader, sessionId, c.env?.IG_SESSION_KV)
-  if (!valid) {
-    return c.json({ error: 'Invalid or missing CSRF token', code: 'BAD_CSRF' }, 403)
-  }
-  return null
-}
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMO / STAGING MODE — G-Round
@@ -400,44 +365,106 @@ function isDemoMode(env?: Partial<Bindings>): boolean {
  * then move to D1 in P1 sprint.
  */
 // ── TEST-ONLY credentials (dev/staging). NEVER use these in production. ────────
-// SECURITY HARDENING:
-// - Removed all live-like email identifiers and embedded TOTP secrets from source control.
-// - Production and real user authentication must come from D1 only.
-// - Source fallback is restricted to generic non-production demo accounts.
+// Generated offline via PBKDF2-SHA256 (100k iterations). Rotate before go-live.
+// In production: D1 database binding (env.DB) is used — USER_STORE is the fallback.
 const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal:string; dashboard:string; totp_secret:string; mfa_required:boolean; demo_account:boolean; totp_demo_pin:string; identifier:string }> = {
-  'demo-client': {
-    identifier: 'demo-client',
-    salt: 'ig-salt-demo-client-2026',
+  'superadmin@indiagully.com': {
+    identifier: 'superadmin@indiagully.com',
+    salt: 'ig-salt-admin-v3-2026',
+    hash: '531e7f8d58df22dc04f4883380c7def8ea1f7a548938d62065d46cf1c011ec1c',
+    role: 'Super Admin', portal: 'admin', dashboard: '/admin/dashboard',
+    totp_secret: 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'demo@indiagully.com': {
+    identifier: 'demo@indiagully.com',
+    salt: 'ig-salt-client-v3-2026',
     hash: '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
     role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
-    totp_secret: '',
-    mfa_required: false, demo_account: true, totp_demo_pin: '',
+    totp_secret: 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
-  'demo-employee': {
-    identifier: 'demo-employee',
-    salt: 'ig-salt-demo-employee-2026',
+  'IG-EMP-0001': {
+    identifier: 'IG-EMP-0001',
+    salt: 'ig-salt-emp-v3-2026',
     hash: '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
     role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
-    totp_secret: '',
-    mfa_required: false, demo_account: true, totp_demo_pin: '',
+    totp_secret: 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
-  'demo-board': {
-    identifier: 'demo-board',
-    salt: 'ig-salt-demo-board-2026',
+  'IG-KMP-0001': {
+    identifier: 'IG-KMP-0001',
+    salt: 'ig-salt-board-v3-2026',
     hash: '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
     role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
-    totp_secret: '',
-    mfa_required: false, demo_account: true, totp_demo_pin: '',
+    totp_secret: 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
-  'qa-client': {
-    identifier: 'qa-client',
-    salt: 'ig-salt-qa-client-2026',
+  'qa@indiagully.com': {
+    identifier: 'qa@indiagully.com',
+    salt: 'ig-salt-qa-v3-2026',
     hash: '9fa32eacc8b9baf0a2e6f564cae45ae40e97110136d05d420e7bbd50554709d8',
     role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
-    totp_secret: '',
+    totp_secret: 'WGYPMNQOOEEJT7VJKBE6ZMZDH3UEGYSK',
     mfa_required: false, demo_account: true, totp_demo_pin: '',
   },
-  // Production users must come from D1 only; source fallback is restricted to generic demo/test accounts.
+  // ── Real Production Users (D1 primary; USER_STORE as fallback) ───────────
+  'akm@indiagully.com': {
+    identifier: 'akm@indiagully.com',
+    salt: 'ig-salt-board-akm-2026',
+    hash: 'cdd6bc852a717f91b12f69240f31e79a2395c0fc78933c1085a09898f9dbe5ad',
+    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
+    totp_secret: 'ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'pavan@indiagully.com': {
+    identifier: 'pavan@indiagully.com',
+    salt: 'ig-salt-board-pavan-2026',
+    hash: '1acec72c5694e8b9422a5dc4f53619e640df99c78d7ea50f265433a888b9c69c',
+    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
+    totp_secret: 'OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'amit.jhingan@indiagully.com': {
+    identifier: 'amit.jhingan@indiagully.com',
+    salt: 'ig-salt-board-amit-2026',
+    hash: '93a39866cc13631cdc12d38c762869938bfcee2a649250c4952bce79ebebd836',
+    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
+    totp_secret: 'BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'atul.rana@indiagully.com': {
+    identifier: 'atul.rana@indiagully.com',
+    salt: 'ig-salt-emp-atul-2026',
+    hash: 'f1868b84e10fb9ba07c183969b669591a82e97f55927cc1ef7fbf8d7bb1d8066',
+    role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
+    totp_secret: 'GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'hr@indiagully.com': {
+    identifier: 'hr@indiagully.com',
+    salt: 'ig-salt-hr-2026',
+    hash: 'b00b260813234b492e7d553c6baf9db49dff4cf30e3260cfb1d841ae1331508f',
+    role: 'Employee', portal: 'employee', dashboard: '/admin/hr',
+    totp_secret: '6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'finance@indiagully.com': {
+    identifier: 'finance@indiagully.com',
+    salt: 'ig-salt-finance-2026',
+    hash: 'bea826a65411a726a511dfe3e9cc22f230e71854a74d923b8967724f98eedad7',
+    role: 'Employee', portal: 'employee', dashboard: '/admin/finance',
+    totp_secret: 'INRLENYXGKG66B4G7PVWZFG7NQLRJHUD',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
+  'legal@indiagully.com': {
+    identifier: 'legal@indiagully.com',
+    salt: 'ig-salt-legal-2026',
+    hash: '255f716a8d4c3476776ed5b2971806991ea67083befba1f311ab255270bb70ab',
+    role: 'Employee', portal: 'employee', dashboard: '/admin/governance',
+    totp_secret: 'CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5',
+    mfa_required: true, demo_account: false, totp_demo_pin: '',
+  },
 }
 
 // ── UserRecord type (unified D1 + USER_STORE) ──────────────────────────────
@@ -461,7 +488,7 @@ type UserRecord = {
  * 2. Falls back to in-memory USER_STORE for local dev / token-pending.
  * Returns null if the user does not exist.
  */
-async function lookupUser(identifier: string, db?: D1Database, env?: Partial<Bindings>): Promise<UserRecord | null> {
+async function lookupUser(identifier: string, db?: D1Database): Promise<UserRecord | null> {
   if (db) {
     try {
       const row = await db.prepare(
@@ -485,13 +512,11 @@ async function lookupUser(identifier: string, db?: D1Database, env?: Partial<Bin
         totp_demo_pin:row.totp_demo_pin || '',
       }
     } catch (e) {
-      console.warn('[lookupUser] D1 error:', e)
-      if (!isDemoMode(env)) {
-        return null
-      }
+      // D1 unavailable (e.g. local build without --local binding) — fall through
+      console.warn('[lookupUser] D1 error, falling back to USER_STORE:', e)
     }
   }
-  if (!isDemoMode(env)) return null
+  // KV / memory fallback
   const u = USER_STORE[identifier.trim()]
   if (!u) return null
   return { ...u, identifier: identifier.trim() }
@@ -592,8 +617,6 @@ function requireSession() {
     }
     c.set('session', session)
     c.set('sessionId', sid)
-    const csrfFailure = await requireCsrfForSessionRequest(c)
-    if (csrfFailure) return csrfFailure
     await next()
   }
 }
@@ -647,8 +670,6 @@ function requireAdmin() {
     if (session.role !== 'Super Admin') return c.json({ error: 'Insufficient permissions', code: 'FORBIDDEN' }, 403)
     c.set('session', session)
     c.set('sessionId', sid)
-    const csrfFailure = await requireCsrfForSessionRequest(c)
-    if (csrfFailure) return csrfFailure
     await next()
   }
 }
@@ -688,10 +709,7 @@ app.post('/auth/login', async (c) => {
     }
 
     const body = await c.req.parseBody()
-    const { portal, identifier, password, otp, csrf } = body as Record<string, string>
-    if (!(await validatePreSessionCSRF(c, csrf))) {
-      return c.html(errorRedirect('/portal', 'Security token expired. Please refresh the login page and try again.'))
-    }
+    const { portal, identifier, password, otp } = body as Record<string, string>
 
     // Input validation — portal must be a known value
     const VALID_PORTALS = ['client', 'employee', 'board']
@@ -706,7 +724,7 @@ app.post('/auth/login', async (c) => {
     }
 
     // Look up user — D1 first, USER_STORE fallback
-    const user = await lookupUser(identifier.trim(), c.env?.DB, c.env)
+    const user = await lookupUser(identifier.trim(), c.env?.DB)
     if (!user || user.portal !== portal) {
       // Intentional vague error — don't leak which field was wrong
       return c.html(errorRedirect(`/portal/${portal}`, 'Invalid credentials.'))
@@ -782,10 +800,7 @@ app.post('/auth/admin', async (c) => {
     }
 
     const body = await c.req.parseBody()
-    const { username, password, totp, csrf } = body as Record<string, string>
-    if (!(await validatePreSessionCSRF(c, csrf))) {
-      return c.html(errorRedirect('/admin', 'Security token expired. Please refresh the login page and try again.'))
-    }
+    const { username, password, totp } = body as Record<string, string>
 
     if (!username || !password || !totp) {
       return c.html(errorRedirect('/admin', 'All fields are required.'))
@@ -794,7 +809,7 @@ app.post('/auth/admin', async (c) => {
       return c.html(errorRedirect('/admin', 'Invalid input.'))
     }
 
-    const adminUser = await lookupUser('superadmin@indiagully.com', c.env?.DB, c.env)
+    const adminUser = await lookupUser('superadmin@indiagully.com', c.env?.DB)
     if (!adminUser) {
       return c.html(errorRedirect('/admin', 'Authentication failed. Please try again.'))
     }
@@ -841,12 +856,6 @@ app.post('/auth/admin', async (c) => {
 app.post('/auth/logout', async (c) => {
   const cookie = c.req.header('Cookie') || ''
   const sessionId = getSessionFromCookie(cookie)
-  if (sessionId) {
-    const csrfOk = await validateCSRFFromSession(c.req.header('X-CSRF-Token') || c.req.header('x-csrf-token') || '', sessionId, c.env?.IG_SESSION_KV)
-    if (!csrfOk) {
-      return c.json({ success: false, error: 'Invalid or missing CSRF token', code: 'BAD_CSRF' }, 403)
-    }
-  }
   let portalDest = 'client'
   if (sessionId) {
     const sd = await kvSessionGet(c.env?.IG_SESSION_KV, sessionId)
@@ -1890,7 +1899,7 @@ app.post('/dpdp/consent', async (c) => {
 // NOTE: /dpdp/rights/request must be registered BEFORE /dpdp/rights/:action
 // to prevent Hono from matching 'request' as the :action param
 // See full implementation at app.post('/dpdp/rights/request') below.
-app.post('/__legacy/dpdp/rights/request', async (c) => {
+app.post('/dpdp/rights/request', async (c) => {
   // Forward to the full K5 implementation
   try {
     const { user_id, request_type, description } =
@@ -2624,38 +2633,20 @@ app.post('/enquiry', async (c) => {
       data = body as Record<string, string>
     }
 
-    const rawType       = sanitiseStr((data as any).type || 'general', 80).toLowerCase()
-    const name          = sanitiseStr((data as any).name, 120)
-    const email         = sanitiseStr((data as any).email, 120)
-    const phone         = sanitiseStr((data as any).phone, 30)
-    const org           = sanitiseStr((data as any).org || (data as any).organisation || (data as any).company || '', 200)
-    const message       = sanitiseStr((data as any).message || (data as any).notes || '', 2000)
-    const type          = (rawType === 'investor_registration' ? 'investor_ir' : rawType || 'general') as 'nda_acceptance' | 'eoi' | 'general' | 'contact' | 'investor_ir' | 'mandate' | 'advisory' | 'horeca' | 'hotel_mgmt' | 'retail'
-    const enquiryTypeLabel = ({
-      general: 'General Enquiry',
-      contact: 'Contact Enquiry',
-      mandate: 'Mandate / Investment Enquiry',
-      advisory: 'Advisory Services Enquiry',
-      horeca: 'HORECA Supply Enquiry',
-      hotel_mgmt: 'Hotel Management / Brand On-Boarding',
-      retail: 'Retail Leasing Advisory',
-      investor_ir: 'Investor Relations Request',
-      investor_registration: 'Investor Registration',
-      nda_acceptance: 'NDA Acceptance',
-      eoi: 'Expression of Interest',
-    } as Record<string, string>)[rawType] || rawType.replace(/[_-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase())
-    const mandate       = sanitiseStr((data as any).mandate || '', 120)
-    const mandateTitle  = sanitiseStr((data as any).mandateTitle || mandate, 200)
-    const mandateValue  = sanitiseStr((data as any).mandateValue || '', 80)
-    const mandateContact     = sanitiseStr((data as any).mandateContact || 'akm@indiagully.com', 120)
-    const mandateContactName = sanitiseStr((data as any).mandateContactName || 'Arun Manikonda', 120)
-    const mandateContactPhone = sanitiseStr((data as any).mandateContactPhone || '+91 98108 89134', 40)
-    const ticketSize    = sanitiseStr((data as any).ticketSize || (data as any).ticket_size || '', 80)
-    const investorType  = sanitiseStr((data as any).investorType || (data as any).investor_type || '', 80)
-    const location      = sanitiseStr((data as any).location || '', 200)
-    const scale         = sanitiseStr((data as any).scale || '', 80)
-    const source        = sanitiseStr((data as any).source || 'website', 80)
-    const vertical      = sanitiseStr((data as any).vertical || (data as any).sectors || '', 200)
+    const name          = sanitiseStr(data.name, 120)
+    const email         = sanitiseStr(data.email, 120)
+    const phone         = sanitiseStr(data.phone, 30)
+    const org           = sanitiseStr(data.org || data.company || '', 200)
+    const message       = sanitiseStr(data.message || '', 2000)
+    const type          = sanitiseStr(data.type || 'general', 80) as 'nda_acceptance' | 'eoi' | 'general'
+    const mandate       = sanitiseStr(data.mandate || '', 120)
+    const mandateTitle  = sanitiseStr(data.mandateTitle || mandate, 200)
+    const mandateValue  = sanitiseStr(data.mandateValue || '', 80)
+    const mandateContact     = sanitiseStr(data.mandateContact || 'akm@indiagully.com', 120)
+    const mandateContactName = sanitiseStr(data.mandateContactName || 'Arun Manikonda', 120)
+    const mandateContactPhone = sanitiseStr(data.mandateContactPhone || '+91 98108 89134', 40)
+    const ticketSize    = sanitiseStr(data.ticketSize || '', 80)
+    const investorType  = sanitiseStr(data.investorType || '', 80)
 
     if (!name || name.length < 2) return c.json({ success: false, error: 'Full name is required (min 2 characters).' }, 400)
     if (!email || !validateEmail(email)) return c.json({ success: false, error: 'A valid email address is required.' }, 400)
@@ -2664,28 +2655,6 @@ app.post('/enquiry', async (c) => {
     const ts  = new Date().toISOString()
 
     const env = (c as any).env
-
-    if (env?.DB) {
-      try {
-        await env.DB.prepare(
-          `INSERT INTO ig_enquiries (ref_number, enquiry_type, name, email, phone, organisation, message, vertical, scale, status, source, created_at, updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?, ?)`
-        ).bind(
-          ref,
-          enquiryTypeLabel,
-          name,
-          email,
-          phone || null,
-          org || null,
-          message || null,
-          vertical || null,
-          scale || ticketSize || null,
-          source,
-          ts,
-          ts,
-        ).run()
-      } catch (_) { /* D1 unavailable — silent */ }
-    }
 
     // Store in KV if available (fire-and-forget, no failure on miss)
     try {
@@ -2739,7 +2708,10 @@ app.post('/enquiry', async (c) => {
     }
 
     // ── GENERAL CONTACT FORM notifications ──────────────────────────────────
-    if (type !== 'eoi' && type !== 'nda_acceptance') {
+    if (type === 'general' || type === 'contact') {
+      const location    = sanitiseStr((data as any).location || '', 200)
+      const scale       = sanitiseStr((data as any).scale   || '', 80)
+      const source      = sanitiseStr((data as any).source  || 'website', 80)
       const contactBody = `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;">
           <div style="background:#0c0c18;padding:24px 32px;border-bottom:3px solid #B8960C;">
@@ -2750,16 +2722,12 @@ app.post('/enquiry', async (c) => {
             <table style="width:100%;border-collapse:collapse;font-size:13px;">
               ${[
                 ['Reference', ref],
-                ['Enquiry Type', enquiryTypeLabel],
                 ['Name', name],
                 ['Email', `<a href="mailto:${email}" style="color:#B8960C;">${email}</a>`],
                 ['Phone', phone || '—'],
                 ['Organisation', org || '—'],
                 ['Location / Property', location || '—'],
                 ['Deal Scale', scale || '—'],
-                ['Investor Type', investorType || '—'],
-                ['Ticket Size', ticketSize || '—'],
-                ['Vertical / Sector Interest', vertical || '—'],
                 ['Source', source],
                 ['Submitted', new Date(ts).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })],
               ].map(([k, v]) => `
@@ -2811,7 +2779,7 @@ app.post('/enquiry', async (c) => {
       sendEmail(env, {
         to: 'info@indiagully.com',
         toName: 'India Gully Team',
-        subject: `[${enquiryTypeLabel}] ${name} — ${org || 'Individual'} · ${ref}`,
+        subject: `[New Enquiry] ${name} — ${org || 'Individual'} · ${ref}`,
         html: contactBody,
         replyTo: email,
       })
@@ -2819,28 +2787,10 @@ app.post('/enquiry', async (c) => {
       sendEmail(env, {
         to: 'akm@indiagully.com',
         toName: 'Arun Manikonda',
-        subject: `[${enquiryTypeLabel}] ${name} · ${ref}`,
+        subject: `[Contact Form] ${name} · ${ref}`,
         html: contactBody,
         replyTo: email,
       })
-      if (type === 'horeca' || type === 'hotel_mgmt') {
-        sendEmail(env, {
-          to: 'pavan@indiagully.com',
-          toName: 'Pavan Manikonda',
-          subject: `[${enquiryTypeLabel}] ${name} · ${ref}`,
-          html: contactBody,
-          replyTo: email,
-        })
-      }
-      if (type === 'retail') {
-        sendEmail(env, {
-          to: 'amit.jhingan@indiagully.com',
-          toName: 'Amit Jhingan',
-          subject: `[${enquiryTypeLabel}] ${name} · ${ref}`,
-          html: contactBody,
-          replyTo: email,
-        })
-      }
       // Confirmation to submitter
       sendEmail(env, {
         to: email,
@@ -2859,7 +2809,7 @@ app.post('/enquiry', async (c) => {
         ? `NDA acceptance recorded for ${mandateTitle}. India Gully team notified.`
         : type === 'eoi'
         ? `Expression of Interest submitted for ${mandateTitle}. Advisory team notified.`
-        : `${enquiryTypeLabel} received. Our leadership team will respond within 24 business hours.`,
+        : 'Enquiry received. Our leadership team will respond within 24 business hours.',
       submitted_at: ts,
       response_eta: '24 hours',
       status: 'Submitted',
@@ -15539,7 +15489,7 @@ app.post('/governance/meetings', requireSession(), requireRole(['Super Admin', '
 })
 
 // Governance: GET Meetings
-app.get('/__legacy/governance/meetings', requireSession(), requireRole(['Super Admin', 'Director', 'KMP'], ['admin', 'board']), async (c) => {
+app.get('/governance/meetings', requireSession(), requireRole(['Super Admin', 'Director', 'KMP'], ['admin', 'board']), async (c) => {
   const env = (c as any).env
   if (env?.DB) {
     try {
@@ -16056,7 +16006,7 @@ app.post('/admin/audit', requireSession(), async (c) => {
 
 // ── CMS ───────────────────────────────────────────────────────────────────────
 
-app.put('/__legacy/cms/pages/:id', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+app.put('/cms/pages/:id', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const id = c.req.param('id')
   const body = await c.req.json() as Record<string,unknown>
   return c.json({ success: true, id, version: 2, saved_at: new Date().toISOString(), ...body })
@@ -16197,7 +16147,7 @@ app.get('/cms/assets', requireSession(), requireRole(['Super Admin'], ['admin'])
   })
 })
 
-app.delete('/__legacy/cms/assets/:name', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+app.delete('/cms/assets/:name', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const name = c.req.param('name')
   return c.json({ success: true, deleted: name })
 })
@@ -16925,7 +16875,7 @@ app.post('/clients', requireSession(), requireRole(['Super Admin'], ['admin']), 
 })
 
 // ── DOCUMENTS ─────────────────────────────────────────────────────────────────
-app.get('/__legacy/documents', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
+app.get('/documents', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   try {
     const db = (c as any).env?.DB
     if (db) {
@@ -17422,22 +17372,21 @@ app.post('/track', async (c) => {
       id:     'EVT-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
     }
     const env = (c as any).env
-    const analyticsKv = env?.IG_AUDIT_KV || env?.KV
-    if (analyticsKv) {
+    if (env && env.KV) {
       // Store individual event
-      await analyticsKv.put(`analytics:event:${event.id}`, JSON.stringify(event), { expirationTtl: 60 * 60 * 24 * 90 }) // 90 days
+      await env.KV.put(`analytics:event:${event.id}`, JSON.stringify(event), { expirationTtl: 60 * 60 * 24 * 90 }) // 90 days
       // Increment page counter
       const countKey = `analytics:count:${event.page.replace(/[^a-zA-Z0-9\-_\/]/g, '_').slice(0,100)}`
-      const existing = await analyticsKv.get(countKey)
+      const existing = await env.KV.get(countKey)
       const count = existing ? (parseInt(existing) + 1) : 1
-      await analyticsKv.put(countKey, String(count), { expirationTtl: 60 * 60 * 24 * 365 })
+      await env.KV.put(countKey, String(count), { expirationTtl: 60 * 60 * 24 * 365 })
       // Increment daily counter
       const day = event.ts.slice(0, 10)
       const dayKey = `analytics:daily:${day}`
-      const dayVal = await analyticsKv.get(dayKey)
+      const dayVal = await env.KV.get(dayKey)
       const dayCount = dayVal ? JSON.parse(dayVal) : { date: day, pageviews: 0, events: 0 }
       if (event.type === 'pageview') dayCount.pageviews++; else dayCount.events++
-      await analyticsKv.put(dayKey, JSON.stringify(dayCount), { expirationTtl: 60 * 60 * 24 * 400 })
+      await env.KV.put(dayKey, JSON.stringify(dayCount), { expirationTtl: 60 * 60 * 24 * 400 })
     }
     return c.json({ success: true, id: event.id })
   } catch { return c.json({ success: false }, 200) } // never fail silently
@@ -17446,7 +17395,6 @@ app.post('/track', async (c) => {
 // Analytics dashboard data (admin only)
 app.get('/analytics', requireSession(), async (c) => {
   const env = (c as any).env
-  const analyticsKv = env?.IG_AUDIT_KV || env?.KV
   // Build stats from KV
   const pages = ['/','listings','/listings/prism-tower-gurgaon','/listings/belcibo-hospitality-platform',
     '/listings/hotel-rajshree-chandigarh','/listings/welcomheritage-santa-roza-kasauli',
@@ -17454,10 +17402,10 @@ app.get('/analytics', requireSession(), async (c) => {
     '/listings/ambience-tower-north-delhi','/listings/sawasdee-jlg-noida',
     '/insights','/horeca','/valuation','/contact','/about']
   const pageCounts: Record<string, number> = {}
-  if (analyticsKv) {
+  if (env && env.KV) {
     for (const p of pages) {
       const key = `analytics:count:${p.replace(/[^a-zA-Z0-9\-_\/]/g, '_').slice(0,100)}`
-      const val = await analyticsKv.get(key)
+      const val = await env.KV.get(key)
       pageCounts[p] = val ? parseInt(val) : 0
     }
     // Daily counts — last 7 days
@@ -17465,7 +17413,7 @@ app.get('/analytics', requireSession(), async (c) => {
     for (let i = 6; i >= 0; i--) {
       const d = new Date(); d.setDate(d.getDate() - i)
       const day = d.toISOString().slice(0, 10)
-      const val = await analyticsKv.get(`analytics:daily:${day}`)
+      const val = await env.KV.get(`analytics:daily:${day}`)
       daily.push(val ? JSON.parse(val) : { date: day, pageviews: 0, events: 0 })
     }
     const totalViews = Object.values(pageCounts).reduce((a, b) => a + b, 0)

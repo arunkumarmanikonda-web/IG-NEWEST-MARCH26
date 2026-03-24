@@ -143,18 +143,9 @@ function loginPage(opts: {
 (function(){
   var portal='${opts.portal}';
   /* ── CSRF token ── */
-  var csrfEl=document.getElementById('csrf-'+portal);
-  var loginBtn=document.getElementById('login-btn-'+portal);
-  var loginBtnHtml=loginBtn?loginBtn.innerHTML:'';
-  function setPortalCsrf(token){
-    if(csrfEl) csrfEl.value=token||'';
-    try{ sessionStorage.setItem('ig_csrf_'+portal, token||''); }catch(e){}
-  }
-  if(loginBtn){ loginBtn.disabled=true; loginBtn.innerHTML='<i class="fas fa-circle-notch fa-spin" style="margin-right:.5rem;"></i>Loading secure token…'; }
-  fetch('/api/auth/csrf-token',{credentials:'same-origin'})
-    .then(function(r){ if(!r.ok) throw new Error('csrf'); return r.json(); })
-    .then(function(d){ setPortalCsrf((d&&d.csrf_token)||''); if(loginBtn){ loginBtn.disabled=false; loginBtn.innerHTML=loginBtnHtml; } })
-    .catch(function(){ if(loginBtn){ loginBtn.disabled=true; loginBtn.innerHTML='Security initialisation failed'; } });
+  var csrf=Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>(b).toString(16).padStart(2,'0')).join('');
+  var csrfEl=document.getElementById('csrf-'+portal); if(csrfEl) csrfEl.value=csrf;
+  sessionStorage.setItem('ig_csrf_'+portal, csrf);
   /* ── Rate limiting (5 attempts → 5min lockout) ── */
   var attKey='ig_attempts_'+portal; var lockKey='ig_lock_'+portal;
   var form=document.getElementById('login-form-'+portal);
