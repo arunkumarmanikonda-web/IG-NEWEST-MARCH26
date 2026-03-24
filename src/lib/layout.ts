@@ -89,6 +89,8 @@ tailwind.config = {
 </script>
 <!-- Load Tailwind CDN async — runs after config object is set above -->
 <script src="https://cdn.tailwindcss.com" defer></script>
+<!-- JS capability flag: lets CSS keep content visible if later scripts fail -->
+<script>document.documentElement.classList.add('js');</script>
 <!-- DARK MODE: early init — defaults to LIGHT; only switches to dark if user explicitly enabled it -->
 <script>
 (function(){
@@ -881,7 +883,7 @@ textarea.ig-input{resize:vertical;min-height:140px}
 }
 @media(prefers-reduced-motion:reduce){
   .ticker-tr,.marquee-track{animation:none!important;}
-  .reveal,.reveal-l,.reveal-r,.reveal-scale{opacity:1!important;transform:none!important;}
+  .reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast{opacity:1!important;transform:none!important;}
 }
 @media(max-width:640px){
   .mob-img-full{width:100%!important;height:240px!important;object-fit:cover!important;}
@@ -1242,17 +1244,19 @@ body{overflow-x:hidden;}
 @media(max-width:560px){#trackRecord{grid-template-columns:1fr;}}
 
 /* ── Scroll-reveal ────────────────────────────── */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal.visible{opacity:1;transform:translateY(0);}
-.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal-l.visible{opacity:1;transform:translateX(0);}
-.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal-r.visible{opacity:1;transform:translateX(0);}
-.reveal-scale{opacity:0;transform:scale(.95);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
-.reveal-scale.visible{opacity:1;transform:scale(1);}
+/* Default state stays visible so content never disappears if a later script fails. */
+.reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast{opacity:1;transform:none;}
+html.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+html.js .reveal.visible{opacity:1;transform:translateY(0);}
+html.js .reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+html.js .reveal-l.visible{opacity:1;transform:translateX(0);}
+html.js .reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+html.js .reveal-r.visible{opacity:1;transform:translateX(0);}
+html.js .reveal-scale{opacity:0;transform:scale(.95);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
+html.js .reveal-scale.visible{opacity:1;transform:scale(1);}
 /* Faster reveal variant */
-.reveal-fast{opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);}
-.reveal-fast.visible{opacity:1;transform:translateY(0);}
+html.js .reveal-fast{opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);}
+html.js .reveal-fast.visible{opacity:1;transform:translateY(0);}
 
 /* ── Listing detail ──────────────────────────── */
 .listing-detail-grid{display:grid;grid-template-columns:1fr 390px;gap:4rem;align-items:start;}
