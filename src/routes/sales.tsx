@@ -222,7 +222,7 @@ app.get('/leads', (c) => {
       <div><label class="ig-label">Company Name *</label><input type="text" id="nl-company" class="ig-input" style="font-size:.82rem;" placeholder="Company / Individual"></div>
       <div><label class="ig-label">Contact Person *</label><input type="text" id="nl-contact" class="ig-input" style="font-size:.82rem;" placeholder="Full name"></div>
       <div><label class="ig-label">Email *</label><input type="email" id="nl-email" class="ig-input" style="font-size:.82rem;" placeholder="contact@company.com"></div>
-      <div><label class="ig-label">Phone</label><input type="text" id="nl-phone" class="ig-input" style="font-size:.82rem;" placeholder="Direct line or mobile"></div>
+      <div><label class="ig-label">Phone</label><input type="text" id="nl-phone" class="ig-input" style="font-size:.82rem;" placeholder="+91 XXXXX XXXXX"></div>
       <div><label class="ig-label">Vertical</label><select id="nl-vert" class="ig-input" style="font-size:.82rem;"><option>Real Estate</option><option>Retail</option><option>Hospitality</option><option>Entertainment</option><option>HORECA</option><option>Debt & Special</option></select></div>
       <div><label class="ig-label">Source</label><select id="nl-src" class="ig-input" style="font-size:.82rem;"><option>Website</option><option>Referral</option><option>LinkedIn</option><option>Event</option><option>Cold Call</option><option>Other</option></select></div>
       <div><label class="ig-label">Estimated Value (₹)</label><input type="text" id="nl-val" class="ig-input" style="font-size:.82rem;" placeholder="e.g. 2,50,00,000"></div>
@@ -686,7 +686,7 @@ app.get('/pipeline', (c) => {
 // ── ENGAGEMENTS ───────────────────────────────────────────────────────────────
 app.get('/engagements', (c) => {
   const engagements = [
-    {id:'ENG-001',client:'Jaipur Heritage Holdings',   title:'Advisory Retainer 2026',       vertical:'Real Estate',  start:'01 Jan 2026',end:'31 Dec 2026',value:'₹6.0 Cr',status:'Active',   progress:25,pm:'Amit Jhingan'},
+    {id:'ENG-001',client:'Demo Client Corp',   title:'Advisory Retainer 2026',       vertical:'Real Estate',  start:'01 Jan 2026',end:'31 Dec 2026',value:'₹6.0 Cr',status:'Active',   progress:25,pm:'Amit Jhingan'},
     {id:'ENG-002',client:'Rajasthan Hotels',   title:'Hotel Pre-Opening PMC',         vertical:'Hospitality',  start:'15 Feb 2026',end:'14 Feb 2027',value:'₹45 L',  status:'Active',   progress:45,pm:'Arun Manikonda'},
     {id:'ENG-003',client:'Entertainment Vent.',title:'Entertainment Feasibility',     vertical:'Entertainment',start:'01 Mar 2025',end:'31 Aug 2026',value:'₹4.5 Cr',status:'Active',   progress:20,pm:'Arun Manikonda'},
     {id:'ENG-004',client:'Mumbai Mall Corp',   title:'Retail Leasing Mandate',        vertical:'Real Estate',  start:'01 Dec 2024',end:'30 Nov 2026',value:'₹2.1 Cr',status:'Active',   progress:75,pm:'Amit Jhingan'},
@@ -808,10 +808,10 @@ app.get('/analytics', (c) => {
   <!-- KPI Grid -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Revenue Won FY 2025-26',     value:'₹18.5 Cr', sub:'vs ₹12.2 Cr FY 2024-25 (+51%)', c:'#16a34a'},
+      {label:'Revenue Won FY25',     value:'₹18.5 Cr', sub:'vs ₹12.2 Cr FY24 (+51%)', c:'#16a34a'},
       {label:'Pipeline Value',       value:'₹47.2 Cr', sub:'Weighted: ₹28.3 Cr',      c:'#B8960C'},
       {label:'Conversion Rate',      value:'14%',       sub:'6 won of 42 enquiries',   c:'#2563eb'},
-      {label:'Avg Deal Size',        value:'₹3.1 Cr',   sub:'Up from ₹2.0 Cr FY 2024-25',   c:'#7c3aed'},
+      {label:'Avg Deal Size',        value:'₹3.1 Cr',   sub:'Up from ₹2.0 Cr FY24',   c:'#7c3aed'},
     ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1.1rem;">
       <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.4rem;">${s.label}</div>
       <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:${s.c};line-height:1;margin-bottom:.25rem;">${s.value}</div>
@@ -823,7 +823,7 @@ app.get('/analytics', (c) => {
     <!-- Revenue by Vertical -->
     <div style="background:#fff;border:1px solid var(--border);">
       <div style="padding:.875rem 1.25rem;border-bottom:1px solid var(--border);">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Revenue by Vertical — FY 2025-26</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Revenue by Vertical — FY 2025</h3>
       </div>
       <div style="padding:1.25rem;">
         ${[
@@ -922,7 +922,7 @@ app.get('/commission', (c) => {
   <!-- Commission KPIs -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Total Earned FY 2025-26',     value:'₹42.6L',  sub:'Across all employees',  c:'#16a34a'},
+      {label:'Total Earned FY25',     value:'₹42.6L',  sub:'Across all employees',  c:'#16a34a'},
       {label:'Pending Payout',        value:'₹8.2L',   sub:'Awaiting invoice close', c:'#d97706'},
       {label:'Avg Commission Rate',   value:'2.8%',    sub:'Of deal value',          c:'#B8960C'},
       {label:'Deals Commissioned',    value:'6',       sub:'Closed this FY',         c:'#7c3aed'},
@@ -947,7 +947,7 @@ app.get('/commission', (c) => {
           {type:'Retail & Leasing',        ret:'4%',  succ:'2.0%', min:'₹2 Cr',   clawback:'3 mo', split:'80% lead / 20% support'},
           {type:'Debt & Special Situations',ret:'3%', succ:'1.5%', min:'₹10 Cr',  clawback:'12 mo',split:'60% lead / 40% support'},
           {type:'Entertainment Advisory',  ret:'5%',  succ:'3.5%', min:'₹1 Cr',   clawback:'3 mo', split:'75% lead / 25% support'},
-          {type:'HORECA Solutions',        ret:'8%',  succ:'-',    min:'₹25L',    clawback:'1 mo', split:'100% account manager'},
+          {type:'HORECA Solutions',        ret:'8%',  succ:'—',    min:'₹25L',    clawback:'1 mo', split:'100% account manager'},
         ].map(r=>`<tr>
           <td style="font-weight:600;font-size:.82rem;">${r.type}</td>
           <td style="color:#2563eb;font-weight:600;">${r.ret}</td>
@@ -963,7 +963,7 @@ app.get('/commission', (c) => {
   <!-- Commission Ledger -->
   <div style="background:#fff;border:1px solid var(--border);margin-bottom:1.5rem;">
     <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Commission Ledger — FY 2025-26</h3>
+      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Commission Ledger — FY 2024-25</h3>
       <div style="display:flex;gap:.5rem;">
         <button onclick="igToast('Commission ledger exported to Excel','success')" style="background:none;border:1px solid var(--border);padding:.3rem .75rem;font-size:.68rem;cursor:pointer;color:var(--gold);"><i class="fas fa-file-excel" style="margin-right:.3rem;"></i>Export</button>
         <button onclick="togglePanel('new-comm-panel')" style="background:#1E1E1E;color:#fff;border:none;padding:.35rem .75rem;font-size:.68rem;font-weight:600;cursor:pointer;"><i class="fas fa-plus" style="margin-right:.3rem;"></i>Manual Entry</button>

@@ -21,7 +21,7 @@ app.get('/', (c) => {
   )
 
   // Portfolio summary stats
-  const totalPipeline = '₹1,165 Cr+'
+  const totalPipeline = '₹2,100 Cr+'
   const sectors = ['Real Estate', 'Hospitality', 'Retail', 'Entertainment', 'Debt & Special']
 
   const content = `
@@ -33,7 +33,7 @@ app.get('/', (c) => {
     <div class="gr-c"></div>
     <p class="eyebrow-lt" style="margin-bottom:1.25rem;">Investor Relations</p>
     <h1 class="h2-lt" style="max-width:720px;margin:0 auto 1.5rem;">Institutional-Grade Mandates.<br>Transaction-Backed Advisory.</h1>
-    <p style="font-size:1rem;line-height:1.9;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto 2.5rem;">India Gully is India's premier multi-vertical advisory firm — advising on ₹1,165 Cr+ of active mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals.</p>
+    <p style="font-size:1rem;line-height:1.9;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto 2.5rem;">India Gully is India's premier multi-vertical advisory firm — advising on ₹2,100 Cr+ of active mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals.</p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
       <a href="#pipeline" class="btn btn-g" style="min-width:200px;justify-content:center;">View Active Pipeline</a>
       <a href="#nda-request" class="btn btn-go" style="min-width:200px;justify-content:center;border-color:rgba(184,150,12,.4);color:rgba(184,150,12,.9);">Request Information</a>
@@ -46,7 +46,7 @@ app.get('/', (c) => {
   <div class="wrap">
     <div style="display:grid;grid-template-columns:repeat(5,1fr);border-left:1px solid rgba(255,255,255,.07);">
       ${[
-        { n: '₹1,165 Cr+', l: 'Active Pipeline',     sub: 'Across all verticals' },
+        { n: '₹2,100 Cr+', l: 'Active Pipeline',     sub: 'Across all verticals' },
         { n: '₹2,000 Cr+', l: 'Transactions Advised', sub: 'Since inception 2017' },
         { n: '15+',         l: 'Hotel Mandates',       sub: 'Pre-opening & acquisition' },
         { n: '8',           l: 'Active Mandates',       sub: 'Open to qualified investors' },
@@ -201,7 +201,7 @@ app.get('/', (c) => {
           deal:'Hotel Brand Pre-Openings & PMC',
           location:'Pan-India — Noida, Chandigarh, Delhi, Hosur',
           co:'Fern · Regenta · Cygnett · Radisson · Park Inn',
-          year:'2017–26',
+          year:'2017-26',
           icon:'hotel',
           color:'#065F46',
           badge:'Ongoing Portfolio',
@@ -212,7 +212,7 @@ app.get('/', (c) => {
           deal:'Premium F&B & Retail Leasing — Khubani at Hyatt Andaz',
           location:'Hyatt Andaz · Gardens Galleria · AIPL Joy Street',
           co:'30+ brand placements including Khubani (42,000 sq ft)',
-          year:'2019–26',
+          year:'2019-26',
           icon:'store',
           color:'#7C3AED',
           badge:'Completed',
@@ -223,7 +223,7 @@ app.get('/', (c) => {
           deal:'End-to-End HORECA Procurement',
           location:'Pan-India',
           co:'Mahindra Holidays · Accor Hotels · CGH Earth',
-          year:'2020–26',
+          year:'2020-26',
           icon:'utensils',
           color:'#B8960C',
           badge:'Ongoing Supply',
@@ -234,7 +234,7 @@ app.get('/', (c) => {
           deal:'Distressed Asset Resolution & Debt Advisory',
           location:'Delhi NCR · Mumbai',
           co:'Structured debt solutions for hospitality & RE assets',
-          year:'2023–26',
+          year:'2023-26',
           icon:'balance-scale',
           color:'#DC2626',
           badge:'Active Advisory',
@@ -356,10 +356,10 @@ app.get('/', (c) => {
             <select name="ticket_size" class="ig-inp">
               <option value="">— Prefer not to say —</option>
               <option>Below ₹10 Cr</option>
-              <option>₹10 Cr – ₹50 Cr</option>
-              <option>₹50 Cr – ₹100 Cr</option>
-              <option>₹100 Cr – ₹250 Cr</option>
-              <option>₹250 Cr – ₹500 Cr</option>
+              <option>₹10 Cr - ₹50 Cr</option>
+              <option>₹50 Cr - ₹100 Cr</option>
+              <option>₹100 Cr - ₹250 Cr</option>
+              <option>₹250 Cr - ₹500 Cr</option>
               <option>Above ₹500 Cr</option>
             </select>
           </div>
@@ -439,7 +439,7 @@ function filterInvest(sector) {
 </script>
 `
   return c.html(layout('Investor Relations — Active Pipeline & Mandates', content, {
-    description: 'India Gully Investor Relations — ₹1,165 Cr+ active advisory pipeline across Real Estate, Hospitality, Retail, Entertainment and Debt. Institutional-grade mandates. Request Information Memorandum.',
+    description: 'India Gully Investor Relations — ₹2,100 Cr+ active advisory pipeline across Real Estate, Hospitality, Retail, Entertainment and Debt. Institutional-grade mandates. Request Information Memorandum.',
     canonical: 'https://india-gully.pages.dev/invest',
     ogImage: 'https://india-gully.pages.dev/static/og-invest.jpg',
     jsonLd: {

@@ -1,6 +1,5 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { serveStatic } from 'hono/cloudflare-workers'
 
 // Route imports
 import homeRoute from './routes/home'
@@ -25,7 +24,10 @@ import investRoute from './routes/invest'
 import pipelineRoute from './routes/pipeline'
 import { layout } from './lib/layout'
 
-const app = new Hono()
+// Cloudflare Pages ASSETS binding type
+type CFPagesEnv = { ASSETS: { fetch: (req: Request) => Promise<Response> } }
+
+const app = new Hono<{ Bindings: CFPagesEnv }>()
 
 // ── I1 PT-004: PER-REQUEST CSP NONCE ─────────────────────────────────────────
 // Generates a cryptographically random nonce for every request and sets a
@@ -59,19 +61,33 @@ app.use('*', async (c, next) => {
       `https://fonts.googleapis.com https://cdn.jsdelivr.net; ` +
     `font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; ` +
     `img-src 'self' data: https: https://api.qrserver.com; ` +
-    `connect-src 'self' https://india-gully.pages.dev; ` +
+    `connect-src 'self' https://india-gully.pages.dev https://indiagully.com; ` +
     `frame-ancestors 'none'; base-uri 'self'; form-action 'self';`
   )
 })
 
 app.use('/api/*', cors({
-  origin: ['https://india-gully.pages.dev', 'http://localhost:3000'],
+  origin: ['https://india-gully.pages.dev', 'https://indiagully.com', 'http://localhost:3000'],
   allowMethods: ['GET', 'POST', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'X-CSRF-Token', 'Authorization'],
   credentials: true,
 }))
-app.use('/static/*', serveStatic({ root: './' }))
-app.use('/assets/*', serveStatic({ root: './' }))
+// ── STATIC ASSETS: delegate to Cloudflare Pages ASSETS binding ──────────────
+// In Cloudflare Pages + _worker.js, static files (dist/assets/, dist/static/)
+// must be served via env.ASSETS.fetch() — NOT via serveStatic({ root: './' })
+// which is a Workers Sites API (uses __STATIC_CONTENT KV) and does not work
+// with Pages. Without this handler the Worker was returning 404 for all logo
+// and image requests because serveStatic found nothing in the bundle.
+app.use('/assets/*', async (c) => {
+  const assets = (c.env as any)?.ASSETS
+  if (assets) return assets.fetch(c.req.raw)
+  return new Response('Asset not found', { status: 404 })
+})
+app.use('/static/*', async (c) => {
+  const assets = (c.env as any)?.ASSETS
+  if (assets) return assets.fetch(c.req.raw)
+  return new Response('Static file not found', { status: 404 })
+})
 
 // ── LEGAL PAGES ───────────────────────────────────────────────────────────────
 function legalPage(title: string, content: string) {
@@ -174,7 +190,7 @@ app.get('/legal/disclaimer', (c) => c.html(legalPage('Disclaimer', `
 
 // ── SEO: sitemap.xml ─────────────────────────────────────────────────────────
 app.get('/sitemap.xml', (c) => {
-  const BASE = 'https://india-gully.pages.dev'
+  const BASE = 'https://indiagully.com'
   const now = new Date().toISOString().split('T')[0]
 
   const staticPages = [
@@ -240,7 +256,7 @@ ${insightIds.map(id => `  <url>
 
 // ── SEO: robots.txt ──────────────────────────────────────────────────────────
 app.get('/robots.txt', (c) => {
-  const BASE = 'https://india-gully.pages.dev'
+  const BASE = 'https://indiagully.com'
   return c.text(
     `User-agent: *\nAllow: /\nDisallow: /portal/\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: ${BASE}/sitemap.xml\n`,
     200,

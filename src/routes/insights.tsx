@@ -39,7 +39,7 @@ const ARTICLES = [
 <h2>1. The Hybrid Work Structural Shift</h2>
 <p>India's corporate occupier base has stabilised at a <strong>3.2-day average office week</strong> — a figure that has remained unchanged since Q2 2024. This equilibrium is driving a fundamental rethinking of space allocation:</p>
 <ul>
-  <li><strong>Densification fatigue</strong>: Occupiers are reversing the open-plan squeeze of 2015–2019. Average workspace per employee has risen from 80 sq ft to 110 sq ft in Grade-A developments.</li>
+  <li><strong>Densification fatigue</strong>: Occupiers are reversing the open-plan squeeze of 2015-2019. Average workspace per employee has risen from 80 sq ft to 110 sq ft in Grade-A developments.</li>
   <li><strong>Experience premium</strong>: 78% of India's top 200 companies now have formal employee experience mandates, translating into budget for higher-quality, hospitality-grade work environments.</li>
   <li><strong>Location recalibration</strong>: CBD and Grade-A suburban micro-markets are outperforming peripheral business parks on both occupancy and rental growth.</li>
 </ul>
@@ -53,25 +53,25 @@ const ARTICLES = [
   <li>High-quality landscaped terraces and break-out spaces</li>
   <li>Premium hotel-standard toilet and locker facilities</li>
 </ul>
-<p>The incremental construction cost of these specifications runs at ₹180–250 per sq ft over baseline — recoverable through a 12–18% rental premium over the project lifecycle.</p>
+<p>The incremental construction cost of these specifications runs at ₹180-250 per sq ft over baseline — recoverable through a 12-18% rental premium over the project lifecycle.</p>
 
 <h2>3. Mixed-Use as Value Creator</h2>
-<p>Our analysis of 14 recent commercial transactions confirms that mixed-use schemes (office + hospitality + retail) achieve 22–35% higher capital values per sq ft versus standalone commercial. The operating hotel component, even at modest 70% occupancy, generates yield on cost of 8.5–11.5% in Tier-1 cities.</p>
+<p>Our analysis of 14 recent commercial transactions confirms that mixed-use schemes (office + hospitality + retail) achieve 22-35% higher capital values per sq ft versus standalone commercial. The operating hotel component, even at modest 70% occupancy, generates yield on cost of 8.5-11.5% in Tier-1 cities.</p>
 <p>Key cities showing the strongest mixed-use office-hospitality convergence in our pipeline: <strong>Delhi NCR (Gurugram, Aerocity), Hyderabad (HITEC City), Bengaluru (Whitefield)</strong>.</p>
 
 <h2>4. Investment Thesis for 2026</h2>
 <p>India Gully recommends a <strong>hospitality-anchored mixed-use strategy</strong> for Grade-A commercial development in 2026, underpinned by:</p>
 <ol>
-  <li>Positioning hotel component (100–180 keys) as the amenity anchor, not a separate P&L</li>
+  <li>Positioning hotel component (100-180 keys) as the amenity anchor, not a separate P&L</li>
   <li>Securing food and beverage brand partners at pre-commitment stage</li>
   <li>Designing for flexibility: floors convertible between office, serviced apartment and hotel use</li>
-  <li>Partnering with experience operators (co-working, managed offices) for 15–25% of GLA</li>
+  <li>Partnering with experience operators (co-working, managed offices) for 15-25% of GLA</li>
 </ol>
 
 <h2>5. Market Outlook by City</h2>
-<p><strong>Delhi NCR</strong>: Aerocity and Central Delhi corridors are commanding ₹8,500–10,500 per sq ft for hospitality-grade office. Demand driven by MNCs, PSUs and financial services.</p>
-<p><strong>Mumbai (BKC)</strong>: Premium plateaued at ₹22,000–28,000 per sq ft for Grade-A. Mixed-use with boutique hotel commands 18% premium; supply constrained.</p>
-<p><strong>Bengaluru (Whitefield/ORR)</strong>: IT sector-led demand recovery. New supply incorporating hospitality amenities is pre-leased 12–18 months in advance.</p>
+<p><strong>Delhi NCR</strong>: Aerocity and Central Delhi corridors are commanding ₹8,500-10,500 per sq ft for hospitality-grade office. Demand driven by MNCs, PSUs and financial services.</p>
+<p><strong>Mumbai (BKC)</strong>: Premium plateaued at ₹22,000-28,000 per sq ft for Grade-A. Mixed-use with boutique hotel commands 18% premium; supply constrained.</p>
+<p><strong>Bengaluru (Whitefield/ORR)</strong>: IT sector-led demand recovery. New supply incorporating hospitality amenities is pre-leased 12-18 months in advance.</p>
 <p><strong>Hyderabad</strong>: Strong government support for IT-hospitality mixed-use. Land cost advantage enables better yield; recommended priority market for 2026.</p>
 
 <h2>Conclusion</h2>
@@ -93,7 +93,7 @@ const ARTICLES = [
 
 <h2>The Six Regulatory Layers</h2>
 <h3>Layer 1: Town Planning & Land Use</h3>
-<p>Entertainment destinations require land classified for <strong>Commercial / Public-Semi-Public (PSP)</strong> use under the relevant Development Control Regulations (DCR). In many states, a change-of-use (CoU) or special zone designation is required. Timeline: 6–24 months depending on state and political environment.</p>
+<p>Entertainment destinations require land classified for <strong>Commercial / Public-Semi-Public (PSP)</strong> use under the relevant Development Control Regulations (DCR). In many states, a change-of-use (CoU) or special zone designation is required. Timeline: 6-24 months depending on state and political environment.</p>
 <p>Key states with progressive entertainment zone policies: Maharashtra (integrated entertainment zones under D-MRT corridor), Rajasthan (tourism and entertainment special areas), Uttar Pradesh (film city and entertainment destination policy).</p>
 
 <h3>Layer 2: Fire Safety & Building Permits</h3>
@@ -146,24 +146,24 @@ const ARTICLES = [
 <h2>The Problem: Vendor Fragmentation</h2>
 <p>The core challenge in Tier 2 HORECA procurement is <strong>vendor fragmentation</strong>. Unlike metro markets where multiple specialist suppliers compete for hotel contracts, Tier 2 cities typically have:</p>
 <ul>
-  <li>1–3 FF&E suppliers with limited hospitality-grade inventory</li>
+  <li>1-3 FF&E suppliers with limited hospitality-grade inventory</li>
   <li>No specialist OS&E (Operating Supplies and Equipment) distributors</li>
   <li>Limited kitchen equipment service networks</li>
   <li>Fragmented linen and uniform supply, often requiring metro-based procurement</li>
   <li>Cold chain infrastructure gaps for perishable F&B supplies</li>
 </ul>
-<p>The result: pre-opening procurement costs in Tier 2 run 18–25% higher than equivalent metro specifications, largely driven by logistics, handling, and the absence of local competitive pricing.</p>
+<p>The result: pre-opening procurement costs in Tier 2 run 18-25% higher than equivalent metro specifications, largely driven by logistics, handling, and the absence of local competitive pricing.</p>
 
 <h2>India Gully's Procurement Framework</h2>
 <p>Based on 15+ hotel supply mandates, India Gully has developed a <strong>Hub-and-Spoke Procurement Model</strong> for Tier 2 hotel pre-openings:</p>
 
-<h3>Phase 1: Specification and Vendor Identification (Months 1–3)</h3>
+<h3>Phase 1: Specification and Vendor Identification (Months 1-3)</h3>
 <p>Working from brand standards, we develop a <strong>master SKU list</strong> covering all FF&E, OS&E, kitchen, linen, and amenities categories. For each SKU, we identify three supplier tiers: metro-based specialists, regional distributors, and local alternatives. This three-tier approach ensures resilience against single-vendor failure.</p>
 
-<h3>Phase 2: Consolidated Procurement and Logistics (Months 4–8)</h3>
+<h3>Phase 2: Consolidated Procurement and Logistics (Months 4-8)</h3>
 <p>India Gully aggregates orders across multiple hotel pre-openings to achieve <strong>volume-based pricing</strong>. Our vendor network of 50+ qualified suppliers means we can negotiate consolidated pricing even for a single 80-key hotel. Logistics coordination — critical in hilly or remotely-located properties — is handled through our logistics partners with experience in last-mile delivery to difficult locations.</p>
 
-<h3>Phase 3: Delivery, Snagging, and Handover (Months 8–11)</h3>
+<h3>Phase 3: Delivery, Snagging, and Handover (Months 8-11)</h3>
 <p>On-site receiving, inspection against specification, snagging resolution, and completion certificate issuance. India Gully's site teams are present at all major deliveries to ensure brand standard compliance before handover.</p>
 
 <h2>Cold Chain: The Critical Gap</h2>
@@ -175,7 +175,7 @@ const ARTICLES = [
   <li><strong>500+ SKUs</strong> in our verified product catalogue</li>
   <li><strong>₹50 Cr+</strong> procurement managed across 15+ hotel properties</li>
   <li><strong>50+ vendors</strong> in our qualified supply network</li>
-  <li><strong>98.2% on-time delivery rate</strong> across 2024–25 mandates</li>
+  <li><strong>98.2% on-time delivery rate</strong> across 2024-25 mandates</li>
   <li><strong>Average 14% cost saving</strong> versus promoter self-procurement</li>
 </ul>
 
@@ -197,37 +197,37 @@ const ARTICLES = [
 <ol>
   <li><strong>Pre-packaged Resolution Plans (PPIRP) Extended to Hotel Assets</strong>: Previously limited to MSMEs, the PPIRP mechanism is now available for hospitality assets below ₹100 Cr enterprise value, significantly accelerating timelines for mid-scale hotel insolvency.</li>
   <li><strong>Operational Creditor Priority Enhancement</strong>: Employees and utility creditors now rank above secured creditors for the first 90 days of CIRP, affecting acquisition economics for strategic buyers.</li>
-  <li><strong>NCLT Bench Expansion</strong>: 14 new circuit benches were notified in Q1 2025, reducing average hearing interval from 42 to 26 days. Resolution timelines for hospitality assets have compressed from an average 680 days (2022–23) to 380 days (2025 estimate).</li>
+  <li><strong>NCLT Bench Expansion</strong>: 14 new circuit benches were notified in Q1 2025, reducing average hearing interval from 42 to 26 days. Resolution timelines for hospitality assets have compressed from an average 680 days (2022-23) to 380 days (2025 estimate).</li>
 </ol>
 
 <h2>The Distressed Hospitality Pipeline</h2>
 <p>India Gully's Debt & Special Situations practice has tracked 64 hospitality assets admitted for CIRP between January 2024 and October 2025. Key observations:</p>
 <ul>
   <li><strong>62% are mid-scale (3-star) properties</strong>, primarily in Tier 1 city periphery and Tier 2 markets</li>
-  <li><strong>Average distress discount to replacement cost</strong>: 42–58% (versus 35% in 2022)</li>
+  <li><strong>Average distress discount to replacement cost</strong>: 42-58% (versus 35% in 2022)</li>
   <li><strong>Operational hotel rate</strong> (properties generating some revenue during CIRP): 71%, up from 45% in 2019 — improved IRP protocols</li>
   <li><strong>Successful resolution rate</strong>: 38% (national average for all sectors: 29%) — hospitality outperforms</li>
 </ul>
 
 <h2>Emerging Buyer Profiles</h2>
-<p>The composition of resolution applicants for hospitality assets has shifted materially in 2024–25:</p>
+<p>The composition of resolution applicants for hospitality assets has shifted materially in 2024-25:</p>
 <h3>Strategic Hotel Operators (35% of resolutions)</h3>
-<p>Branded mid-scale operators (Lemon Tree, Cygnett, Keys, Regenta) are increasingly submitting resolution plans to grow their owned portfolios at distressed acquisition costs. The typical strategy: acquire at ₹20–35L per key, refurbish at ₹8–12L per key, rebrand and operate at 65–75% occupancy within 18 months of reopening.</p>
+<p>Branded mid-scale operators (Lemon Tree, Cygnett, Keys, Regenta) are increasingly submitting resolution plans to grow their owned portfolios at distressed acquisition costs. The typical strategy: acquire at ₹20-35L per key, refurbish at ₹8-12L per key, rebrand and operate at 65-75% occupancy within 18 months of reopening.</p>
 <h3>Family Offices (28% of resolutions)</h3>
-<p>India's growing base of high-net-worth family offices is the most active buyer segment. They typically seek distressed properties in leisure destinations (hill stations, heritage cities) with 15–20 year hold horizons, operating through management contracts with branded operators.</p>
+<p>India's growing base of high-net-worth family offices is the most active buyer segment. They typically seek distressed properties in leisure destinations (hill stations, heritage cities) with 15-20 year hold horizons, operating through management contracts with branded operators.</p>
 <h3>Real Estate Funds (22%)</h3>
 <p>Institutional real estate funds with hospitality mandates are targeting IBC acquisitions as a route to building scale quickly. These buyers tend to focus on larger assets (100+ keys) in Tier-1 cities.</p>
 <h3>Promoter Buybacks (15%)</h3>
 <p>Original promoters — often having addressed the original stress — submit competitive resolution plans. Regulatorily constrained but still a significant segment.</p>
 
 <h2>The Post-Resolution Value Creation Playbook</h2>
-<p>Based on India Gully's advisory on 8 completed distressed hotel acquisitions (2020–2025), the post-resolution value creation sequence is:</p>
+<p>Based on India Gully's advisory on 8 completed distressed hotel acquisitions (2020-2025), the post-resolution value creation sequence is:</p>
 <ol>
-  <li><strong>Months 1–3</strong>: Operational stabilisation. Address deferred maintenance, settle operational creditors, rehire core staff. Revenue recovery to 40–50% of pre-stress levels.</li>
-  <li><strong>Months 3–12</strong>: Brand on-boarding. Select and negotiate hotel brand. This is India Gully's primary advisory role — we have active relationships with every relevant brand and can compress brand on-boarding from 12 to 6 months in many cases.</li>
-  <li><strong>Months 12–18</strong>: Refurbishment and reopening. Targeted FF&E / OS&E investment of ₹8–15L per key. India Gully's HORECA division executes this.</li>
-  <li><strong>Months 18–36</strong>: Revenue ramp. Stabilised occupancy 65–75%. Brand loyalty programme ramp. F&B revenue development.</li>
-  <li><strong>Year 3+</strong>: Asset value crystallisation. Typical IRR on acquisition-to-stabilisation: 22–35%.</li>
+  <li><strong>Months 1-3</strong>: Operational stabilisation. Address deferred maintenance, settle operational creditors, rehire core staff. Revenue recovery to 40-50% of pre-stress levels.</li>
+  <li><strong>Months 3-12</strong>: Brand on-boarding. Select and negotiate hotel brand. This is India Gully's primary advisory role — we have active relationships with every relevant brand and can compress brand on-boarding from 12 to 6 months in many cases.</li>
+  <li><strong>Months 12-18</strong>: Refurbishment and reopening. Targeted FF&E / OS&E investment of ₹8-15L per key. India Gully's HORECA division executes this.</li>
+  <li><strong>Months 18-36</strong>: Revenue ramp. Stabilised occupancy 65-75%. Brand loyalty programme ramp. F&B revenue development.</li>
+  <li><strong>Year 3+</strong>: Asset value crystallisation. Typical IRR on acquisition-to-stabilisation: 22-35%.</li>
 </ol>
 
 <h2>Key Risk Factors</h2>
@@ -260,9 +260,9 @@ const ARTICLES = [
 <h2>Why the Trinity Works: Economic Logic</h2>
 <p>The financial case for the Mall-Hotel-Office trinity rests on three interlocking value drivers:</p>
 <h3>1. Rental Uplift from Density</h3>
-<p>Hotels and premium offices create a captive, high-spending population. Hotel guests with dining spend average 2.8× the retail spend of regular mall visitors. Office workers within integrated developments spend ₹1,200–1,800 per week on food and convenience retail — a highly predictable revenue stream for mall operators and their tenants.</p>
+<p>Hotels and premium offices create a captive, high-spending population. Hotel guests with dining spend average 2.8× the retail spend of regular mall visitors. Office workers within integrated developments spend ₹1,200-1,800 per week on food and convenience retail — a highly predictable revenue stream for mall operators and their tenants.</p>
 <h3>2. Land Efficiency</h3>
-<p>Mixed-use developments achieve 30–40% higher Floor Space Index (FSI) utilisation versus single-use, enabled by vertical stacking of different uses. Premium mixed-use developments in Delhi NCR and Mumbai are achieving FSI of 2.5–4.0 versus 1.8–2.2 for pure retail.</p>
+<p>Mixed-use developments achieve 30-40% higher Floor Space Index (FSI) utilisation versus single-use, enabled by vertical stacking of different uses. Premium mixed-use developments in Delhi NCR and Mumbai are achieving FSI of 2.5-4.0 versus 1.8-2.2 for pure retail.</p>
 <h3>3. Risk Diversification</h3>
 <p>Mixed-use income streams provide resilience against retail cyclicality. During COVID, integrated developments with hotels and offices recovered rental income 14 months faster than pure retail assets.</p>
 
@@ -272,7 +272,7 @@ const ARTICLES = [
   <li>F&B anchor (30% of GLA) outperformed projections by 22% in Year 1</li>
   <li>Office component (3 floors, 180,000 sq ft) achieved full occupancy 9 months before retail completion</li>
   <li>Hotel pre-opening enquiry volume was 4× that of standalone hotel comparable</li>
-  <li>Retail rental premium over comparable pure malls: 17–22%</li>
+  <li>Retail rental premium over comparable pure malls: 17-22%</li>
 </ul>
 
 <h2>Lease Structure Innovations</h2>
@@ -280,17 +280,17 @@ const ARTICLES = [
 <h3>Cross-Amenity Leases</h3>
 <p>Tenants in integrated developments are increasingly seeking <strong>cross-asset access rights</strong> — office tenants negotiating parking rights in the mall structure, hotel guests receiving preferential retail rates, loyalty programme integration across all components. These require multi-party lease agreements that most retail lease professionals are not structured to handle.</p>
 <h3>Revenue Participation</h3>
-<p>Mixed-use developers are moving from pure fixed rent to <strong>base rent + revenue share</strong> models — particularly for F&B anchors and entertainment components. India Gully structures these as: Base = 65% of market rent + 4–7% of net revenue above a turnover threshold.</p>
+<p>Mixed-use developers are moving from pure fixed rent to <strong>base rent + revenue share</strong> models — particularly for F&B anchors and entertainment components. India Gully structures these as: Base = 65% of market rent + 4-7% of net revenue above a turnover threshold.</p>
 <h3>Green Lease Provisions</h3>
 <p>New integrated developments in India's top 5 cities are incorporating green lease provisions covering energy consumption sharing, waste management obligations, and sustainability reporting — a requirement emerging from ESG-mandated institutional investors.</p>
 
 <h2>The Anchor Strategy</h2>
 <p>In mixed-use destination retail, the anchor tenant strategy must account for all three components. India Gully's recommended anchor configuration for a 500,000 sq ft mixed-use development:</p>
 <ul>
-  <li><strong>Hotel anchor</strong> (150–200 keys, mid-upscale brand): Provides footfall catalyst, event venue, and F&B magnets. Best position: above or adjacent to premium retail zone.</li>
-  <li><strong>F&B destination floor</strong> (15,000–25,000 sq ft, 6–10 operators): Drive-to destination. Include one fine-dining, two casual, two QSR, one pan-Asian, one bar/lounge.</li>
-  <li><strong>Entertainment anchor</strong> (multiplex or FEC, 20,000–40,000 sq ft): Evening and weekend traffic generator. Critical for family demographics.</li>
-  <li><strong>Office anchor</strong> (50,000–80,000 sq ft, single corporate tenant): Provides daytime food and convenience footfall reliability.</li>
+  <li><strong>Hotel anchor</strong> (150-200 keys, mid-upscale brand): Provides footfall catalyst, event venue, and F&B magnets. Best position: above or adjacent to premium retail zone.</li>
+  <li><strong>F&B destination floor</strong> (15,000-25,000 sq ft, 6-10 operators): Drive-to destination. Include one fine-dining, two casual, two QSR, one pan-Asian, one bar/lounge.</li>
+  <li><strong>Entertainment anchor</strong> (multiplex or FEC, 20,000-40,000 sq ft): Evening and weekend traffic generator. Critical for family demographics.</li>
+  <li><strong>Office anchor</strong> (50,000-80,000 sq ft, single corporate tenant): Provides daytime food and convenience footfall reliability.</li>
 </ul>
 
 <h2>Conclusion</h2>
@@ -307,63 +307,63 @@ const ARTICLES = [
     readTime: '11 min read',
     body: `
 <h2>The Mid-Scale Opportunity</h2>
-<p>India's branded hotel supply is significantly skewed toward the luxury and upper-upscale segments. The <strong>mid-scale branded segment</strong> (3-star, ₹3,000–6,000 average daily rate) represents the most significant supply-demand gap in the Indian hospitality market. Demand is robust and growing at 12–15% per annum; branded supply growth is 8–10%.</p>
+<p>India's branded hotel supply is significantly skewed toward the luxury and upper-upscale segments. The <strong>mid-scale branded segment</strong> (3-star, ₹3,000-6,000 average daily rate) represents the most significant supply-demand gap in the Indian hospitality market. Demand is robust and growing at 12-15% per annum; branded supply growth is 8-10%.</p>
 <p>India Gully's hotel management and brand on-boarding practice has assessed or executed mid-scale greenfield projects in 15 cities over the past 3 years. This article models the project economics based on those live mandates.</p>
 
 <h2>The 80-Key Model: Tier 2 City</h2>
 <h3>Land and Development Cost</h3>
 <ul>
-  <li>Land (0.6–0.8 acres, commercial zone): ₹3.5–7 Cr (city-dependent)</li>
-  <li>Construction cost (80 keys, branded mid-scale standard): ₹18–24 Cr</li>
-  <li>FF&E/OS&E (India Gully HORECA procurement): ₹4.5–6 Cr</li>
-  <li>Pre-opening and working capital: ₹1.5–2 Cr</li>
-  <li><strong>Total development cost: ₹27–39 Cr</strong> (₹34–49L per key)</li>
+  <li>Land (0.6-0.8 acres, commercial zone): ₹3.5-7 Cr (city-dependent)</li>
+  <li>Construction cost (80 keys, branded mid-scale standard): ₹18-24 Cr</li>
+  <li>FF&E/OS&E (India Gully HORECA procurement): ₹4.5-6 Cr</li>
+  <li>Pre-opening and working capital: ₹1.5-2 Cr</li>
+  <li><strong>Total development cost: ₹27-39 Cr</strong> (₹34-49L per key)</li>
 </ul>
 
 <h3>Revenue Assumptions (Year 3 Stabilised)</h3>
 <ul>
-  <li>Occupancy: 68–72% (branded mid-scale, Tier 2)</li>
-  <li>Average Daily Rate: ₹3,800–4,800</li>
-  <li>RevPAR: ₹2,580–3,456</li>
-  <li>F&B contribution: 28–32% of total revenue</li>
-  <li><strong>Total revenue Year 3: ₹8–11 Cr</strong></li>
+  <li>Occupancy: 68-72% (branded mid-scale, Tier 2)</li>
+  <li>Average Daily Rate: ₹3,800-4,800</li>
+  <li>RevPAR: ₹2,580-3,456</li>
+  <li>F&B contribution: 28-32% of total revenue</li>
+  <li><strong>Total revenue Year 3: ₹8-11 Cr</strong></li>
 </ul>
 
 <h3>EBITDA and Returns</h3>
 <ul>
-  <li>Hotel EBITDA margin (branded mid-scale): 28–35%</li>
-  <li>EBITDA Year 3: ₹2.2–3.9 Cr</li>
-  <li>Yield on development cost: 8–13%</li>
-  <li>Cap rate (mid-scale hotel, Tier 2): 8.5–10.5%</li>
-  <li>Implied capital value at stabilisation: ₹21–46 Cr</li>
-  <li><strong>Equity IRR (8-year hold): 16–23%</strong></li>
+  <li>Hotel EBITDA margin (branded mid-scale): 28-35%</li>
+  <li>EBITDA Year 3: ₹2.2-3.9 Cr</li>
+  <li>Yield on development cost: 8-13%</li>
+  <li>Cap rate (mid-scale hotel, Tier 2): 8.5-10.5%</li>
+  <li>Implied capital value at stabilisation: ₹21-46 Cr</li>
+  <li><strong>Equity IRR (8-year hold): 16-23%</strong></li>
 </ul>
 
 <h2>Brand Selection: The Revenue Multiplier</h2>
 <p>Brand choice is the single most impactful variable in mid-scale hotel project economics. India Gully's brand on-boarding experience across Cygnett, Keys, Regenta, Pride, and Lemon Tree reveals the following:</p>
 <ul>
-  <li><strong>RevPAR premium over independent hotels</strong>: 22–38% for top-tier mid-scale brands</li>
+  <li><strong>RevPAR premium over independent hotels</strong>: 22-38% for top-tier mid-scale brands</li>
   <li><strong>Faster occupancy ramp</strong>: Branded hotels reach 65% occupancy on average 7 months faster than independent</li>
-  <li><strong>Brand fee impact on EBITDA</strong>: Management fee + royalty = 8–12% of total revenue. Net benefit remains strongly positive.</li>
+  <li><strong>Brand fee impact on EBITDA</strong>: Management fee + royalty = 8-12% of total revenue. Net benefit remains strongly positive.</li>
 </ul>
 <p>India Gully's recommendation: for 80-key Tier 2 properties, <strong>Cygnett, Keys, or Regenta</strong> offer the optimal brand fee / RevPAR premium equation. For 120-key+ projects, Lemon Tree Premier or Radisson RED become competitive.</p>
 
 <h2>Construction and Pre-Opening Timeline</h2>
 <p>Based on India Gully's project management experience:</p>
 <ol>
-  <li><strong>Month 1–3</strong>: Land acquisition, approvals, brand selection</li>
-  <li><strong>Month 3–6</strong>: Design development, tender</li>
-  <li><strong>Month 6–22</strong>: Construction (80-key standard)</li>
-  <li><strong>Month 20–26</strong>: FF&E procurement, installation (India Gully HORECA)</li>
-  <li><strong>Month 24–28</strong>: Staffing, training, mock inspections, soft opening</li>
-  <li><strong>Month 28–30</strong>: Grand opening, brand loyalty programme activation</li>
+  <li><strong>Month 1-3</strong>: Land acquisition, approvals, brand selection</li>
+  <li><strong>Month 3-6</strong>: Design development, tender</li>
+  <li><strong>Month 6-22</strong>: Construction (80-key standard)</li>
+  <li><strong>Month 20-26</strong>: FF&E procurement, installation (India Gully HORECA)</li>
+  <li><strong>Month 24-28</strong>: Staffing, training, mock inspections, soft opening</li>
+  <li><strong>Month 28-30</strong>: Grand opening, brand loyalty programme activation</li>
 </ol>
 
-<h2>Top 5 Markets for 2025–27 Greenfield Mid-Scale</h2>
-<p>India Gully's market assessment identifies the following as priority markets for 2025–27 greenfield mid-scale development:</p>
+<h2>Top 5 Markets for 2025-27 Greenfield Mid-Scale</h2>
+<p>India Gully's market assessment identifies the following as priority markets for 2025-27 greenfield mid-scale development:</p>
 <ol>
   <li><strong>Chandigarh / Mohali / Panchkula</strong>: Strong corporate demand, limited branded mid-scale supply. RevPAR growth 14% YoY.</li>
-  <li><strong>Dehradun / Haridwar</strong>: Religious and leisure tourism boom. Weekend demand spikes 3–4×.</li>
+  <li><strong>Dehradun / Haridwar</strong>: Religious and leisure tourism boom. Weekend demand spikes 3-4×.</li>
   <li><strong>Coimbatore</strong>: Industrial and IT growth corridor. Under-served by branded mid-scale.</li>
   <li><strong>Ahmedabad (outer corridors)</strong>: GIFT City and industrial demand, strong MICE potential.</li>
   <li><strong>Bhubaneswar</strong>: Government-backed convention and tourism infrastructure. Early-mover advantage for branded operators.</li>
@@ -383,18 +383,18 @@ const ARTICLES = [
     readTime: '8 min read',
     body: `
 <h2>Overview</h2>
-<p>India's hospitality market entered 2024 with strong structural tailwinds: rising domestic travel, pent-up leisure demand, significant infrastructure investment, and accelerating international brand expansion. This report examines the key dynamics and investment opportunities for the 2024–2025 horizon.</p>
+<p>India's hospitality market entered 2024 with strong structural tailwinds: rising domestic travel, pent-up leisure demand, significant infrastructure investment, and accelerating international brand expansion. This report examines the key dynamics and investment opportunities for the 2024-2025 horizon.</p>
 
 <h2>Demand Drivers</h2>
 <p>Domestic leisure travel volumes reached 120% of pre-COVID peaks by Q3 2024, driven by a growing upper-middle-income class with increased disposable income and changing lifestyle priorities. Business travel has recovered to 95% of 2019 levels, with MICE (Meetings, Incentives, Conferences, Exhibitions) driving disproportionate growth in the 5-star and upscale segments.</p>
-<p>India's inbound international tourism grew 28% YoY in 2024, supported by expanded air connectivity (30+ new international routes announced in 2023–24) and streamlined visa processes under the e-Visa programme expansion to 166 countries.</p>
+<p>India's inbound international tourism grew 28% YoY in 2024, supported by expanded air connectivity (30+ new international routes announced in 2023-24) and streamlined visa processes under the e-Visa programme expansion to 166 countries.</p>
 
 <h2>RevPAR & Occupancy Trends</h2>
 <p>FY2024 was a landmark year for India hospitality metrics. Key performance data from STR/HVS:</p>
 <ul>
   <li><strong>Pan-India RevPAR</strong>: ₹4,850 in FY24 — up 14% YoY, the highest since records began</li>
   <li><strong>Luxury/Upper-Upscale ADR</strong>: ₹12,200+ — up 18% YoY driven by corporate demand recovery and MICE resurgence</li>
-  <li><strong>Occupancy (Branded, Pan-India)</strong>: 68.4% annual average; metro markets averaging 72–78%</li>
+  <li><strong>Occupancy (Branded, Pan-India)</strong>: 68.4% annual average; metro markets averaging 72-78%</li>
   <li><strong>Delhi NCR</strong>: Occupancy 74.2%, ADR ₹8,500, RevPAR ₹6,307</li>
   <li><strong>Mumbai</strong>: Occupancy 76.1%, ADR ₹10,200, RevPAR ₹7,762</li>
   <li><strong>Bengaluru</strong>: Occupancy 71.8%, ADR ₹7,800, RevPAR ₹5,600</li>
@@ -404,10 +404,10 @@ const ARTICLES = [
 <h2>Segment Dynamics</h2>
 <p>The segmental performance divergence in 2024 is significant and shapes investment strategy:</p>
 <ul>
-  <li><strong>Luxury (5-star)</strong>: Demand exceeds supply in every major metro. New luxury inventory is being absorbed in under 18 months. Premium ADR growth of 20%+ sustainable through 2025–26.</li>
-  <li><strong>Upscale (4-star)</strong>: The sweet spot for investment. RevPAR premium over mid-scale at 2.2× with capex premium of only 1.5×. IRR superiority of 300–500 bps.</li>
+  <li><strong>Luxury (5-star)</strong>: Demand exceeds supply in every major metro. New luxury inventory is being absorbed in under 18 months. Premium ADR growth of 20%+ sustainable through 2025-26.</li>
+  <li><strong>Upscale (4-star)</strong>: The sweet spot for investment. RevPAR premium over mid-scale at 2.2× with capex premium of only 1.5×. IRR superiority of 300-500 bps.</li>
   <li><strong>Mid-scale</strong>: Volume leader. 62% of pipeline. Best demand visibility through MICE, corporate, and government segments. Lemon Tree, Cygnett, Regenta, and Keys expanding aggressively.</li>
-  <li><strong>Heritage / Boutique</strong>: India's fastest-growing segment by ADR growth. International leisure demand at premium ARR (₹15,000–60,000/night). WelcomHeritage, Neemrana, Taj SeleQtions competing for quality assets.</li>
+  <li><strong>Heritage / Boutique</strong>: India's fastest-growing segment by ADR growth. International leisure demand at premium ARR (₹15,000-60,000/night). WelcomHeritage, Neemrana, Taj SeleQtions competing for quality assets.</li>
   <li><strong>Budget/Economy</strong>: Structurally challenged by OYO and homestay competition. Investment thesis limited to captive-demand locations (pilgrim towns, industrial corridors).</li>
 </ul>
 
@@ -415,16 +415,16 @@ const ARTICLES = [
 <p>The branded hotel supply pipeline in India stands at approximately 165,000 keys across all segments — the largest pipeline in Asia-Pacific excluding China. The mid-scale and economy segments account for 62% of the pipeline, reflecting promoter confidence in the mass-market segment.</p>
 <p>Key supply markets in the pipeline: NCR (22,000 keys), Mumbai Metropolitan Region (18,000 keys), Bengaluru (14,000 keys), Hyderabad (11,000 keys), Goa (8,500 keys). Tier 2 markets — Coimbatore, Vizag, Bhubaneswar, Lucknow — account for 28% of the pipeline, the highest share in any five-year period.</p>
 
-<h2>Infrastructure Catalysts for 2025–2026</h2>
+<h2>Infrastructure Catalysts for 2025-2026</h2>
 <p>Government infrastructure investment is creating new hotel demand nodes across India:</p>
 <ul>
-  <li><strong>Airport expansion</strong>: 21 new or expanded airports under UDAN Phase 4 — each airport creates a branded hotel demand pocket within 18–24 months of opening</li>
+  <li><strong>Airport expansion</strong>: 21 new or expanded airports under UDAN Phase 4 — each airport creates a branded hotel demand pocket within 18-24 months of opening</li>
   <li><strong>Highway development</strong>: PM Gati Shakti national highway corridors creating roadside hospitality demand across Tier 2 corridors</li>
   <li><strong>Smart Cities Mission</strong>: 100 smart cities programme has catalysed branded supply absorption in secondary markets</li>
   <li><strong>DESH Bill (Special Economic Zones)</strong>: Corporate campuses driving captive accommodation demand in peripheral locations</li>
 </ul>
 
-<h2>Brand Expansion Summary 2024–25</h2>
+<h2>Brand Expansion Summary 2024-25</h2>
 <p>International and domestic hotel brands are deploying capital aggressively in India's branded segment:</p>
 <ul>
   <li><strong>Marriott International</strong>: 100+ hotels operational, targeting 150+ by 2026. Fairfield and Courtyard leading Tier 2 expansion.</li>
@@ -435,15 +435,15 @@ const ARTICLES = [
 </ul>
 
 <h2>Investment Opportunities</h2>
-<p>India Gully identifies three primary investment themes in hospitality for 2024–2025:</p>
+<p>India Gully identifies three primary investment themes in hospitality for 2024-2025:</p>
 <ol>
-  <li><strong>Mid-scale branded greenfield</strong>: Best risk-adjusted returns in Tier 2 cities. 16–23% equity IRR based on our project models. Payback period 7–10 years at 65% stabilised occupancy.</li>
-  <li><strong>Distressed asset acquisition via IBC/NCLT</strong>: Growing pipeline of operationally viable hotels in CIRP. Acquisition discounts of 40–55% to replacement cost. Brand on-boarding post-acquisition driving RevPAR uplift of 22–38%.</li>
-  <li><strong>Heritage and experiential hospitality</strong>: India's heritage hotel segment commands premium ARR and international demand. Acquisition and conversion of heritage properties in Rajasthan, Kerala, and Himachal Pradesh. Target IRR: 18–28% with right asset and operator.</li>
+  <li><strong>Mid-scale branded greenfield</strong>: Best risk-adjusted returns in Tier 2 cities. 16-23% equity IRR based on our project models. Payback period 7-10 years at 65% stabilised occupancy.</li>
+  <li><strong>Distressed asset acquisition via IBC/NCLT</strong>: Growing pipeline of operationally viable hotels in CIRP. Acquisition discounts of 40-55% to replacement cost. Brand on-boarding post-acquisition driving RevPAR uplift of 22-38%.</li>
+  <li><strong>Heritage and experiential hospitality</strong>: India's heritage hotel segment commands premium ARR and international demand. Acquisition and conversion of heritage properties in Rajasthan, Kerala, and Himachal Pradesh. Target IRR: 18-28% with right asset and operator.</li>
 </ol>
 
 <h2>India Gully's Advisory Role</h2>
-<p>India Gully serves as transaction advisor, brand on-boarding partner, and HORECA procurement specialist across the full hospitality investment lifecycle. Our active 2024–2025 hospitality mandate pipeline spans 15+ projects across India, including WelcomHeritage Santa Roza Kasauli (₹45 Cr), Hotel Rajshree Chandigarh (₹70 Cr), Maple Resort Chail (₹30 Cr), and a Heritage Hotel Structure in Jaipur (₹20 Cr). We work with family offices, NBFCs, HNI investors, and strategic operators across the investment and development cycle.</p>
+<p>India Gully serves as transaction advisor, brand on-boarding partner, and HORECA procurement specialist across the full hospitality investment lifecycle. Our active 2024-2025 hospitality mandate pipeline spans 15+ projects across India, including WelcomHeritage Santa Roza Kasauli (₹45 Cr), Hotel Rajshree Chandigarh (₹70 Cr), Maple Resort Chail (₹30 Cr), and a Heritage Hotel Structure in Jaipur (₹20 Cr). We work with family offices, NBFCs, HNI investors, and strategic operators across the investment and development cycle.</p>
 `,
   },
   {
@@ -462,16 +462,16 @@ const ARTICLES = [
 <p>Four structural forces are converging to create this opportunity:</p>
 <ul>
   <li><strong>Rising aspirational middle class</strong>: India's 350 million-strong aspirational middle class is the primary demand driver. Family leisure spend per outing has grown from ₹1,800 in 2019 to ₹3,200 in 2025. Spending on experiences has grown at 18% CAGR since 2019 versus 7% for goods.</li>
-  <li><strong>Real estate developer diversification</strong>: Major real estate developers are allocating 15–25% of their portfolios to experience and entertainment to differentiate destinations and drive footfall to their mixed-use developments. Developers like DLF, Godrej, Prestige, and Phoenix have active entertainment real estate mandates.</li>
+  <li><strong>Real estate developer diversification</strong>: Major real estate developers are allocating 15-25% of their portfolios to experience and entertainment to differentiate destinations and drive footfall to their mixed-use developments. Developers like DLF, Godrej, Prestige, and Phoenix have active entertainment real estate mandates.</li>
   <li><strong>International operator expansion</strong>: Global entertainment operators (including several household names) have active India expansion mandates. India Gully represents several in their site selection and partner search across NCR, Mumbai, Pune, and Hyderabad corridors.</li>
-  <li><strong>State government competition</strong>: At least 8 state governments have announced entertainment destination promotion policies in 2023–24, including Maharashtra (Film City expansion), UP (Noida's Film City 2.0), Rajasthan (Rajasthan Tourism Policy), Tamil Nadu, and Karnataka. These policies offer land at concessional rates, faster regulatory clearance, and infrastructure support.</li>
+  <li><strong>State government competition</strong>: At least 8 state governments have announced entertainment destination promotion policies in 2023-24, including Maharashtra (Film City expansion), UP (Noida's Film City 2.0), Rajasthan (Rajasthan Tourism Policy), Tamil Nadu, and Karnataka. These policies offer land at concessional rates, faster regulatory clearance, and infrastructure support.</li>
 </ul>
 
 <h2>Market Size & Pipeline</h2>
 <p>India's entertainment real estate market is at an early but rapidly-growing stage. Current estimates based on industry data and India Gully pipeline intelligence:</p>
 <ul>
   <li><strong>Operational FEC/Entertainment GLA</strong>: ~18 million sq ft across India (2024)</li>
-  <li><strong>Pipeline additions (2024–2029)</strong>: 35+ large-format projects, estimated ₹38,000 Cr combined capital investment</li>
+  <li><strong>Pipeline additions (2024-2029)</strong>: 35+ large-format projects, estimated ₹38,000 Cr combined capital investment</li>
   <li><strong>Amusement park sector alone</strong>: ₹3,200 Cr market in FY2024, growing at 19% CAGR per NRAI estimates</li>
   <li><strong>Consumer spend on out-of-home entertainment</strong>: ₹1.2 lakh Cr annually, less than 3% penetrated by branded formats</li>
 </ul>
@@ -479,21 +479,21 @@ const ARTICLES = [
 <h2>Format Typology & Capex Ranges</h2>
 <p>Entertainment real estate projects fall into four primary format categories with distinct capital profiles:</p>
 <ul>
-  <li><strong>Large-format theme parks & waterparks</strong>: ₹150–500 Cr capex, 50–200 acres, require IP licensing or proprietary IP, 8–12 year breakeven</li>
-  <li><strong>Integrated mall-entertainment centres</strong>: ₹25–80 Cr entertainment component within larger mall/mixed-use, 15,000–50,000 sq ft FEC, 5–7 year breakeven</li>
-  <li><strong>Standalone FECs</strong>: ₹8–35 Cr, 8,000–25,000 sq ft, family-oriented, anchor by bowling/trampoline/arcade, 3–5 year breakeven</li>
-  <li><strong>Entertainment-hospitality hybrids</strong>: ₹40–120 Cr, combine F&B destination dining with entertainment programming, resort-entertainment in leisure catchments</li>
+  <li><strong>Large-format theme parks & waterparks</strong>: ₹150-500 Cr capex, 50-200 acres, require IP licensing or proprietary IP, 8-12 year breakeven</li>
+  <li><strong>Integrated mall-entertainment centres</strong>: ₹25-80 Cr entertainment component within larger mall/mixed-use, 15,000-50,000 sq ft FEC, 5-7 year breakeven</li>
+  <li><strong>Standalone FECs</strong>: ₹8-35 Cr, 8,000-25,000 sq ft, family-oriented, anchor by bowling/trampoline/arcade, 3-5 year breakeven</li>
+  <li><strong>Entertainment-hospitality hybrids</strong>: ₹40-120 Cr, combine F&B destination dining with entertainment programming, resort-entertainment in leisure catchments</li>
 </ul>
 
 <h2>Unit Economics: FEC P&L Model</h2>
-<p>A 20,000 sq ft Tier 1 city FEC (₹18–25 Cr capex) with India Gully benchmark assumptions:</p>
+<p>A 20,000 sq ft Tier 1 city FEC (₹18-25 Cr capex) with India Gully benchmark assumptions:</p>
 <ul>
-  <li><strong>Revenue split</strong>: 55–65% activity fees, 25–35% F&B, 10–15% ancillary (birthday packages, corporate, retail)</li>
-  <li><strong>Activity gross margin</strong>: 70–80% (after operator fees, consumables, maintenance)</li>
-  <li><strong>F&B gross margin</strong>: 60–68%</li>
-  <li><strong>EBITDA margin</strong>: 28–38% at stabilisation</li>
-  <li><strong>Footfall required for breakeven</strong>: 1,200–1,800 visitors/day on 300-day basis at ₹600–800 average ticket</li>
-  <li><strong>Payback period</strong>: 4–6 years at 65%+ capacity utilisation</li>
+  <li><strong>Revenue split</strong>: 55-65% activity fees, 25-35% F&B, 10-15% ancillary (birthday packages, corporate, retail)</li>
+  <li><strong>Activity gross margin</strong>: 70-80% (after operator fees, consumables, maintenance)</li>
+  <li><strong>F&B gross margin</strong>: 60-68%</li>
+  <li><strong>EBITDA margin</strong>: 28-38% at stabilisation</li>
+  <li><strong>Footfall required for breakeven</strong>: 1,200-1,800 visitors/day on 300-day basis at ₹600-800 average ticket</li>
+  <li><strong>Payback period</strong>: 4-6 years at 65%+ capacity utilisation</li>
 </ul>
 
 <h2>Investment Considerations</h2>
@@ -502,8 +502,8 @@ const ARTICLES = [
   <li><strong>IP risk</strong>: Themed attractions require IP licensing. India Gully maps IP availability and negotiates licensing structures. Proprietary IP is the most sustainable long-term position.</li>
   <li><strong>Operational complexity</strong>: Entertainment destinations are operationally intensive. Management agreement structure, revenue share, and minimum guarantee terms are critical. India Gully has structured 12+ operator agreements for entertainment mandates.</li>
   <li><strong>Phasing strategy</strong>: Large entertainment destinations should be phased to validate demand before committing full capital. Phase 1 should achieve breakeven independently.</li>
-  <li><strong>Infrastructure dependency</strong>: Road, metro, and utility access are critical success factors often underestimated in initial feasibility. A 20% traffic/catchment haircut for poor last-mile is conservative — reality can be 40–60%.</li>
-  <li><strong>Regulatory complexity</strong>: Fire safety, amusement ride certification (PESO), food licensing (FSSAI), excise for F&B, local municipality NOCs — the regulatory stack for entertainment is 15–20 approvals. India Gully maintains a full regulatory checklist and vendor network for clearances.</li>
+  <li><strong>Infrastructure dependency</strong>: Road, metro, and utility access are critical success factors often underestimated in initial feasibility. A 20% traffic/catchment haircut for poor last-mile is conservative — reality can be 40-60%.</li>
+  <li><strong>Regulatory complexity</strong>: Fire safety, amusement ride certification (PESO), food licensing (FSSAI), excise for F&B, local municipality NOCs — the regulatory stack for entertainment is 15-20 approvals. India Gully maintains a full regulatory checklist and vendor network for clearances.</li>
 </ul>
 
 <h2>India Gully's Entertainment Advisory Practice</h2>
@@ -527,17 +527,17 @@ const ARTICLES = [
     readTime: '6 min read',
     body: `
 <h2>The Pre-Opening Procurement Challenge</h2>
-<p>Hotel pre-opening procurement — covering FF&E (Furniture, Fixtures & Equipment), OS&E (Operating Supplies & Equipment), kitchen equipment, linen, uniform, and amenities — is consistently underestimated by first-time hotel developers. India Gully's HORECA practice has rectified procurement failures on 7 of our last 15 hotel mandates where the developer had initially self-procured without specialist support. Common result: deferred opening by 3–6 months, ₹80–200 Cr capex overrun on a 100-key property.</p>
+<p>Hotel pre-opening procurement — covering FF&E (Furniture, Fixtures & Equipment), OS&E (Operating Supplies & Equipment), kitchen equipment, linen, uniform, and amenities — is consistently underestimated by first-time hotel developers. India Gully's HORECA practice has rectified procurement failures on 7 of our last 15 hotel mandates where the developer had initially self-procured without specialist support. Common result: deferred opening by 3-6 months, ₹80-200 Cr capex overrun on a 100-key property.</p>
 
 <h2>The 18-Month Critical Path Timeline</h2>
 <p>The single biggest procurement error is starting too late. The correct procurement timeline for a 100-key branded hotel:</p>
 <ul>
-  <li><strong>Month –18 to –15</strong>: Brand standard specification confirmed with operator. Master FF&E and OS&E list generated (India Gully standard: 500+ SKUs). Preliminary budget locked.</li>
-  <li><strong>Month –15 to –12</strong>: Vendor identification, RFQ issuance, commercial evaluation. Preferred vendor list shortlisted. Sample approval process begins for FF&E items with 12+ week lead times.</li>
-  <li><strong>Month –12 to –9</strong>: Major FF&E orders placed (guestroom furniture, custom joinery, upholstered seating, branded linen). Kitchen equipment specifications finalised with operator's F&B team. Amenity kit supplier confirmed.</li>
-  <li><strong>Month –9 to –6</strong>: OS&E orders placed in bulk (glassware, crockery, flatware, kitchen smallwares). Uniform design finalised, production ordered. IT equipment procurement initiated.</li>
-  <li><strong>Month –6 to –3</strong>: Deliveries begin. On-site receiving warehouse operational. Staging and inspection commenced. Snagging list initiated.</li>
-  <li><strong>Month –3 to 0</strong>: Installation, final inspection, brand compliance check, soft opening inventory confirmed.</li>
+  <li><strong>Month -18 to -15</strong>: Brand standard specification confirmed with operator. Master FF&E and OS&E list generated (India Gully standard: 500+ SKUs). Preliminary budget locked.</li>
+  <li><strong>Month -15 to -12</strong>: Vendor identification, RFQ issuance, commercial evaluation. Preferred vendor list shortlisted. Sample approval process begins for FF&E items with 12+ week lead times.</li>
+  <li><strong>Month -12 to -9</strong>: Major FF&E orders placed (guestroom furniture, custom joinery, upholstered seating, branded linen). Kitchen equipment specifications finalised with operator's F&B team. Amenity kit supplier confirmed.</li>
+  <li><strong>Month -9 to -6</strong>: OS&E orders placed in bulk (glassware, crockery, flatware, kitchen smallwares). Uniform design finalised, production ordered. IT equipment procurement initiated.</li>
+  <li><strong>Month -6 to -3</strong>: Deliveries begin. On-site receiving warehouse operational. Staging and inspection commenced. Snagging list initiated.</li>
+  <li><strong>Month -3 to 0</strong>: Installation, final inspection, brand compliance check, soft opening inventory confirmed.</li>
 </ul>
 
 <h2>The Specification Cascade</h2>
@@ -560,19 +560,19 @@ const ARTICLES = [
 
 <h2>Common Procurement Failures</h2>
 <ul>
-  <li><strong>Under-specification of kitchen equipment</strong>: Commercial kitchen specification requires brand, capacity, utility connection type (gas/electric/induction), and certification (BIS, CE) — not simply a product category. India Gully has seen ₹40–80 lakh kitchen equipment orders rejected by operators at inspection stage.</li>
-  <li><strong>Linen quantity error</strong>: Correct par stock calculation is 3–4× room count (in-use + laundry + reserve), not 2×. A 100-key hotel needs 350–400 sets of each linen category. Understocking disrupts operations from Day 1 and requires expensive emergency procurement.</li>
-  <li><strong>Amenity sourcing delays</strong>: Brand-specified amenity kits — particularly for IHG, Marriott, and Hyatt — often have 8–12 week lead times from authorised suppliers. Order 16 weeks before opening minimum.</li>
-  <li><strong>Last-mile logistics failure</strong>: Remote hotel locations (hill stations, resort properties) require logistics-aware procurement with buffer timing of 3–4 weeks beyond manufacturer lead time. India Gully's Kasauli and Chail hotel mandates required Shimla consolidation with specialised mountain logistics.</li>
-  <li><strong>Uniform production lead times</strong>: Custom-embroidered uniforms for 150+ staff require 10–14 weeks from design finalisation. Late design decisions cascade into staff arriving on Day 1 without uniforms.</li>
+  <li><strong>Under-specification of kitchen equipment</strong>: Commercial kitchen specification requires brand, capacity, utility connection type (gas/electric/induction), and certification (BIS, CE) — not simply a product category. India Gully has seen ₹40-80 lakh kitchen equipment orders rejected by operators at inspection stage.</li>
+  <li><strong>Linen quantity error</strong>: Correct par stock calculation is 3-4× room count (in-use + laundry + reserve), not 2×. A 100-key hotel needs 350-400 sets of each linen category. Understocking disrupts operations from Day 1 and requires expensive emergency procurement.</li>
+  <li><strong>Amenity sourcing delays</strong>: Brand-specified amenity kits — particularly for IHG, Marriott, and Hyatt — often have 8-12 week lead times from authorised suppliers. Order 16 weeks before opening minimum.</li>
+  <li><strong>Last-mile logistics failure</strong>: Remote hotel locations (hill stations, resort properties) require logistics-aware procurement with buffer timing of 3-4 weeks beyond manufacturer lead time. India Gully's Kasauli and Chail hotel mandates required Shimla consolidation with specialised mountain logistics.</li>
+  <li><strong>Uniform production lead times</strong>: Custom-embroidered uniforms for 150+ staff require 10-14 weeks from design finalisation. Late design decisions cascade into staff arriving on Day 1 without uniforms.</li>
 </ul>
 
 <h2>Budget Control & Value Engineering</h2>
-<p>India Gully's consolidated procurement model delivers savings of 12–22% versus independent developer procurement through:</p>
+<p>India Gully's consolidated procurement model delivers savings of 12-22% versus independent developer procurement through:</p>
 <ul>
-  <li>Volume aggregation across concurrent hotel mandates (typically 4–6 active hotel projects at any time)</li>
-  <li>Long-term supplier relationships allowing credit terms of 60–90 days versus 30 days for first-time buyers</li>
-  <li>Value engineering of specifications without compromising brand compliance — typically ₹15–25 lakh savings on a 100-key hotel FF&E budget</li>
+  <li>Volume aggregation across concurrent hotel mandates (typically 4-6 active hotel projects at any time)</li>
+  <li>Long-term supplier relationships allowing credit terms of 60-90 days versus 30 days for first-time buyers</li>
+  <li>Value engineering of specifications without compromising brand compliance — typically ₹15-25 lakh savings on a 100-key hotel FF&E budget</li>
   <li>Avoiding the most common over-specification errors (over-spec on back-of-house FF&E that guests never see)</li>
 </ul>
 
@@ -595,18 +595,18 @@ const ARTICLES = [
 <h2>Why Hotels Enter CIRP</h2>
 <p>The primary causes of hotel insolvency in India are structural — making many assets operationally viable despite financial distress:</p>
 <ul>
-  <li><strong>Overleveraged development financing</strong>: Many properties were built at 70–80% debt, with DSCR assumptions requiring stabilised performance from Year 1 — a scenario that almost never holds for a greenfield hotel. India Gully estimates that 60% of CIRP hotels were fundamentally viable assets destroyed by excessive leverage, not operational failure.</li>
-  <li><strong>COVID-19 disruption</strong>: Properties with thin equity cushions were unable to service debt during the 18–24 month COVID closure period. The ECLGS scheme helped many, but severely leveraged properties still entered CIRP after the moratorium expired.</li>
+  <li><strong>Overleveraged development financing</strong>: Many properties were built at 70-80% debt, with DSCR assumptions requiring stabilised performance from Year 1 — a scenario that almost never holds for a greenfield hotel. India Gully estimates that 60% of CIRP hotels were fundamentally viable assets destroyed by excessive leverage, not operational failure.</li>
+  <li><strong>COVID-19 disruption</strong>: Properties with thin equity cushions were unable to service debt during the 18-24 month COVID closure period. The ECLGS scheme helped many, but severely leveraged properties still entered CIRP after the moratorium expired.</li>
   <li><strong>Promoter-related stress</strong>: Group-level financial distress triggering cross-default on performing hotel assets. The hotel may have been trading profitably; the group's other businesses caused the default.</li>
 </ul>
 
 <h2>CIRP Valuation Dynamics</h2>
 <p>The IBC resolution process creates a distinct valuation framework that sophisticated acquirers can exploit:</p>
 <ul>
-  <li><strong>Acquisition discount</strong>: CIRP hotels typically transact at 35–55% discount to replacement cost (registered valuer assessment). For a hotel with ₹80 Cr replacement cost, a resolution plan at ₹36–52 Cr is typical.</li>
-  <li><strong>Claim haircut as value driver</strong>: Financial creditors (banks) often accept 40–60 paise on the rupee in resolution. This structural claim haircut is effectively transferred as equity value to the resolution applicant.</li>
-  <li><strong>Operational period value</strong>: The interim resolution period (typically 6–18 months) often results in deferred maintenance, depleted inventory, and staff attrition — these represent known costs the acquirer can pre-price in the plan.</li>
-  <li><strong>Brand upside</strong>: An unbranded CIRP hotel in a strong demand location can achieve 22–38% RevPAR uplift within 12 months of brand on-boarding — the single largest value driver post-resolution.</li>
+  <li><strong>Acquisition discount</strong>: CIRP hotels typically transact at 35-55% discount to replacement cost (registered valuer assessment). For a hotel with ₹80 Cr replacement cost, a resolution plan at ₹36-52 Cr is typical.</li>
+  <li><strong>Claim haircut as value driver</strong>: Financial creditors (banks) often accept 40-60 paise on the rupee in resolution. This structural claim haircut is effectively transferred as equity value to the resolution applicant.</li>
+  <li><strong>Operational period value</strong>: The interim resolution period (typically 6-18 months) often results in deferred maintenance, depleted inventory, and staff attrition — these represent known costs the acquirer can pre-price in the plan.</li>
+  <li><strong>Brand upside</strong>: An unbranded CIRP hotel in a strong demand location can achieve 22-38% RevPAR uplift within 12 months of brand on-boarding — the single largest value driver post-resolution.</li>
 </ul>
 
 <h2>India Gully's 5-Workstream DD Framework</h2>
@@ -622,11 +622,11 @@ const ARTICLES = [
 <h2>Post-Resolution Value Creation</h2>
 <p>The value creation thesis in distressed hotel acquisition depends on three compounding drivers:</p>
 <ul>
-  <li><strong>Brand premium</strong>: RevPAR uplift of 22–38% from brand on-boarding. On a 50-key hotel at ₹3,500 ADR, this represents ₹15–25 lakh annual EBITDA addition at 70% occupancy.</li>
-  <li><strong>Refurbishment ROI</strong>: Well-scoped refurbishment (₹8–15 lakh per key) typically returns 4–6× capital at stabilisation through ADR increase, extended brand agreement tenure, and improved online reviews driving direct bookings.</li>
-  <li><strong>Operational efficiency recovery</strong>: CIRP properties typically operate at 30–40% cost inefficiency vs. benchmarks. Post-resolution management normalisation recovers 800–1,200 bps of EBITDA margin within 24 months.</li>
+  <li><strong>Brand premium</strong>: RevPAR uplift of 22-38% from brand on-boarding. On a 50-key hotel at ₹3,500 ADR, this represents ₹15-25 lakh annual EBITDA addition at 70% occupancy.</li>
+  <li><strong>Refurbishment ROI</strong>: Well-scoped refurbishment (₹8-15 lakh per key) typically returns 4-6× capital at stabilisation through ADR increase, extended brand agreement tenure, and improved online reviews driving direct bookings.</li>
+  <li><strong>Operational efficiency recovery</strong>: CIRP properties typically operate at 30-40% cost inefficiency vs. benchmarks. Post-resolution management normalisation recovers 800-1,200 bps of EBITDA margin within 24 months.</li>
 </ul>
-<p>India Gully's integrated offer — transaction advisory + brand on-boarding + HORECA procurement — is uniquely positioned to execute the full post-resolution value creation playbook. Combined, these levers can generate equity IRRs of 22–35% on well-selected distressed hotel acquisitions.</p>
+<p>India Gully's integrated offer — transaction advisory + brand on-boarding + HORECA procurement — is uniquely positioned to execute the full post-resolution value creation playbook. Combined, these levers can generate equity IRRs of 22-35% on well-selected distressed hotel acquisitions.</p>
 `,
   },
   {
@@ -639,56 +639,56 @@ const ARTICLES = [
     readTime: '9 min read',
     body: `
 <h2>The Experience Imperative</h2>
-<p>India's top-performing malls of 2023–24 share a common characteristic: a deliberate shift from pure retail to experience-led destinations. Footfall in experience-anchored malls grew 18% YoY versus 4% for conventional retail-only malls. India Gully's retail leasing practice, active across 8 mall and mixed-use developments, has observed this shift directly in tenant demand, lease terms, and CAM contribution. Properties that made the experience pivot early — Entertainment City Noida, Gardens Galleria, Pacific Malls — are now 3–5 years ahead on occupancy and rental benchmarks.</p>
+<p>India's top-performing malls of 2023-24 share a common characteristic: a deliberate shift from pure retail to experience-led destinations. Footfall in experience-anchored malls grew 18% YoY versus 4% for conventional retail-only malls. India Gully's retail leasing practice, active across 8 mall and mixed-use developments, has observed this shift directly in tenant demand, lease terms, and CAM contribution. Properties that made the experience pivot early — Entertainment City Noida, Gardens Galleria, Pacific Malls — are now 3-5 years ahead on occupancy and rental benchmarks.</p>
 
 <h2>Tenant Mix Recalibration</h2>
 <p>The optimal tenant mix for a Grade-A mall in India's Tier 1 cities in 2024 has shifted materially from 2018 benchmarks:</p>
 <ul>
-  <li><strong>F&B and dining</strong>: 25–32% of GLA (up from 18–22% in 2018) — the single biggest shift</li>
-  <li><strong>Entertainment and leisure</strong>: 12–18% (up from 8–10%) — bowling, gaming, FEC, fitness</li>
-  <li><strong>Fashion and apparel</strong>: 28–32% (down from 42–48%) — but premiumising upward</li>
-  <li><strong>Beauty and wellness</strong>: 8–10% (up from 4–6%) — grooming, salons, wellness studios</li>
-  <li><strong>Technology and electronics</strong>: 6–8% (stable)</li>
+  <li><strong>F&B and dining</strong>: 25-32% of GLA (up from 18-22% in 2018) — the single biggest shift</li>
+  <li><strong>Entertainment and leisure</strong>: 12-18% (up from 8-10%) — bowling, gaming, FEC, fitness</li>
+  <li><strong>Fashion and apparel</strong>: 28-32% (down from 42-48%) — but premiumising upward</li>
+  <li><strong>Beauty and wellness</strong>: 8-10% (up from 4-6%) — grooming, salons, wellness studios</li>
+  <li><strong>Technology and electronics</strong>: 6-8% (stable)</li>
   <li><strong>Other specialty</strong>: Balance — stationery, books, specialty foods, concept stores</li>
 </ul>
-<p>The implication for landlords: a mall that allocated 18–20% to F&B in 2018 needs to create 500–1,500 sq ft of additional food court and restaurant GLA per 10,000 sq ft of total mall area to reach current benchmarks. This is being executed through anchor tenant replacement and renovation programmes.</p>
+<p>The implication for landlords: a mall that allocated 18-20% to F&B in 2018 needs to create 500-1,500 sq ft of additional food court and restaurant GLA per 10,000 sq ft of total mall area to reach current benchmarks. This is being executed through anchor tenant replacement and renovation programmes.</p>
 
 <h2>F&B as the Revenue Engine</h2>
 <p>Food and beverage has emerged as the highest-performing and most resilient category in Indian retail real estate. India Gully's active F&B leasing at Entertainment City (Begum, Noor, Sutra, Informal), Gardens Galleria (Dearie, Maricham, Clinique, BBL), AIPL Joy Street (Rosia), and Hyatt Andaz Delhi (Khubani) demonstrates:</p>
 <ul>
-  <li>F&B tenants command 12–22% higher base rent than comparable retail per sq ft (on a higher turnover base)</li>
-  <li>F&B revenue share clauses generate 35–40% of total mall revenue participation receipts despite occupying 25–32% of GLA</li>
-  <li>F&B destination anchor (a ₹500+ cover dining concept) draws from a 25–35km catchment versus 15–20km for fashion retail</li>
-  <li>Vacancy in F&B zones is structurally lower (2–4%) versus fashion (8–12%) in current market</li>
+  <li>F&B tenants command 12-22% higher base rent than comparable retail per sq ft (on a higher turnover base)</li>
+  <li>F&B revenue share clauses generate 35-40% of total mall revenue participation receipts despite occupying 25-32% of GLA</li>
+  <li>F&B destination anchor (a ₹500+ cover dining concept) draws from a 25-35km catchment versus 15-20km for fashion retail</li>
+  <li>Vacancy in F&B zones is structurally lower (2-4%) versus fashion (8-12%) in current market</li>
   <li>F&B tenure is typically 5+5 years with fit-out contribution, creating stickier income versus fashion's 3+3</li>
 </ul>
 
 <h2>Entertainment Anchor Footfall Premium</h2>
 <p>Entertainment anchors — multiplex, FEC, gaming zone, bowling — generate a measurable footfall premium for co-located retail. India Gully benchmark data from 8 active mall mandates:</p>
 <ul>
-  <li>Malls with entertainment anchor: average 28,000–35,000 footfall per weekday</li>
-  <li>Malls without entertainment anchor: average 16,000–22,000 footfall per weekday</li>
-  <li>Weekend peak: entertainment-anchored malls reach 65,000–90,000 versus 40,000–55,000</li>
+  <li>Malls with entertainment anchor: average 28,000-35,000 footfall per weekday</li>
+  <li>Malls without entertainment anchor: average 16,000-22,000 footfall per weekday</li>
+  <li>Weekend peak: entertainment-anchored malls reach 65,000-90,000 versus 40,000-55,000</li>
   <li>Dwell time: 2.8 hours average at entertainment-anchored mall versus 1.6 hours at retail-only</li>
-  <li>Spend per visit: 18–24% higher at entertainment-anchored malls (correlation with dwell time)</li>
+  <li>Spend per visit: 18-24% higher at entertainment-anchored malls (correlation with dwell time)</li>
 </ul>
 
 <h2>Tier 2 Mall Dynamics</h2>
-<p>India's Tier 2 mall market (cities with population 0.5–3 million) presents a materially different opportunity from Tier 1 in 2024:</p>
+<p>India's Tier 2 mall market (cities with population 0.5-3 million) presents a materially different opportunity from Tier 1 in 2024:</p>
 <ul>
-  <li><strong>Supply undersupply</strong>: Grade-A mall GLA per capita in Tier 2 is 0.4–0.8 sq ft versus 3.2–4.5 sq ft in Tier 1 metros. Demand-supply is strongly in favour of quality supply.</li>
-  <li><strong>Catchment advantage</strong>: A Tier 2 Grade-A mall is the only quality shopping destination for a 50–100km radius. Monopoly position = premium rents and 95%+ occupancy on opening.</li>
+  <li><strong>Supply undersupply</strong>: Grade-A mall GLA per capita in Tier 2 is 0.4-0.8 sq ft versus 3.2-4.5 sq ft in Tier 1 metros. Demand-supply is strongly in favour of quality supply.</li>
+  <li><strong>Catchment advantage</strong>: A Tier 2 Grade-A mall is the only quality shopping destination for a 50-100km radius. Monopoly position = premium rents and 95%+ occupancy on opening.</li>
   <li><strong>Retailer appetite</strong>: H&M, Zara, Shoppers Stop, and all major F&B chains have active Tier 2 expansion mandates. India Gully placed 12 brands in Tier 2 cities in FY2024.</li>
-  <li><strong>Investment returns</strong>: Grade-A Tier 2 malls (₹150–300 Cr development cost) achieve stabilised yields of 9–12% — significantly above Tier 1 (6–8%) — with lower vacancy risk.</li>
+  <li><strong>Investment returns</strong>: Grade-A Tier 2 malls (₹150-300 Cr development cost) achieve stabilised yields of 9-12% — significantly above Tier 1 (6-8%) — with lower vacancy risk.</li>
 </ul>
 
 <h2>Lease Negotiation Strategy</h2>
 <p>India Gully's experience across 30+ retail leasing transactions provides a clear framework for lease negotiation in the current market:</p>
 <ul>
-  <li><strong>Anchor tenants</strong>: Negotiate fit-out contribution (₹800–1,200/sq ft for hypermarkets, ₹400–600/sq ft for apparel anchors) and minimum guarantee at 80% of market base rent for 9+9 year tenure</li>
-  <li><strong>F&B destination</strong>: Turnover-linked structure with base at 60–70% of market, revenue share at 8–12% above breakeven turnover. Fit-out contribution of 20–30%. 5+5 year standard.</li>
-  <li><strong>Mid-size specialty retail</strong>: Market base rent + 8–10% revenue share above 100% breakeven. 3+3 year standard.</li>
-  <li><strong>Entertainment/FEC</strong>: Base rent at market minus 15–20% discount + 12–18% revenue share. CAM contribution negotiated at 50% of retail rate. Fit-out contribution at 30–40%.</li>
+  <li><strong>Anchor tenants</strong>: Negotiate fit-out contribution (₹800-1,200/sq ft for hypermarkets, ₹400-600/sq ft for apparel anchors) and minimum guarantee at 80% of market base rent for 9+9 year tenure</li>
+  <li><strong>F&B destination</strong>: Turnover-linked structure with base at 60-70% of market, revenue share at 8-12% above breakeven turnover. Fit-out contribution of 20-30%. 5+5 year standard.</li>
+  <li><strong>Mid-size specialty retail</strong>: Market base rent + 8-10% revenue share above 100% breakeven. 3+3 year standard.</li>
+  <li><strong>Entertainment/FEC</strong>: Base rent at market minus 15-20% discount + 12-18% revenue share. CAM contribution negotiated at 50% of retail rate. Fit-out contribution at 30-40%.</li>
 </ul>
 
 <h2>India Gully's Retail Practice</h2>
@@ -705,7 +705,7 @@ const ARTICLES = [
     readTime: '11 min read',
     body: `
 <h2>The Supply Gap</h2>
-<p>India's Tier 2 and Tier 3 cities represent the most significant hotel supply gap in Asia. Branded room supply per 100,000 population in cities like Coimbatore, Vizag, Bhubaneswar, Jammu, and Srinagar is 6–12 keys — versus 35–65 keys in Mumbai and Delhi, and 80–120 keys in comparable South-East Asian cities.</p>
+<p>India's Tier 2 and Tier 3 cities represent the most significant hotel supply gap in Asia. Branded room supply per 100,000 population in cities like Coimbatore, Vizag, Bhubaneswar, Jammu, and Srinagar is 6-12 keys — versus 35-65 keys in Mumbai and Delhi, and 80-120 keys in comparable South-East Asian cities.</p>
 <p>Demand is not the constraint — occupancy at existing branded properties in these markets regularly exceeds 80% on weekdays, with weekend spikes to 95%+. The constraint is supply: risk-averse developers, limited financing, and the absence of experienced development partners.</p>
 
 <h2>Demand Drivers in Tier 2/3</h2>
@@ -719,18 +719,18 @@ const ARTICLES = [
 <h2>Brand Considerations</h2>
 <p>Brand selection is the most critical development decision for Tier 2 greenfield. India Gully's brand on-boarding experience provides a differentiated perspective:</p>
 <ul>
-  <li><strong>Economy (₹2,000–3,500 ADR)</strong>: Lemon Tree Express, Keys Lite, Ginger — lowest capital requirements, fastest ramp</li>
-  <li><strong>Mid-Scale (₹3,500–6,000 ADR)</strong>: Cygnett, Keys Select, Regenta, Pride — optimal for most Tier 2 markets</li>
-  <li><strong>Upscale (₹6,000–12,000 ADR)</strong>: Radisson Blu, Marriott Courtyard, Novotel — appropriate for state capitals and industrial Tier 2 cities</li>
+  <li><strong>Economy (₹2,000-3,500 ADR)</strong>: Lemon Tree Express, Keys Lite, Ginger — lowest capital requirements, fastest ramp</li>
+  <li><strong>Mid-Scale (₹3,500-6,000 ADR)</strong>: Cygnett, Keys Select, Regenta, Pride — optimal for most Tier 2 markets</li>
+  <li><strong>Upscale (₹6,000-12,000 ADR)</strong>: Radisson Blu, Marriott Courtyard, Novotel — appropriate for state capitals and industrial Tier 2 cities</li>
 </ul>
 
 <h2>Financing Structure</h2>
 <p>Tier 2 greenfield hotels are increasingly bankable. SBI, HDFC, and several NBFCs have dedicated hospitality lending desks with Tier 2 experience. Typical financing structure:</p>
 <ul>
-  <li>Debt: 55–65% of project cost (branded hotel, Tier 2)</li>
-  <li>Promoter equity: 25–35%</li>
+  <li>Debt: 55-65% of project cost (branded hotel, Tier 2)</li>
+  <li>Promoter equity: 25-35%</li>
   <li>DSCR requirement: 1.35× from Year 3</li>
-  <li>Moratorium: 24–30 months (pre-opening + ramp-up)</li>
+  <li>Moratorium: 24-30 months (pre-opening + ramp-up)</li>
 </ul>
 
 <h2>India Gully's Development Support</h2>
@@ -747,11 +747,11 @@ const ARTICLES = [
     readTime: '9 min read',
     body: `
 <h2>The Economic Logic of Integration</h2>
-<p>India's retail real estate sector is undergoing a fundamental structural shift. The standalone mall — once the dominant format — is losing ground to <strong>integrated mixed-use destinations</strong> that combine retail anchors, branded hotels, and Grade-A office in a single master-planned development. India Gully's advisory work across eight active mixed-use mandates in 2025–26 has crystallised three compelling economic arguments for integration:</p>
+<p>India's retail real estate sector is undergoing a fundamental structural shift. The standalone mall — once the dominant format — is losing ground to <strong>integrated mixed-use destinations</strong> that combine retail anchors, branded hotels, and Grade-A office in a single master-planned development. India Gully's advisory work across eight active mixed-use mandates in 2025-26 has crystallised three compelling economic arguments for integration:</p>
 <ol>
   <li><strong>Retail uplift from hotel guests</strong>: Hotel guests within an integrated development spend 2.8× more in the retail podium than casual footfall. The captive guest spend on F&B, lifestyle, and wellness creates a baseline revenue floor that is independent of the external retail cycle.</li>
-  <li><strong>FSI efficiency</strong>: Mixed-use designations in most state DCRs allow <strong>30–40% higher FSI</strong> than standalone commercial or retail (2.5–4.0 FAR vs 1.8–2.2 FAR for standalone mall). On the same land parcel, a developer can build 30–40% more sellable / leasable area, materially improving project economics.</li>
-  <li><strong>Income diversification</strong>: Retail income (variable, footfall-linked) is balanced by hotel operating income (RevPAR-linked) and office lease income (fixed, long-term). This reduces covenant risk and typically commands a 25–40 basis point compression on construction financing.</li>
+  <li><strong>FSI efficiency</strong>: Mixed-use designations in most state DCRs allow <strong>30-40% higher FSI</strong> than standalone commercial or retail (2.5-4.0 FAR vs 1.8-2.2 FAR for standalone mall). On the same land parcel, a developer can build 30-40% more sellable / leasable area, materially improving project economics.</li>
+  <li><strong>Income diversification</strong>: Retail income (variable, footfall-linked) is balanced by hotel operating income (RevPAR-linked) and office lease income (fixed, long-term). This reduces covenant risk and typically commands a 25-40 basis point compression on construction financing.</li>
 </ol>
 
 <h2>The AIPL Joy Street Case Study</h2>
@@ -760,22 +760,22 @@ const ARTICLES = [
   <li><strong>F&amp;B anchor outperformance</strong>: 22% rental uplift versus comparable standalone mall F&B anchors, attributed to hotel-guest dining demand</li>
   <li><strong>Office occupancy</strong>: Reached full occupancy 9 months earlier than standalone office benchmarks in the micro-market, driven by amenity access and hotel-rate corporate accommodation</li>
   <li><strong>Hotel enquiry volume</strong>: 4× standalone hotel benchmark for corporate group bookings, driven by adjacency to office occupiers</li>
-  <li><strong>Retail rent premium</strong>: 17–22% premium over standalone mall benchmarks for non-anchor retail, reflecting destination positioning</li>
+  <li><strong>Retail rent premium</strong>: 17-22% premium over standalone mall benchmarks for non-anchor retail, reflecting destination positioning</li>
 </ul>
 
 <h2>Tenant Mix Strategy for Integrated Retail</h2>
 <p>The tenant mix strategy for integrated mixed-use retail requires a fundamentally different approach from standalone malls. India Gully's framework distinguishes three tenant categories:</p>
-<h3>Destination Anchors (15–20% of GLA)</h3>
+<h3>Destination Anchors (15-20% of GLA)</h3>
 <p>Large-format retailers, multiplex operators, hypermarkets, or F&B destinations that generate primary footfall. In integrated developments, the hotel lobby and co-working/managed office hub function as additional destination anchors, reducing dependence on a single retail anchor.</p>
-<h3>Experience Operators (25–35% of GLA)</h3>
+<h3>Experience Operators (25-35% of GLA)</h3>
 <p>Formats that benefit directly from hotel-guest and office-worker captive demand: fine dining, casual dining, premium fitness, wellness, spa, and entertainment. Experience operators are the primary beneficiaries of the mixed-use premium and should be given priority in the leasing programme.</p>
-<h3>Convenience and Services (50–60% of GLA)</h3>
+<h3>Convenience and Services (50-60% of GLA)</h3>
 <p>Fashion, lifestyle, and convenience retail that benefit from the destination positioning but are less directly linked to hotel/office demand. Maintain flexibility through shorter initial terms (3+3) to allow for tenant mix evolution.</p>
 
 <h2>Operational Integration: The Shared Services Model</h2>
 <p>The most progressive integrated developments are moving towards a <strong>shared services model</strong> that pools hotel, office, and retail operational infrastructure. India Gully has developed an operational integration framework that covers:</p>
 <ul>
-  <li><strong>Security and FM</strong>: Single integrated FM contract (typically 15–20% cost saving vs separate contracts)</li>
+  <li><strong>Security and FM</strong>: Single integrated FM contract (typically 15-20% cost saving vs separate contracts)</li>
   <li><strong>Parking management</strong>: Dynamic pricing across retail, hotel, and office parking inventory</li>
   <li><strong>Digital infrastructure</strong>: Unified guest WiFi, loyalty platform, and digital directory serving retail customers, hotel guests, and office occupiers</li>
   <li><strong>F&amp;B commissary</strong>: Shared central kitchen infrastructure for hotel F&amp;B and food court operations</li>
@@ -790,13 +790,13 @@ const ARTICLES = [
 <ol>
   <li>Pre-application meeting with ULB/Development Authority to confirm mixed-use eligibility</li>
   <li>FSI calculation and loading analysis across proposed uses</li>
-  <li>Traffic impact assessment (mixed-use destinations generate 35–50% lower peak traffic than standalone mall of equivalent GLA)</li>
+  <li>Traffic impact assessment (mixed-use destinations generate 35-50% lower peak traffic than standalone mall of equivalent GLA)</li>
   <li>Environmental clearance (for developments above 20,000 sq m, EIA notification threshold)</li>
   <li>Fire NOC for integrated development (complex multi-use egress requirements)</li>
 </ol>
 
 <h2>Investment Outlook</h2>
-<p>India Gully's pipeline analysis indicates that the next generation of Indian retail real estate investment will be dominated by mixed-use integrated formats. Our active retail mandate pipeline includes three mixed-use developments totalling ₹2,400 Cr in project cost — all incorporating the mall-hotel-office trinity. The yields being achieved — retail cap rates of 7.5–9.0%, hotel yield on cost of 9–11%, office cap rates of 7–8% — are each superior to standalone format benchmarks, with the combination providing a risk-adjusted return profile that is compelling for domestic and institutional investors.</p>
+<p>India Gully's pipeline analysis indicates that the next generation of Indian retail real estate investment will be dominated by mixed-use integrated formats. Our active retail mandate pipeline includes three mixed-use developments totalling ₹2,400 Cr in project cost — all incorporating the mall-hotel-office trinity. The yields being achieved — retail cap rates of 7.5-9.0%, hotel yield on cost of 9-11%, office cap rates of 7-8% — are each superior to standalone format benchmarks, with the combination providing a risk-adjusted return profile that is compelling for domestic and institutional investors.</p>
 `,
   },
   {
@@ -804,7 +804,7 @@ const ARTICLES = [
     category: 'HORECA',
     date: 'February 2026',
     title: 'Building Resilient HORECA Supply Chains in Tier 2 India',
-    excerpt: 'Hotel and F&B operators in India\'s Tier 2 and Tier 3 cities face a structural procurement challenge: fragmented vendors, no specialist OS&E suppliers, and pre-opening costs 18–25% above Tier 1 benchmarks. India Gully\'s Hub-and-Spoke procurement model, refined across 15+ hotel projects, delivers 14% average cost savings.',
+    excerpt: 'Hotel and F&B operators in India\'s Tier 2 and Tier 3 cities face a structural procurement challenge: fragmented vendors, no specialist OS&E suppliers, and pre-opening costs 18-25% above Tier 1 benchmarks. India Gully\'s Hub-and-Spoke procurement model, refined across 15+ hotel projects, delivers 14% average cost savings.',
     tags: ['HORECA', 'Supply Chain', 'Hospitality', 'Tier 2'],
     readTime: '7 min read',
     body: `
@@ -812,10 +812,10 @@ const ARTICLES = [
 <p>India's Tier 2 and Tier 3 hotel markets — cities like Chandigarh, Bhubaneswar, Coimbatore, Jammu, Nashik, and Mysuru — are experiencing their strongest period of branded hotel supply growth in a decade. Yet the supply chain infrastructure required to commission and operate these properties has not kept pace with development velocity.</p>
 <p>India Gully's HORECA procurement practice, operating across 15+ hotel projects in Tier 2 markets, has documented a consistent set of supply chain pathologies that drive up pre-opening costs and compromise operational quality:</p>
 <ul>
-  <li><strong>Vendor fragmentation</strong>: A typical 80-key Tier 2 hotel requires 1–3 FF&E suppliers and has virtually no access to specialist OS&E (Operating Supplies &amp; Equipment) vendors. Procurement is handled piecemeal, with no consolidated buying leverage.</li>
+  <li><strong>Vendor fragmentation</strong>: A typical 80-key Tier 2 hotel requires 1-3 FF&E suppliers and has virtually no access to specialist OS&E (Operating Supplies &amp; Equipment) vendors. Procurement is handled piecemeal, with no consolidated buying leverage.</li>
   <li><strong>Quality inconsistency</strong>: Without established vendor relationships or quality-assurance frameworks, delivered products frequently deviate from specification. India Gully's project records document an average 18% product non-conformance rate in unmanaged Tier 2 procurement versus &lt;4% under managed procurement.</li>
-  <li><strong>Logistics complexity</strong>: Last-mile delivery to Tier 2 cities adds 12–18% to logistics cost and 3–6 weeks to delivery timelines. Without proper procurement sequencing, pre-opening programmes slip consistently.</li>
-  <li><strong>Cost impact</strong>: Pre-opening procurement costs in unmanaged Tier 2 projects run 18–25% above Tier 1 benchmarks — a paradox, since land and construction costs in Tier 2 are lower. The supply chain premium erodes a significant portion of the location cost advantage.</li>
+  <li><strong>Logistics complexity</strong>: Last-mile delivery to Tier 2 cities adds 12-18% to logistics cost and 3-6 weeks to delivery timelines. Without proper procurement sequencing, pre-opening programmes slip consistently.</li>
+  <li><strong>Cost impact</strong>: Pre-opening procurement costs in unmanaged Tier 2 projects run 18-25% above Tier 1 benchmarks — a paradox, since land and construction costs in Tier 2 are lower. The supply chain premium erodes a significant portion of the location cost advantage.</li>
 </ul>
 
 <h2>The Hub-and-Spoke Procurement Model</h2>
@@ -871,59 +871,59 @@ const ARTICLES = [
     category: 'Retail',
     date: 'March 2026',
     title: 'India Retail Leasing 2026: Premiumisation, Omnichannel & the New Mall Hierarchy',
-    excerpt: 'India\'s organised retail leasing market is undergoing structural realignment. Grade-A malls command rental premiums of 40–65% over Grade-B stock; international brand entry is at a 10-year high; and the omnichannel pivot is reshaping the economics of physical retail. India Gully\'s 1,40,000+ sq ft leasing practice reveals the trends shaping 2026.',
+    excerpt: 'India\'s organised retail leasing market is undergoing structural realignment. Grade-A malls command rental premiums of 40-65% over Grade-B stock; international brand entry is at a 10-year high; and the omnichannel pivot is reshaping the economics of physical retail. India Gully\'s 1,40,000+ sq ft leasing practice reveals the trends shaping 2026.',
     tags: ['Retail', 'Leasing', 'Real Estate', '2026'],
     readTime: '9 min read',
     body: `
 <h2>Executive Summary</h2>
-<p>India's organised retail real estate sector in 2026 is bifurcating sharply. The top 15% of mall stock — Grade-A developments in metro CBDs and premium suburban corridors — is virtually fully leased, with brands competing for space and rental reversions of 12–18% on lease renewal. The bottom 40% of existing mall stock faces vacancy rates above 25%, anchor tenant exodus, and structural repositioning requirements. Understanding this hierarchy — and selecting the right assets — is the central challenge for both retail brands and real estate investors.</p>
+<p>India's organised retail real estate sector in 2026 is bifurcating sharply. The top 15% of mall stock — Grade-A developments in metro CBDs and premium suburban corridors — is virtually fully leased, with brands competing for space and rental reversions of 12-18% on lease renewal. The bottom 40% of existing mall stock faces vacancy rates above 25%, anchor tenant exodus, and structural repositioning requirements. Understanding this hierarchy — and selecting the right assets — is the central challenge for both retail brands and real estate investors.</p>
 <p>India Gully's retail leasing practice has transacted 1,40,000+ sq ft across Delhi NCR and Gurugram over the past 7 years, working with both landlords repositioning their retail assets and brands seeking optimal physical retail locations. This report synthesises our transaction data with India Gully's market intelligence to define the strategic landscape for 2026.</p>
 
 <h2>The New Mall Hierarchy</h2>
 <p>India's mall market has evolved from a binary Grade-A / Grade-B classification to a more nuanced five-tier hierarchy, each with distinct occupancy, rental, and investment dynamics:</p>
 
 <h3>Tier I: Destination Malls (National)</h3>
-<p>The top 8–10 malls nationally — DLF Emporio, Select Citywalk, Palladium, Phoenix MarketCity Mumbai — occupy a category apart. Vacancy rates are effectively zero; waitlists for anchor and flagship space run 18–36 months. Rental premiums of 80–120% over city averages are sustained by irreplaceable footfall (30,000–70,000 daily visitors) and unmatched brand visibility. Investment yields have compressed to 5.5–6.5%, reflecting institutional quality comparable to gateway European retail real estate.</p>
+<p>The top 8-10 malls nationally — DLF Emporio, Select Citywalk, Palladium, Phoenix MarketCity Mumbai — occupy a category apart. Vacancy rates are effectively zero; waitlists for anchor and flagship space run 18-36 months. Rental premiums of 80-120% over city averages are sustained by irreplaceable footfall (30,000-70,000 daily visitors) and unmatched brand visibility. Investment yields have compressed to 5.5-6.5%, reflecting institutional quality comparable to gateway European retail real estate.</p>
 
 <h3>Tier II: Premium Regional Malls</h3>
-<p>15–20 malls in the 6 major metros — DLF CyberHub, Pacific Mall Tagore Garden, Nexus Elante Chandigarh — deliver consistent Grade-A performance with footfall of 12,000–28,000 daily. Vacancy runs 3–8%. Rental levels of ₹150–300 per sq ft per month for premium inline are achievable. These assets attract both international brand entries and domestic premiumisation plays.</p>
+<p>15-20 malls in the 6 major metros — DLF CyberHub, Pacific Mall Tagore Garden, Nexus Elante Chandigarh — deliver consistent Grade-A performance with footfall of 12,000-28,000 daily. Vacancy runs 3-8%. Rental levels of ₹150-300 per sq ft per month for premium inline are achievable. These assets attract both international brand entries and domestic premiumisation plays.</p>
 
 <h3>Tier III: Quality Neighbourhood Malls</h3>
-<p>The largest segment by number — well-located, single-catchment malls of 3–5 lakh sq ft in Tier 1 cities. Performance varies significantly by micro-market. Anchor-tenant quality is the key differentiator: malls anchored by Reliance / D-Mart / premium cineplex outperform peers by 35–45% on inline brand performance. Vacancy: 8–15%. Rental: ₹80–150 per sq ft per month for inline.</p>
+<p>The largest segment by number — well-located, single-catchment malls of 3-5 lakh sq ft in Tier 1 cities. Performance varies significantly by micro-market. Anchor-tenant quality is the key differentiator: malls anchored by Reliance / D-Mart / premium cineplex outperform peers by 35-45% on inline brand performance. Vacancy: 8-15%. Rental: ₹80-150 per sq ft per month for inline.</p>
 
 <h3>Tier IV: Transitional Assets</h3>
-<p>Legacy malls (2008–2015 vintage) in secondary micro-markets facing the omnichannel disruption most acutely. Many have lost 1–3 anchor tenants in the post-COVID period; vacancy of 20–35% is common. These assets require repositioning — conversion of dead retail into F&B, entertainment, gym/wellness, co-working, or hotel use. India Gully has active advisory mandates involving three such repositioning projects totalling 8 lakh sq ft of gross leasable area.</p>
+<p>Legacy malls (2008-2015 vintage) in secondary micro-markets facing the omnichannel disruption most acutely. Many have lost 1-3 anchor tenants in the post-COVID period; vacancy of 20-35% is common. These assets require repositioning — conversion of dead retail into F&B, entertainment, gym/wellness, co-working, or hotel use. India Gully has active advisory mandates involving three such repositioning projects totalling 8 lakh sq ft of gross leasable area.</p>
 
 <h3>Tier V: Distressed Assets</h3>
-<p>Poorly located, structurally undermined retail assets with vacancy above 40%. Resolution is primarily through Tier IV conversion (full repurposing) or debt resolution via IBC. India Gully's Debt & Special Situations practice has engaged on three such assets in the ₹35–120 Cr range over the past 24 months.</p>
+<p>Poorly located, structurally undermined retail assets with vacancy above 40%. Resolution is primarily through Tier IV conversion (full repurposing) or debt resolution via IBC. India Gully's Debt & Special Situations practice has engaged on three such assets in the ₹35-120 Cr range over the past 24 months.</p>
 
 <h2>International Brand Entry: 10-Year High</h2>
-<p>International brand entry into India in 2024–25 reached its highest level since 2014–15. Key data points:</p>
+<p>International brand entry into India in 2024-25 reached its highest level since 2014-15. Key data points:</p>
 <ul>
-  <li><strong>35+ international brands</strong> entered or announced India entry in 2024–25, across luxury, premium, and mass-premium segments</li>
+  <li><strong>35+ international brands</strong> entered or announced India entry in 2024-25, across luxury, premium, and mass-premium segments</li>
   <li><strong>Luxury segment</strong>: Miu Miu, Brunello Cucinelli, Rimowa, and Ralph Lauren Pink Pony flagship expansions represent the continued deepening of the luxury consumer base in Delhi NCR and Mumbai</li>
   <li><strong>F&B international</strong>: Tim Hortons, Popeyes, and Five Guys expansions represent the coming-of-age of India's QSR and fast-casual segment for international operators</li>
   <li><strong>Sports & outdoor</strong>: Salomon, Hoka, and Vuori's entry signals the emergence of India's sports lifestyle consumer as a distinct retail segment</li>
 </ul>
-<p>International brand entry is disproportionately concentrated in Tier I and Tier II mall stock. 87% of new international brand stores opened in 2024–25 were located in the top 25 malls nationally. The implication for mall landlords outside this group is that international brand anchoring requires significant asset repositioning to be a realistic aspiration.</p>
+<p>International brand entry is disproportionately concentrated in Tier I and Tier II mall stock. 87% of new international brand stores opened in 2024-25 were located in the top 25 malls nationally. The implication for mall landlords outside this group is that international brand anchoring requires significant asset repositioning to be a realistic aspiration.</p>
 
 <h2>Premiumisation Across Domestic Brands</h2>
-<p>The premiumisation trend that began in post-COVID 2021–22 has accelerated. India Gully's leasing transaction data shows:</p>
+<p>The premiumisation trend that began in post-COVID 2021-22 has accelerated. India Gully's leasing transaction data shows:</p>
 <ul>
-  <li>Average ticket size for domestic apparel and lifestyle brands has increased 28–35% across our portfolio in 2024–25 versus 2021–22</li>
-  <li>Brands in the ₹3,000–8,000 ASP (average selling price) range are the most active space-seekers — this "accessible premium" segment is growing faster than both mass and luxury</li>
+  <li>Average ticket size for domestic apparel and lifestyle brands has increased 28-35% across our portfolio in 2024-25 versus 2021-22</li>
+  <li>Brands in the ₹3,000-8,000 ASP (average selling price) range are the most active space-seekers — this "accessible premium" segment is growing faster than both mass and luxury</li>
   <li>Home and lifestyle categories — D2C furniture, artisanal home décor, premium kitchenware — are the fastest-growing categories for physical retail expansion</li>
-  <li>Beauty and personal care (BPC) premiumisation: domestic BPC brands (The Derma Co., Minimalist, Plum, Pilgrim) are transitioning from digital-first to omnichannel, with aggressive physical retail rollout plans for 2026–27</li>
+  <li>Beauty and personal care (BPC) premiumisation: domestic BPC brands (The Derma Co., Minimalist, Plum, Pilgrim) are transitioning from digital-first to omnichannel, with aggressive physical retail rollout plans for 2026-27</li>
 </ul>
 
 <h2>Omnichannel: Physical Retail's New Economics</h2>
-<p>The narrative that e-commerce would eliminate physical retail has been superseded by a more nuanced omnichannel reality. India Gully's landlord clients report that brands operating strong omnichannel models are delivering 15–22% better store economics than pure-play physical retailers. The data from our portfolio:</p>
+<p>The narrative that e-commerce would eliminate physical retail has been superseded by a more nuanced omnichannel reality. India Gully's landlord clients report that brands operating strong omnichannel models are delivering 15-22% better store economics than pure-play physical retailers. The data from our portfolio:</p>
 <ul>
   <li><strong>Discovery function</strong>: 68% of surveyed brand partners report that physical store presence drives measurable incremental digital sales within a 15km radius of the store location</li>
-  <li><strong>Returns reduction</strong>: Brands with physical presence show 35–42% lower return rates on online orders — customers who can touch and try in-store order with more confidence online</li>
+  <li><strong>Returns reduction</strong>: Brands with physical presence show 35-42% lower return rates on online orders — customers who can touch and try in-store order with more confidence online</li>
   <li><strong>Brand trust premium</strong>: Consumer surveys by ICICI Securities (2025) indicate 58% of Indian consumers trust a brand more upon seeing a physical store, regardless of whether they ultimately purchase online or offline</li>
 </ul>
-<p>The implication for retail leasing economics: physical retail is no longer justified purely on a store-P&L basis. Landlords and brands are increasingly agreeing on revenue-share lease structures that capture the full omnichannel contribution of a store location, with base rents lower but revenue share kickers higher. India Gully has negotiated three such hybrid lease structures in 2025–26 for domestic D2C brands entering their first physical footprint.</p>
+<p>The implication for retail leasing economics: physical retail is no longer justified purely on a store-P&L basis. Landlords and brands are increasingly agreeing on revenue-share lease structures that capture the full omnichannel contribution of a store location, with base rents lower but revenue share kickers higher. India Gully has negotiated three such hybrid lease structures in 2025-26 for domestic D2C brands entering their first physical footprint.</p>
 
 <h2>India Gully's Retail Leasing Services</h2>
 <p>India Gully's retail leasing practice operates across the full spectrum of retail real estate transactions:</p>
@@ -940,31 +940,31 @@ const ARTICLES = [
     category: 'Debt & Special Situations',
     date: 'March 2026',
     title: 'Distressed Hospitality Assets in India 2026: Opportunity Map for Special Situations Investors',
-    excerpt: 'India\'s hospitality sector carries an estimated ₹22,000–28,000 Cr of stressed debt, concentrated in mid-market hotels built in the 2008–2015 cycle. The post-COVID recovery has been uneven: premium assets have recapitalised; sub-optimal assets face IBC proceedings or promoter distress. India Gully\'s Debt & Special Situations practice maps the opportunity.',
+    excerpt: 'India\'s hospitality sector carries an estimated ₹22,000-28,000 Cr of stressed debt, concentrated in mid-market hotels built in the 2008-2015 cycle. The post-COVID recovery has been uneven: premium assets have recapitalised; sub-optimal assets face IBC proceedings or promoter distress. India Gully\'s Debt & Special Situations practice maps the opportunity.',
     tags: ['Debt & Special Situations', 'Hospitality', 'IBC', 'Real Estate'],
     readTime: '11 min read',
     body: `
 <h2>Executive Summary</h2>
-<p>India's hospitality sector recovery from COVID-19 has been structurally uneven. Tier-1 branded hotels, airport-proximate properties, and heritage assets have delivered strong RevPAR recovery — many exceeding 2019 benchmarks by 15–25% in nominal terms. However, the mid-market hotel cohort built in the infrastructure and consumption boom of 2008–2015 carries structural vulnerabilities that the COVID shock exposed and the recovery has not fully healed: sub-optimal locations, over-leveraged capital structures, deferred capex, and in some cases promoter distress that has diverted management attention from hotel operations.</p>
-<p>For special situations investors — family offices, credit funds, and strategic acquirers — this creates an investable opportunity in the ₹15–150 Cr per asset range, a segment that is too small for institutional PE but too complex for conventional property investors. India Gully's Debt & Special Situations vertical, active since 2023, has engaged on 8 assets in this segment with a combined debt exposure of ₹380 Cr.</p>
+<p>India's hospitality sector recovery from COVID-19 has been structurally uneven. Tier-1 branded hotels, airport-proximate properties, and heritage assets have delivered strong RevPAR recovery — many exceeding 2019 benchmarks by 15-25% in nominal terms. However, the mid-market hotel cohort built in the infrastructure and consumption boom of 2008-2015 carries structural vulnerabilities that the COVID shock exposed and the recovery has not fully healed: sub-optimal locations, over-leveraged capital structures, deferred capex, and in some cases promoter distress that has diverted management attention from hotel operations.</p>
+<p>For special situations investors — family offices, credit funds, and strategic acquirers — this creates an investable opportunity in the ₹15-150 Cr per asset range, a segment that is too small for institutional PE but too complex for conventional property investors. India Gully's Debt & Special Situations vertical, active since 2023, has engaged on 8 assets in this segment with a combined debt exposure of ₹380 Cr.</p>
 
 <h2>The Stressed Debt Landscape</h2>
 <p>Estimating the quantum of stressed hospitality debt in India requires triangulating multiple data sources. India Gully's analysis, drawing on RBI's sectoral NPA data, NCLT filings, and direct transaction intelligence, arrives at the following picture:</p>
 
 <h3>Overall Quantum</h3>
 <ul>
-  <li><strong>Total hospitality sector bank debt</strong>: Approximately ₹1,10,000–1,20,000 Cr (scheduled commercial banks + HFCs + NBFCs)</li>
-  <li><strong>Gross NPA + SMA-2 (stressed) cohort</strong>: Estimated ₹22,000–28,000 Cr (19–23% of total hospitality sector lending)</li>
+  <li><strong>Total hospitality sector bank debt</strong>: Approximately ₹1,10,000-1,20,000 Cr (scheduled commercial banks + HFCs + NBFCs)</li>
+  <li><strong>Gross NPA + SMA-2 (stressed) cohort</strong>: Estimated ₹22,000-28,000 Cr (19-23% of total hospitality sector lending)</li>
   <li><strong>NCLT admitted cases</strong>: 280+ hospitality-sector CIRPs active as of Q4 FY25, with aggregate admitted claims of ₹14,200 Cr</li>
-  <li><strong>Pre-IBC settlements (OTS, restructuring)</strong>: India Gully estimates a further ₹8,000–14,000 Cr in pre-admission restructuring being managed bilaterally between promoters and lenders</li>
+  <li><strong>Pre-IBC settlements (OTS, restructuring)</strong>: India Gully estimates a further ₹8,000-14,000 Cr in pre-admission restructuring being managed bilaterally between promoters and lenders</li>
 </ul>
 
 <h3>Asset Segment Concentration</h3>
 <p>Stressed debt is heavily concentrated in three asset segments:</p>
 <ol>
-  <li><strong>Mid-market hotels, 2008–2015 vintage, secondary locations</strong> (40–120 keys): Accounts for approximately 55–60% of the stressed cohort. These assets were built on aggressive debt, achieved acceptable occupancy in the pre-COVID period, but cannot service debt at current interest rates while funding the capex required to maintain brand standard or franchise eligibility.</li>
-  <li><strong>Resort and leisure properties, Tier 2 / hill station locations</strong> (30–80 keys): Accounts for approximately 20–25%. Post-COVID leisure demand recovery has been strong, but many of these assets are technically operated by promoters without proper franchise agreements, making them difficult to refinance or sell at institutional pricing.</li>
-  <li><strong>Large mid-scale hotels, non-metro markets</strong> (120–250 keys): Accounts for approximately 15–20%. Oversupplied markets (Agra, Jaipur outskirts, highway corridor properties) with structural occupancy weakness and ADR compression from new branded supply.</li>
+  <li><strong>Mid-market hotels, 2008-2015 vintage, secondary locations</strong> (40-120 keys): Accounts for approximately 55-60% of the stressed cohort. These assets were built on aggressive debt, achieved acceptable occupancy in the pre-COVID period, but cannot service debt at current interest rates while funding the capex required to maintain brand standard or franchise eligibility.</li>
+  <li><strong>Resort and leisure properties, Tier 2 / hill station locations</strong> (30-80 keys): Accounts for approximately 20-25%. Post-COVID leisure demand recovery has been strong, but many of these assets are technically operated by promoters without proper franchise agreements, making them difficult to refinance or sell at institutional pricing.</li>
+  <li><strong>Large mid-scale hotels, non-metro markets</strong> (120-250 keys): Accounts for approximately 15-20%. Oversupplied markets (Agra, Jaipur outskirts, highway corridor properties) with structural occupancy weakness and ADR compression from new branded supply.</li>
 </ol>
 
 <h2>The IBC Resolution Track Record</h2>
@@ -979,17 +979,17 @@ const ARTICLES = [
 <h2>Investment Thesis: Where the Opportunity Lies</h2>
 <p>India Gully's Debt & Special Situations practice has identified four sub-segments within the distressed hospitality opportunity that offer attractive risk-adjusted returns:</p>
 
-<h3>1. Pre-NPA OTS Acquisitions (₹15–60 Cr ticket)</h3>
-<p>Assets where promoter distress is evident but the loan has not yet been classified NPA. Banks and NBFCs are willing to negotiate OTS at 55–70 cents on the rupee for early settlement. The acquirer receives a clean asset (no IBC overhang), operational continuity, and the ability to install new management immediately. India Gully acts as transaction advisor — structuring the OTS, negotiating with lenders, and connecting acquirers with franchise partners for re-branding.</p>
+<h3>1. Pre-NPA OTS Acquisitions (₹15-60 Cr ticket)</h3>
+<p>Assets where promoter distress is evident but the loan has not yet been classified NPA. Banks and NBFCs are willing to negotiate OTS at 55-70 cents on the rupee for early settlement. The acquirer receives a clean asset (no IBC overhang), operational continuity, and the ability to install new management immediately. India Gully acts as transaction advisor — structuring the OTS, negotiating with lenders, and connecting acquirers with franchise partners for re-branding.</p>
 
-<h3>2. Post-IBC Resolution (₹20–80 Cr ticket)</h3>
-<p>Assets that have gone through IBC but failed to attract a resolution applicant in the initial CIRP. Liquidation assets — typically available at 40–60% of NCLT-assessed liquidation value — offer the deepest value but require full operational rebuild. India Gully's value-add framework for these assets: assess structural integrity, identify optimal brand/franchise, model 36-month recovery P&L, and connect with operators willing to manage on a management contract rather than requiring an upfront fee. Hotel Rajshree, Chandigarh (India Gully mandate) is an example of a successful post-distress operational restoration.</p>
+<h3>2. Post-IBC Resolution (₹20-80 Cr ticket)</h3>
+<p>Assets that have gone through IBC but failed to attract a resolution applicant in the initial CIRP. Liquidation assets — typically available at 40-60% of NCLT-assessed liquidation value — offer the deepest value but require full operational rebuild. India Gully's value-add framework for these assets: assess structural integrity, identify optimal brand/franchise, model 36-month recovery P&L, and connect with operators willing to manage on a management contract rather than requiring an upfront fee. Hotel Rajshree, Chandigarh (India Gully mandate) is an example of a successful post-distress operational restoration.</p>
 
-<h3>3. Promoter Equity Restructuring (₹8–35 Cr ticket)</h3>
-<p>Family-owned, single-asset hotel operators where the original promoter is operationally capable but financially distressed due to COVID-era debt. The investment thesis: inject equity capital at a significant discount to replacement cost (50–65 cents), restructure the liability profile, and participate in the upside as the asset recovers to normalised trading. These situations typically require patient capital (3–5 year horizon) but deliver 22–28% IRR when executed well.</p>
+<h3>3. Promoter Equity Restructuring (₹8-35 Cr ticket)</h3>
+<p>Family-owned, single-asset hotel operators where the original promoter is operationally capable but financially distressed due to COVID-era debt. The investment thesis: inject equity capital at a significant discount to replacement cost (50-65 cents), restructure the liability profile, and participate in the upside as the asset recovers to normalised trading. These situations typically require patient capital (3-5 year horizon) but deliver 22-28% IRR when executed well.</p>
 
 <h3>4. Portfolio Debt Acquisition</h3>
-<p>For larger capital pools (₹150 Cr+), acquiring portfolios of hotel NPA from banks and ARCs at portfolio discount (typically 40–55% of outstanding principal). Portfolio acquisition provides diversification, reduces single-asset concentration risk, and enables operational synergies (shared management, procurement consolidation). India Gully has structured one such portfolio acquisition mandate covering 4 assets in Punjab and Himachal Pradesh with aggregate principal of ₹185 Cr.</p>
+<p>For larger capital pools (₹150 Cr+), acquiring portfolios of hotel NPA from banks and ARCs at portfolio discount (typically 40-55% of outstanding principal). Portfolio acquisition provides diversification, reduces single-asset concentration risk, and enables operational synergies (shared management, procurement consolidation). India Gully has structured one such portfolio acquisition mandate covering 4 assets in Punjab and Himachal Pradesh with aggregate principal of ₹185 Cr.</p>
 
 <h2>India Gully's Debt & Special Situations Practice</h2>
 <p>India Gully's Debt & Special Situations vertical provides end-to-end advisory across the distressed asset lifecycle:</p>
@@ -1023,52 +1023,52 @@ const ARTICLES = [
 <ul>
   <li><strong>Swiggy Snacc / Instamart</strong>: Dark store network of 800+ locations nationally, expanding into HORECA-adjacent cold storage</li>
   <li><strong>Zomato Hyperpure</strong>: B2B ingredient supply business now processing ₹2,400 Cr+ annually, servicing 50,000+ restaurant partners</li>
-  <li><strong>Blinkit (Zomato)</strong>: 800+ dark stores across 40+ cities; average dark store area 1,800–3,500 sq ft; lease terms 3–5 years at ₹45–120 per sq ft per month in Tier-1 micro-markets</li>
+  <li><strong>Blinkit (Zomato)</strong>: 800+ dark stores across 40+ cities; average dark store area 1,800-3,500 sq ft; lease terms 3-5 years at ₹45-120 per sq ft per month in Tier-1 micro-markets</li>
 </ul>
 <p>The implication for commercial real estate: aggregator-operated dark stores have become a new, credit-worthy tenant category for landlords with ground-floor retail in the right micro-markets.</p>
 
 <h3>Cloud Kitchen Operator Landscape</h3>
-<p>India's cloud kitchen landscape has consolidated significantly from the 2020–22 peak. Current structure:</p>
+<p>India's cloud kitchen landscape has consolidated significantly from the 2020-22 peak. Current structure:</p>
 <ul>
-  <li><strong>Platform-operated hubs</strong>: Rebel Foods (Faasos, Behrouz, Ovenstory), EatClub — vertically integrated multi-brand operators with 300–600 sq ft standardised kitchen modules</li>
-  <li><strong>Landlord-operated shared kitchens</strong>: Co-working-style shared kitchen infrastructure (Kitchens@, The Kitchens by Swiggy) leased to F&B brands at ₹12,000–35,000 per station per month</li>
+  <li><strong>Platform-operated hubs</strong>: Rebel Foods (Faasos, Behrouz, Ovenstory), EatClub — vertically integrated multi-brand operators with 300-600 sq ft standardised kitchen modules</li>
+  <li><strong>Landlord-operated shared kitchens</strong>: Co-working-style shared kitchen infrastructure (Kitchens@, The Kitchens by Swiggy) leased to F&B brands at ₹12,000-35,000 per station per month</li>
   <li><strong>Single-brand cloud kitchens</strong>: Restaurant chains using dedicated dark kitchen units to extend delivery radius without front-of-house investment</li>
-  <li><strong>Ghost kitchens in hotel basements</strong>: India Gully has actively advised 3 hotel owners on monetising under-utilised basement kitchen infrastructure for cloud kitchen sub-leasing — generating ₹80,000–1.8 Cr per year in incremental revenue</li>
+  <li><strong>Ghost kitchens in hotel basements</strong>: India Gully has actively advised 3 hotel owners on monetising under-utilised basement kitchen infrastructure for cloud kitchen sub-leasing — generating ₹80,000-1.8 Cr per year in incremental revenue</li>
 </ul>
 
 <h2>2. Real Estate Implications</h2>
 <h3>The HORECA Real Estate Stack</h3>
 <p>India Gully has developed a framework for categorising the physical infrastructure requirements across the HORECA delivery ecosystem:</p>
 <ol>
-  <li><strong>Tier A: Hub Dark Kitchens</strong> (2,500–8,000 sq ft): Multi-brand production hubs in industrial or commercial zones; ground floor preferred; loading bay mandatory; 3-phase power (80–150 kW); monthly lease ₹20–60 per sq ft in Tier-1</li>
-  <li><strong>Tier B: Satellite Cloud Kitchens</strong> (400–1,200 sq ft): Delivery-radius extension units; typically in basement or mezzanine of existing commercial buildings; monthly lease ₹40–120 per sq ft depending on micro-market</li>
-  <li><strong>Tier C: Dark Stores</strong> (1,500–4,000 sq ft): Ground-floor retail with 15-minute delivery access; cold storage (0–4°C zone) mandatory; monthly lease ₹60–180 per sq ft in high-demand micro-markets</li>
-  <li><strong>Tier D: Hotel Kitchen Monetisation</strong>: Sub-leasing hotel kitchen capacity during off-peak hours to cloud kitchen operators; India Gully's model generates 18–32% kitchen utilisation increase with minimal capex</li>
+  <li><strong>Tier A: Hub Dark Kitchens</strong> (2,500-8,000 sq ft): Multi-brand production hubs in industrial or commercial zones; ground floor preferred; loading bay mandatory; 3-phase power (80-150 kW); monthly lease ₹20-60 per sq ft in Tier-1</li>
+  <li><strong>Tier B: Satellite Cloud Kitchens</strong> (400-1,200 sq ft): Delivery-radius extension units; typically in basement or mezzanine of existing commercial buildings; monthly lease ₹40-120 per sq ft depending on micro-market</li>
+  <li><strong>Tier C: Dark Stores</strong> (1,500-4,000 sq ft): Ground-floor retail with 15-minute delivery access; cold storage (0-4°C zone) mandatory; monthly lease ₹60-180 per sq ft in high-demand micro-markets</li>
+  <li><strong>Tier D: Hotel Kitchen Monetisation</strong>: Sub-leasing hotel kitchen capacity during off-peak hours to cloud kitchen operators; India Gully's model generates 18-32% kitchen utilisation increase with minimal capex</li>
 </ol>
 
 <h3>Location Science for HORECA Infrastructure</h3>
 <p>Optimal HORECA infrastructure location depends on three variables that India Gully has modelled across active mandates:</p>
 <ul>
-  <li><strong>Delivery radius economics</strong>: Swiggy/Zomato delivery radius optimisation centres on 3–5 km radius from kitchen; beyond 6 km, packaging quality and delivery cost economics deteriorate</li>
+  <li><strong>Delivery radius economics</strong>: Swiggy/Zomato delivery radius optimisation centres on 3-5 km radius from kitchen; beyond 6 km, packaging quality and delivery cost economics deteriorate</li>
   <li><strong>Population density threshold</strong>: Dark stores require 8,000+ households within 2 km radius to sustain a 10-minute delivery model; cloud kitchens require 15,000+ food delivery orders per month in the micro-market</li>
-  <li><strong>Infrastructure requirements</strong>: 3-phase power, ventilation compliance, ground-floor vehicle access — these structural requirements limit eligible buildings to 15–25% of total commercial stock in most micro-markets</li>
+  <li><strong>Infrastructure requirements</strong>: 3-phase power, ventilation compliance, ground-floor vehicle access — these structural requirements limit eligible buildings to 15-25% of total commercial stock in most micro-markets</li>
 </ul>
 
 <h2>3. Investment Opportunity Analysis</h2>
 <h3>HORECA Real Estate as an Asset Class</h3>
 <p>The institutionalisation of dark kitchens and dark stores as tenants creates a new sub-category of commercial real estate investment. Key investment metrics from India Gully's mandate experience:</p>
 <ul>
-  <li><strong>Yield premium</strong>: HORECA-optimised commercial spaces (with ventilation, power, and loading access) achieve 15–25% yield premium over equivalent non-HORECA commercial</li>
-  <li><strong>Tenant credit quality</strong>: Aggregator-operated dark stores (Blinkit, Swiggy Instamart) represent investment-grade tenants with 3–5 year leases; independent cloud kitchen operators are sub-investment-grade but provide higher yield</li>
-  <li><strong>Asset repositioning</strong>: Ground-floor retail with 30%+ vacancy in Tier-1 micro-markets can achieve full occupancy through HORECA-format conversion at ₹150–400 per sq ft capex</li>
+  <li><strong>Yield premium</strong>: HORECA-optimised commercial spaces (with ventilation, power, and loading access) achieve 15-25% yield premium over equivalent non-HORECA commercial</li>
+  <li><strong>Tenant credit quality</strong>: Aggregator-operated dark stores (Blinkit, Swiggy Instamart) represent investment-grade tenants with 3-5 year leases; independent cloud kitchen operators are sub-investment-grade but provide higher yield</li>
+  <li><strong>Asset repositioning</strong>: Ground-floor retail with 30%+ vacancy in Tier-1 micro-markets can achieve full occupancy through HORECA-format conversion at ₹150-400 per sq ft capex</li>
 </ul>
 
 <h3>Operating Business Opportunities</h3>
 <p>Beyond real estate, India Gully's HORECA practice identifies three investable operating business opportunities:</p>
 <ul>
-  <li><strong>Shared kitchen platform</strong>: ₹2–8 Cr investment in 3,000–6,000 sq ft shared kitchen infrastructure; payback 28–42 months at 75%+ utilisation; multiple revenue streams (station rent, ingredient supply, licensing)</li>
-  <li><strong>Cold chain distribution</strong>: B2B ingredient logistics serving cloud kitchen and dark store networks; underserved by existing logistics operators; 18–28% gross margin for temperature-controlled last-mile</li>
-  <li><strong>Technology stack for HORECA operators</strong>: Order aggregation, inventory management, menu engineering and customer analytics tools for cloud kitchen operators; SaaS opportunity with ₹8,000–25,000 per month ARPU</li>
+  <li><strong>Shared kitchen platform</strong>: ₹2-8 Cr investment in 3,000-6,000 sq ft shared kitchen infrastructure; payback 28-42 months at 75%+ utilisation; multiple revenue streams (station rent, ingredient supply, licensing)</li>
+  <li><strong>Cold chain distribution</strong>: B2B ingredient logistics serving cloud kitchen and dark store networks; underserved by existing logistics operators; 18-28% gross margin for temperature-controlled last-mile</li>
+  <li><strong>Technology stack for HORECA operators</strong>: Order aggregation, inventory management, menu engineering and customer analytics tools for cloud kitchen operators; SaaS opportunity with ₹8,000-25,000 per month ARPU</li>
 </ul>
 
 <h2>4. Challenges and Risk Factors</h2>
@@ -1076,7 +1076,7 @@ const ARTICLES = [
 <ul>
   <li><strong>Regulatory uncertainty</strong>: FSSAI compliance requirements for cloud kitchens continue to evolve; zoning and fire safety compliance is inconsistently enforced across states</li>
   <li><strong>Aggregator dependency</strong>: Single-aggregator dependency creates concentration risk; multi-aggregator listing is best practice but adds operational complexity</li>
-  <li><strong>Unit economics pressure</strong>: Aggregator commission rates (18–28% of order value) create sustained P&L pressure; operators with proprietary delivery capability achieve 8–12% better contribution margin</li>
+  <li><strong>Unit economics pressure</strong>: Aggregator commission rates (18-28% of order value) create sustained P&L pressure; operators with proprietary delivery capability achieve 8-12% better contribution margin</li>
   <li><strong>Real estate availability</strong>: The intersection of affordable rent, structural compliance, and delivery-optimised location remains scarce; site identification is the primary bottleneck for expansion-stage operators</li>
 </ul>
 
@@ -1101,8 +1101,8 @@ const ARTICLES = [
 <h3>International Chains</h3>
 <p>The three dominant international chains in India's midscale-to-upscale segment are:</p>
 <ul>
-  <li><strong>Marriott International</strong>: 150+ hotels open and 80+ in pipeline. Brands present: Courtyard, Four Points, Fairfield, Marriott, JW Marriott, Westin, Sheraton, W, The Ritz-Carlton. Strongest in NCR, Mumbai, Bengaluru. RevPAR premium over comparable unbranded: 28–40%.</li>
-  <li><strong>IHG (InterContinental Hotels Group)</strong>: 50+ hotels open, 40+ pipeline. Holiday Inn, Holiday Inn Express, Crowne Plaza, InterContinental. Strongest in mid-market (Holiday Inn Express) with strong secondary city penetration. Management fee: 2% of revenue base fee + 6–8% gross operating profit incentive fee.</li>
+  <li><strong>Marriott International</strong>: 150+ hotels open and 80+ in pipeline. Brands present: Courtyard, Four Points, Fairfield, Marriott, JW Marriott, Westin, Sheraton, W, The Ritz-Carlton. Strongest in NCR, Mumbai, Bengaluru. RevPAR premium over comparable unbranded: 28-40%.</li>
+  <li><strong>IHG (InterContinental Hotels Group)</strong>: 50+ hotels open, 40+ pipeline. Holiday Inn, Holiday Inn Express, Crowne Plaza, InterContinental. Strongest in mid-market (Holiday Inn Express) with strong secondary city penetration. Management fee: 2% of revenue base fee + 6-8% gross operating profit incentive fee.</li>
   <li><strong>Hyatt</strong>: 40+ hotels open, 35+ pipeline. Hyatt Regency, Grand Hyatt, Park Hyatt, Alila, Andaz, Hyatt Place, Hyatt Centric. Premium positioning; Delhi, Mumbai, Bengaluru focus. Known for demanding fitout standards but strong loyalty network (World of Hyatt).</li>
 </ul>
 
@@ -1116,7 +1116,7 @@ const ARTICLES = [
 
 <h3>Midscale & Economy Aggregators</h3>
 <ul>
-  <li><strong>OYO</strong>: Franchise-light model at economy segment (₹800–2,500 ADR). 3,000+ properties nationally. Rapid customer acquisition through platform; significant brand reputation risks. India Gully recommends OYO only for assets unable to qualify for conventional brands.</li>
+  <li><strong>OYO</strong>: Franchise-light model at economy segment (₹800-2,500 ADR). 3,000+ properties nationally. Rapid customer acquisition through platform; significant brand reputation risks. India Gully recommends OYO only for assets unable to qualify for conventional brands.</li>
   <li><strong>Radisson Hotel Group</strong>: Park Inn, Radisson, Radisson Blu, Radisson RED. Active in Tier-2 and Tier-3 cities; more flexible on fitout standards than Marriott or IHG. Growing pipeline in highway and industrial corridor locations.</li>
   <li><strong>Choice Hotels (Comfort Inn, Quality Inn)</strong>: Franchise model (not management contract); lower fee structure; appropriate for owner-operated hotels seeking distribution benefits without full management handover.</li>
 </ul>
@@ -1125,13 +1125,13 @@ const ARTICLES = [
 <h3>Key Contract Terms India Gully Negotiates</h3>
 <p>Hotel management contracts are complex instruments. India Gully's advisory practice focuses on 7 key terms that drive long-term owner economics:</p>
 <ol>
-  <li><strong>Base fee</strong>: Typically 1.5–3.5% of total revenue. Benchmark: 2% for midscale, 2.5–3.5% for upper-upscale. Negotiate a ramp-up structure (lower base fee in years 1–3) for new builds.</li>
-  <li><strong>Incentive fee</strong>: 6–10% of GOP (Gross Operating Profit) after a fixed owner's priority return (typically 8–10% of invested capital or total investment). The incentive fee structure is where most owner-operator disputes originate — ensure GOP definition, capex treatment, and owner's priority are clearly defined.</li>
-  <li><strong>Operator performance guarantee</strong>: Minimum RevPAR (Revenue Per Available Room) or NOI (Net Operating Income) guarantee by the operator, with termination rights if missed for 2–3 consecutive years. Not all operators offer performance guarantees — Marriott and IHG do in competitive situations; OYO and budget operators typically do not.</li>
-  <li><strong>Technical services fee (TSA)</strong>: Pre-opening fee covering design review, pre-opening services, and brand standard compliance. Typically 3–4% of project cost. India Gully negotiates cap and scope limitations.</li>
-  <li><strong>FF&E (Furniture, Fixtures & Equipment) reserve</strong>: Mandatory reserve of 3–5% of revenue, held in escrow and applied to hotel maintenance capex. India Gully negotiates joint control over deployment.</li>
-  <li><strong>Brand fee / royalty</strong>: Separate from management fee in franchise models (Choice, some Marriott formats). Typically 4–6% of rooms revenue. Franchise without full management is increasingly common for experienced owner-operators.</li>
-  <li><strong>Term and termination</strong>: Standard initial term 15–25 years with renewal options. India Gully structures break clauses (performance-based, change-of-control, sale of asset) to preserve owner liquidity options.</li>
+  <li><strong>Base fee</strong>: Typically 1.5-3.5% of total revenue. Benchmark: 2% for midscale, 2.5-3.5% for upper-upscale. Negotiate a ramp-up structure (lower base fee in years 1-3) for new builds.</li>
+  <li><strong>Incentive fee</strong>: 6-10% of GOP (Gross Operating Profit) after a fixed owner's priority return (typically 8-10% of invested capital or total investment). The incentive fee structure is where most owner-operator disputes originate — ensure GOP definition, capex treatment, and owner's priority are clearly defined.</li>
+  <li><strong>Operator performance guarantee</strong>: Minimum RevPAR (Revenue Per Available Room) or NOI (Net Operating Income) guarantee by the operator, with termination rights if missed for 2-3 consecutive years. Not all operators offer performance guarantees — Marriott and IHG do in competitive situations; OYO and budget operators typically do not.</li>
+  <li><strong>Technical services fee (TSA)</strong>: Pre-opening fee covering design review, pre-opening services, and brand standard compliance. Typically 3-4% of project cost. India Gully negotiates cap and scope limitations.</li>
+  <li><strong>FF&E (Furniture, Fixtures & Equipment) reserve</strong>: Mandatory reserve of 3-5% of revenue, held in escrow and applied to hotel maintenance capex. India Gully negotiates joint control over deployment.</li>
+  <li><strong>Brand fee / royalty</strong>: Separate from management fee in franchise models (Choice, some Marriott formats). Typically 4-6% of rooms revenue. Franchise without full management is increasingly common for experienced owner-operators.</li>
+  <li><strong>Term and termination</strong>: Standard initial term 15-25 years with renewal options. India Gully structures break clauses (performance-based, change-of-control, sale of asset) to preserve owner liquidity options.</li>
 </ol>
 
 <h2>3. Choosing the Right Brand for Your Asset</h2>
@@ -1144,11 +1144,11 @@ const ARTICLES = [
 <h3>Dimension 2: Fitout and Capex Requirements</h3>
 <p>Brand standard compliance capex varies dramatically:</p>
 <ul>
-  <li>IHG Holiday Inn Express: ₹18–25 lakh per key (renovation to brand standard for existing hotel)</li>
-  <li>Marriott Courtyard / Fairfield: ₹22–35 lakh per key</li>
-  <li>Hyatt Place / Centric: ₹28–42 lakh per key</li>
-  <li>Lemon Tree / Goldfinch: ₹12–20 lakh per key</li>
-  <li>Choice Hotels (Quality Inn): ₹8–15 lakh per key</li>
+  <li>IHG Holiday Inn Express: ₹18-25 lakh per key (renovation to brand standard for existing hotel)</li>
+  <li>Marriott Courtyard / Fairfield: ₹22-35 lakh per key</li>
+  <li>Hyatt Place / Centric: ₹28-42 lakh per key</li>
+  <li>Lemon Tree / Goldfinch: ₹12-20 lakh per key</li>
+  <li>Choice Hotels (Quality Inn): ₹8-15 lakh per key</li>
 </ul>
 <p>Owners must model the full risk-adjusted return including brand capex before signing a management contract — India Gully consistently finds that aspirational brand selection that exceeds the market's willingness to pay destroys owner value.</p>
 
@@ -1158,17 +1158,17 @@ const ARTICLES = [
 <h3>Dimension 4: Exit and Financing Value</h3>
 <p>The brand decision directly affects asset exit value and debt financing terms:</p>
 <ul>
-  <li>Institutionally recognised brands (Marriott, IHG, Hyatt) add 15–25% to asset value at exit versus equivalent unbranded</li>
-  <li>Domestic brand affiliations (Taj, Lemon Tree) add 8–15% at exit, particularly for domestic buyer pools</li>
+  <li>Institutionally recognised brands (Marriott, IHG, Hyatt) add 15-25% to asset value at exit versus equivalent unbranded</li>
+  <li>Domestic brand affiliations (Taj, Lemon Tree) add 8-15% at exit, particularly for domestic buyer pools</li>
   <li>Economy aggregator affiliations (OYO, Fab Hotels) may not add meaningful value at institutional-standard exits</li>
-  <li>Branded hotel assets access bank finance at lower interest rates (typically 75–150 bps lower) versus unbranded, reflecting lender comfort with management continuity</li>
+  <li>Branded hotel assets access bank finance at lower interest rates (typically 75-150 bps lower) versus unbranded, reflecting lender comfort with management continuity</li>
 </ul>
 
 <h2>4. India Gully's Hotel Brand Advisory Practice</h2>
 <p>India Gully provides hotel brand selection and management contract advisory as a standalone engagement for owner-developers navigating the affiliation decision:</p>
 <ul>
   <li><strong>Brand feasibility study</strong>: Market positioning analysis, brand comparison, projected RevPAR under each brand scenario, capex modelling</li>
-  <li><strong>RFP and brand selection process</strong>: Structured competitive process to shortlist 3–4 brands, manage technical due diligence, and negotiate management contract terms</li>
+  <li><strong>RFP and brand selection process</strong>: Structured competitive process to shortlist 3-4 brands, manage technical due diligence, and negotiate management contract terms</li>
   <li><strong>Contract negotiation</strong>: India Gully's proprietary contract benchmark database (40+ contracts reviewed) enables evidence-based negotiation on fees, performance standards, break clauses, and FF&E structures</li>
   <li><strong>Pre-opening advisory</strong>: Supporting owners through the brand's pre-opening technical services process to ensure compliance while controlling costs</li>
 </ul>
@@ -1180,58 +1180,58 @@ const ARTICLES = [
     category: 'Entertainment',
     date: 'March 2026',
     title: 'Building India\'s Next Entertainment Destination: Development Economics & Operational Model',
-    excerpt: 'India\'s entertainment real estate pipeline for 2026–29 includes 35+ large-format destination projects across family entertainment, sports, gaming, and experiential retail. The development economics of these assets are complex — high capex, non-standard valuation, and operator-dependency. India Gully maps the framework for developers and investors.',
+    excerpt: 'India\'s entertainment real estate pipeline for 2026-29 includes 35+ large-format destination projects across family entertainment, sports, gaming, and experiential retail. The development economics of these assets are complex — high capex, non-standard valuation, and operator-dependency. India Gully maps the framework for developers and investors.',
     tags: ['Entertainment', 'Real Estate Development', 'FEC', 'Investment'],
     readTime: '10 min read',
     body: `
 <h2>Executive Summary</h2>
-<p>India's entertainment real estate — encompassing family entertainment centres (FECs), theme parks, waterparks, bowling alleys, go-karting tracks, trampoline parks, virtual reality arcades, and integrated entertainment destinations — is at an inflection point. Consumer spending on experiential leisure is growing at 18–22% annually (CRISIL, 2025), driven by a young population, rising disposable incomes, and the 'experience economy' shift that followed COVID-19.</p>
+<p>India's entertainment real estate — encompassing family entertainment centres (FECs), theme parks, waterparks, bowling alleys, go-karting tracks, trampoline parks, virtual reality arcades, and integrated entertainment destinations — is at an inflection point. Consumer spending on experiential leisure is growing at 18-22% annually (CRISIL, 2025), driven by a young population, rising disposable incomes, and the 'experience economy' shift that followed COVID-19.</p>
 <p>Yet despite strong demand fundamentals, entertainment real estate development economics remain complex: high capex, unconventional asset valuation, operator dependency, and a thin domestic institutional equity market. India Gully's entertainment advisory practice — active on 5 entertainment destination mandates totalling ₹280 Cr in project value — presents a development framework for operators and investors in this space.</p>
 
 <h2>1. The Entertainment Destination Landscape</h2>
 <h3>Format Categories</h3>
 <p>India Gully classifies entertainment destinations into four format categories, each with distinct development and operating economics:</p>
 <ol>
-  <li><strong>Large-format theme parks / waterparks</strong> (₹150–500 Cr): Adlabs Imagica, Wonderla — high capex, high barrier to entry, strong cash-on-cash returns at maturity (12–18% CoC at 70% occupancy) but 4–7 year payback period and significant operational complexity</li>
-  <li><strong>Integrated entertainment centres in malls</strong> (₹25–80 Cr): FECs, bowling, arcade gaming, trampoline parks within mall anchoring space — mall anchor tenant economics with revenue share structures; lower capex but dependent on mall traffic</li>
-  <li><strong>Standalone destination FECs</strong> (₹8–35 Cr): Go-karting tracks, adventure zones, escape rooms, indoor sports facilities with F&B — India Gully's most active advisory segment; mid-ticket capex with 3–5 year payback at adequate utilisation</li>
-  <li><strong>Entertainment hospitality hybrids</strong> (₹40–120 Cr): Resort properties with integrated entertainment — adventure activities, gaming zones, live entertainment venues — increasingly relevant as India's MICE and leisure travel grows</li>
+  <li><strong>Large-format theme parks / waterparks</strong> (₹150-500 Cr): Adlabs Imagica, Wonderla — high capex, high barrier to entry, strong cash-on-cash returns at maturity (12-18% CoC at 70% occupancy) but 4-7 year payback period and significant operational complexity</li>
+  <li><strong>Integrated entertainment centres in malls</strong> (₹25-80 Cr): FECs, bowling, arcade gaming, trampoline parks within mall anchoring space — mall anchor tenant economics with revenue share structures; lower capex but dependent on mall traffic</li>
+  <li><strong>Standalone destination FECs</strong> (₹8-35 Cr): Go-karting tracks, adventure zones, escape rooms, indoor sports facilities with F&B — India Gully's most active advisory segment; mid-ticket capex with 3-5 year payback at adequate utilisation</li>
+  <li><strong>Entertainment hospitality hybrids</strong> (₹40-120 Cr): Resort properties with integrated entertainment — adventure activities, gaming zones, live entertainment venues — increasingly relevant as India's MICE and leisure travel grows</li>
 </ol>
 
 <h3>Consumer Demand Drivers</h3>
 <p>India Gully's demand analysis across entertainment mandates identifies three primary demand drivers:</p>
 <ul>
   <li><strong>Family leisure spend growth</strong>: Average family entertainment spend per outing has grown from ₹1,800 in 2019 to ₹3,200 in 2025 (FICCI, 2025). The per-outing basket is expanding as consumers trade up from bowling alleys to multi-format FECs with F&B integration.</li>
-  <li><strong>Youth-driven experiential demand</strong>: 18–35 age cohort (India's largest demographic) is the most active entertainment consumer — VR arcades, e-sports centres, escape rooms, and social gaming formats skew strongly to this cohort</li>
-  <li><strong>Corporate MICE demand</strong>: Post-COVID, corporate events and team-building activities have shifted toward experiential formats — go-karting, bowling tournaments, escape room team events. India Gully's entertainment clients report MICE contributing 18–35% of revenue at optimal locations</li>
+  <li><strong>Youth-driven experiential demand</strong>: 18-35 age cohort (India's largest demographic) is the most active entertainment consumer — VR arcades, e-sports centres, escape rooms, and social gaming formats skew strongly to this cohort</li>
+  <li><strong>Corporate MICE demand</strong>: Post-COVID, corporate events and team-building activities have shifted toward experiential formats — go-karting, bowling tournaments, escape room team events. India Gully's entertainment clients report MICE contributing 18-35% of revenue at optimal locations</li>
 </ul>
 
 <h2>2. Development Economics Framework</h2>
 <h3>Capex Benchmarks (2025-26)</h3>
 <p>India Gully's active mandate database provides the following capex benchmarks for entertainment destination development:</p>
 <ul>
-  <li><strong>Go-karting track</strong> (400m outdoor): ₹3.5–6 Cr including track, barriers, safety systems, timing equipment, and basic F&B infrastructure</li>
-  <li><strong>Trampoline park</strong> (8,000–15,000 sq ft): ₹2.8–4.5 Cr including trampoline installation, foam pits, ninja warrior courses, and structural upgrades</li>
-  <li><strong>Bowling alley</strong> (8 lanes): ₹4–7 Cr including lane equipment (AMF/Brunswick), flooring, scoring systems, seating, and F&B</li>
-  <li><strong>Indoor climbing wall</strong> (4,000–8,000 sq ft): ₹1.8–3.2 Cr including wall structures, safety systems, and equipment</li>
-  <li><strong>VR / gaming zone</strong> (3,000–6,000 sq ft): ₹2.5–5 Cr including VR hardware, gaming pods, cabling, and digital infrastructure</li>
-  <li><strong>Integrated FEC</strong> (25,000–50,000 sq ft, multiple formats): ₹18–40 Cr including all entertainment formats, F&B build-out, and interior design</li>
+  <li><strong>Go-karting track</strong> (400m outdoor): ₹3.5-6 Cr including track, barriers, safety systems, timing equipment, and basic F&B infrastructure</li>
+  <li><strong>Trampoline park</strong> (8,000-15,000 sq ft): ₹2.8-4.5 Cr including trampoline installation, foam pits, ninja warrior courses, and structural upgrades</li>
+  <li><strong>Bowling alley</strong> (8 lanes): ₹4-7 Cr including lane equipment (AMF/Brunswick), flooring, scoring systems, seating, and F&B</li>
+  <li><strong>Indoor climbing wall</strong> (4,000-8,000 sq ft): ₹1.8-3.2 Cr including wall structures, safety systems, and equipment</li>
+  <li><strong>VR / gaming zone</strong> (3,000-6,000 sq ft): ₹2.5-5 Cr including VR hardware, gaming pods, cabling, and digital infrastructure</li>
+  <li><strong>Integrated FEC</strong> (25,000-50,000 sq ft, multiple formats): ₹18-40 Cr including all entertainment formats, F&B build-out, and interior design</li>
 </ul>
 
 <h3>Revenue Model</h3>
 <p>Entertainment destination revenue models have three layers:</p>
 <ol>
-  <li><strong>Activity revenue</strong>: Per-session charges (go-kart laps, bowling games, VR sessions) — typically 55–65% of total revenue; highest margin (70–80% gross margin)</li>
-  <li><strong>F&B revenue</strong>: Restaurant, café, bar — typically 25–35% of total revenue; gross margin 60–70% for mid-market F&B offering</li>
-  <li><strong>Ancillary revenue</strong>: Birthday packages, corporate MICE bookings, membership programs, retail (branded merchandise) — typically 10–20% of total revenue; highest contribution margin</li>
+  <li><strong>Activity revenue</strong>: Per-session charges (go-kart laps, bowling games, VR sessions) — typically 55-65% of total revenue; highest margin (70-80% gross margin)</li>
+  <li><strong>F&B revenue</strong>: Restaurant, café, bar — typically 25-35% of total revenue; gross margin 60-70% for mid-market F&B offering</li>
+  <li><strong>Ancillary revenue</strong>: Birthday packages, corporate MICE bookings, membership programs, retail (branded merchandise) — typically 10-20% of total revenue; highest contribution margin</li>
 </ol>
-<p>India Gully's revenue model for a ₹15 Cr standalone FEC (25,000 sq ft, 3 entertainment formats + F&B) projects stabilised Year 3 revenue of ₹6–8 Cr against operating cost of ₹3.5–4.5 Cr, implying EBITDA of ₹2–3.5 Cr (30–45% margin) and a project-level IRR of 18–26% over a 7-year horizon.</p>
+<p>India Gully's revenue model for a ₹15 Cr standalone FEC (25,000 sq ft, 3 entertainment formats + F&B) projects stabilised Year 3 revenue of ₹6-8 Cr against operating cost of ₹3.5-4.5 Cr, implying EBITDA of ₹2-3.5 Cr (30-45% margin) and a project-level IRR of 18-26% over a 7-year horizon.</p>
 
 <h3>Valuation Methodology</h3>
 <p>Entertainment real estate requires a bespoke valuation approach that blends real estate and operating business methodologies:</p>
 <ul>
-  <li><strong>DCF on stabilised cash flows</strong>: Primary methodology for operational properties; discount rate 14–18% for entertainment assets reflecting operating risk premium</li>
-  <li><strong>EV/EBITDA comparable</strong>: Benchmarked against listed entertainment operators (PVR Inox, Wonderla) at 10–16x EBITDA; applicable to scaled multi-location operators</li>
+  <li><strong>DCF on stabilised cash flows</strong>: Primary methodology for operational properties; discount rate 14-18% for entertainment assets reflecting operating risk premium</li>
+  <li><strong>EV/EBITDA comparable</strong>: Benchmarked against listed entertainment operators (PVR Inox, Wonderla) at 10-16x EBITDA; applicable to scaled multi-location operators</li>
   <li><strong>Real estate residual value</strong>: For owned property entertainment assets, land and building value provides floor value; applicable when operating business value is impaired</li>
 </ul>
 
@@ -1239,13 +1239,13 @@ const ARTICLES = [
 <p>Unlike hotels where the brand/operator market is well-structured, entertainment operators in India operate a fragmented, largely domestic market. India Gully's operator partnership framework:</p>
 
 <h3>Option A: Operator-Managed Model</h3>
-<p>Developer builds and owns the asset; experienced operator manages for a management fee (typically 8–15% of revenue + 20–25% of EBITDA over hurdle). Best for developers without entertainment operating capability. Risk: operator dependency; quality of operators is highly variable in India's entertainment space.</p>
+<p>Developer builds and owns the asset; experienced operator manages for a management fee (typically 8-15% of revenue + 20-25% of EBITDA over hurdle). Best for developers without entertainment operating capability. Risk: operator dependency; quality of operators is highly variable in India's entertainment space.</p>
 
 <h3>Option B: Revenue Share Lease</h3>
-<p>Developer leases space to operator on revenue share basis (typically base rent + 12–20% of gross revenue). Lower risk for developer; operator retains upside. Best for developer-landlords seeking income certainty. India Gully has structured 2 such arrangements in the past 12 months.</p>
+<p>Developer leases space to operator on revenue share basis (typically base rent + 12-20% of gross revenue). Lower risk for developer; operator retains upside. Best for developer-landlords seeking income certainty. India Gully has structured 2 such arrangements in the past 12 months.</p>
 
 <h3>Option C: Franchise Model</h3>
-<p>International entertainment franchise brands (Kidzania, Bounce, Clip 'n Climb) provide brand, operating manual, and marketing for an upfront franchise fee (₹1.5–8 Cr) plus ongoing royalty (3–6% of revenue). Best for operators without brand development budget but seeking a proven concept. International franchise availability in India is growing: Kidzania (Delhi), Bounce (Bengaluru, Gurgaon), Sky Zone (Mumbai announced).</p>
+<p>International entertainment franchise brands (Kidzania, Bounce, Clip 'n Climb) provide brand, operating manual, and marketing for an upfront franchise fee (₹1.5-8 Cr) plus ongoing royalty (3-6% of revenue). Best for operators without brand development budget but seeking a proven concept. International franchise availability in India is growing: Kidzania (Delhi), Bounce (Bengaluru, Gurgaon), Sky Zone (Mumbai announced).</p>
 
 <h2>4. India Gully's Entertainment Advisory Practice</h2>
 <p>India Gully's entertainment advisory practice provides end-to-end support for entertainment destination developers and operators:</p>
@@ -1354,8 +1354,8 @@ app.get('/', (c) => {
       ${[
         { n: '19', l: 'In-Depth Articles' },
         { n: '6',  l: 'Sectors Covered' },
-        { n: '₹1,165 Cr+', l: 'Active Pipeline' },
-        { n: '2024–26', l: 'Research Period' },
+        { n: '₹2,100 Cr+', l: 'Active Pipeline' },
+        { n: '2024-26', l: 'Research Period' },
       ].map((s: any) => `<div class="ins-stat"><div class="ins-stat__n">${s.n}</div><div class="ins-stat__l">${s.l}</div></div>`).join('')}
     </div>
   </div>
@@ -1651,7 +1651,7 @@ app.get('/:id', (c) => {
           ${[
             { n: '8+', l: 'Yrs Advisory' },
             { n: '40+', l: 'Contracts' },
-            { n: '₹1,165 Cr', l: 'Pipeline' },
+            { n: '₹2,100 Cr', l: 'Pipeline' },
             { n: '6', l: 'Sectors' },
           ].map((s: any) => `<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:.6rem .75rem;text-align:center;">
             <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--gold);line-height:1;">${s.n}</div>

@@ -132,7 +132,7 @@ VALUES
    ' ',
    NULL,
    'Client', 'client', '/portal/client/dashboard',
-   1, 1, 1, '');
+   1'');
 
 -- Demo Employee
 INSERT OR IGNORE INTO ig_users
@@ -145,7 +145,7 @@ VALUES
    ' ',
    NULL,
    'Employee', 'employee', '/portal/employee/dashboard',
-   1, 1, 1, '');
+   1'');
 
 -- Demo Board/KMP
 INSERT OR IGNORE INTO ig_users
@@ -158,7 +158,7 @@ VALUES
    ' ',
    NULL,
    'Board', 'board', '/portal/board/dashboard',
-   1, 1, 1, '');
+   1'');
 
 -- QA Automation (no TOTP, demo mode only)
 INSERT OR IGNORE INTO ig_users

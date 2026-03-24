@@ -4,86 +4,108 @@
 -- ============================================================================
 
 -- ── Create missing ERP tables ─────────────────────────────────────────────────
--- ig_clients table created in migration 0018
+CREATE TABLE IF NOT EXISTS ig_clients (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  company_name  TEXT    NOT NULL,
+  contact_name  TEXT    NOT NULL,
+  email         TEXT    UNIQUE NOT NULL,
+  phone         TEXT,
+  sector        TEXT,
+  status        TEXT    NOT NULL DEFAULT 'Prospect',
+  source        TEXT,
+  notes         TEXT,
+  created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
--- ig_enquiries table created in migration 0018
+CREATE TABLE IF NOT EXISTS ig_enquiries (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  ref_number    TEXT    UNIQUE NOT NULL,
+  enquiry_type  TEXT    NOT NULL DEFAULT 'General',
+  name          TEXT    NOT NULL,
+  email         TEXT    NOT NULL,
+  phone         TEXT,
+  organisation  TEXT,
+  message       TEXT,
+  vertical      TEXT,
+  scale         TEXT,
+  status        TEXT    NOT NULL DEFAULT 'New',
+  source        TEXT,
+  assigned_to   INTEGER REFERENCES ig_users(id),
+  created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at    DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
--- ig_vouchers table created in migration 0018
+CREATE TABLE IF NOT EXISTS ig_vouchers (
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  voucher_type     TEXT    NOT NULL,
+  voucher_number   TEXT    UNIQUE NOT NULL,
+  date             DATE    NOT NULL,
+  narration        TEXT,
+  amount           REAL    NOT NULL DEFAULT 0,
+  dr_account_code  TEXT,
+  cr_account_code  TEXT,
+  reference        TEXT,
+  created_by       INTEGER REFERENCES ig_users(id),
+  fy_year          TEXT    NOT NULL DEFAULT '2025-26',
+  is_reconciled    INTEGER NOT NULL DEFAULT 0,
+  created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
--- ig_board_meetings table created in migration 0018
+CREATE TABLE IF NOT EXISTS ig_board_meetings (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  meeting_type    TEXT    NOT NULL DEFAULT 'Board Meeting',
+  meeting_number  TEXT    UNIQUE NOT NULL,
+  meeting_date    DATE    NOT NULL,
+  meeting_time    TEXT,
+  venue           TEXT,
+  mode            TEXT    NOT NULL DEFAULT 'Physical',
+  agenda_text     TEXT,
+  status          TEXT    NOT NULL DEFAULT 'Scheduled',
+  quorum_required INTEGER NOT NULL DEFAULT 2,
+  minutes_text    TEXT,
+  created_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
--- ig_payroll_runs table created in migration 0018
+CREATE TABLE IF NOT EXISTS ig_payroll_runs (
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  month            INTEGER NOT NULL,
+  year             INTEGER NOT NULL,
+  status           TEXT    NOT NULL DEFAULT 'Draft',
+  run_by           INTEGER REFERENCES ig_users(id),
+  total_gross      REAL    NOT NULL DEFAULT 0,
+  total_deductions REAL    NOT NULL DEFAULT 0,
+  total_net        REAL    NOT NULL DEFAULT 0,
+  fy_year          TEXT    NOT NULL DEFAULT '2025-26',
+  created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
 -- ── Seed: ig_users ────────────────────────────────────────────────────────────
--- INSERT OR REPLACE ensures re-running this migration keeps passwords current
-INSERT OR REPLACE INTO ig_users
+INSERT OR IGNORE INTO ig_users
   (identifier, password_hash, password_salt, totp_secret, totp_enabled,
    role, portal, dashboard_url, is_active, mfa_required, is_demo, totp_demo_pin)
 VALUES
-  -- 1. Super Admin | Password: India@5327** | TOTP: CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ
   ('superadmin@indiagully.com',
-   '531e7f8d58df22dc04f4883380c7def8ea1f7a548938d62065d46cf1c011ec1c',
-   'ig-salt-admin-v3-2026', 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ', 1,
-   'Super Admin', 'admin', '/admin/dashboard', 1, 1, 0, ''),
+   '03620224810d84bfe71510f8cc0dea92da229208246b1916235ed0e0d1c9d035',
+   'ig-salt-admin-v3-2026', '' , 0,
+   'Super Admin', 'admin', '/admin/dashboard', 1, 1, 1, '')
 
-  -- 2. Arun Manikonda (MD/Board) | Password: Arun@IG2026 | TOTP: ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ
-  ('akm@indiagully.com',
-   'cdd6bc852a717f91b12f69240f31e79a2395c0fc78933c1085a09898f9dbe5ad',
-   'ig-salt-board-akm-2026', 'ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ', 1,
-   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
-
-  -- 3. Pavan Manikonda (ED/Board) | Password: Pavan@IG2026 | TOTP: OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO
-  ('pavan@indiagully.com',
-   '1acec72c5694e8b9422a5dc4f53619e640df99c78d7ea50f265433a888b9c69c',
-   'ig-salt-board-pavan-2026', 'OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO', 1,
-   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
-
-  -- 4. Amit Jhingan (President/Board) | Password: Amit@IG2026 | TOTP: BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR
-  ('amit.jhingan@indiagully.com',
-   '93a39866cc13631cdc12d38c762869938bfcee2a649250c4952bce79ebebd836',
-   'ig-salt-board-amit-2026', 'BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR', 1,
-   'Board', 'board', '/portal/board/dashboard', 1, 1, 0, ''),
-
-  -- 5. Atul Rana (Head Sales/Employee) | Password: Atul@IG2026# | TOTP: GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU
-  ('atul.rana@indiagully.com',
-   'f1868b84e10fb9ba07c183969b669591a82e97f55927cc1ef7fbf8d7bb1d8066',
-   'ig-salt-emp-atul-2026', 'GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU', 1,
-   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 0, ''),
-
-  -- 6. HR Manager | Password: HR@IG2026# | TOTP: 6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z
-  ('hr@indiagully.com',
-   'b00b260813234b492e7d553c6baf9db49dff4cf30e3260cfb1d841ae1331508f',
-   'ig-salt-hr-2026', '6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z', 1,
-   'Employee', 'employee', '/admin/hr', 1, 1, 0, ''),
-
-  -- 7. Finance CFO | Password: Finance@IG2026# | TOTP: INRLENYXGKG66B4G7PVWZFG7NQLRJHUD
-  ('finance@indiagully.com',
-   'bea826a65411a726a511dfe3e9cc22f230e71854a74d923b8967724f98eedad7',
-   'ig-salt-finance-2026', 'INRLENYXGKG66B4G7PVWZFG7NQLRJHUD', 1,
-   'Employee', 'employee', '/admin/finance', 1, 1, 0, ''),
-
-  -- 8. Legal CS | Password: Legal@IG2026# | TOTP: CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5
-  ('legal@indiagully.com',
-   '255f716a8d4c3476776ed5b2971806991ea67083befba1f311ab255270bb70ab',
-   'ig-salt-legal-2026', 'CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5', 1,
-   'Employee', 'employee', '/admin/governance', 1, 1, 0, ''),
-
-  -- Demo / QA (testing only)
   ('demo@indiagully.com',
-   '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
-   'ig-salt-client-v3-2026', 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU', 1,
-   'Client', 'client', '/portal/client/dashboard', 1, 1, 1, ''),
+   '4b785ef73842a2a8dd83285291f6d70b556667314f64bb4219c507770f92a2ce',
+   'ig-salt-client-v3-2026', '' , 0,
+   'Client', 'client', '/portal/client/dashboard', 1, 1, 1, '')
 
   ('IG-EMP-0001',
-   '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
-   'ig-salt-emp-v3-2026', 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67', 1,
-   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 1, ''),
+   '2327d437979646c3a1dd2535776f7b2998528832264450ce3a82ce1c335b59d4',
+   'ig-salt-emp-v3-2026', '' , 0,
+   'Employee', 'employee', '/portal/employee/dashboard', 1, 1, 1, '')
 
   ('IG-KMP-0001',
-   '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
-   'ig-salt-board-v3-2026', 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN', 1,
-   'Board', 'board', '/portal/board/dashboard', 1, 1, 1, '');
+   'd436a3bf72ea09c74d7f778ecbc32fcd0c54db0d2cd2c3ecc352c1cb994be876',
+   'ig-salt-board-v3-2026', '' , 0,
+   'Board', 'board', '/portal/board/dashboard', 1, 1, 1, '')
 
+-- ── Seed: ig_cms_pages (Phase 18D CMS) ───────────────────────────────────────
 INSERT OR IGNORE INTO ig_cms_pages
   (slug, title, meta_desc, body_html, status, author)
 VALUES
@@ -129,13 +151,13 @@ VALUES
 
 -- ── Seed: ig_invoices ─────────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_invoices
-  (invoice_number, client_name, client_gstin, amount_gross, gst_rate, amount_gst, amount_net, status, due_date, paid_date)
+  (invoice_number, client_name, client_gstin, amount_gross, gst_rate, amount_gst, amount_net, status, due_date, paid_date, created_by)
 VALUES
-  ('INV-2026-001', 'Maple Resorts Pvt. Ltd.',  '07AABCM1234P1Z1', 211864, 18, 38136, 250000, 'Paid',    '2026-01-31', '2026-01-20'),
-  ('INV-2026-002', 'Heritage Hotels Group',    '07AABCH5678P1Z2', 127119, 18, 22881, 150000, 'Overdue', '2026-02-28', NULL),
-  ('INV-2026-003', 'Cloud Kitchen Ventures',   '07AABCC9012P1Z3',  72034, 18, 12966,  85000, 'Paid',    '2026-02-28', '2026-02-20'),
-  ('INV-2026-004', 'Delhi NCR Developers',     '07AABCD3456P1Z4', 338983, 18, 61017, 400000, 'Sent',    '2026-03-31', NULL),
-  ('INV-2026-005', 'EY India LLP',             '07AAACE0470N1ZU', 211864, 18, 38136, 250000, 'Draft',   '2026-04-15', NULL);
+  ('INV-2026-001', 'Maple Resorts Pvt. Ltd.',  '07AABCM1234P1Z1', 211864, 18, 38136, 250000, 'Paid',    '2026-01-31', '2026-01-20', 1),
+  ('INV-2026-002', 'Heritage Hotels Group',    '07AABCH5678P1Z2', 127119, 18, 22881, 150000, 'Overdue', '2026-02-28', NULL,         1),
+  ('INV-2026-003', 'Cloud Kitchen Ventures',   '07AABCC9012P1Z3',  72034, 18, 12966,  85000, 'Paid',    '2026-02-28', '2026-02-20', 2),
+  ('INV-2026-004', 'Delhi NCR Developers',     '07AABCD3456P1Z4', 338983, 18, 61017, 400000, 'Sent',    '2026-03-31', NULL,         1),
+  ('INV-2026-005', 'EY India LLP',             '07AAACE0470N1ZU', 211864, 18, 38136, 250000, 'Draft',   '2026-04-15', NULL,         1);
 
 -- ── Seed: ig_employees ────────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_employees
@@ -149,20 +171,20 @@ VALUES
 
 -- ── Seed: ig_vouchers ─────────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_vouchers
-  (voucher_type, voucher_number, date, narration, amount, dr_account_code, cr_account_code, reference, fy_year, is_reconciled)
+  (voucher_type, voucher_number, date, narration, amount, dr_account_code, cr_account_code, reference, created_by, fy_year, is_reconciled)
 VALUES
-  ('Sales',   'SAL-2026-001', '2026-01-15', 'Advisory fee — Maple Resorts Q1 2026',       250000, '1120', '4100', 'INV-2026-001', '2025-26', 1),
-  ('Sales',   'SAL-2026-002', '2026-02-01', 'Advisory retainer — Heritage Hotels Feb',     150000, '1120', '4100', 'INV-2026-002', '2025-26', 0),
-  ('Sales',   'SAL-2026-003', '2026-02-15', 'HORECA supply — Cloud Kitchen BOQ',            85000, '1120', '4300', 'INV-2026-003', '2025-26', 1),
-  ('Sales',   'SAL-2026-004', '2026-03-01', 'Transaction advisory — Delhi NCR Dev',        400000, '1120', '4200', 'INV-2026-004', '2025-26', 0),
-  ('Receipt', 'RCP-2026-001', '2026-01-20', 'Payment received against INV-2026-001',       250000, '1110', '1120', 'INV-2026-001', '2025-26', 1),
-  ('Receipt', 'RCP-2026-002', '2026-02-20', 'Payment received against INV-2026-003',        85000, '1110', '1120', 'INV-2026-003', '2025-26', 1),
-  ('Payment', 'PMT-2026-001', '2026-01-31', 'Office rent — January 2026',                   45000, '5300', '1110', 'RENT-JAN-26',  '2025-26', 1),
-  ('Payment', 'PMT-2026-002', '2026-02-05', 'Travel — Delhi-Mumbai-Delhi (Arun)',            18500, '5200', '1110', 'EXP-TRVL-001', '2025-26', 1),
-  ('Payment', 'PMT-2026-003', '2026-02-28', 'Office rent — February 2026',                  45000, '5300', '1110', 'RENT-FEB-26',  '2025-26', 1),
-  ('Payment', 'PMT-2026-004', '2026-03-05', 'Digital marketing — Google Ads Feb',           25000, '5500', '1110', 'MKT-FEB-26',   '2025-26', 0),
-  ('Journal', 'JNL-2026-001', '2026-02-28', 'Accrual — Feb advisory fees receivable',      150000, '1120', '4100', 'ACCR-FEB-26',  '2025-26', 0),
-  ('Journal', 'JNL-2026-002', '2026-03-31', 'FY closing — accrued advisory fees Q4',       250000, '1120', '4100', 'ACCR-MAR-26',  '2025-26', 0);
+  ('Sales',   'SAL-2026-001', '2026-01-15', 'Advisory fee — Maple Resorts Q1 2026',       250000, '1120', '4100', 'INV-2026-001', 1, '2025-26', 1),
+  ('Sales',   'SAL-2026-002', '2026-02-01', 'Advisory retainer — Heritage Hotels Feb',     150000, '1120', '4100', 'INV-2026-002', 1, '2025-26', 0),
+  ('Sales',   'SAL-2026-003', '2026-02-15', 'HORECA supply — Cloud Kitchen BOQ',            85000, '1120', '4300', 'INV-2026-003', 2, '2025-26', 1),
+  ('Sales',   'SAL-2026-004', '2026-03-01', 'Transaction advisory — Delhi NCR Dev',        400000, '1120', '4200', 'INV-2026-004', 1, '2025-26', 0),
+  ('Receipt', 'RCP-2026-001', '2026-01-20', 'Payment received against INV-2026-001',       250000, '1110', '1120', 'INV-2026-001', 1, '2025-26', 1),
+  ('Receipt', 'RCP-2026-002', '2026-02-20', 'Payment received against INV-2026-003',        85000, '1110', '1120', 'INV-2026-003', 1, '2025-26', 1),
+  ('Payment', 'PMT-2026-001', '2026-01-31', 'Office rent — January 2026',                   45000, '5300', '1110', 'RENT-JAN-26',  1, '2025-26', 1),
+  ('Payment', 'PMT-2026-002', '2026-02-05', 'Travel — Delhi-Mumbai-Delhi (Arun)',            18500, '5200', '1110', 'EXP-TRVL-001', 1, '2025-26', 1),
+  ('Payment', 'PMT-2026-003', '2026-02-28', 'Office rent — February 2026',                  45000, '5300', '1110', 'RENT-FEB-26',  1, '2025-26', 1),
+  ('Payment', 'PMT-2026-004', '2026-03-05', 'Digital marketing — Google Ads Feb',           25000, '5500', '1110', 'MKT-FEB-26',   1, '2025-26', 0),
+  ('Journal', 'JNL-2026-001', '2026-02-28', 'Accrual — Feb advisory fees receivable',      150000, '1120', '4100', 'ACCR-FEB-26',  1, '2025-26', 0),
+  ('Journal', 'JNL-2026-002', '2026-03-31', 'FY closing — accrued advisory fees Q4',       250000, '1120', '4100', 'ACCR-MAR-26',  1, '2025-26', 0);
 
 -- ── Seed: ig_board_meetings ───────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_board_meetings
@@ -193,14 +215,14 @@ VALUES
 
 -- ── Seed: ig_payroll_runs ─────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_payroll_runs
-  (month, year, status, total_gross, total_deductions, total_net, fy_year)
+  (month, year, status, run_by, total_gross, total_deductions, total_net, fy_year)
 VALUES
-  (10, 2025, 'Processed', 950000, 142500, 807500, '2025-26'),
-  (11, 2025, 'Processed', 950000, 142500, 807500, '2025-26'),
-  (12, 2025, 'Processed', 975000, 145000, 830000, '2025-26'),
-  (1,  2026, 'Processed', 950000, 142500, 807500, '2025-26'),
-  (2,  2026, 'Processed', 950000, 142500, 807500, '2025-26'),
-  (3,  2026, 'Draft',     950000, 142500, 807500, '2025-26');
+  (10, 2025, 'Processed', 1, 950000, 142500, 807500, '2025-26'),
+  (11, 2025, 'Processed', 1, 950000, 142500, 807500, '2025-26'),
+  (12, 2025, 'Processed', 1, 975000, 145000, 830000, '2025-26'),
+  (1,  2026, 'Processed', 1, 950000, 142500, 807500, '2025-26'),
+  (2,  2026, 'Processed', 1, 950000, 142500, 807500, '2025-26'),
+  (3,  2026, 'Draft',     1, 950000, 142500, 807500, '2025-26');
 
 -- ── Seed: ig_resolutions ─────────────────────────────────────────────────────
 INSERT OR IGNORE INTO ig_resolutions

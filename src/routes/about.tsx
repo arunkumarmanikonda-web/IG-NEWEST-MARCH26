@@ -3,7 +3,31 @@ import { layout } from '../lib/layout'
 
 const app = new Hono()
 
-app.get('/', (c) => {
+app.get('/', async (c) => {
+  // ── CMS: fetch published row from D1 ─────────────────────────────────────
+  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
+  try {
+    const db = (c.env as any)?.DB
+    if (db) {
+      const row = await db.prepare(
+        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
+           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
+      ).bind('/about').first()
+      if (row) {
+        cmsTitle    = (row.title        as string) || ''
+        cmsMeta     = (row.meta_desc    as string) || ''
+        cmsHeroH    = (row.hero_headline   as string) || ''
+        cmsHeroSub  = (row.hero_subheading as string) || ''
+        cmsBodyHtml = (row.body_html    as string) || ''
+      }
+    }
+  } catch (_) { /* D1 unavailable - fall through to defaults */ }
+
+  /* ── CMS body override zone ──────────────────────────────────────────── */
+  const cmsZoneHtml = cmsBodyHtml
+    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
+    : ''
+
   const content = `
 
 <!-- ABOUT HERO -->
@@ -21,11 +45,11 @@ app.get('/', (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">About India Gully</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Celebrating<br><em style="color:var(--gold);font-style:italic;">Desiness</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
-      <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. A Delhi-based, multi-vertical enterprise advisory firm operating across Hospitality, Retail, Real Estate and Entertainment with a distinctly Indian identity.</p>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
+      <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. — a Delhi-based, multi-vertical institutional advisory platform operating across Hospitality Asset Management, Retail Leasing Velocity, Real Estate Transaction Structuring, Entertainment Destination Advisory, Capital Markets and Special Situations, with a proprietary pan-India mandate pipeline exceeding INR 2,100 Cr.</p>
       <!-- Quick stats -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
-        ${[{n:"2017",l:"Founded"},{n:"₹2,000 Cr+",l:"Transacted"},{n:"6",l:"Verticals"},{n:"Pan-India",l:"Presence"}].map(s=>`<div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;line-height:1;">${s.n}</div><div style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-top:.25rem;">${s.l}</div></div>`).join('')}
+        ${[{n:"2017",l:"Founded"},{n:"INR 2,100 Cr+",l:"Mandate Pipeline"},{n:"6",l:"Verticals"},{n:"Pan-India",l:"Presence"}].map(s=>`<div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:#fff;line-height:1;">${s.n}</div><div style="font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(184,150,12,.7);margin-top:.25rem;">${s.l}</div></div>`).join('')}
       </div>
     </div>
   </div>
@@ -37,18 +61,18 @@ app.get('/', (c) => {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;" class="mob-stack">
       <div class="reveal-l">
         <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:.875rem;">Our Purpose</p>
-        <h2 class="h2" style="margin-bottom:3rem;">Vision &amp; Mission</h2>
+        <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Mandate &amp; Strategic Positioning</p>
+        <h2 class="h2" style="margin-bottom:3rem;">Strategic Vision and Advisory Mission</h2>
 
         <div style="border-left:3px solid var(--gold);padding:1.75rem 2rem;background:linear-gradient(135deg,rgba(184,150,12,.04),transparent);margin-bottom:1.75rem;position:relative;">
           <div style="position:absolute;top:1.5rem;left:-3px;width:3px;height:40px;background:linear-gradient(180deg,var(--gold),var(--gold-lt));"></div>
           <p style="font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Vision</p>
-          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To be India's most respected diversified advisory enterprise, creating extraordinary experiences in hospitality and entertainment while delivering unmatched strategic value to our clients and stakeholders."</p>
+          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To be India's preeminent force in Real Estate, Hospitality, and Entertainment - integrating institutional rigour with bespoke advisory and trading solutions, while setting the benchmark for excellence across every vertical."</p>
         </div>
 
         <div style="border-left:3px solid var(--border);padding:1.75rem 2rem;background:var(--parch);">
           <p style="font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;">Mission</p>
-          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To combine deep sector expertise with operational excellence and global best practices, enabling our clients and ventures to achieve sustainable, scalable growth that benefits all stakeholders."</p>
+          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To empower stakeholders through a unique synergy of data-driven strategy and Yield-Centric Focus - delivering high-impact advisory, world-class hospitality, and entertainment experiences that benchmark the standards of excellence."</p>
         </div>
       </div>
 
@@ -59,10 +83,10 @@ app.get('/', (c) => {
 
         <div style="display:flex;flex-direction:column;gap:0;">
           ${[
-            { icon:'⚖️', name:'Integrity',   desc:'Transparent, ethical conduct in every engagement. We act in the best interests of our clients and maintain the highest standards of professional ethics.' },
-            { icon:'🏆', name:'Excellence',  desc:'Relentless pursuit of the highest standards in everything we do, from mandate delivery to client communication and internal governance.' },
-            { icon:'🤝', name:'Partnership', desc:'Long-term relationships built on trust, shared objectives and sustained value creation for clients, partners and communities we operate in.' },
-            { icon:'💡', name:'Innovation',  desc:'Embracing new ideas, methodologies and technologies to solve complex challenges and create differentiated outcomes.' },
+            { icon:'⚖️', name:'Institutional Integrity',   desc:'We operate with the transparency and discipline of a global institution. By acting as true fiduciaries, we ensure every engagement is rooted in ethical conduct and the best interests of our stakeholders.' },
+            { icon:'🏆', name:'Benchmark Excellence',  desc:'We do not just follow industry standards; we define them. Our pursuit of excellence is relentless, ensuring every engagement sets a higher bar for operational excellence.' },
+            { icon:'🎯', name:'Yield-Centric Partnership', desc:'We build long-term relationships centered on measurable success. Our focus remains on creating a unique synergy that delivers sustained value and high-impact results for our clients and communities.' },
+            { icon:'💡', name:'Strategic Innovation',  desc:'We synthesize data-driven strategy with bespoke thinking to solve complex challenges. By embracing new methodologies, we transform traditional sectors and deliver outcomes that set new industry benchmarks.' },
           ].map(v => `
           <div style="display:flex;gap:1.5rem;padding:1.75rem 0;border-bottom:1px solid var(--border);align-items:flex-start;transition:background .2s;" onmouseover="this.style.background='rgba(184,150,12,.02)'" onmouseout="this.style.background='transparent'">
             <span style="font-size:1.6rem;flex-shrink:0;width:40px;text-align:center;">${v.icon}</span>
@@ -83,9 +107,9 @@ app.get('/', (c) => {
   <div class="wrap">
     <div style="text-align:center;max-width:580px;margin:0 auto 5rem;">
       <div class="gr-c"></div>
-      <p class="eyebrow" style="margin-bottom:.875rem;">Our Story</p>
-      <h2 class="h2">A Legacy of<br>Innovation</h2>
-      <p class="lead" style="margin-top:1.25rem;">Seven years of building India's most trusted multi-vertical advisory practice.</p>
+      <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Trajectory</p>
+      <h2 class="h2">The India Gully Trajectory:<br>From Vision to Force</h2>
+      <p class="lead" style="margin-top:1.25rem;">Eight years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
     </div>
 
     <div style="position:relative;max-width:920px;margin:0 auto;">
@@ -93,14 +117,14 @@ app.get('/', (c) => {
       <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--gold-line),var(--border),transparent);transform:translateX(-50%);"></div>
 
       ${[
-        { year:'2017', desc:'Incorporated as Vivacious Entertainment and Hospitality Pvt. Ltd. in New Delhi. Commenced advisory operations across Hospitality and Entertainment sectors with founding team.' },
-        { year:'2018', desc:'Launched hotel management and pre-opening consultancy vertical. First mandates executed for Cygnett, Regenta and Radisson brand properties across North India.' },
-        { year:'2019', desc:'Expanded into Real Estate consulting and Retail Leasing strategy, building a truly diversified advisory practice across four complementary verticals.' },
-        { year:'2020', desc:'HORECA Supplies vertical launched. Providing end-to-end FF&E, OS&E and kitchen procurement for hotel pre-openings and renovations across India.' },
-        { year:'2021', desc:'Launched India Gully brand identity, celebrating Desiness. Deepened retail leasing practice with 30+ brand relationships across fashion, F&B and entertainment.' },
-        { year:'2023', desc:'Scaled hospitality transaction advisory with high-value asset sales and acquisitions across Delhi NCR, Chandigarh and Himachal Pradesh. Debt & Special Situations vertical established. Advisory pipeline crosses ₹1,000 Cr+.' },
-        { year:'2024', desc:'Digital transformation initiative. India Gully Enterprise Platform (ERP), integrated advisory management, governance and HORECA procurement system launched.' },
-        { year:'2025', desc:'₹1,165 Cr+ active advisory pipeline. Prism Tower (₹400 Cr) and Belcibo Hospitality Platform (₹100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
+        { year:'2017', desc:'The Genesis. Incorporated as Vivacious Entertainment and Hospitality Pvt. Ltd. in New Delhi. Hit the ground running with a specialist founding team, injecting structured advisory into the vibrant but fragmented Hospitality and Entertainment sectors.' },
+        { year:'2018', desc:'Operational Command. Launched our Hotel Management and Pre-opening vertical - securing inaugural mandates for marquee brands including Cygnett, Regenta, and Radisson, setting a new pace for North Indian hospitality.' },
+        { year:'2019', desc:'Multi-Vertical Expansion. Breaking the silo of single-sector firms, we integrated Real Estate Strategy and Retail Leasing. This cross-pollination created a diversified advisory engine capable of solving complex, high-stakes urban challenges.' },
+        { year:'2020', desc:'Supply Chain Integration. The launch of our HORECA Supplies vertical closed the loop between strategy and reality. By providing end-to-end FF&E, OS&E, and Kitchen Procurement, we became the on-ground engine for hotel pre-openings across India.' },
+        { year:'2021', desc:'The India Gully Identity. Rebranded as India Gully - a name that celebrates Desiness with a global edge. Aggressively scaled our Retail Leasing practice, anchoring our influence with 30+ powerhouse brand relationships in Fashion, F&B, and Entertainment.' },
+        { year:'2023', desc:'Scaling the Pipeline. Growth shifted into high gear with Greenfield Hotel Projects in Hosur, Shirdi, and Goa. Completed the landmark INR 1,350 Cr+ Entertainment City Limited divestment alongside EY - a 100% shareholder-consented transaction. Pioneered the Debt &amp; Special Situations vertical to navigate the market\'s most complex financial mandates.' },
+        { year:'2024', desc:'The Intelligence Layer. Went fully digital with the India Gully Enterprise Platform (ERP). By integrating advisory management, governance, and HORECA procurement into one proprietary system, we ensured that our Institutional Rigour is now automated and unshakeable.' },
+        { year:'2025', desc:'INR 2,100 Cr+ active advisory pipeline. Prism Tower (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
         { year:'2026', desc:'India Gully Investor Relations portal launched. /invest page goes live for qualified institutional investors and family offices. CERT-In OWASP Top-10 security compliance achieved. Eight active mandates across five asset classes.' },
       ].map((t,i) => `
       <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;margin-bottom:2.5rem;align-items:center;">
@@ -138,9 +162,9 @@ app.get('/', (c) => {
   <div class="wrap">
     <div style="text-align:center;max-width:640px;margin:0 auto 5rem;">
       <div class="gr-c"></div>
-      <p class="eyebrow" style="margin-bottom:.875rem;">Our People</p>
-      <h2 class="h2">Board &amp; Key Managerial<br>Personnel</h2>
-      <p class="lead" style="margin-top:1.25rem;">Three decades of combined experience spanning hospitality, real estate, retail and entertainment — earned through landmark transactions, not just advisory.</p>
+      <p class="eyebrow" style="margin-bottom:.875rem;">Executive Leadership &amp; Mandate Custodians</p>
+      <h2 class="h2">Executive Leadership &amp;<br>Mandate Custodians</h2>
+      <p class="lead" style="margin-top:1.25rem;">Three decades of combined experience spanning Hospitality, Real Estate, Retail, and Entertainment - earned through landmark transactions, not just advisory.</p>
     </div>
 
     <!-- ── ARUN MANIKONDA — Featured MD Profile ──────────────────── -->
@@ -193,10 +217,10 @@ app.get('/', (c) => {
           <!-- Career highlights -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">
             ${[
-              { icon:'trophy',     color:'#B8960C', label:'₹1,350 Cr+', sub:'Entertainment City divestment (EY joint advisory)' },
+              { icon:'trophy',     color:'#B8960C', label:'INR 1,350 Cr+', sub:'Entertainment City divestment (EY joint advisory)' },
               { icon:'hotel',      color:'#1A3A6B', label:'15+ Hotels',   sub:'Pre-opening PMC & brand on-boarding mandates' },
-              { icon:'store',      color:'#15803d', label:'1,40,000 sq ft', sub:'Retail leased across premium destinations' },
-              { icon:'chart-line', color:'#7C3AED', label:'₹1,165 Cr+',  sub:'Active advisory pipeline under management' },
+              { icon:'store',      color:'#15803d', label:'1,40,000 sq. ft.', sub:'Retail leased across premium destinations' },
+              { icon:'chart-line', color:'#7C3AED', label:'INR 2,100 Cr+',  sub:'Active mandate pipeline under management' },
             ].map(h => `
             <div style="display:flex;gap:.75rem;align-items:flex-start;padding:1rem;background:var(--parch-dk);border:1px solid var(--border-lt);">
               <div style="width:34px;height:34px;background:${h.color}15;border:1px solid ${h.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -325,7 +349,7 @@ app.get('/', (c) => {
         <div style="padding:1.75rem;">
           <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(21,128,61,.08);border:1px solid rgba(21,128,61,.18);padding:.28rem .75rem;margin-bottom:1.25rem;">
             <i class="fas fa-building" style="color:#15803d;font-size:.6rem;"></i>
-            <span style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15803d;">President – Real Estate, India Gully</span>
+            <span style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15803d;">President - Real Estate, India Gully</span>
           </div>
           <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.85;margin-bottom:1.25rem;">
             Amit Jhingan is President, Real Estate &amp; Key Managerial Personnel at India Gully. A seasoned real estate specialist with <strong style="color:var(--ink);">15+ years of pan-India experience</strong>, Amit heads India Gully's Real Estate advisory vertical covering transaction advisory, investment sales, retail leasing and commercial asset management.
@@ -405,12 +429,12 @@ app.get('/', (c) => {
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;">
       ${[
-        { n:'₹1,165 Cr+', label:'Active Pipeline', sub:'8 mandates across 5 asset classes', icon:'chart-bar', color:'#B8960C' },
-        { n:'₹2,000 Cr+', label:'Transactions Advised', sub:'Including ₹1,350 Cr+ Entertainment City divestment', icon:'trophy', color:'#1A3A6B' },
-        { n:'1,40,000 sq ft', label:'Retail Leased', sub:'Across Delhi NCR and Gurugram', icon:'store', color:'#15803d' },
+        { n:'INR 2,100 Cr+', label:'Mandate Pipeline Under Management', sub:'Active mandates across 5 asset classes', icon:'chart-bar', color:'#B8960C' },
+        { n:'INR 2,000 Cr+', label:'Transactions Advised', sub:'Incl. INR 1,350 Cr+ Entertainment City divestment (EY)', icon:'trophy', color:'#1A3A6B' },
+        { n:'1,40,000 sq. ft.', label:'Retail Leased', sub:'Across Delhi NCR and Gurugram', icon:'store', color:'#15803d' },
         { n:'15+', label:'Hotel Projects', sub:'PMC, pre-opening & HORECA supply', icon:'hotel', color:'#7C3AED' },
         { n:'500+ SKUs', label:'HORECA Catalogue', sub:'FF&E, OS&E, kitchen, linen, uniforms', icon:'utensils', color:'#B8960C' },
-        { n:'₹50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
+        { n:'INR 50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
         { n:'30+', label:'Retail Brands', sub:'Brand partnerships in NCR & Gurugram', icon:'tag', color:'#1A3A6B' },
         { n:'8+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
       ].map(s => `
@@ -483,10 +507,10 @@ app.get('/', (c) => {
         <h2 class="h2" style="margin-bottom:2rem;">Selected Highlights</h2>
         <div style="display:flex;flex-direction:column;gap:1rem;">
           ${[
-            { value:'₹1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY — 100% shareholder-consented divestment with full promoter alignment, comprehensive due diligence and structured deal closure.', sector:'Entertainment', color:'#7C3AED' },
-            { value:'₹400 Cr', title:'Prism Tower, Gurugram', desc:'312-key mixed-use hospitality & commercial asset advisory mandate. REIT-grade exit potential. 10 km metro connectivity. Active transaction.', sector:'Real Estate', color:'#1A3A6B' },
-            { value:'₹70 Cr', title:'Hotel Rajshree & Spa, Chandigarh', desc:'41-key boutique hotel — full HORECA procurement refresh, operational enhancement and active asset sale advisory.', sector:'Hospitality', color:'#15803d' },
-            { value:'₹45 Cr', title:'WelcomHeritage Santa Roza, Kasauli', desc:'44-key luxury heritage resort under ITC WelcomHeritage brand. End-to-end transaction advisory and investor outreach.', sector:'Heritage Hospitality', color:'#B8960C' },
+            { value:'INR 1,350 Cr+', title:'Entertainment City Limited Divestment', desc:'Joint advisory mandate with EY — 100% shareholder-consented divestment with full promoter alignment, comprehensive due diligence and structured deal closure.', sector:'Entertainment', color:'#7C3AED' },
+            { value:'INR 400 Cr', title:'Prism Tower, Gurugram', desc:'312-key mixed-use hospitality & commercial asset advisory mandate. REIT-grade exit potential. 10 km metro connectivity. Active transaction.', sector:'Real Estate', color:'#1A3A6B' },
+            { value:'INR 70 Cr', title:'Hotel Rajshree & Spa, Chandigarh', desc:'41-key boutique hotel — full HORECA procurement refresh, operational enhancement and active asset sale advisory.', sector:'Hospitality', color:'#15803d' },
+            { value:'INR 45 Cr', title:'WelcomHeritage Santa Roza, Kasauli', desc:'44-key luxury heritage resort under ITC WelcomHeritage brand. End-to-end transaction advisory and investor outreach.', sector:'Heritage Hospitality', color:'#B8960C' },
             { value:'₹30 Cr', title:'Maple Resort Chail, Himachal Pradesh', desc:'30-key boutique mountain resort at 2,515 metres. Owner-direct advisory and active buyer outreach for premium mountain hospitality asset.', sector:'Hospitality', color:'#065F46' },
           ].map(m => `
           <div style="padding:1.25rem;border:1px solid var(--border-lt);display:flex;gap:1rem;align-items:flex-start;transition:all .22s;" onmouseover="this.style.borderColor='rgba(184,150,12,.25)'" onmouseout="this.style.borderColor='var(--border-lt)'">
@@ -508,25 +532,26 @@ app.get('/', (c) => {
   </div>
 </div>
 
-`
-  return c.html(layout('About India Gully', content, {
-    description: "About India Gully. Celebrating Desiness since 2017. Leadership, vision, values and the story behind India's premier multi-vertical advisory firm.",
-    canonical: 'https://india-gully.pages.dev/about',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+${cmsZoneHtml}`
+  return c.html(layout(cmsTitle || 'About India Gully', content, {
+    description: cmsMeta || "About India Gully - India's preeminent multi-vertical advisory platform. Established 2017. INR 2,100 Cr+ mandate pipeline. Institutional Vision, Executive Leadership, and the Trajectory from Genesis to Force.",
+    canonical: 'https://indiagully.com/about',
+    ogImage: 'https://indiagully.com/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'AboutPage',
       name: 'About India Gully',
-      url: 'https://india-gully.pages.dev/about',
+      url: 'https://indiagully.com/about',
       description: "India Gully (Vivacious Entertainment and Hospitality Pvt. Ltd.) — advisory firm celebrating Desiness since 2017.",
       mainEntity: {
         '@type': 'Organization',
         name: 'India Gully',
         legalName: 'Vivacious Entertainment and Hospitality Pvt. Ltd.',
         foundingDate: '2017',
-        url: 'https://india-gully.pages.dev',
+        url: 'https://indiagully.com',
         employee: [
           { '@type': 'Person', name: 'Arun Kumar Manikonda', jobTitle: 'Managing Director' },
+
           { '@type': 'Person', name: 'Pavan Kumar Manikonda', jobTitle: 'Executive Director' },
           { '@type': 'Person', name: 'Amit Jhingan', jobTitle: 'President, Real Estate' }
         ]

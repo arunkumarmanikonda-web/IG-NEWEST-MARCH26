@@ -1,11 +1,6 @@
 -- Migration 0008: Phase P — Ensure unique constraints and seed Phase P data
--- Ensure ig_invoices has invoice_number index (invoice_number UNIQUE NOT NULL defined in 0001)
--- PATCH: Add actor/module columns to ig_audit_log
-ALTER TABLE ig_audit_log ADD COLUMN actor TEXT;
-ALTER TABLE ig_audit_log ADD COLUMN module TEXT;
-
-
-CREATE INDEX IF NOT EXISTS idx_invoices_no ON ig_invoices(invoice_number);
+-- Ensure ig_invoices has invoice_no unique index
+CREATE UNIQUE INDEX IF NOT EXISTS idx_invoices_no ON ig_invoices(invoice_no);
 
 -- Ensure ig_audit_log has id as PK with INSERT OR IGNORE support
 CREATE INDEX IF NOT EXISTS idx_audit_module ON ig_audit_log(module);
@@ -33,9 +28,9 @@ VALUES
    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Seed sample audit log entries
-INSERT OR IGNORE INTO ig_audit_log (actor, action, module, details, created_at)
+INSERT OR IGNORE INTO ig_audit_log (id, actor, action, module, details, created_at)
 VALUES
-  ('superadmin', 'Phase P D1 wiring deployed', 'System',
+  ('AUD-P01', 'superadmin', 'Phase P D1 wiring deployed', 'System',
    '{"phase":"P","fixes":9,"build":"passing"}', CURRENT_TIMESTAMP),
-  ('superadmin', 'Risk register seeded — 3 entries', 'Risk',
+  ('AUD-P02', 'superadmin', 'Risk register seeded — 3 entries', 'Risk',
    '{"records":3,"source":"migration_0008"}', CURRENT_TIMESTAMP);
