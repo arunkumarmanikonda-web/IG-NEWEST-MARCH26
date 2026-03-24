@@ -1848,7 +1848,7 @@ const SCRIPTS = (_nonce?: string) => `
     };
 
     var path = window.location.pathname || '/';
-    var protectedRoute = path.indexOf('/admin/') === 0 || /^\/portal\/(client|employee|board)\//.test(path);
+    var protectedRoute = path.indexOf('/admin/') === 0 || /^\\/portal\\/(client|employee|board)\\//.test(path);
     if(!protectedRoute) return;
     originalFetch('/api/auth/session',{credentials:'include'})
       .then(function(r){ if(!r.ok) throw new Error('session'); return r.json(); })
@@ -1923,7 +1923,7 @@ const SCRIPTS = (_nonce?: string) => `
   (function(){
     function splitCounter(raw){
       var trimmed = String(raw || '').trim();
-      var match = trimmed.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
+      var match = trimmed.match(/^([^\\d]*)([\\d,]+(?:\\.\\d+)?)(.*)$/);
       if(!match) return null;
       return { prefix: match[1] || '', number: match[2] || '0', suffix: (match[3] || '').trim() };
     }
@@ -2133,9 +2133,15 @@ const SCRIPTS = (_nonce?: string) => `
 
   /* ── MODAL DIALOG ─────────────────────────────────────────────────────── */
   window.igModal = function(title, bodyHtml){
+    var isSingleHtmlArg = typeof bodyHtml === 'undefined';
+    if(isSingleHtmlArg){
+      bodyHtml = title;
+      title = 'Details';
+    }
     var uid = 'igm_'+Date.now();
     var overlay = document.createElement('div');
     overlay.id = uid;
+    overlay.className = 'ig-modal-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:1.5rem;';
     var closeId = uid + '_close';
     var closeId2 = uid + '_close2';

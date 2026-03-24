@@ -4861,7 +4861,7 @@ ${empRowsHtml}
         +'<td style="font-size:.75rem;color:var(--ink-muted);">'+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+'</td>'
         +'<td style="font-family:\\x27DM Serif Display\\x27,Georgia,serif;">₹'+(parseInt(ctc)||0)/100000+'L</td>'
         +'<td><span class="badge b-gr">Active</span></td>'
-        +'<td><button onclick="igHrGenPayslipRow(e.name)" style="background:none;border:1px solid var(--border);padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class=\\x27fas fa-file-invoice\\x27></i></button></td>';
+        +'<td><button onclick="igHrGenPayslipRow(\\x27'+esc(name)+'\\x27)" style="background:none;border:1px solid var(--border);padding:.25rem .5rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class=\\x27fas fa-file-invoice\\x27></i></button></td>';
       tbody.insertBefore(tr,tbody.firstChild);
       igToast((r&&r.message)||'Employee '+name+' onboarded. Portal credentials emailed.','success');
     });
@@ -5614,28 +5614,6 @@ app.get('/governance', async (c) => {
     {id:'RES-004', title:'Authorise MD to sign Advisory Agreement — EVL',    type:'Ordinary', proposed:'Pavan Manikonda',date:'20 Feb 2026', status:'Passed',   votes:{yes:2,no:0,abstain:0,total:2}},
     {id:'RES-005', title:'Approval of Capital Expenditure Budget FY2026-27', type:'Ordinary', proposed:'Arun Manikonda', date:'31 Jan 2026', status:'Deferred', votes:{yes:1,no:0,abstain:1,total:2}},
   ]
-
-// Phase O: Live governance directors/KMPs loader
-;(window as any).igLoadGovernanceDirectors = async function() {
-  try {
-    const r = await fetch('/api/governance/board', {credentials:'include'})
-    if (!r.ok) return
-    const d = await r.json() as any
-    // Update directors section if present
-    const dirTbody = document.getElementById('directors-tbody')
-    if (dirTbody && d.directors?.length) {
-      dirTbody.innerHTML = d.directors.map((dir: any) => `
-        <tr>
-          <td>${dir.name || ''}</td>
-          <td>${dir.din || ''}</td>
-          <td>${dir.designation || ''}</td>
-          <td><span class="ig-badge" style="background:#16a34a20;color:#16a34a">${dir.kyc_status || 'Verified'}</span></td>
-          <td>${dir.din_status || 'Active'}</td>
-          <td><button class="ig-btn ig-btn-sm" onclick="igGovSubmitDir3('${dir.id||dir.din}')">DIR-3 KYC</button></td>
-        </tr>`).join('')
-    }
-  } catch(e) { console.warn('[igLoadGovernanceDirectors]', e) }
-}
 
   const directors = [
     {name:'Arun Manikonda',  din:'00000001', desig:'Managing Director',  kyc:'Verified', din_status:'Active', dob:'1980-04-15'},
