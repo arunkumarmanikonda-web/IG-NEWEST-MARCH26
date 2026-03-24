@@ -392,8 +392,8 @@ function filterTest(cat) {
 `
   return c.html(layout('Client Testimonials — India Gully Advisory', html, {
     description: 'Read what India Gully clients say about our transaction advisory, HORECA procurement, and hospitality development services across INR 2,100 Cr+ of mandates.',
-    canonical: 'https://india-gully.pages.dev/testimonials',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+    canonical: 'https://indiagully.com/testimonials',
+    ogImage: 'https://indiagully.com/static/og.jpg',
   }))
 })
 

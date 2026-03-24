@@ -3,6 +3,18 @@
 -- ============================================================
 
 -- HORECA: Vendors
+-- PATCH: Add new KPI columns introduced in Phase M (safe to ignore if already exist)
+ALTER TABLE ig_kpi_records ADD COLUMN department TEXT;
+ALTER TABLE ig_kpi_records ADD COLUMN metric_name TEXT;
+ALTER TABLE ig_kpi_records ADD COLUMN target_label TEXT;
+ALTER TABLE ig_kpi_records ADD COLUMN actual_label TEXT;
+ALTER TABLE ig_kpi_records ADD COLUMN pct_complete REAL DEFAULT 0;
+ALTER TABLE ig_kpi_records ADD COLUMN period TEXT;
+ALTER TABLE ig_kpi_records ADD COLUMN target_value REAL;
+ALTER TABLE ig_kpi_records ADD COLUMN actual_value REAL;
+ALTER TABLE ig_kpi_records ADD COLUMN unit TEXT;
+
+
 CREATE TABLE IF NOT EXISTS ig_horeca_vendors (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
@@ -239,20 +251,20 @@ INSERT OR IGNORE INTO ig_okrs (department, objective, progress, owner, color, pe
   ('HORECA',     '₹2 Cr HORECA revenue, 3 new hotel clients',55,'Amit Jhingan',  '#d97706', 'FY2025-26');
 
 -- Seed: KPI Records
-INSERT OR IGNORE INTO ig_kpi_records (id, department, metric_name, target_label, actual_label, pct_complete, period) VALUES
-  ('kr-fin-1','Finance','Advisory revenue MTD','₹12.4L/mo','₹12.4L',100,'FY2025-26'),
-  ('kr-fin-2','Finance','Invoice collection rate','>90%','87%',87,'FY2025-26'),
-  ('kr-fin-3','Finance','EBITDA margin','>35%','37.1%',100,'FY2025-26'),
-  ('kr-fin-4','Finance','GST compliance — on time','100%','100%',100,'FY2025-26'),
-  ('kr-sal-1','Sales','Pipeline value','₹50 Cr+','₹52.4 Cr',100,'FY2025-26'),
-  ('kr-sal-2','Sales','Lead to proposal rate','>50%','43%',86,'FY2025-26'),
-  ('kr-sal-3','Sales','Proposals won','6 deals','3 deals',50,'FY2025-26'),
-  ('kr-hr-1','HR','Positions filled','5','2',40,'FY2025-26'),
-  ('kr-hr-2','HR','Employee satisfaction NPS','>40','52',100,'FY2025-26'),
-  ('kr-gov-1','Governance','Board meetings held','4/year','2',50,'FY2025-26'),
-  ('kr-gov-2','Governance','ROC filings on time','100%','100%',100,'FY2025-26'),
-  ('kr-hrc-1','HORECA','Active hotel clients','3','1',33,'FY2025-26'),
-  ('kr-hrc-2','HORECA','HORECA revenue YTD','₹2 Cr','₹85L',43,'FY2025-26');
+INSERT OR IGNORE INTO ig_kpi_records (department, metric_name, target_label, actual_label, pct_complete, period) VALUES
+  ('Finance','Advisory revenue MTD','₹12.4L/mo','₹12.4L',100,'FY2025-26'),
+  ('Finance','Invoice collection rate','>90%','87%',87,'FY2025-26'),
+  ('Finance','EBITDA margin','>35%','37.1%',100,'FY2025-26'),
+  ('Finance','GST compliance — on time','100%','100%',100,'FY2025-26'),
+  ('Sales','Pipeline value','₹50 Cr+','₹52.4 Cr',100,'FY2025-26'),
+  ('Sales','Lead to proposal rate','>50%','43%',86,'FY2025-26'),
+  ('Sales','Proposals won','6 deals','3 deals',50,'FY2025-26'),
+  ('HR','Positions filled','5','2',40,'FY2025-26'),
+  ('HR','Employee satisfaction NPS','>40','52',100,'FY2025-26'),
+  ('Governance','Board meetings held','4/year','2',50,'FY2025-26'),
+  ('Governance','ROC filings on time','100%','100%',100,'FY2025-26'),
+  ('HORECA','Active hotel clients','3','1',33,'FY2025-26'),
+  ('HORECA','HORECA revenue YTD','₹2 Cr','₹85L',43,'FY2025-26');
 
 -- Seed: Compliance calendar
 INSERT OR IGNORE INTO ig_compliance_calendar (id, title, due_date, status, urgency, module) VALUES

@@ -45,7 +45,7 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">About India Gully</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em><br><span style="font-size:.5em;font-weight:300;color:rgba(255,255,255,.38);letter-spacing:-.01em;">Since 2017.</span></h1>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Institutional Advisory Architecture.<br><em style="color:var(--gold);font-style:italic;">Established 2017.</em></h1>
       <p class="lead-lt" style="max-width:600px;margin-bottom:2.5rem;">Vivacious Entertainment and Hospitality Pvt. Ltd. — a Delhi-based, multi-vertical institutional advisory platform operating across Hospitality Asset Management, Retail Leasing Velocity, Real Estate Transaction Structuring, Entertainment Destination Advisory, Capital Markets and Special Situations, with a proprietary pan-India mandate pipeline exceeding INR 2,100 Cr.</p>
       <!-- Quick stats -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
@@ -109,7 +109,7 @@ app.get('/', async (c) => {
       <div class="gr-c"></div>
       <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Trajectory</p>
       <h2 class="h2">The India Gully Trajectory:<br>From Vision to Force</h2>
-      <p class="lead" style="margin-top:1.25rem;">Eight years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
+      <p class="lead" style="margin-top:1.25rem;">Nine years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
     </div>
 
     <div style="position:relative;max-width:920px;margin:0 auto;">
@@ -122,6 +122,7 @@ app.get('/', async (c) => {
         { year:'2019', desc:'Multi-Vertical Expansion. Breaking the silo of single-sector firms, we integrated Real Estate Strategy and Retail Leasing. This cross-pollination created a diversified advisory engine capable of solving complex, high-stakes urban challenges.' },
         { year:'2020', desc:'Supply Chain Integration. The launch of our HORECA Supplies vertical closed the loop between strategy and reality. By providing end-to-end FF&E, OS&E, and Kitchen Procurement, we became the on-ground engine for hotel pre-openings across India.' },
         { year:'2021', desc:'The India Gully Identity. Rebranded as India Gully - a name that celebrates Desiness with a global edge. Aggressively scaled our Retail Leasing practice, anchoring our influence with 30+ powerhouse brand relationships in Fashion, F&B, and Entertainment.' },
+        { year:'2022', desc:'Post-Pandemic Acceleration. India\'s hospitality and real estate markets rebounded strongly. India Gully scaled its advisory pipeline with new Greenfield Hotel Development mandates across Hosur, Shirdi and Goa. HORECA division expanded to 500+ SKU procurement across 15+ hotel pre-openings.' },
         { year:'2023', desc:'Scaling the Pipeline. Growth shifted into high gear with Greenfield Hotel Projects in Hosur, Shirdi, and Goa. Completed the landmark INR 1,350 Cr+ Entertainment City Limited divestment alongside EY - a 100% shareholder-consented transaction. Pioneered the Debt &amp; Special Situations vertical to navigate the market\'s most complex financial mandates.' },
         { year:'2024', desc:'The Intelligence Layer. Went fully digital with the India Gully Enterprise Platform (ERP). By integrating advisory management, governance, and HORECA procurement into one proprietary system, we ensured that our Institutional Rigour is now automated and unshakeable.' },
         { year:'2025', desc:'INR 2,100 Cr+ active advisory pipeline. Prism Tower (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
@@ -349,7 +350,7 @@ app.get('/', async (c) => {
         <div style="padding:1.75rem;">
           <div style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(21,128,61,.08);border:1px solid rgba(21,128,61,.18);padding:.28rem .75rem;margin-bottom:1.25rem;">
             <i class="fas fa-building" style="color:#15803d;font-size:.6rem;"></i>
-            <span style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15803d;">President - Real Estate, India Gully</span>
+            <span style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#15803d;">President, Real Estate — India Gully</span>
           </div>
           <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.85;margin-bottom:1.25rem;">
             Amit Jhingan is President, Real Estate &amp; Key Managerial Personnel at India Gully. A seasoned real estate specialist with <strong style="color:var(--ink);">15+ years of pan-India experience</strong>, Amit heads India Gully's Real Estate advisory vertical covering transaction advisory, investment sales, retail leasing and commercial asset management.
@@ -436,7 +437,7 @@ app.get('/', async (c) => {
         { n:'500+ SKUs', label:'HORECA Catalogue', sub:'FF&E, OS&E, kitchen, linen, uniforms', icon:'utensils', color:'#B8960C' },
         { n:'INR 50 Cr+', label:'Procurement Managed', sub:'Cumulative HORECA procurement value', icon:'truck', color:'#065F46' },
         { n:'30+', label:'Retail Brands', sub:'Brand partnerships in NCR & Gurugram', icon:'tag', color:'#1A3A6B' },
-        { n:'8+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
+        { n:'9+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
       ].map(s => `
       <div class="reveal" style="padding:2rem;border:1px solid var(--border-lt);text-align:center;transition:all .28s;position:relative;overflow:hidden;" onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.transform='translateY(0)'">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${s.color},transparent);opacity:0;transition:opacity .3s;" class="num-top"></div>
@@ -458,7 +459,7 @@ app.get('/', async (c) => {
     <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:stretch;">
       ${[
         { icon:'shield-alt',    color:'#065F46', bg:'rgba(22,163,74,.08)', border:'rgba(22,163,74,.2)',  title:'CERT-In Compliant',         sub:'Cyber security advisory standard' },
-        { icon:'check-shield',  color:'#1A3A6B', bg:'rgba(37,99,235,.08)', border:'rgba(37,99,235,.2)',  title:'OWASP Top-10 Secure',       sub:'Platform security verified 2025' },
+        { icon:'check-shield',  color:'#1A3A6B', bg:'rgba(37,99,235,.08)', border:'rgba(37,99,235,.2)',  title:'OWASP Top-10 Secure',       sub:'Platform security verified 2026' },
         { icon:'file-contract', color:'#B8960C', bg:'rgba(184,150,12,.08)',border:'rgba(184,150,12,.2)', title:'Mutual NDA Framework',      sub:'All mandates NDA-protected' },
         { icon:'balance-scale', color:'#7C3AED', bg:'rgba(124,58,237,.08)',border:'rgba(124,58,237,.2)', title:'SEBI-Compliant Advisory',   sub:'Transaction advisory within regulatory framework' },
         { icon:'building',      color:'#065F46', bg:'rgba(22,163,74,.08)', border:'rgba(22,163,74,.2)',  title:'EY Co-Advisory',            sub:'Joint mandates with Ernst & Young' },

@@ -59,7 +59,7 @@ app.get('/', async (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Investment Opportunities</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Active<br><em style="font-style:italic;color:var(--gold);">Mandates</em></h1>
-      <p class="lead-lt" style="max-width:620px;margin-bottom:3rem;">Institutional-grade investment mandates across India's premier asset classes. All opportunities are exclusive to India Gully's advisory pipeline and strictly subject to NDA. Information Memoranda available to qualified investors, family offices and institutional buyers upon request.</p>
+      <p class="lead-lt" style="max-width:620px;margin-bottom:3rem;">NDA-governed, institutional-grade mandates across India's premier asset classes — Real Estate, Hospitality, Retail, Entertainment and Debt. All opportunities are exclusive to India Gully's advisory pipeline. Information Memoranda released only to qualified investors, PE funds, family offices and institutional buyers upon mutual NDA execution.</p>
       <!-- Filter buttons + Saved bookmarks toggle -->
       <div style="display:flex;flex-wrap:wrap;gap:.625rem;align-items:center;">
         ${['All Mandates','Hospitality','Real Estate','Heritage Hospitality','Mixed-Use'].map((f,i) => `
@@ -698,8 +698,8 @@ function resetFilters() {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Active Mandates — India Gully Advisory Pipeline', content, {
     description: 'India Gully active mandates — ₹2,100 Cr+ institutional-grade investment opportunities across Real Estate, Hospitality, Entertainment and Retail. All opportunities subject to NDA.',
-    canonical: 'https://india-gully.pages.dev/listings',
-    ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg'
+    canonical: 'https://indiagully.com/listings',
+    ogImage: 'https://indiagully.com/static/og-listings.jpg'
   }))
 })
 
@@ -709,6 +709,19 @@ app.get('/:id', (c) => {
   const listing = LISTINGS.find((l: any) => l.id === id)
   if (!listing) return c.redirect('/listings')
   const l = listing as any
+  const detailSeo = id === 'hotel-rajshree-chandigarh'
+    ? {
+        title: 'Hotel Rajshree Chandigarh Asset Sale | 41-Key Boutique Hotel',
+        description: 'Explore Hotel Rajshree & Spa, a 41-key boutique hotel with spa and wellness facilities in Chandigarh. India Gully advisory mandate with NDA-based investor access.',
+        h1: 'Hotel Rajshree Chandigarh: 41-Key Boutique Hotel Asset Sale',
+        subtitle: 'Boutique Hotel with Spa & Wellness · 41 Keys · Chandigarh',
+      }
+    : {
+        title: listing.title,
+        description: `${listing.title}, ${listing.location}, ${listing.value}, India Gully exclusive transaction advisory mandate.`,
+        h1: l.title,
+        subtitle: l.subtitle,
+      }
 
   // Other mandates for the "More Mandates" section
   const others = LISTINGS.filter((x: any) => x.id !== id).slice(0, 3)
@@ -777,25 +790,25 @@ app.get('/:id', (c) => {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.625rem;">
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Full Name *</label>
-            <input id="nda-name" type="text" placeholder="e.g. Rajesh Kumar" required autocomplete="name"
+            <input id="nda-name" type="text" placeholder="Legal full name" required autocomplete="name"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Email Address *</label>
-            <input id="nda-email" type="email" placeholder="your@email.com" required autocomplete="email"
+            <input id="nda-email" type="email" placeholder="Institutional email address" required autocomplete="email"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Phone / WhatsApp *</label>
-            <input id="nda-phone" type="tel" placeholder="+91 98XXX XXXXX" required autocomplete="tel"
+            <input id="nda-phone" type="tel" placeholder="Direct line or mobile" required autocomplete="tel"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
           <div>
             <label style="display:block;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.2rem;">Organisation / Fund *</label>
-            <input id="nda-org" type="text" placeholder="e.g. XYZ Family Office" required autocomplete="organization"
+            <input id="nda-org" type="text" placeholder="Fund / Family Office / Developer" required autocomplete="organization"
                    style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .8rem;font-size:.85rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;background:#fafaf7;"
                    onfocus="this.style.borderColor='var(--gold)';this.style.boxShadow='0 0 0 3px rgba(184,150,12,.08)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
           </div>
@@ -1220,8 +1233,8 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <span style="background:${ss.bg};color:${ss.text};border:1px solid ${ss.border};font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .7rem;">${l.status}</span>
           <span style="font-size:.75rem;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:.35rem;"><i class="fas fa-map-marker-alt" style="color:var(--gold);font-size:.6rem;"></i>${l.location}</span>
         </div>
-        <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.75rem,4vw,3rem);color:#fff;line-height:1.1;margin-bottom:.5rem;">${l.title}</h1>
-        <p style="font-size:1rem;color:var(--gold);font-weight:400;">${l.subtitle}</p>
+        <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.75rem,4vw,3rem);color:#fff;line-height:1.1;margin-bottom:.5rem;">${detailSeo.h1}</h1>
+        <p style="font-size:1rem;color:var(--gold);font-weight:400;">${detailSeo.subtitle}</p>
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:3rem;color:var(--gold);line-height:1;">${l.value}</div>
@@ -1567,13 +1580,13 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <div id="eoi-form" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Full Name *</label>
-              <input id="eoi-name" type="text" placeholder="Your full name" autocomplete="name"
+              <input id="eoi-name" type="text" placeholder="Legal full name" autocomplete="name"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Email Address *</label>
-              <input id="eoi-email" type="email" placeholder="your@email.com" autocomplete="email"
+              <input id="eoi-email" type="email" placeholder="Institutional email address" autocomplete="email"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
@@ -1585,13 +1598,13 @@ ${l.id === 'prism-tower-gurgaon' ? `
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Phone / WhatsApp *</label>
-              <input id="eoi-phone" type="tel" placeholder="+91 XXXXX XXXXX" autocomplete="tel"
+              <input id="eoi-phone" type="tel" placeholder="Direct line or mobile" autocomplete="tel"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
             <div style="grid-column:1/-1;">
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Ticket Size / Investment Capacity</label>
-              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr - ₹100 Cr"
+              <input id="eoi-ticket" type="text" placeholder="e.g. ₹50 Cr - ₹500 Cr"
                      style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
             </div>
@@ -1612,7 +1625,7 @@ ${l.id === 'prism-tower-gurgaon' ? `
             </div>
             <div style="grid-column:1/-1;">
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.3rem;">Brief Note / Interest Statement</label>
-              <textarea id="eoi-message" rows="3" placeholder="Please describe your investment thesis, timeline, and specific interest in this mandate…"
+              <textarea id="eoi-message" rows="3" placeholder="Investment thesis, proposed ticket size, timeline and any specific interest in this mandate"
                         style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:.72rem .9rem;font-size:.85rem;color:#fff;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;transition:border-color .2s;"
                         onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"></textarea>
             </div>
@@ -1826,22 +1839,22 @@ ${l.id === 'prism-tower-gurgaon' ? `
           <!-- Share row -->
           <div style="display:flex;justify-content:center;gap:.5rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.07);">
             <span style="font-size:.58rem;color:rgba(255,255,255,.3);align-self:center;margin-right:.2rem;text-transform:uppercase;letter-spacing:.1em;">Share</span>
-            <a href="https://twitter.com/intent/tweet?url=https://india-gully.pages.dev/listings/${l.id}&text=${encodeURIComponent(l.title + ' — Active Mandate, India Gully Advisory')}" target="_blank" rel="noopener" title="Share on X/Twitter"
+            <a href="https://twitter.com/intent/tweet?url=https://indiagully.com/listings/${l.id}&text=${encodeURIComponent(l.title + ' — Active Mandate, India Gully Advisory')}" target="_blank" rel="noopener" title="Share on X/Twitter"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-x-twitter" style="font-size:.62rem;"></i>
             </a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://india-gully.pages.dev/listings/${l.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://indiagully.com/listings/${l.id}" target="_blank" rel="noopener" title="Share on LinkedIn"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='#0A66C2';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-linkedin-in" style="font-size:.62rem;"></i>
             </a>
-            <a href="https://wa.me/?text=${encodeURIComponent(l.title + ' — Active Mandate https://india-gully.pages.dev/listings/' + l.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
+            <a href="https://wa.me/?text=${encodeURIComponent(l.title + ' — Active Mandate https://indiagully.com/listings/' + l.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);text-decoration:none;transition:all .2s;"
                onmouseover="this.style.background='#25D366';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fab fa-whatsapp" style="font-size:.62rem;"></i>
             </a>
-            <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://india-gully.pages.dev/listings/${l.id}').then(function(){igToast('Link copied!','success')}).catch(function(){})" title="Copy link"
+            <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://indiagully.com/listings/${l.id}').then(function(){igToast('Link copied!','success')}).catch(function(){})" title="Copy link"
                style="width:30px;height:30px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;"
                onmouseover="this.style.background='rgba(255,255,255,.12)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.06)';this.style.color='rgba(255,255,255,.6)'">
               <i class="fas fa-link" style="font-size:.62rem;"></i>
@@ -2065,32 +2078,47 @@ ${l.id === 'prism-tower-gurgaon' ? `
 </script>
 `
 
-  return c.html(layout(listing.title, content, {
-    description: `${listing.title}, ${listing.location}, ${listing.value}, India Gully exclusive transaction advisory mandate.`,
-    ogImage: (listing as any).images?.[0],
-    canonical: `https://india-gully.pages.dev/listings/${listing.id}`,
-    jsonLd: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'RealEstateListing',
-          name: listing.title,
-          description: `${listing.desc} — ${listing.location} — ${listing.value}`,
-          address: { '@type': 'PostalAddress', addressLocality: listing.location, addressCountry: 'IN' },
-          url: `https://india-gully.pages.dev/listings/${listing.id}`,
-          image: (listing as any).images?.[0] || 'https://india-gully.pages.dev/static/og.jpg',
-        },
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://india-gully.pages.dev/' },
-            { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://india-gully.pages.dev/listings' },
-            { '@type': 'ListItem', position: 3, name: listing.title, item: `https://india-gully.pages.dev/listings/${listing.id}` },
-          ]
-        }
-      ]
-    }
-  }))
+return c.html(layout(detailSeo.title, content, {
+  description: detailSeo.description,
+  ogImage: (listing as any).images?.[0],
+  canonical: `https://indiagully.com/listings/${listing.id}`,
+  jsonLd: {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'RealEstateListing',
+        name: detailSeo.h1,
+        description: detailSeo.description,
+        address: { '@type': 'PostalAddress', addressLocality: listing.location, addressCountry: 'IN' },
+        url: `https://indiagully.com/listings/${listing.id}`,
+        image: (listing as any).images?.[0] || 'https://indiagully.com/static/og.jpg',
+        numberOfRooms: id === 'hotel-rajshree-chandigarh' ? '41' : undefined,
+        category: listing.sector,
+        seller: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' },
+        offers: id === 'hotel-rajshree-chandigarh' ? {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          price: '700000000',
+          availability: 'https://schema.org/InStock',
+          url: `https://indiagully.com/listings/${listing.id}`,
+        } : undefined,
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://indiagully.com/' },
+          { '@type': 'ListItem', position: 2, name: 'Mandates', item: 'https://indiagully.com/listings' },
+          { '@type': 'ListItem', position: 3, name: detailSeo.h1, item: `https://indiagully.com/listings/${listing.id}` },
+        ]
+      },
+      {
+        '@type': 'Organization',
+        name: 'India Gully',
+        url: 'https://indiagully.com'
+      }
+    ]
+  }
+}))
 })
 
 export default app

@@ -245,14 +245,14 @@ app.get('/', async (c) => {
         <div id="horeca-form-wrap">
         <form id="horeca-form" class="ig-form" style="display:flex;flex-direction:column;gap:1.25rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-            <div><label class="ig-lbl">Full Name *</label><input id="hf-name" type="text" name="name" class="ig-inp" required placeholder="Your full name"></div>
+            <div><label class="ig-lbl">Full Name *</label><input id="hf-name" type="text" name="name" class="ig-inp" required placeholder="Contact name"></div>
             <div><label class="ig-lbl">Company / Property *</label><input id="hf-company" type="text" name="company" class="ig-inp" required placeholder="Hotel or company name"></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
-            <div><label class="ig-lbl">Email Address *</label><input id="hf-email" type="email" name="email" class="ig-inp" required placeholder="your@email.com"></div>
-            <div><label class="ig-lbl">Phone Number</label><input id="hf-phone" type="tel" name="phone" class="ig-inp" placeholder="+91 XXXXX XXXXX"></div>
+            <div><label class="ig-lbl">Email Address *</label><input id="hf-email" type="email" name="email" class="ig-inp" required placeholder="Work email address"></div>
+            <div><label class="ig-lbl">Phone Number</label><input id="hf-phone" type="tel" name="phone" class="ig-inp" placeholder="Direct line or mobile"></div>
           </div>
-          <div><label class="ig-lbl">Property Location *</label><input id="hf-location" type="text" name="location" class="ig-inp" required placeholder="City, State"></div>
+          <div><label class="ig-lbl">Property Location *</label><input id="hf-location" type="text" name="location" class="ig-inp" required placeholder="Property city, state"></div>
           <div>
             <label class="ig-lbl">Supply Categories Required *</label>
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:.35rem;">
@@ -274,7 +274,7 @@ app.get('/', async (c) => {
               <option>Above ₹25 Crore</option>
             </select>
           </div>
-          <div><label class="ig-lbl">Additional Requirements</label><textarea id="hf-message" name="message" class="ig-inp" placeholder="Describe your requirements, timeline, brand standards or any specific product preferences…"></textarea></div>
+          <div><label class="ig-lbl">Additional Requirements</label><textarea id="hf-message" name="message" class="ig-inp" placeholder="Requirements, brand standards, timeline and any specific product preferences"></textarea></div>
           <!-- Error -->
           <div id="hf-err" style="display:none;background:#fef2f2;border:1px solid #fecaca;padding:.625rem .875rem;font-size:.75rem;color:#dc2626;"><i class="fas fa-exclamation-circle" style="margin-right:.4rem;"></i><span id="hf-err-msg">Please fill all required fields.</span></div>
           <button type="button" id="hf-submit" onclick="igSubmitHORECA()" class="btn btn-g" style="width:100%;justify-content:center;padding:1rem;"><i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit HORECA Enquiry</button>
@@ -356,7 +356,7 @@ app.get('/', async (c) => {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Integrated HORECA Procurement &amp; Supply Chain Orchestration', content, {
     description: 'India Gully Integrated HORECA Procurement &amp; Supply Chain Orchestration — kitchen equipment, FF&E, OS&E, linens, uniforms and guest amenities for hotels and F&B operators across India.',
-    canonical: 'https://india-gully.pages.dev/horeca'
+    canonical: 'https://indiagully.com/horeca'
   }))
 })
 
@@ -653,13 +653,13 @@ app.get('/catalogue', (c) => {
         <div style="display:flex;flex-direction:column;gap:.875rem;">
           <div>
             <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Property / Company Name *</label>
-            <input id="rfq-company" type="text" placeholder="Hotel / Restaurant name"
+            <input id="rfq-company" type="text" placeholder="Property / restaurant name"
                    style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
           </div>
           <div>
             <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Property Location *</label>
-            <input id="rfq-location" type="text" placeholder="City, State"
+            <input id="rfq-location" type="text" placeholder="Property city, state"
                    style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
           </div>
@@ -683,7 +683,7 @@ app.get('/catalogue', (c) => {
           </div>
           <div>
             <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Additional Notes</label>
-            <textarea id="rfq-notes" rows="3" placeholder="Brand standards, timeline, special requirements\u2026"
+            <textarea id="rfq-notes" rows="3" placeholder="Brand standards, timeline and any special requirements"
                       style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;resize:vertical;min-height:80px;transition:all .2s;"
                       onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"></textarea>
           </div>
@@ -704,20 +704,20 @@ app.get('/catalogue', (c) => {
         <div style="display:flex;flex-direction:column;gap:.875rem;">
           <div>
             <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Full Name *</label>
-            <input id="rfq-name" type="text" placeholder="Your full name"
+            <input id="rfq-name" type="text" placeholder="Contact name"
                    style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                    onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">Email *</label>
-              <input id="rfq-email" type="email" placeholder="your@email.com"
+              <input id="rfq-email" type="email" placeholder="Work email address"
                      style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
               <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">WhatsApp / Phone *</label>
-              <input id="rfq-phone" type="tel" placeholder="+91 XXXXX XXXXX"
+              <input id="rfq-phone" type="tel" placeholder="Direct line or mobile"
                      style="width:100%;box-sizing:border-box;border:1.5px solid var(--border);padding:.65rem .875rem;font-size:.875rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:all .2s;"
                      onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
             </div>
@@ -1237,7 +1237,7 @@ function igCatDownloadPDF() {
     + '</tr></thead><tbody>' + catSections + '</tbody></table>'
     + '<div style="margin-top:14px;padding-top:8px;border-top:1px solid #e4dece;display:flex;justify-content:space-between;align-items:center;">'
     + '<div style="font-size:7.5px;color:#94a3b8;">All prices in INR exclusive of GST · Prices subject to change without notice · For latest pricing contact Pavan Manikonda</div>'
-    + '<div style="font-size:7.5px;color:#94a3b8;">india-gully.pages.dev/horeca · pavan@indiagully.com · +91 62825 56067</div>'
+    + '<div style="font-size:7.5px;color:#94a3b8;">indiagully.com/horeca · pavan@indiagully.com · +91 62825 56067</div>'
     + '</div></body></html>';
 
   var w = window.open('', '_blank', 'width=1200,height=900');
@@ -1364,7 +1364,7 @@ document.addEventListener('DOMContentLoaded', igCatLoad);
 `
   return c.html(layout('HORECA Product Catalogue', content, {
     description: 'India Gully HORECA product catalogue — browse 500+ SKUs across kitchen equipment, crockery, linen, bar, housekeeping, furniture, technology and safety. Download CSV or PDF.',
-    canonical: 'https://india-gully.pages.dev/horeca/catalogue'
+    canonical: 'https://indiagully.com/horeca/catalogue'
   }))
 })
 

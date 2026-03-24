@@ -218,7 +218,7 @@ app.get('/', (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Knowledge Hub</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Resources &amp;<br><em style="color:var(--gold);font-style:italic;">Downloads</em></h1>
-      <p class="lead-lt" style="max-width:640px;margin-bottom:3rem;">Practical guides, templates, checklists and research drawn from India Gully's 8+ years of boots-on-the-ground execution across HORECA procurement, real estate transactions, hospitality advisory and regulatory compliance.</p>
+      <p class="lead-lt" style="max-width:640px;margin-bottom:3rem;">Practical guides, templates, checklists and research drawn from India Gully's 9+ years of boots-on-the-ground execution across HORECA procurement, real estate transactions, hospitality advisory and regulatory compliance.</p>
       <!-- Stats row -->
       <div style="display:flex;flex-wrap:wrap;gap:2.5rem;">
         ${[
@@ -330,7 +330,7 @@ app.get('/', (c) => {
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Email Address *</label>
-          <input id="res-email" type="email" placeholder="your@email.com" autocomplete="email"
+          <input id="res-email" type="email" placeholder="Work email address" autocomplete="email"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
@@ -485,8 +485,8 @@ document.getElementById('res-modal').addEventListener('click', function(e){
 `
 
   return c.html(layout('Resources & Downloads', content, {
-    description: 'India Gully Knowledge Hub — free guides, checklists, templates and research covering HORECA procurement, hotel feasibility, real estate valuation and hospitality advisory. Download practical tools built from 8+ years of advisory experience.',
-    canonical: 'https://india-gully.pages.dev/resources'
+    description: 'India Gully Knowledge Hub — free guides, checklists, templates and research covering HORECA procurement, hotel feasibility, real estate valuation and hospitality advisory. Download practical tools built from 9+ years of advisory experience.',
+    canonical: 'https://indiagully.com/resources'
   }))
 })
 

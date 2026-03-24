@@ -146,22 +146,22 @@ app.get('/', async (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
             <div>
               <label class="ig-lbl">First Name *</label>
-              <input type="text" name="first_name" class="ig-inp" required placeholder="First name">
+              <input type="text" name="first_name" class="ig-inp" required placeholder="Legal first name">
             </div>
             <div>
               <label class="ig-lbl">Last Name *</label>
-              <input type="text" name="last_name" class="ig-inp" required placeholder="Last name">
+              <input type="text" name="last_name" class="ig-inp" required placeholder="Legal last name">
             </div>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
             <div>
               <label class="ig-lbl">Email Address *</label>
-              <input type="email" name="email" class="ig-inp" required placeholder="your@email.com">
+              <input type="email" name="email" class="ig-inp" required placeholder="Institutional email address">
             </div>
             <div>
               <label class="ig-lbl">Phone Number *</label>
-              <input type="tel" name="phone" class="ig-inp" required placeholder="+91 XXXXX XXXXX">
+              <input type="tel" name="phone" class="ig-inp" required placeholder="Direct line or mobile">
             </div>
           </div>
 
@@ -185,7 +185,7 @@ app.get('/', async (c) => {
 
           <div>
             <label class="ig-lbl">Project / Mandate Location</label>
-            <input type="text" name="location" class="ig-inp" placeholder="City, State or Region">
+            <input type="text" name="location" class="ig-inp" placeholder="Asset city, state or region">
           </div>
 
           <div>
@@ -437,13 +437,13 @@ function igContactAjax() {
 ${cmsZoneHtml}`
   return c.html(layout(cmsTitle || 'Contact & Enquiry', content, {
     description: 'Contact India Gully, submit a mandate enquiry, HORECA RFQ or advisory request. Our leadership team responds within 24 hours.',
-    canonical: 'https://india-gully.pages.dev/contact',
-    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
+    canonical: 'https://indiagully.com/contact',
+    ogImage: 'https://indiagully.com/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'ContactPage',
       name: 'Contact India Gully',
-      url: 'https://india-gully.pages.dev/contact',
+      url: 'https://indiagully.com/contact',
       description: 'Initiate a confidential mandate enquiry or HORECA RFQ. 24-hour diagnostic acknowledgment. Pre-Mandate Confidentiality Protocol executed on engagement commencement.',
       mainEntity: {
         '@type': 'Organization',

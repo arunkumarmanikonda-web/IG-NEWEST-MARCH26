@@ -37,8 +37,7 @@ CREATE TABLE IF NOT EXISTS ig_dpdp_dfr (
 CREATE INDEX IF NOT EXISTS idx_dpdp_dfr_status ON ig_dpdp_dfr(status);
 
 -- Additional index on ig_employees for TDS 16A queries
-CREATE INDEX IF NOT EXISTS idx_employees_status_dept ON ig_employees(status, department);
-
+-- idx_employees_status_dept removed: status column not in ig_employees (use is_active)
 -- Seed: Pre-load 6 vendor DPA records
 INSERT OR IGNORE INTO ig_dpdp_vendor_dpas (dpa_id, vendor, category, status, signed_date, expiry_date, risk_level) VALUES
   ('DPA-001', 'AWS India', 'Cloud Infrastructure', 'Signed', '2025-01-15', '2026-01-14', 'Low'),
