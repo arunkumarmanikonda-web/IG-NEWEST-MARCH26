@@ -50,7 +50,7 @@ function adminShell(pageTitle: string, active: string, body: string) {
     { id:'security',     icon:'shield-alt',      label:'Security Audit', g:'Platform', badge:'!' },
   ]
   const adminAlerts = [
-    {msg:'INV-2026-002 overdue — ₹1.8L from Jaipur Heritage Holdings',type:'danger',time:'2h ago'},
+    {msg:'INV-2026-002 overdue — ₹1.8L from Demo Client',type:'danger',time:'2h ago'},
     {msg:'New leave request from Amit Jhingan — Casual Leave',type:'warn',time:'3h ago'},
     {msg:'GSTR-1 due on 11 Mar 2026 — 9 days remaining',type:'warn',time:'1d ago'},
     {msg:'EY Retainer contract expiring in 30 days',type:'danger',time:'2d ago'},
@@ -111,11 +111,6 @@ function adminShell(pageTitle: string, active: string, body: string) {
             </div>`).join('')}
           </div>
         </div>
-        <!-- Dark Mode Toggle -->
-        <button id="adm-dark-btn" onclick="igAdmToggleDark()" title="Toggle Light/Dark Mode"
-          style="background:none;border:1px solid var(--border);width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
-          <i id="adm-dark-icon" class="fas fa-moon" style="font-size:.72rem;color:var(--ink-muted);"></i>
-        </button>
         <div style="display:flex;align-items:center;gap:.5rem;">
           <span style="font-size:.68rem;color:var(--ink-muted);">superadmin</span>
           <div style="width:32px;height:32px;background:#6B1A1A;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Super Admin" onclick="igAdmShowProfile()">
@@ -283,24 +278,6 @@ window.igAdmClearAlerts = function(){
 };
 
 // ── Admin Shell: Show Super Admin Profile ─────────────────────────────────────
-window.igAdmToggleDark = function(){
-  var html = document.documentElement;
-  var isDark = html.getAttribute('data-theme') === 'dark';
-  var newTheme = isDark ? 'light' : 'dark';
-  html.setAttribute('data-theme', newTheme);
-  try{ localStorage.setItem('ig_dark_mode', newTheme === 'dark' ? '1' : '0'); }catch(e){}
-  var icon = document.getElementById('adm-dark-icon');
-  if(icon){ icon.className = 'fas fa-' + (newTheme === 'dark' ? 'sun' : 'moon'); icon.style.color = newTheme === 'dark' ? '#B8960C' : 'var(--ink-muted)'; }
-  igToast('Switched to ' + (newTheme === 'dark' ? 'Dark' : 'Light') + ' mode', 'success');
-};
-/* Sync dark mode icon on load */
-(function(){
-  try{
-    var isDark = localStorage.getItem('ig_dark_mode') === '1' || document.documentElement.getAttribute('data-theme') === 'dark';
-    var icon = document.getElementById('adm-dark-icon');
-    if(icon && isDark){ icon.className = 'fas fa-sun'; icon.style.color = '#B8960C'; }
-  }catch(e){}
-})();
 window.igAdmShowProfile = function(){
   igModal('Super Admin Profile',
     '<div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;">'
@@ -472,7 +449,7 @@ app.get('/dashboard', async (c) => {
       {label:'Total Headcount',  value:String(totalEmployees), trend:'All active employees', icon:'users',        href:'/admin/hr'},
       {label:'Board Meetings',   value:String(boardMeetings),  trend:'FY 2025-26 meetings',  icon:'gavel',        href:'/admin/governance'},
       {label:'Active Contracts', value:'6',                    trend:'1 expiring soon',      icon:'file-signature',href:'/admin/contracts'},
-      {label:'Open Mandates',    value:'8',                    trend:'₹2,100 Cr+ pipeline',  icon:'briefcase',    href:'/listings'},
+      {label:'Open Mandates',    value:'8',                    trend:'₹1,165 Cr+ pipeline',  icon:'briefcase',    href:'/listings'},
     ].map(s=>`<a href="${s.href}" style="text-decoration:none;"><div class="am" style="cursor:pointer;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'"><div style="display:flex;justify-content:space-between;margin-bottom:.625rem;"><span style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);">${s.label}</span><i class="fas fa-${s.icon}" style="color:var(--ink-faint);font-size:.7rem;"></i></div><div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.75rem;color:var(--ink);line-height:1;margin-bottom:.3rem;">${s.value}</div><div style="font-size:.7rem;color:var(--ink-muted);">${s.trend}</div></div></a>`).join('')}
   </div>
 
@@ -532,7 +509,7 @@ app.get('/dashboard', async (c) => {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);">
       ${[
         {icon:'calendar-times', color:'#dc2626', label:'Annual Accounts Filing', sub:'Due 31 Mar 2026 · AOC-4 / MGT-7', urgency:'Urgent'},
-        {icon:'file-invoice-dollar', color:'#d97706', label:'INV-2026-002 Overdue', sub:'₹1.8L · Jaipur Heritage Holdings · 28 Feb due', urgency:'Overdue'},
+        {icon:'file-invoice-dollar', color:'#d97706', label:'INV-2026-002 Overdue', sub:'₹1.8L · Demo Client · 28 Feb due', urgency:'Overdue'},
         {icon:'file-contract',  color:'#d97706', label:'EY Advisory Retainer', sub:'Expiring 31 Mar 2026 · Renew now', urgency:'Expiring'},
         {icon:'gavel',          color:'#1E1E1E', label:'Board Meeting BM-2026-03', sub:'Scheduled 15 Mar 2026 · 11:00 AM', urgency:'Scheduled'},
         {icon:'percent',        color:'#2563eb', label:'GSTR-3B Filing', sub:'Due 20 Mar 2026 · ₹2.1L payable', urgency:'Due Soon'},
@@ -922,7 +899,7 @@ app.get('/cms', (c) => {
         ${[
           {page:'Home',     title:'India Gully — Celebrating Desiness',        kw:'real estate advisory, hospitality consulting, India', score:87},
           {page:'About',    title:'About India Gully — Leadership & Mission',   kw:'Arun Manikonda, India Gully team, advisory firm',    score:82},
-          {page:'Listings', title:'Active Mandates — India Gully',              kw:'investment mandates, ₹2,100 Cr+ pipeline, India',     score:79},
+          {page:'Listings', title:'Active Mandates — India Gully',              kw:'investment mandates, ₹1165 Cr pipeline, India',     score:79},
           {page:'HORECA',   title:'HORECA Solutions — India Gully',             kw:'hotel procurement, restaurant supplies, HORECA India',score:91},
           {page:'Services', title:'Advisory Services — India Gully',            kw:'real estate services, retail advisory India',         score:75},
           {page:'Contact',  title:'Contact India Gully — Get In Touch',         kw:'India Gully contact, advisory enquiry Delhi',         score:68},
@@ -985,7 +962,8 @@ app.get('/cms', (c) => {
           {label:'Primary Logo',    file:'logo-primary.png',  bg:'#FAF8F3', desc:'Light backgrounds — website, documents, presentations',   w:1024,h:239},
           {label:'White Logo',      file:'logo-white.png',    bg:'#111111', desc:'Dark backgrounds — sidebar, footer, dark-mode UI',         w:1024,h:239},
           {label:'Hologram Mark',   file:'logo-hologram.png', bg:'#1a1a2e', desc:'Favicon master — hologram calligraphic mark (do not use as general logo)', w:275,h:424},
-        ].map(a=>`<div style="border:1px solid var(--border);overflow:hidden;">
+        ].map(a=
+           onerror="this.onerror=null;this.style.display='none'" >`<div style="border:1px solid var(--border);overflow:hidden;">
           <div style="background:${a.bg};padding:1.5rem;display:flex;align-items:center;justify-content:center;min-height:90px;">
             <img src="/assets/${a.file}"
                  alt="${a.label}"
@@ -1099,7 +1077,8 @@ app.get('/cms', (c) => {
             {name:'indiagully-deck.pdf',size:'4.2 MB',dim:'—',        type:'doc',   locked:false, bg:'#fef9f0', file:''},
             {name:'advisory-brochure.pdf',size:'2.1 MB',dim:'—',      type:'doc',   locked:false, bg:'#f0fdf4', file:''},
             {name:'social-banner-1.png',size:'85 KB',dim:'1080×1080', type:'image', locked:false, bg:'#f0f4ff', file:''},
-          ].map(a=>`<div style="background:#fff;border:1px solid ${a.locked?'#fde68a':'var(--border)'};overflow:hidden;position:relative;">
+          ].map(a=
+           onerror="this.onerror=null;this.style.display='none'" >`<div style="background:#fff;border:1px solid ${a.locked?'#fde68a':'var(--border)'};overflow:hidden;position:relative;">
             ${a.locked?'<div style="position:absolute;top:.4rem;right:.4rem;background:#d97706;color:#fff;font-size:.5rem;font-weight:700;padding:1px 5px;letter-spacing:.06em;z-index:2;">LOCKED</div>':''}
             <div style="background:${a.bg};height:70px;display:flex;align-items:center;justify-content:center;">
               ${a.file?`<img src="/assets/${a.file}" alt="${a.name}" style="max-height:50px;max-width:80%;object-fit:contain;pointer-events:none;" draggable="false">`:`<i class="fas fa-${a.type==='doc'?'file-pdf':a.type==='icon'?'globe':'image'}" style="font-size:1.5rem;color:#94a3b8;"></i>`}
@@ -1193,7 +1172,7 @@ app.get('/cms', (c) => {
     var variantData = {
       'Hero Headline': ['Celebrating Desiness \u2014 Where Vision Meets Advisory Excellence','India\u2019s Most Trusted Multi-Vertical Advisory Firm','From Real Estate to Hospitality \u2014 One Partner, Endless Possibilities','Pioneering Desiness: Advisory at the Intersection of Culture & Commerce','Building Tomorrow\u2019s Icons \u2014 Advisory That Goes Beyond Transactions'],
       'Service Description': ['End-to-end advisory spanning Real Estate, Retail, Hospitality and Entertainment \u2014 crafted for discerning clients who demand precision.','From site acquisition to brand positioning, our multi-vertical expertise delivers measurable outcomes across India\u2019s most dynamic sectors.','We don\u2019t just advise. We partner. Every engagement is built on data, relationships and a decade of deep-sector mastery.','India Gully\u2019s advisory practice combines market intelligence with on-ground execution \u2014 bridging strategy and reality for our clients.','Trusted by developers, hoteliers, retailers and entertainment brands alike \u2014 India Gully brings institutional-grade advisory to every mandate.'],
-      'Meta Description': ['India Gully: Premier advisory across Real Estate, Retail, Hospitality & Entertainment. \u20b92,100 Cr+ in active mandates. New Delhi.','Multi-vertical advisory firm helping developers, hoteliers and brands unlock value. Celebrating Desiness since 2017.','Expert advisory in Real Estate, Hospitality, Retail and Entertainment. Contact India Gully \u2014 New Delhi\u2019s trusted advisory partner.','From concept to completion \u2014 India Gully\u2019s advisory spans 5 verticals, 50+ mandates and a \u20b92,100 Cr active pipeline.','India Gully: Where Indian enterprise meets world-class advisory. Real Estate \u00b7 Retail \u00b7 Hospitality \u00b7 Entertainment \u00b7 HORECA.'],
+      'Meta Description': ['India Gully: Premier advisory across Real Estate, Retail, Hospitality & Entertainment. \u20b91,165 Cr+ in active mandates. New Delhi.','Multi-vertical advisory firm helping developers, hoteliers and brands unlock value. Celebrating Desiness since 2017.','Expert advisory in Real Estate, Hospitality, Retail and Entertainment. Contact India Gully \u2014 New Delhi\u2019s trusted advisory partner.','From concept to completion \u2014 India Gully\u2019s advisory spans 5 verticals, 50+ mandates and a \u20b91,165 Cr active pipeline.','India Gully: Where Indian enterprise meets world-class advisory. Real Estate \u00b7 Retail \u00b7 Hospitality \u00b7 Entertainment \u00b7 HORECA.'],
     };
     var renderVariants = function(bank){
       var html = '';
@@ -1618,7 +1597,7 @@ app.get('/users', async (c) => {
       {name:'Arun Manikonda', email:'akm@indiagully.com',        role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
       {name:'Pavan Manikonda',email:'pavan@indiagully.com',      role:'Director',    portal:'Board',    login:'02 Mar 2026', active:true},
       {name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',        portal:'Board',    login:'01 Mar 2026', active:true},
-      {name:'Jaipur Heritage Holdings',    email:'portal@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
+      {name:'Demo Client',    email:'demo@indiagully.com',       role:'Client',      portal:'Client',   login:'02 Mar 2026', active:true},
       {name:'Demo Employee',  email:'emp@indiagully.com',        role:'Employee',    portal:'Employee', login:'01 Mar 2026', active:true},
       {name:'Demo KMP',       email:'kmp@indiagully.com',        role:'KMP',         portal:'Board',    login:'28 Feb 2026', active:true},
       {name:'Ex Employee',    email:'ex.emp@indiagully.com',     role:'Employee',    portal:'Employee', login:'01 Jan 2026', active:false},
@@ -2403,7 +2382,7 @@ app.get('/finance', async (c) => {
     <div id="new-inv-panel" class="ig-panel" style="margin-bottom:1.5rem;">
       <h4 style="font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;">New Invoice — <span id="inv-num-preview">INV-2026-004</span></h4>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
-        <div><label class="ig-label">Client</label><select class="ig-input" id="inv-client"><option>Jaipur Heritage Holdings Pvt. Ltd.</option><option>Rajasthan Hotels Pvt Ltd</option><option>Mumbai Mall Pvt Ltd</option><option>Entertainment Ventures Ltd</option></select></div>
+        <div><label class="ig-label">Client</label><select class="ig-input" id="inv-client"><option>Demo Client Corp</option><option>Rajasthan Hotels Pvt Ltd</option><option>Mumbai Mall Pvt Ltd</option><option>Entertainment Ventures Ltd</option></select></div>
         <div><label class="ig-label">Invoice Date</label><input type="date" class="ig-input" id="inv-date" value="2026-03-02"></div>
         <div><label class="ig-label">Due Date</label><input type="date" class="ig-input" id="inv-due" value="2026-03-31"></div>
         <div style="grid-column:span 2"><label class="ig-label">Description of Services</label><input type="text" class="ig-input" id="inv-desc" placeholder="Advisory Retainer — Mar 2026"></div>
@@ -2903,8 +2882,8 @@ ${invRowsHtml}
         <div style="padding:1.25rem;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;">
             ${[
-              {q:'Q3 FY 2024-25 (Oct-Dec)',due:'15 Jan 2025',filed:'12 Jan 2025',tds:'₹1,24,500',s:'Filed'},
-              {q:'Q4 FY 2024-25 (Jan-Mar)',due:'31 May 2025',filed:'30 May 2025',         tds:'₹98,000',s:'Pending'},
+              {q:'Q3 FY 2024-25 (Oct–Dec)',due:'15 Jan 2025',filed:'12 Jan 2025',tds:'₹1,24,500',s:'Filed'},
+              {q:'Q4 FY 2024-25 (Jan–Mar)',due:'31 May 2025',filed:null,         tds:'₹98,000',s:'Pending'},
             ].map(r=>`<div style="border:1px solid ${r.s==='Filed'?'#86efac':'#fcd34d'};background:${r.s==='Filed'?'#f0fdf4':'#fffbeb'};padding:.875rem;">
               <div style="font-size:.72rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;">${r.q}</div>
               <div style="font-size:.68rem;color:var(--ink-muted);">Due: ${r.due}</div>
@@ -2913,7 +2892,7 @@ ${invRowsHtml}
               <span class="badge ${r.s==='Filed'?'b-gr':'b-g'}" style="font-size:.6rem;">${r.s}</span>
             </div>`).join('')}
           </div>
-          <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:.625rem;">Vendor-Wise TDS Summary — Q4 FY 2024-25 (Historical)</div>
+          <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:.625rem;">Vendor-Wise TDS Summary — Q4 FY 2024-25</div>
           <table class="ig-tbl"><thead><tr><th>Vendor</th><th>PAN</th><th>Section</th><th>Payment</th><th>TDS Rate</th><th>TDS Amt</th><th>Form 16A</th></tr></thead><tbody>
             ${[
               {v:'ABC Consultants Pvt',pan:'AAAAA1234A',sec:'194J',pay:'₹5.5L',rate:'10%',tds:'₹55,000',f16a:true},
@@ -2961,7 +2940,7 @@ ${invRowsHtml}
               </div>
             </div>`).join('')}
           </div>
-          <button onclick="igFinInitiateFyClose()" style="background:var(--ink);color:#fff;border:none;padding:.55rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:1rem;width:100%;"><i class="fas fa-lock" style="margin-right:.4rem;"></i>Initiate FY 2025-26 Close</button>
+          <button onclick="igFinInitiateFyClose()" style="background:var(--ink);color:#fff;border:none;padding:.55rem 1.25rem;font-size:.78rem;font-weight:600;cursor:pointer;margin-top:1rem;width:100%;"><i class="fas fa-lock" style="margin-right:.4rem;"></i>Initiate FY 2024-25 Close</button>
         </div>
       </div>
     </div>
@@ -3565,7 +3544,7 @@ ${invRowsHtml}
       var csv = igBuildCsv(
         ['Date','Particulars','Voucher No','Debit (INR)','Credit (INR)','Balance (INR)'],
         [['01 Feb 2026','Opening Balance','OB-001','','','5510000'],
-         ['03 Feb 2026','Advisory Fee — Jaipur Heritage Holdings','INV-2026-001','212000','','5722000'],
+         ['03 Feb 2026','Advisory Fee — Demo Client','INV-2026-001','212000','','5722000'],
          ['05 Feb 2026','Office Rent Paid','EXP-FEB-001','','45000','5677000'],
          ['10 Feb 2026','GST Challan Feb 2026','GST-FEB','','58800','5618200'],
          ['15 Feb 2026','Advisory Fee — NCR Corp','INV-2026-002','153000','','5771200'],
@@ -3752,11 +3731,11 @@ ${invRowsHtml}
     igToast('Preparing 26Q return for Q4…','info');
     igApi.post('/finance/tds/prepare',{form:'26Q',quarter:'Q4'}).then(function(d){
       var csv = igBuildCsv(['Deductee','PAN','Amount Paid','TDS Rate','TDS Deducted','Section','Quarter'],
-        [['Vendor A Pvt Ltd','AABCV1234A','₹2,50,000','10%','₹25,000','194C','Q4 FY 2025-26'],
-         ['Consultant B','BBXCK5678B','₹1,80,000','10%','₹18,000','194J','Q4 FY 2025-26'],
-         ['Service Provider C','CCCSP9012C','₹3,40,000','2%','₹6,800','194C','Q4 FY 2025-26'],
-         ['Contractor D','DDCTR3456D','₹1,20,000','1%','₹1,200','194C','Q4 FY 2025-26'],
-         ['Freelancer E','EEEFL7890E','₹85,000','10%','₹8,500','194J','Q4 FY 2025-26']]
+        [['Vendor A Pvt Ltd','AABCV1234A','₹2,50,000','10%','₹25,000','194C','Q4 FY25-26'],
+         ['Consultant B','BBXCK5678B','₹1,80,000','10%','₹18,000','194J','Q4 FY25-26'],
+         ['Service Provider C','CCCSP9012C','₹3,40,000','2%','₹6,800','194C','Q4 FY25-26'],
+         ['Contractor D','DDCTR3456D','₹1,20,000','1%','₹1,200','194C','Q4 FY25-26'],
+         ['Freelancer E','EEEFL7890E','₹85,000','10%','₹8,500','194J','Q4 FY25-26']]
       );
       igSaveFile('26Q-Q4-FY2025-26-return.csv', csv, 'text/csv');
       igToast('26Q return for Q4 prepared & downloaded — review before filing on TRACES','success');
@@ -3775,7 +3754,7 @@ ${invRowsHtml}
 
   // ── Finance: Initiate FY Close ───────────────────────────────────────────
   window.igFinInitiateFyClose = function(){
-    igConfirm('Initiate FY 2025-26 year-end closing? This will require CFO approval.',function(){
+    igConfirm('Initiate FY 2024-25 year-end closing? This will require CFO approval.',function(){
       igToast('Triggering year-end closing workflow…','info');
       igApi.post('/finance/fy-close',{fy:'2024-25'}).then(function(){
         igToast('Year-end closing workflow triggered — CFO approval required','success');
@@ -3867,7 +3846,7 @@ ${invRowsHtml}
         ['Valid Until',(d&&d.valid_until)||new Date(Date.now()+86400000).toISOString().slice(0,10)],
         ['Distance (km)',(d&&d.distance)||'450'],
         ['Consignor','India Gully Pvt Ltd'],
-        ['Consignee','Jaipur Heritage Holdings'],
+        ['Consignee','Demo Client'],
         ['Generated At',(d&&d.generated_at)||new Date().toISOString()]
       ]);
       igSaveFile('ewb-'+ewb+'.csv', csv, 'text/csv');
@@ -3958,14 +3937,14 @@ ${invRowsHtml}
     igToast('Fetching latest 26AS from TRACES…','info');
     igApi.get('/finance/tds/26as').then(function(d){
       var csv = igBuildCsv(['Deductor','TAN','Section','Quarter','Gross Amount','TDS Amount','Date','Status'],
-        [['Client Co Alpha','DLCA12345A','194J','Q3 FY 2025-26','₹5,00,000','₹50,000','15 Jan 2026','Deposited'],
-         ['Beta Services LLP','MHBS67890B','194C','Q3 FY 2025-26','₹3,20,000','₹6,400','20 Jan 2026','Deposited'],
-         ['Gamma Corp','KAGA34567C','194J','Q3 FY 2025-26','₹2,10,000','₹21,000','25 Jan 2026','Deposited'],
-         ['Delta Consulting','DLDC78901D','194C','Q3 FY 2025-26','₹1,80,000','₹3,600','28 Jan 2026','Deposited']]
+        [['Client Co Alpha','DLCA12345A','194J','Q3 FY25-26','₹5,00,000','₹50,000','15 Jan 2026','Deposited'],
+         ['Beta Services LLP','MHBS67890B','194C','Q3 FY25-26','₹3,20,000','₹6,400','20 Jan 2026','Deposited'],
+         ['Gamma Corp','KAGA34567C','194J','Q3 FY25-26','₹2,10,000','₹21,000','25 Jan 2026','Deposited'],
+         ['Delta Consulting','DLDC78901D','194C','Q3 FY25-26','₹1,80,000','₹3,600','28 Jan 2026','Deposited']]
       );
       igSaveFile('26AS-FY2024-25-'+new Date().toISOString().slice(0,10)+'.csv', csv, 'text/csv');
-      igToast('26AS data refreshed from TRACES — downloaded for FY 2025-26','success');
-    }).catch(function(){ igToast('26AS data refreshed from TRACES for FY 2025-26','success'); });
+      igToast('26AS data refreshed from TRACES — downloaded for FY 2024-25','success');
+    }).catch(function(){ igToast('26AS data refreshed from TRACES for FY 2024-25','success'); });
   };
 
   // ── Finance: Escalate 26AS Mismatch ──────────────────────────────────────
@@ -4242,7 +4221,7 @@ ${empRowsHtml}
         <div id="leave-req-list">
           <div style="padding:1.25rem;border-bottom:1px solid var(--border);">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
-              <div><div style="font-size:.875rem;font-weight:500;color:var(--ink);">Amit Jhingan</div><div style="font-size:.72rem;color:var(--ink-muted);margin-top:.1rem;">Casual Leave · 5 Mar - 7 Mar 2026 (3 days)</div></div>
+              <div><div style="font-size:.875rem;font-weight:500;color:var(--ink);">Amit Jhingan</div><div style="font-size:.72rem;color:var(--ink-muted);margin-top:.1rem;">Casual Leave · 5 Mar – 7 Mar 2026 (3 days)</div></div>
               <span id="lv-badge-1" class="badge b-g">Pending</span>
             </div>
             <div style="font-size:.78rem;color:var(--ink-muted);margin-bottom:.75rem;">Reason: Personal — attending family event in Chandigarh</div>
@@ -4637,7 +4616,7 @@ ${empRowsHtml}
 
   <!-- hr-pane-7: Appraisals & Performance Management -->
   <div id="hr-pane-7" style="display:none;">
-    <div class="ig-info" style="margin-bottom:1.25rem;"><i class="fas fa-star"></i><div><strong>Performance Cycle FY 2025-26:</strong> Mid-year review due 30 Sep 2026. Annual appraisal cycle runs Oct-Nov 2026. KRA setting deadline: 15 Apr 2026.</div></div>
+    <div class="ig-info" style="margin-bottom:1.25rem;"><i class="fas fa-star"></i><div><strong>Performance Cycle FY 2025-26:</strong> Mid-year review due 30 Sep 2026. Annual appraisal cycle runs Oct–Nov 2026. KRA setting deadline: 15 Apr 2026.</div></div>
     <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
       <button onclick="togglePanel('new-appraisal-panel')" style="background:#1E1E1E;color:#fff;border:none;padding:.5rem 1.1rem;font-size:.78rem;font-weight:600;cursor:pointer;"><i class="fas fa-plus" style="margin-right:.4rem;"></i>Initiate Appraisal</button>
       <button onclick="igHrSendKraForms()" style="background:none;border:1px solid var(--border);padding:.5rem 1rem;font-size:.78rem;cursor:pointer;color:var(--ink);"><i class="fas fa-bullseye" style="margin-right:.4rem;"></i>Send KRA Forms</button>
@@ -4649,7 +4628,7 @@ ${empRowsHtml}
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.875rem;margin-bottom:.875rem;">
         <div><label class="ig-label">Employee</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda</option><option>Pavan Manikonda</option><option>Amit Jhingan</option></select></div>
         <div><label class="ig-label">Appraisal Type</label><select class="ig-input" style="font-size:.82rem;"><option>Annual Review</option><option>Mid-Year Review</option><option>Probation Completion</option><option>Promotion Review</option></select></div>
-        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option selected>FY 2025-26 (Apr 25 - Mar 26)</option><option>FY 2024-25 (Apr 24 - Mar 25)</option></select></div>
+        <div><label class="ig-label">Review Period</label><select class="ig-input" style="font-size:.82rem;"><option>FY 2024-25 (Apr 24 – Mar 25)</option><option>H1 FY 2025-26</option></select></div>
         <div><label class="ig-label">Reviewer</label><select class="ig-input" style="font-size:.82rem;"><option>Arun Manikonda (CEO)</option><option>Pavan Manikonda (COO)</option></select></div>
         <div><label class="ig-label">Self-Assessment Due</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-03-31"></div>
         <div><label class="ig-label">Review Meeting Date</label><input type="date" class="ig-input" style="font-size:.82rem;" value="2026-04-15"></div>
@@ -4663,14 +4642,14 @@ ${empRowsHtml}
     <!-- Appraisal Status Table -->
     <div style="background:#fff;border:1px solid var(--border);margin-bottom:1.5rem;">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Appraisal Tracker — FY 2025-26</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Appraisal Tracker — FY 2024-25</h3>
         <button onclick="igHrExportAppraisal()" style="background:none;border:1px solid var(--border);padding:.3rem .75rem;font-size:.68rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download" style="margin-right:.3rem;"></i>Export</button>
       </div>
       <table class="ig-tbl"><thead><tr><th>Employee</th><th>Type</th><th>Period</th><th>Self-Assessment</th><th>Manager Review</th><th>Rating</th><th>Increment</th><th>Status</th><th>Action</th></tr></thead><tbody>
         ${[
-          {name:'Amit Jhingan',   type:'Annual',   period:'FY 2025-26', self:'Submitted',  mgr:'Completed', rating:4.2, incr:'12%',  cls:'b-gr', status:'Completed'},
-          {name:'Pavan Manikonda',type:'Annual',   period:'FY 2025-26', self:'Submitted',  mgr:'In Review',  rating:4.0, incr:'—',   cls:'b-g',  status:'In Progress'},
-          {name:'Arun Manikonda', type:'Annual',   period:'FY 2025-26', self:'Pending',    mgr:'Pending',    rating:'—', incr:'—',   cls:'b-dk', status:'Pending'},
+          {name:'Amit Jhingan',   type:'Annual',   period:'FY 2024-25', self:'Submitted',  mgr:'Completed', rating:4.2, incr:'12%',  cls:'b-gr', status:'Completed'},
+          {name:'Pavan Manikonda',type:'Annual',   period:'FY 2024-25', self:'Submitted',  mgr:'In Review',  rating:4.0, incr:'—',   cls:'b-g',  status:'In Progress'},
+          {name:'Arun Manikonda', type:'Annual',   period:'FY 2024-25', self:'Pending',    mgr:'Pending',    rating:'—', incr:'—',   cls:'b-dk', status:'Pending'},
         ].map(a=>`<tr>
           <td style="font-weight:500;">${a.name}</td>
           <td><span class="badge b-dk" style="font-size:.6rem;">${a.type}</span></td>
@@ -4690,7 +4669,7 @@ ${empRowsHtml}
     <!-- Performance Rating Distribution -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
       <div style="background:#fff;border:1px solid var(--border);padding:1.25rem;">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Rating Distribution — FY 2025-26</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Rating Distribution — FY 2024-25</h3>
         ${[
           {rating:'5 — Exceptional',  count:0, pct:0,  color:'#16a34a'},
           {rating:'4 — Exceeds Exp.', count:2, pct:67, color:'#22c55e'},
@@ -5073,11 +5052,11 @@ ${empRowsHtml}
     });
   };
   window.igHrGenForm16All = function(){
-    igToast('Generating Form-16 bundle for FY 2025-26…','info');
+    igToast('Generating Form-16 bundle for FY 2024-25…','info');
     igApi.get('/employees').then(function(d){
       var count = d&&d.total||8;
       var rows = [
-        ['IG-EMP-0001','Riya Sharma','AABPR1234A','₹6,90,000','₹45,600','Part A + B','Ready'],
+        ['IG-EMP-0001','Riya Sharma','ABCDE1234F','₹6,90,000','₹45,600','Part A + B','Ready'],
         ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','₹5,46,000','₹28,400','Part A + B','Ready'],
         ['IG-EMP-0003','Priya Nair','KLMNO9012L','₹10,80,000','₹98,500','Part A + B','Ready'],
         ['IG-EMP-0004','Vikram Singh','PQRST3456M','₹16,44,000','₹1,86,000','Part A + B','Ready'],
@@ -5089,7 +5068,7 @@ ${empRowsHtml}
     }).catch(function(){
       var csv = igBuildCsv(['EMP ID','Employee Name','PAN','Form 16','Status'],[['ALL','All Employees','—','Part A + B','Generated']]);
       igSaveFile('form-16-all-employees-fy2024-25.csv', csv, 'text/csv');
-      igToast('Form-16 bundle generated for FY 2025-26','success');
+      igToast('Form-16 bundle generated for FY 2024-25','success');
     });
   };
   window.igHrGenForm16PartA = function(){
@@ -5097,7 +5076,7 @@ ${empRowsHtml}
     igApi.get('/hr/compliance/pf-esi').then(function(d){
       var count = d&&d.employees_count||8;
       var rows = [
-        ['IG-EMP-0001','Riya Sharma','AABPR1234A','Q1-Q4','₹45,600','TRACES Verified'],
+        ['IG-EMP-0001','Riya Sharma','ABCDE1234F','Q1-Q4','₹45,600','TRACES Verified'],
         ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','Q1-Q4','₹28,400','TRACES Verified'],
         ['IG-EMP-0003','Priya Nair','KLMNO9012L','Q1-Q4','₹98,500','TRACES Verified'],
         ['IG-EMP-0004','Vikram Singh','PQRST3456M','Q1-Q4','₹1,86,000','TRACES Verified'],
@@ -5207,7 +5186,7 @@ ${empRowsHtml}
       var count=d&&d.total||5;
       var csv = igBuildCsv(
         ['EMP ID','Name','PAN','Form-16 Ref','Tax Deducted','Status'],
-        [['IG-EMP-0001','Riya Sharma','AABPR1234A','F16-2025-001','45,600','Ready'],
+        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','F16-2025-001','45,600','Ready'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','F16-2025-002','33,600','Ready'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','F16-2025-003','1,02,000','Ready'],
          ['IG-EMP-0004','Vikram Singh','PQRST3456M','F16-2025-004','2,16,000','Ready'],
@@ -5352,13 +5331,13 @@ ${empRowsHtml}
     igApi.get('/hr/compliance/pf-esi').then(function(d){
       var count = d&&d.employees_count||8;
       var csv = igBuildCsv(['EMP ID','Name','PAN','Employer TAN','Gross Salary','TDS Part A','Status','FY'],
-        [['IG-EMP-0001','Riya Sharma','AABPR1234A','MUMD01234A','₹6,90,000','₹45,600','Fetched from TRACES','2024-25'],
+        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','MUMD01234A','₹6,90,000','₹45,600','Fetched from TRACES','2024-25'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','MUMD01234A','₹5,46,000','₹28,400','Fetched from TRACES','2024-25'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','MUMD01234A','₹10,80,000','₹98,500','Fetched from TRACES','2024-25']]
       );
       igSaveFile('traces-part-a-fy2024-25.csv', csv, 'text/csv');
       igToast('Part A data fetched from TRACES — '+count+' employees — CSV downloaded','success');
-    }).catch(function(){ igToast('Part A data fetched from TRACES for FY 2025-26 — 8 employees','success'); });
+    }).catch(function(){ igToast('Part A data fetched from TRACES for FY 2024-25 — 8 employees','success'); });
   };
 
   // ── HR: Download All Part A ──────────────────────────────────────────────
@@ -5367,7 +5346,7 @@ ${empRowsHtml}
     igApi.get('/employees').then(function(d){
       var csv = igBuildCsv(
         ['EMP ID','Name','PAN','Employer TAN','Salary (INR)','TDS Deducted','Q1','Q2','Q3','Q4'],
-        [['IG-EMP-0001','Riya Sharma','AABPR1234A','DELX12345A','690000','45600','11400','11400','11400','11400'],
+        [['IG-EMP-0001','Riya Sharma','ABCDE1234F','DELX12345A','690000','45600','11400','11400','11400','11400'],
          ['IG-EMP-0002','Arjun Mehta','FGHIJ5678K','DELX12345A','546000','33600','8400','8400','8400','8400'],
          ['IG-EMP-0003','Priya Nair','KLMNO9012L','DELX12345A','1080000','102000','25500','25500','25500','25500'],
          ['IG-EMP-0004','Vikram Singh','PQRST3456M','DELX12345A','1644000','216000','54000','54000','54000','54000'],
@@ -5516,7 +5495,7 @@ ${empRowsHtml}
     igToast('Loading Form-16 Part B preview…','info');
     igModal('Form-16 Part B Preview',
       '<div style="padding:1.25rem;font-size:.82rem;">'
-      +'<div style="font-weight:700;margin-bottom:.75rem;">Form 16 — Part B (FY 2025-26)</div>'
+      +'<div style="font-weight:700;margin-bottom:.75rem;">Form 16 — Part B (FY 2024-25)</div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Gross Salary</span><span>₹7,20,000</span></div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Standard Deduction</span><span>₹50,000</span></div>'
       +'<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border);"><span>Taxable Salary</span><span>₹6,70,000</span></div>'
@@ -5656,7 +5635,7 @@ app.get('/governance', async (c) => {
     {name:'Pavan Manikonda', din:'00000002', desig:'Executive Director',  kyc:'Verified', din_status:'Active', dob:'1985-07-22'},
   ]
   const kmps = [
-    {name:'Amit Jhingan',   desig:'President — Real Estate', pan:'AACPJ1234K', kyc:'Verified'},
+    {name:'Amit Jhingan',   desig:'President — Real Estate', pan:'ABCDE1234F', kyc:'Verified'},
     {name:'Arun Manikonda', desig:'Chief Executive Officer',  pan:'FGHIJ5678K', kyc:'Verified'},
     {name:'Pavan Manikonda',desig:'Chief Financial Officer',  pan:'KLMNO9012L', kyc:'Verified'},
   ]
@@ -5905,7 +5884,7 @@ app.get('/governance', async (c) => {
       <table class="ig-tbl"><thead><tr><th>Due Date</th><th>Filing / Event</th><th>Form</th><th>Responsible</th><th>Penalty</th><th>Status</th><th>Action</th></tr></thead><tbody>
         ${[
           {date:'11 Mar 2026', event:'GSTR-1 — February 2026',         form:'GSTR-1',  resp:'Finance', pen:'₹200/day',  status:'Due',      cls:'b-g'},
-          {date:'15 Mar 2026', event:'Board Meeting — Q3 Review',       form:'§173',    resp:'Board',   pen:'₹5K-25K',  status:'Scheduled',cls:'b-gr'},
+          {date:'15 Mar 2026', event:'Board Meeting — Q3 Review',       form:'§173',    resp:'Board',   pen:'₹5K–25K',  status:'Scheduled',cls:'b-gr'},
           {date:'15 Mar 2026', event:'TDS Deposit — February 2026',     form:'Challan', resp:'Finance', pen:'1.5%/mo',   status:'Due',      cls:'b-g'},
           {date:'20 Mar 2026', event:'GSTR-3B — February 2026',         form:'GSTR-3B', resp:'Finance', pen:'₹50/day',   status:'Upcoming', cls:'b-dk'},
           {date:'31 Mar 2026', event:'Annual Accounts Filing',           form:'AOC-4',   resp:'CS/CFO',  pen:'₹1K/day',  status:'Upcoming', cls:'b-dk'},
@@ -5962,7 +5941,7 @@ app.get('/governance', async (c) => {
           ${[
             {doc:'Board Resolution — Q4 Financials',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'10 Mar 2025', signed:0},
             {doc:'Advisory Agreement — Hotel Rajshree (MND-003)',  signers:['Amit Jhingan'],                       due:'12 Mar 2026', signed:1},
-            {doc:'Annual Return MGT-7 (FY 2025-26)',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Sep 2025', signed:0},
+            {doc:'Annual Return MGT-7 (FY 2024-25)',   signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Sep 2025', signed:0},
             {doc:'Financial Statements (AOC-4)',        signers:['Arun Manikonda','Pavan Manikonda'],   due:'30 Oct 2025', signed:0},
           ].map(d=>`<div style="border:1px solid var(--border);padding:.875rem;margin-bottom:.5rem;background:var(--parch-dk);">
             <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.3rem;">${d.doc}</div>
@@ -5981,7 +5960,7 @@ app.get('/governance', async (c) => {
     <!-- Digital Director Attendance -->
     <div style="background:#fff;border:1px solid var(--border);">
       <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);">
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Director Digital Attendance — Board Meetings FY 2025-26</h3>
+        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Director Digital Attendance — Board Meetings FY 2024-25</h3>
       </div>
       <div style="padding:1.25rem;overflow-x:auto;">
         <table class="ig-tbl"><thead><tr><th>Director / KMP</th><th>BM-01 (15 Jan)</th><th>BM-02 (15 Feb)</th><th>BM-03 (05 Mar)</th><th>Attendance %</th><th>Min. Required</th><th>Status</th></tr></thead><tbody>
@@ -6056,7 +6035,7 @@ app.get('/governance', async (c) => {
           <button onclick="igGovDraftNotice('SS-2')" style="background:var(--gold);color:#fff;border:none;padding:.35rem .75rem;font-size:.72rem;font-weight:600;cursor:pointer;"><i class="fas fa-plus" style="margin-right:.3rem;"></i>Draft Notice</button>
         </div>
         <div style="padding:1.25rem;">
-          <div class="ig-warn" style="margin-bottom:1rem;"><i class="fas fa-calendar-times"></i><div>Annual General Meeting for FY 2025-26 due by <strong>30 September 2026</strong>. Plan for August 2026.</div></div>
+          <div class="ig-warn" style="margin-bottom:1rem;"><i class="fas fa-calendar-times"></i><div>Annual General Meeting for FY 2024-25 due by <strong>30 September 2025</strong>. Plan for August 2025.</div></div>
           ${[
             {ref:'AGM-2024', date:'25 Sep 2024', type:'AGM', notice_days:21, quorum:'Quorum met (2 members present)', s:'Completed', compliant:true},
             {ref:'EGM-2024-01', date:'15 Nov 2024', type:'EGM', notice_days:14, quorum:'Quorum met (2 members present)', s:'Completed', compliant:true},
@@ -6158,7 +6137,7 @@ app.get('/governance', async (c) => {
           <div id="resolution-drafts" style="padding:1rem;display:flex;flex-direction:column;gap:.75rem;">
             <div style="background:#f8f9fa;border:1px solid var(--border);padding:.875rem;">
               <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;margin-bottom:.3rem;">Ordinary Resolution #1</div>
-              <p style="font-size:.78rem;color:var(--ink);margin-bottom:.4rem;">"RESOLVED THAT the audited financial statements of the Company for the FY 2025-26 be and are hereby adopted."</p>
+              <p style="font-size:.78rem;color:var(--ink);margin-bottom:.4rem;">"RESOLVED THAT the audited financial statements of the Company for the FY 2024-25 be and are hereby adopted."</p>
               <div style="display:flex;gap:.4rem;">
                 <span style="font-size:.62rem;background:#ede9fe;color:#5b21b6;padding:2px 6px;">Ordinary Resolution</span>
                 <span style="font-size:.62rem;background:#dcfce7;color:#166534;padding:2px 6px;">Draft Ready</span>
@@ -6206,7 +6185,7 @@ app.get('/governance', async (c) => {
   var agItemCnt2 = 0;
   var agendaItems = [
     {type:'routine',text:'Confirmation of Notice & Quorum'},
-    {type:'routine',text:'Adoption of Financial Statements FY 2025-26'},
+    {type:'routine',text:'Adoption of Financial Statements FY 2024-25'},
     {type:'resolution',text:'Investment approval under Section 186 — up to ₹5 Crore'},
   ];
   function igRenderAgendaBuilder(){
@@ -7950,7 +7929,7 @@ app.get('/horeca', async (c) => {
       +'<div style="font-weight:700;margin-bottom:.75rem;">'+name+'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Category</div><div>F&B Supplier</div></div>'
-      +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Lead Time</div><div>2-3 Days</div></div>'
+      +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Lead Time</div><div>2–3 Days</div></div>'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">Payment Terms</div><div>Net 30</div></div>'
       +'<div><div style="font-size:.68rem;color:var(--ink-muted);">GST Registered</div><div>Yes</div></div>'
       +'</div></div>'
@@ -7966,7 +7945,7 @@ app.get('/horeca', async (c) => {
         [['RFQ No',rfqNo],['Vendor',vendor],['Requested By','India Gully Advisory LLP'],['Date',new Date().toLocaleDateString('en-IN')],['Expected Response','Within 48 hours'],['Items Requested','All active HORECA SKUs'],['Status','Sent']]);
       igSaveFile('rfq-'+vendor.replace(/\s+/g,'-').toLowerCase()+'-'+rfqNo+'.csv', csv, 'text/csv');
       igToast('RFQ '+rfqNo+' sent to '+vendor+' — acknowledgement downloaded','success');
-    }).catch(function(){ igToast('RFQ sent to '+vendor+' — response expected in 24-48h','success'); });
+    }).catch(function(){ igToast('RFQ sent to '+vendor+' — response expected in 24–48h','success'); });
   };
 
   // ── HORECA: Create PO ─────────────────────────────────────────────────────
@@ -8141,7 +8120,7 @@ app.get('/contracts', async (c) => {
 }
 
 const FALLBACK_CONTRACTS = [
-    {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Jaipur Heritage Holdings Pvt. Ltd.',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
+    {id:'AGR-001', name:'Advisory Agreement FY2025',       party:'Demo Client Corp',  type:'Advisory',    start:'01 Jan 2025',expiry:'31 Dec 2025',status:'Active',   cls:'b-gr',signed:true},
     {id:'PMC-001', name:'Hotel PMC Agreement',              party:'Rajasthan Hotels',  type:'PMC',         start:'15 Feb 2026',expiry:'14 Feb 2027',status:'Active',   cls:'b-gr',signed:true},
     {id:'MND-001', name:'Retail Leasing Mandate',           party:'Mumbai Mall Pvt.', type:'Mandate',     start:'01 Dec 2025',expiry:'30 Nov 2026',status:'Active',   cls:'b-gr',signed:true},
     {id:'RET-001', name:'EY Advisory Retainer',             party:'Ernst & Young',    type:'Retainer',    start:'01 Apr 2025',expiry:'31 Mar 2026',status:'Expiring', cls:'b-g', signed:true},
@@ -9233,7 +9212,7 @@ app.get('/reports', (c) => {
       <canvas id="pipeline-chart" height="140"></canvas>
     </div>
     <div style="background:#fff;border:1px solid var(--border);padding:1.25rem;">
-      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Monthly Revenue Trend — FY 2025-26</h3>
+      <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:1rem;">Monthly Revenue Trend — FY 2024-25</h3>
       <canvas id="trend-chart" height="140"></canvas>
     </div>
   </div>
@@ -9336,7 +9315,7 @@ app.get('/reports', (c) => {
           {label:'FY26 Forecast',  value:'₹1.58 Cr/mo', sub:'Avg monthly target',      c:'#B8960C'},
           {label:'Growth CAGR',    value:'+28%',          sub:'vs FY25 actual',          c:'#16a34a'},
           {label:'Churn Risk',     value:'Low (12%)',     sub:'2 at-risk client accounts',c:'#d97706'},
-          {label:'Model Accuracy', value:'87.3%',         sub:'Backtested on FY 2024-25',   c:'#2563eb'},
+          {label:'Model Accuracy', value:'87.3%',         sub:'Backtested on FY24-25',   c:'#2563eb'},
         ].map(s=>`<div style="background:var(--parch-dk);border:1px solid var(--border);padding:.875rem;">
           <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.3rem;">${s.label}</div>
           <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.4rem;color:${s.c};">${s.value}</div>
@@ -9349,7 +9328,7 @@ app.get('/reports', (c) => {
         <div style="background:var(--parch-dk);border:1px solid var(--border);padding:1rem;">
           <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:.75rem;">Churn Risk Analysis</div>
           ${[
-            {client:'Jaipur Heritage Holdings',      score:82, risk:'Low',    trend:'stable',   c:'#16a34a'},
+            {client:'Demo Client Corp',      score:82, risk:'Low',    trend:'stable',   c:'#16a34a'},
             {client:'Rajasthan Hotels Ltd',  score:61, risk:'Medium', trend:'declining',c:'#d97706'},
             {client:'Mumbai Mall Pvt. Ltd.', score:45, risk:'High',   trend:'declining',c:'#dc2626'},
             {client:'L5 Resort Group',       score:91, risk:'Low',    trend:'improving',c:'#16a34a'},
@@ -9421,7 +9400,7 @@ app.get('/reports', (c) => {
       <button onclick="togglePanel('rpt-${i}')" style="background:${r.color};color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;width:100%;">Generate Report</button>
       <div id="rpt-${i}" class="ig-panel" style="margin-top:.875rem;">
         <h5 style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem;">${r.name} — Filters</h5>
-        ${r.filters.map(f=>`<div style="margin-bottom:.625rem;"><label class="ig-label">${f}</label>${f.includes('Date')||f.includes('Month')&&!f.includes('Quarter')?`<input type="month" class="ig-input" style="font-size:.82rem;">`:`<select class="ig-input" style="font-size:.82rem;"><option>All</option>${f==='Quarter'?['Q1 FY2025','Q2 FY2025','Q3 FY2025','Q4 FY2025'].map(q=>`<option>${q}</option>`).join(''):f==='Financial Year'?['FY 2024-25','FY 2023-24'].map(y=>`<option>${y}</option>`).join(''):f==='Sector'?['All','Real Estate','Hospitality','Retail','Entertainment'].map(s=>`<option>${s}</option>`).join(''):f==='Status'?['All','Active','Negotiating','Closed'].map(s=>`<option>${s}</option>`).join(''):f==='Module'?['All','Auth','CMS','Finance','HR','Governance'].map(m=>`<option>${m}</option>`).join(''):f==='User'?['All','superadmin@indiagully.com','akm@indiagully.com','pavan@indiagully.com'].map(u=>`<option>${u}</option>`).join(''):f==='Client'?['All Clients','Jaipur Heritage Holdings','Rajasthan Hotels','Mumbai Mall Pvt.'].map(cl=>`<option>${cl}</option>`).join(''):''}</select>`}</div>`).join('')}
+        ${r.filters.map(f=>`<div style="margin-bottom:.625rem;"><label class="ig-label">${f}</label>${f.includes('Date')||f.includes('Month')&&!f.includes('Quarter')?`<input type="month" class="ig-input" style="font-size:.82rem;">`:`<select class="ig-input" style="font-size:.82rem;"><option>All</option>${f==='Quarter'?['Q1 FY2025','Q2 FY2025','Q3 FY2025','Q4 FY2025'].map(q=>`<option>${q}</option>`).join(''):f==='Financial Year'?['FY 2024-25','FY 2023-24'].map(y=>`<option>${y}</option>`).join(''):f==='Sector'?['All','Real Estate','Hospitality','Retail','Entertainment'].map(s=>`<option>${s}</option>`).join(''):f==='Status'?['All','Active','Negotiating','Closed'].map(s=>`<option>${s}</option>`).join(''):f==='Module'?['All','Auth','CMS','Finance','HR','Governance'].map(m=>`<option>${m}</option>`).join(''):f==='User'?['All','superadmin@indiagully.com','akm@indiagully.com','pavan@indiagully.com'].map(u=>`<option>${u}</option>`).join(''):f==='Client'?['All Clients','Demo Client Corp','Rajasthan Hotels','Mumbai Mall Pvt.'].map(cl=>`<option>${cl}</option>`).join(''):''}</select>`}</div>`).join('')}
         <div style="display:flex;gap:.5rem;margin-top:.625rem;">
           <button onclick="igGenerateReport('${r.name}');togglePanel('rpt-${i}')" style="background:${r.color};color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem;"><i class="fas fa-download" style="font-size:.6rem;"></i>Download PDF</button>
           <button onclick="igSalesExportExcel('${r.name}')" style="background:#16a34a;color:#fff;border:none;padding:.4rem .875rem;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem;"><i class="fas fa-file-excel" style="font-size:.6rem;"></i>Excel</button>
@@ -12991,7 +12970,7 @@ window.igRiskHeatmap = function() {
     igModal('AA6: Enterprise Risk Heatmap (Top 10)',
       '<p style="font-size:.85rem"><b>Risk Level:</b> <span style="color:' + rc + ';font-weight:700">' + (rh.risk_level||'—') + '</span> &nbsp;|&nbsp; <b>Score:</b> ' + (rh.risk_score||0) + '/100 &nbsp;|&nbsp; <b>High:</b> ' + (sm.high_risks||0) + ' &nbsp;|&nbsp; <b>Medium:</b> ' + (sm.medium_risks||0) + ' &nbsp;|&nbsp; <b>Low:</b> ' + (sm.low_risks||0) + '</p>' +
       '<div style="max-height:300px;overflow-y:auto"><table style="width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.8rem"><thead><tr style="background:#f3f4f6"><th>ID</th><th>Domain</th><th>Risk</th><th>L×I</th><th>Score</th><th>Residual</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
-      '<p style="font-size:.7rem;color:#6b7280;margin-top:.4rem">L=Likelihood 1-5 × I=Impact 1-5 | Score ≥12=High ≥6=Medium <6=Low</p>');
+      '<p style="font-size:.7rem;color:#6b7280;margin-top:.4rem">L=Likelihood 1–5 × I=Impact 1–5 | Score ≥12=High ≥6=Medium <6=Low</p>');
   }).catch(function(){igModal('AA6: Risk Heatmap','Session expired — log in as Super Admin')});
 };
 
@@ -14689,28 +14668,28 @@ mutation CreateInvoice($input: InvoiceInput!) {
 // ── KPI / OKR TRACKER (/admin/kpi) ────────────────────────────────────────────
 app.get('/kpi', (c) => {
   const okrs = [
-    { dept:'Finance',    obj:'Achieve ₹15 Cr revenue in FY 2026',     progress:82, owner:'Arun Manikonda',
+    { dept:'Finance',    obj:'Achieve ₹15 Cr revenue in FY 2025',     progress:82, owner:'Arun Manikonda',
       krs:[
         {label:'Advisory revenue MTD',      target:'₹12.4L/mo',  actual:'₹12.4L', pct:100},
         {label:'Invoice collection rate',   target:'>90%',         actual:'87%',    pct:87},
         {label:'EBITDA margin',             target:'>35%',         actual:'37.1%',  pct:100},
         {label:'GST compliance — on time',  target:'100%',         actual:'100%',   pct:100},
       ], color:'#2563eb' },
-    { dept:'Sales',      obj:'Close ₹25 Cr in new engagements FY26',  progress:70, owner:'Amit Jhingan',
+    { dept:'Sales',      obj:'Close ₹25 Cr in new engagements FY25',  progress:70, owner:'Amit Jhingan',
       krs:[
         {label:'Pipeline value',            target:'₹50 Cr+',      actual:'₹52.4 Cr',pct:100},
         {label:'Lead to proposal rate',     target:'>50%',         actual:'43%',    pct:86},
         {label:'Proposals won',             target:'6 deals',      actual:'3 deals',pct:50},
         {label:'Avg deal closure time',     target:'<90 days',     actual:'104 days',pct:87},
       ], color:'#B8960C' },
-    { dept:'HR',         obj:'Hire 5 key roles, 0% attrition FY26',   progress:60, owner:'Pavan Manikonda',
+    { dept:'HR',         obj:'Hire 5 key roles, 0% attrition FY25',   progress:60, owner:'Pavan Manikonda',
       krs:[
         {label:'Positions filled',          target:'5',            actual:'2',      pct:40},
         {label:'Employee satisfaction NPS', target:'>40',          actual:'52',     pct:100},
         {label:'Training hours/employee',   target:'40h/yr',       actual:'28h',    pct:70},
         {label:'Payroll accuracy',          target:'100%',         actual:'100%',   pct:100},
       ], color:'#7c3aed' },
-    { dept:'Governance', obj:'100% statutory compliance, 4 board meetings',progress:75, owner:'Arun Manikonda',
+    { dept:'Governance', obj:'100% statutory compliance, 4 board mtgs',progress:75, owner:'Arun Manikonda',
       krs:[
         {label:'Board meetings held',       target:'4/year',       actual:'2',      pct:50},
         {label:'ROC filings on time',       target:'100%',         actual:'100%',   pct:100},
@@ -14748,7 +14727,7 @@ app.get('/kpi', (c) => {
         </div>
         <div>
           <div style="font-size:.85rem;font-weight:700;color:var(--ink);">${o.dept} — ${o.obj}</div>
-          <div style="font-size:.68rem;color:var(--ink-muted);">Owner: ${o.owner} · FY 2025-26</div>
+          <div style="font-size:.68rem;color:var(--ink-muted);">Owner: ${o.owner} · FY 2024-25</div>
         </div>
       </div>
       <div style="text-align:right;">
@@ -14885,7 +14864,7 @@ app.get('/risk', (c) => {
     ${[
       {label:'Portfolio Value',     value:'₹8,815 Cr', sub:'6 active mandates', c:'#B8960C', icon:'chart-bar'},
       {label:'Low Risk',            value:mandates.filter(m=>m.score>=80).length.toString(), sub:'Score ≥80', c:'#16a34a', icon:'check-circle'},
-      {label:'Medium Risk',         value:mandates.filter(m=>m.score>=65&&m.score<80).length.toString(), sub:'Score 65-79', c:'#d97706', icon:'exclamation-triangle'},
+      {label:'Medium Risk',         value:mandates.filter(m=>m.score>=65&&m.score<80).length.toString(), sub:'Score 65–79', c:'#d97706', icon:'exclamation-triangle'},
       {label:'High Risk',           value:mandates.filter(m=>m.score<65).length.toString(), sub:'Score <65 — action required', c:'#dc2626', icon:'fire'},
     ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1.1rem;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;">
@@ -15063,7 +15042,7 @@ const FALLBACK_LEADS = [
   <!-- KPI Row -->
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem;">
     ${[
-      {label:'Total Pipeline',  value:'₹2,100 Cr+', trend:'6 active leads', c:'#d97706'},
+      {label:'Total Pipeline',  value:'₹3,275 Cr', trend:'6 active leads', c:'#d97706'},
       {label:'Proposals Sent',  value:'3',          trend:'This month',     c:'#2563eb'},
       {label:'Win Rate',        value:'62%',         trend:'↑ +5% vs last Q',c:'#16a34a'},
       {label:'Avg Deal Size',   value:'₹546 Cr',    trend:'FY 2025-26',    c:'#7c3aed'},
@@ -15546,7 +15525,7 @@ app.get('/compliance', async (c) => {
         {label:'Compliance Score',    value:'96%',  sub:'DPDP+Sec+Legal',    icon:'shield-alt',   color:'#16a34a'},
         {label:'Open Findings',       value:'0',    sub:'All resolved',      icon:'check-circle', color:'#16a34a'},
         {label:'Pending Actions',     value:'3',    sub:'Due within 30 days',icon:'clock',        color:'#d97706'},
-        {label:'Audit Reports',       value:'12',   sub:'FY 2025-26',        icon:'file-alt',     color:'#2563eb'},
+        {label:'Audit Reports',       value:'12',   sub:'FY 2025–26',        icon:'file-alt',     color:'#2563eb'},
       ].map(s=>`<div style="background:#fff;border:1px solid var(--border);padding:1rem;display:flex;align-items:center;gap:.875rem;">
         <div style="width:38px;height:38px;background:${s.color}1a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <i class="fas fa-${s.icon}" style="color:${s.color};font-size:.875rem;"></i>
@@ -15582,7 +15561,7 @@ app.get('/compliance', async (c) => {
       </div>
       <div style="background:#fff;border:1px solid var(--border);">
         <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-          <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Regulatory Calendar — FY 2025-26</h3>
+          <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Regulatory Calendar — FY 2025–26</h3>
           <button onclick="igHrExportComplianceCal()" style="background:none;border:1px solid var(--border);padding:.25rem .6rem;font-size:.65rem;cursor:pointer;color:var(--gold);"><i class="fas fa-download"></i></button>
         </div>
         <div style="padding:1.25rem;">
@@ -16210,7 +16189,7 @@ app.get('/clients', async (c) => {
   }
   // Fallback seed if D1 empty
   const fallbackClients = [
-    {id:'CLT-001', company_name:'Prism Advisory Partners', contact_name:'Advisory Contact', email:'advisory@indiagully.com',    sector:'Advisory',    status:'Active',  source:'AKM',   created_at:'2026-01-01'},
+    {id:'CLT-001', company_name:'Demo Advisory Client',   contact_name:'Demo Contact', email:'demo@indiagully.com',    sector:'Advisory',    status:'Active',  source:'AKM',   created_at:'2026-01-01'},
     {id:'CLT-002', company_name:'NCR Realty Corp',         contact_name:'NCR Contact',  email:'ncr@indiagully.com',     sector:'Real Estate', status:'Active',  source:'Pavan', created_at:'2025-12-01'},
     {id:'CLT-003', company_name:'Mumbai F&B Group',        contact_name:'MFB Contact',  email:'mumbai@indiagully.com',  sector:'HORECA',      status:'Active',  source:'AKM',   created_at:'2024-11-01'},
     {id:'CLT-004', company_name:'Jaipur Hotels Ltd',       contact_name:'JHL Contact',  email:'jaipur@indiagully.com',  sector:'Hospitality', status:'Active',  source:'AKM',   created_at:'2026-01-01'},
@@ -16463,351 +16442,11 @@ app.get('/documents', async (c) => {
     }
   }, intervalMs)
 }
-// ── Phase T: Sales, HR, Finance live loaders ──────────────────────────────────
-;(window as any).igLoadSalesDealsLive = async function(tableBodyId?: string) {
-  try {
-    const r = await fetch('/api/sales/deals', { credentials: 'include' })
-    const d = await r.json()
-    if (!tableBodyId) return d
-    const el = document.getElementById(tableBodyId)
-    if (!el) return d
-    const deals = d.deals || []
-    el.innerHTML = deals.length ? deals.map((deal: any) => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
-        <td style="padding:.6rem .75rem;font-family:monospace;font-size:.72rem;color:#fbbf24">${deal.id}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:rgba(255,255,255,.85)">${deal.name}</td>
-        <td style="padding:.6rem .75rem;font-size:.75rem;color:rgba(255,255,255,.5)">${deal.client}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;font-weight:600">${deal.value}</td>
-        <td style="padding:.6rem .75rem"><span style="font-size:.68rem;padding:.2rem .5rem;background:rgba(184,150,12,.12);color:#fbbf24;border:1px solid rgba(184,150,12,.2)">${deal.stage}</span></td>
-        <td style="padding:.6rem .75rem;font-size:.75rem;color:rgba(255,255,255,.5)">${deal.probability}%</td>
-        <td style="padding:.6rem .75rem;font-size:.72rem;color:rgba(255,255,255,.4)">${deal.close_date || '—'}</td>
-      </tr>`).join('') : '<tr><td colspan="7" style="padding:2rem;text-align:center;color:rgba(255,255,255,.3)">No deals found</td></tr>'
-    return d
-  } catch(e) { console.warn('[igLoadSalesDealsLive]', e) }
-}
-;(window as any).igLoadBankStatementLive = async function(period?: string) {
-  try {
-    const url = period ? `/api/finance/bank-statement?period=${encodeURIComponent(period)}` : '/api/finance/bank-statement'
-    const r = await fetch(url, { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadBankStatementLive]', e) }
-}
-;(window as any).igLoadPayslipsLive = async function(employeeId?: string) {
-  try {
-    const url = employeeId ? `/api/hr/payslip?employee_id=${encodeURIComponent(employeeId)}` : '/api/hr/payslip'
-    const r = await fetch(url, { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPayslipsLive]', e) }
-}
-;(window as any).igLoadLeaveSummaryLive = async function(tableBodyId?: string) {
-  try {
-    const r = await fetch('/api/hr/leave-summary', { credentials: 'include' })
-    const d = await r.json()
-    if (!tableBodyId) return d
-    const el = document.getElementById(tableBodyId)
-    if (!el) return d
-    const emps = d.employees || []
-    el.innerHTML = emps.length ? emps.map((e: any) => `
-      <tr style="border-bottom:1px solid rgba(255,255,255,.05)">
-        <td style="padding:.6rem .75rem;font-family:monospace;font-size:.72rem;color:#fbbf24">${e.id}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:rgba(255,255,255,.85)">${e.name}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.earned}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.casual}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;color:#fff;text-align:center">${e.sick}</td>
-        <td style="padding:.6rem .75rem;font-size:.78rem;font-weight:700;color:#22c55e;text-align:center">${e.balance}</td>
-      </tr>`).join('') : '<tr><td colspan="6" style="padding:2rem;text-align:center;color:rgba(255,255,255,.3)">No employees found</td></tr>'
-    return d
-  } catch(e) { console.warn('[igLoadLeaveSummaryLive]', e) }
-}
-;(window as any).igLoadTdsDeclarationsLive = async function() {
-  try {
-    const r = await fetch('/api/hr/tds-declaration', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadTdsDeclarationsLive]', e) }
-}
-;(window as any).igLoadEwbLive = async function() {
-  try {
-    const r = await fetch('/api/finance/gst/ewb', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEwbLive]', e) }
-}
-;(window as any).igLoadPfEsiLive = async function() {
-  try {
-    const r = await fetch('/api/hr/compliance/pf-esi', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPfEsiLive]', e) }
-}
-
-// ── Phase U: Analytics, Admin Users, DPDP, Compliance live loaders ────────────
-;(window as any).igLoadKpiDashboardLive = async function(containerId?: string) {
-  try {
-    const r = await fetch('/api/executive/kpi-dashboard', { credentials: 'include' })
-    const d = await r.json()
-    if (containerId && d.metrics?.length) {
-      const el = document.getElementById(containerId)
-      if (el) el.innerHTML = d.metrics.map((k: any) => `
-        <div style="padding:.75rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto auto;gap:.5rem;align-items:center;">
-          <div><span style="font-size:.72rem;color:rgba(255,255,255,.4);">${k.department}</span> · <span style="font-size:.8rem;color:#fff;font-weight:600;">${k.metric_name}</span></div>
-          <div style="font-size:.78rem;color:rgba(255,255,255,.5);">${k.actual_label || k.actual_value} / ${k.target_label || k.target_value}</div>
-          <div style="font-size:.72rem;font-weight:700;color:${(k.pct_complete||0)>=90?'#22c55e':(k.pct_complete||0)>=70?'#fbbf24':'#ef4444'};">${Math.round(k.pct_complete||0)}%</div>
-        </div>`).join('')
-    }
-    return d
-  } catch(e) { console.warn('[igLoadKpiDashboardLive]', e) }
-}
-;(window as any).igLoadErpDashboardLive = async function() {
-  try {
-    const r = await fetch('/api/finance/erp-dashboard', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadErpDashboardLive]', e) }
-}
-;(window as any).igLoadTdsTrackerLive = async function(tableBodyId?: string) {
-  try {
-    const r = await fetch('/api/finance/tds-tracker', { credentials: 'include' })
-    const d = await r.json()
-    if (tableBodyId && d.deductees?.length) {
-      const el = document.getElementById(tableBodyId)
-      if (el) el.innerHTML = d.deductees.map((t: any) => `
-        <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
-          <td style="padding:.6rem .8rem;font-size:.78rem;color:#fff;">${t.name}</td>
-          <td style="padding:.6rem .8rem;font-size:.75rem;color:rgba(255,255,255,.6);">${t.section}</td>
-          <td style="padding:.6rem .8rem;font-size:.78rem;color:#fbbf24;text-align:right;">₹${(t.tds_deducted||0).toLocaleString()}</td>
-          <td style="padding:.6rem .8rem;">
-            <span style="font-size:.65rem;font-weight:700;letter-spacing:.06em;padding:.2rem .55rem;${t.filing_status==='filed'?'background:rgba(34,197,94,.12);color:#22c55e;':t.filing_status==='overdue'?'background:rgba(239,68,68,.12);color:#ef4444;':'background:rgba(251,191,36,.1);color:#fbbf24;'}">${(t.filing_status||'—').toUpperCase()}</span>
-          </td>
-        </tr>`).join('')
-    }
-    return d
-  } catch(e) { console.warn('[igLoadTdsTrackerLive]', e) }
-}
-;(window as any).igLoadPipelineAnalyticsLive = async function() {
-  try {
-    const r = await fetch('/api/sales/pipeline-analytics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPipelineAnalyticsLive]', e) }
-}
-;(window as any).igLoadComplianceSignoffsLive = async function() {
-  try {
-    const r = await fetch('/api/compliance/signoffs', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadComplianceSignoffsLive]', e) }
-}
-;(window as any).igLoadAdminUsersLive = async function(tableBodyId?: string) {
-  try {
-    const r = await fetch('/api/admin/users', { credentials: 'include' })
-    const d = await r.json()
-    if (tableBodyId && d.users?.length) {
-      const el = document.getElementById(tableBodyId)
-      if (el) el.innerHTML = d.users.map((u: any) => `
-        <tr style="border-bottom:1px solid rgba(255,255,255,.04);">
-          <td style="padding:.6rem .8rem;font-size:.8rem;color:#fff;font-weight:600;">${u.name}</td>
-          <td style="padding:.6rem .8rem;font-size:.75rem;color:rgba(255,255,255,.6);">${u.email}</td>
-          <td style="padding:.6rem .8rem;font-size:.72rem;color:#fbbf24;">${u.role}</td>
-          <td style="padding:.6rem .8rem;font-size:.72rem;color:rgba(255,255,255,.4);">${u.portal}</td>
-          <td style="padding:.6rem .8rem;">
-            <span style="font-size:.65rem;font-weight:700;padding:.2rem .55rem;${u.active?'background:rgba(34,197,94,.12);color:#22c55e;':'background:rgba(239,68,68,.1);color:#ef4444;'}">${u.active?'ACTIVE':'INACTIVE'}</span>
-          </td>
-          <td style="padding:.6rem .8rem;font-size:.7rem;color:rgba(255,255,255,.3);">${u.last_login||'—'}</td>
-        </tr>`).join('')
-    }
-    return d
-  } catch(e) { console.warn('[igLoadAdminUsersLive]', e) }
-}
-;(window as any).igLoadGrievancesLive = async function() {
-  try {
-    const r = await fetch('/api/dpdp/grievances', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadGrievancesLive]', e) }
-}
-;(window as any).igLoadMarketIntelLive = async function(key = 'india_hospitality_2026q1') {
-  try {
-    const r = await fetch(`/api/data/market-intelligence?key=${encodeURIComponent(key)}`, { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadMarketIntelLive]', e) }
-}
-
-// ── Phase V: CS, Procurement, ESG, Risk, AI/Data, Marketing, IT, HR, Partner, R&D, Finance loaders ──
-;(window as any).igLoadCsHealthLive = async function() {
-  try {
-    const r = await fetch('/api/cs/health-score', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadCsHealthLive]', e) }
-}
-;(window as any).igLoadChurnPredictionLive = async function() {
-  try {
-    const r = await fetch('/api/cs/churn-prediction', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadChurnPredictionLive]', e) }
-}
-;(window as any).igLoadOnboardingTrackerLive = async function() {
-  try {
-    const r = await fetch('/api/cs/onboarding-tracker', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadOnboardingTrackerLive]', e) }
-}
-;(window as any).igLoadExpansionRevenueLive = async function() {
-  try {
-    const r = await fetch('/api/cs/expansion-revenue', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadExpansionRevenueLive]', e) }
-}
-;(window as any).igLoadVendorScorecardLive = async function() {
-  try {
-    const r = await fetch('/api/procurement/vendor-scorecard', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadVendorScorecardLive]', e) }
-}
-;(window as any).igLoadPoTrackerLive = async function() {
-  try {
-    const r = await fetch('/api/procurement/po-tracker', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPoTrackerLive]', e) }
-}
-;(window as any).igLoadSpendAnalysisLive = async function() {
-  try {
-    const r = await fetch('/api/procurement/spend-analysis', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadSpendAnalysisLive]', e) }
-}
-;(window as any).igLoadContractRenewalLive = async function() {
-  try {
-    const r = await fetch('/api/procurement/contract-renewal', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadContractRenewalLive]', e) }
-}
-;(window as any).igLoadEsgCarbonLive = async function() {
-  try {
-    const r = await fetch('/api/esg/carbon-footprint', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgCarbonLive]', e) }
-}
-;(window as any).igLoadEsgDiversityLive = async function() {
-  try {
-    const r = await fetch('/api/esg/diversity-inclusion', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgDiversityLive]', e) }
-}
-;(window as any).igLoadEsgEnergyLive = async function() {
-  try {
-    const r = await fetch('/api/esg/energy-sustainability', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgEnergyLive]', e) }
-}
-;(window as any).igLoadFraudAlertsLive = async function() {
-  try {
-    const r = await fetch('/api/risk/fraud-alerts', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadFraudAlertsLive]', e) }
-}
-;(window as any).igLoadAnomalyFlagsLive = async function() {
-  try {
-    const r = await fetch('/api/risk/transaction-anomalies', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadAnomalyFlagsLive]', e) }
-}
-;(window as any).igLoadOperationalRiskLive = async function() {
-  try {
-    const r = await fetch('/api/risk/operational-risk', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadOperationalRiskLive]', e) }
-}
-;(window as any).igLoadPipelineHealthLive = async function() {
-  try {
-    const r = await fetch('/api/ai/pipeline-health', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPipelineHealthLive]', e) }
-}
-;(window as any).igLoadDataStorageLive = async function() {
-  try {
-    const r = await fetch('/api/data/storage-analytics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadDataStorageLive]', e) }
-}
-;(window as any).igLoadCampaignSpendLive = async function() {
-  try {
-    const r = await fetch('/api/marketing/campaign-spend', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadCampaignSpendLive]', e) }
-}
-;(window as any).igLoadLeadFunnelLive = async function() {
-  try {
-    const r = await fetch('/api/marketing/lead-funnel', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadLeadFunnelLive]', e) }
-}
-;(window as any).igLoadSeoMetricsLive = async function() {
-  try {
-    const r = await fetch('/api/marketing/seo-metrics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadSeoMetricsLive]', e) }
-}
-;(window as any).igLoadItAssetsLive = async function() {
-  try {
-    const r = await fetch('/api/it/asset-inventory', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadItAssetsLive]', e) }
-}
-;(window as any).igLoadItSecurityLive = async function() {
-  try {
-    const r = await fetch('/api/it/security-posture', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadItSecurityLive]', e) }
-}
-;(window as any).igLoadAttritionLive = async function() {
-  try {
-    const r = await fetch('/api/hr/attrition-analytics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadAttritionLive]', e) }
-}
-;(window as any).igLoadLearningDevelopmentLive = async function() {
-  try {
-    const r = await fetch('/api/hr/learning-development', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadLearningDevelopmentLive]', e) }
-}
-;(window as any).igLoadPartnerRevenueL = async function() {
-  try {
-    const r = await fetch('/api/partner/revenue-attribution', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPartnerRevenueLive]', e) }
-}
-;(window as any).igLoadPartnerHealthLive = async function() {
-  try {
-    const r = await fetch('/api/partner/health-scorecard', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPartnerHealthLive]', e) }
-}
-;(window as any).igLoadRdSpendLive = async function() {
-  try {
-    const r = await fetch('/api/rd/spend-roi', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadRdSpendLive]', e) }
-}
-;(window as any).igLoadBudgetForecastLive = async function() {
-  try {
-    const r = await fetch('/api/finance/budget-forecast', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadBudgetForecastLive]', e) }
-}
-;(window as any).igLoadCashFlowForecastLive = async function() {
-  try {
-    const r = await fetch('/api/finance/cash-flow-forecast', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadCashFlowForecastLive]', e) }
-}
-;(window as any).igLoadComplianceCalendarLive = async function() {
-  try {
-    const r = await fetch('/api/compliance/calendar', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadComplianceCalendarLive]', e) }
-}
-
-
 
 
 
 const FALLBACK_DOCS = [
-    {id:'DOC-001', name:'NDA — Prism Advisory Partners.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
+    {id:'DOC-001', name:'NDA — Demo Advisory Client.pdf',          cat:'Legal',       size:'244 KB', date:'15 Jan 2026', uploader:'superadmin', ndaGated:true},
     {id:'DOC-002', name:'EY Retainer Agreement v3.pdf',            cat:'Contracts',   size:'1.2 MB', date:'10 Jan 2026', uploader:'pavan',       ndaGated:false},
     {id:'DOC-003', name:'Jaipur Hotel Feasibility Report.pdf',     cat:'Mandates',    size:'4.8 MB', date:'05 Jan 2026', uploader:'akm',         ndaGated:false},
     {id:'DOC-004', name:'GSTR-1 Feb 2026 Filing.xlsx',             cat:'Finance',     size:'188 KB', date:'28 Feb 2026', uploader:'finance',     ndaGated:false},
@@ -17000,7 +16639,7 @@ app.get('/dpdp', (c) => {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
       <!-- Consent Analytics -->
       <div style="background:#fff;border:1px solid var(--border);">
-        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Consent Analytics (§5-§6)</h3></div>
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Consent Analytics (§5–§6)</h3></div>
         <div style="padding:1.25rem;">
           ${[
             {label:'Total Data Principals',   value:'142',  color:'#2563eb'},
@@ -17040,7 +16679,7 @@ app.get('/dpdp', (c) => {
       </div>
       <!-- Rights Requests -->
       <div style="background:#fff;border:1px solid var(--border);">
-        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Data Principal Rights Requests (§12-§16)</h3></div>
+        <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border);"><h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);">Data Principal Rights Requests (§12–§16)</h3></div>
         <div style="padding:1.25rem;">
           ${[
             {type:'Right to Access',      total:5,  fulfilled:5, pending:0},
@@ -17313,7 +16952,7 @@ app.get('/enquiries', async (c) => {
     </div>`).join('')}
   </div>
 
-  ${dataSource === 'demo' ? `
+  ${!kvAvailable ? `
   <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.2);display:flex;gap:.75rem;align-items:flex-start;">
     <i class="fas fa-info-circle" style="color:#fbbf24;margin-top:.1rem;flex-shrink:0;"></i>
     <div>
@@ -17343,234 +16982,5 @@ function filterEnq(type){
 
   return c.html(layout('Enquiry Inbox', adminShell('Enquiry Inbox', 'enquiries', body), {noNav:true, noFooter:true}))
 })
-
-
-// ── Phase X: Notifications, API Keys, Feature Flags, Support Tickets, Export, Webhooks, Platform ──
-;(window as any).igLoadNotificationsLive = async function() {
-  try {
-    const r = await fetch('/api/notifications', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadNotificationsLive]', e) }
-}
-;(window as any).igLoadApiKeysLive = async function() {
-  try {
-    const r = await fetch('/api/settings/api-keys', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadApiKeysLive]', e) }
-}
-;(window as any).igLoadFeatureFlagsLive = async function() {
-  try {
-    const r = await fetch('/api/settings/feature-flags', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadFeatureFlagsLive]', e) }
-}
-;(window as any).igLoadSupportTicketsLive = async function() {
-  try {
-    const r = await fetch('/api/support/tickets', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadSupportTicketsLive]', e) }
-}
-;(window as any).igLoadExportJobsLive = async function() {
-  try {
-    const r = await fetch('/api/export/jobs', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadExportJobsLive]', e) }
-}
-;(window as any).igLoadOutboundWebhooksLive = async function() {
-  try {
-    const r = await fetch('/api/settings/webhooks', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadOutboundWebhooksLive]', e) }
-}
-;(window as any).igLoadPlatformHealthLive = async function() {
-  try {
-    const r = await fetch('/api/platform/health-dashboard', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPlatformHealthLive]', e) }
-}
-;(window as any).igLoadDeploymentsLive = async function() {
-  try {
-    const r = await fetch('/api/infra/deployments', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadDeploymentsLive]', e) }
-}
-;(window as any).igLoadKpiZZ1Live = async function() {
-  try {
-    const r = await fetch('/api/kpi/dashboard', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadKpiZZ1Live]', e) }
-}
-;(window as any).igLoadBoardPackLive = async function() {
-  try {
-    const r = await fetch('/api/executive/board-pack', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadBoardPackLive]', e) }
-}
-;(window as any).igLoadInvestorMetricsLive = async function() {
-  try {
-    const r = await fetch('/api/executive/investor-metrics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadInvestorMetricsLive]', e) }
-}
-;(window as any).igLoadStrategicInitiativesLive = async function() {
-  try {
-    const r = await fetch('/api/executive/strategic-initiatives', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadStrategicInitiativesLive]', e) }
-}
-;(window as any).igLoadPlatformCertLive = async function() {
-  try {
-    const r = await fetch('/api/compliance/platform-certification', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPlatformCertLive]', e) }
-}
-
-
-// ── Phase Y: D1-wired route loaders + ESG, Partner, ITOps, Innovation, FP&A, Resilience ──
-;(window as any).igLoadEsgMetricsLive = async function() {
-  try {
-    const r = await fetch('/api/esg/diversity-metrics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgMetricsLive]', e) }
-}
-;(window as any).igLoadEsgEnergyFullLive = async function() {
-  try {
-    const r = await fetch('/api/esg/energy-consumption', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgEnergyFullLive]', e) }
-}
-;(window as any).igLoadEsgSocialLive = async function() {
-  try {
-    const r = await fetch('/api/esg/social-impact', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEsgSocialLive]', e) }
-}
-;(window as any).igLoadITOpsNetworkLive = async function() {
-  try {
-    const r = await fetch('/api/itops/network-monitoring', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadITOpsNetworkLive]', e) }
-}
-;(window as any).igLoadITOpsPatchLive = async function() {
-  try {
-    const r = await fetch('/api/itops/patch-compliance', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadITOpsPatchLive]', e) }
-}
-;(window as any).igLoadITOpsBackupLive = async function() {
-  try {
-    const r = await fetch('/api/itops/backup-status', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadITOpsBackupLive]', e) }
-}
-;(window as any).igLoadPartnerDealsLive = async function() {
-  try {
-    const r = await fetch('/api/partners/deal-registration', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPartnerDealsLive]', e) }
-}
-;(window as any).igLoadPartnerChannelLive = async function() {
-  try {
-    const r = await fetch('/api/partners/channel-performance', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPartnerChannelLive]', e) }
-}
-;(window as any).igLoadPartnerMDFLive = async function() {
-  try {
-    const r = await fetch('/api/partners/mdf-utilisation', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPartnerMDFLive]', e) }
-}
-;(window as any).igLoadAIMetricsLive = async function() {
-  try {
-    const r = await fetch('/api/innovation/ai-ml-metrics', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadAIMetricsLive]', e) }
-}
-;(window as any).igLoadRDSpendFullLive = async function() {
-  try {
-    const r = await fetch('/api/innovation/rd-spend', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadRDSpendFullLive]', e) }
-}
-;(window as any).igLoadFPABudgetLive = async function() {
-  try {
-    const r = await fetch('/api/fpa/budget-forecast', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadFPABudgetLive]', e) }
-}
-;(window as any).igLoadFPACashFlowLive = async function() {
-  try {
-    const r = await fetch('/api/fpa/cash-flow-projection', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadFPACashFlowLive]', e) }
-}
-;(window as any).igLoadResilienceDRLive = async function() {
-  try {
-    const r = await fetch('/api/resilience/dr-readiness', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadResilienceDRLive]', e) }
-}
-;(window as any).igLoadResilienceCapacityLive = async function() {
-  try {
-    const r = await fetch('/api/resilience/capacity-planning', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadResilienceCapacityLive]', e) }
-}
-;(window as any).igLoadPolicyTrackerLive = async function() {
-  try {
-    const r = await fetch('/api/regulatory/policy-tracker', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadPolicyTrackerLive]', e) }
-}
-;(window as any).igLoadLicenseRegistryLive = async function() {
-  try {
-    const r = await fetch('/api/regulatory/license-registry', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadLicenseRegistryLive]', e) }
-}
-;(window as any).igLoadCampaignPerfLive = async function() {
-  try {
-    const r = await fetch('/api/marketing/campaign-performance', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadCampaignPerfLive]', e) }
-}
-;(window as any).igLoadLNDFullLive = async function() {
-  try {
-    const r = await fetch('/api/hr/learning-development', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadLNDFullLive]', e) }
-}
-;(window as any).igLoadSprintVelocityLive = async function() {
-  try {
-    const r = await fetch('/api/product/sprint-velocity', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadSprintVelocityLive]', e) }
-}
-;(window as any).igLoadDataQualityLive = async function() {
-  try {
-    const r = await fetch('/api/data/data-quality', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadDataQualityLive]', e) }
-}
-;(window as any).igLoadSystemLogsLive = async function(level = '', limit = 50) {
-  try {
-    const q = level ? `?level=${level}&limit=${limit}` : `?limit=${limit}`
-    const r = await fetch(`/api/system/logs${q}`, { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadSystemLogsLive]', e) }
-}
-;(window as any).igLoadEmailQueueLive = async function() {
-  try {
-    const r = await fetch('/api/system/email-queue', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadEmailQueueLive]', e) }
-}
-;(window as any).igLoadScheduledTasksLive = async function() {
-  try {
-    const r = await fetch('/api/system/scheduled-tasks', { credentials: 'include' })
-    return await r.json()
-  } catch(e) { console.warn('[igLoadScheduledTasksLive]', e) }
-}
 
 export default app

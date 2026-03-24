@@ -13,7 +13,7 @@ export function layout(title: string, content: string, opts?: {
   heroPreload?: string    // optional above-fold image URL to preload with high priority
 }) {
   const desc = opts?.description || "India Gully — Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions."
-  const ogImg = opts?.ogImage || 'https://indiagully.com/static/og.jpg'
+  const ogImg = opts?.ogImage || 'https://india-gully.pages.dev/static/og.jpg'
 
   return `<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -1548,7 +1548,7 @@ ${opts?.noNav ? '' : `<nav id="ig-mob-bar" aria-label="Quick contact">
   <div class="wrap" style="padding-top:0;padding-bottom:0;">
     <div style="display:flex;align-items:center;justify-content:space-between;overflow-x:auto;gap:0;">
       ${[
-        {n:'₹2,100 Cr+',l:'Pipeline'},
+        {n:'₹1,165 Cr+',l:'Pipeline'},
         {n:'15+',        l:'Hotels'},
         {n:'35+',        l:'Retail Brands'},
         {n:'20+',        l:'Hotel Brands'},

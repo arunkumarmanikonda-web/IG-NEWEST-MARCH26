@@ -194,54 +194,38 @@ app.get('/sitemap.xml', (c) => {
   const now = new Date().toISOString().split('T')[0]
 
   const staticPages = [
-    { url: '/', priority: '1.0', freq: 'daily' },
-    { url: '/about', priority: '0.8', freq: 'monthly' },
+    { url: '/',         priority: '1.0', freq: 'daily'   },
+    { url: '/about',    priority: '0.8', freq: 'monthly' },
     { url: '/services', priority: '0.9', freq: 'monthly' },
-    { url: '/horeca', priority: '0.85', freq: 'monthly' },
-    { url: '/listings', priority: '0.95', freq: 'daily' },
-    { url: '/works', priority: '0.8', freq: 'monthly' },
-    { url: '/insights', priority: '0.9', freq: 'weekly' },
-    { url: '/contact', priority: '0.8', freq: 'monthly' },
-    { url: '/valuation', priority: '0.85', freq: 'monthly' },
-    { url: '/testimonials', priority: '0.75', freq: 'monthly' },
-    { url: '/compare', priority: '0.8', freq: 'weekly' },
-    { url: '/market-data', priority: '0.85', freq: 'weekly' },
-    { url: '/resources', priority: '0.85', freq: 'weekly' },
-    { url: '/careers', priority: '0.75', freq: 'monthly' },
-    { url: '/invest', priority: '0.85', freq: 'monthly' },
-    { url: '/pipeline', priority: '0.80', freq: 'weekly' },
-    { url: '/legal/privacy', priority: '0.3', freq: 'yearly' },
-    { url: '/legal/terms', priority: '0.3', freq: 'yearly' },
+    { url: '/horeca',   priority: '0.85',freq: 'monthly' },
+    { url: '/listings', priority: '0.95',freq: 'daily'   },
+    { url: '/works',    priority: '0.8', freq: 'monthly' },
+    { url: '/insights', priority: '0.9', freq: 'weekly'  },
+    { url: '/contact',  priority: '0.8', freq: 'monthly' },
+    { url: '/valuation',     priority: '0.85', freq: 'monthly' },
+    { url: '/testimonials',  priority: '0.75', freq: 'monthly' },
+    { url: '/compare',       priority: '0.8',  freq: 'weekly'  },
+    { url: '/market-data',   priority: '0.85', freq: 'weekly'  },
+    { url: '/resources',     priority: '0.85', freq: 'weekly'  },
+    { url: '/careers',       priority: '0.75', freq: 'monthly' },
+    { url: '/invest',        priority: '0.85', freq: 'monthly' },
+    { url: '/legal/privacy',    priority: '0.3', freq: 'yearly' },
+    { url: '/legal/terms',      priority: '0.3', freq: 'yearly' },
     { url: '/legal/disclaimer', priority: '0.3', freq: 'yearly' },
   ]
 
   const listingIds = [
-    'prism-tower-gurgaon',
-    'belcibo-hospitality-platform',
-    'hotel-rajshree-chandigarh',
-    'welcomheritage-santa-roza-kasauli',
-    'heritage-hotel-jaipur',
-    'maple-resort-chail',
-    'ambience-tower-north-delhi',
-    'sawasdee-jlg-noida',
+    'prism-tower-gurgaon','belcibo-hospitality-platform','hotel-rajshree-chandigarh',
+    'welcomheritage-santa-roza-kasauli','heritage-hotel-jaipur','maple-resort-chail',
+    'ambience-tower-north-delhi','sawasdee-jlg-noida',
   ]
 
   const insightIds = [
-    'india-realty-2026-outlook',
-    'entertainment-zone-regulatory-india',
-    'horeca-tier2-supply-chain',
-    'horeca-tier2-supply-chain-deep-dive',
-    'mall-hotel-office-trinity',
-    'ibc-distressed-hospitality-2025',
-    'mall-mixed-use-integration',
-    'retail-leasing-trends-india-2026',
-    'debt-special-situations-india-hospitality-2026',
-    'greenfield-midscale-hotels',
-    'india-hospitality-2024',
-    'entertainment-destinations-india',
-    'horeca-procurement-strategy',
-    'debt-special-situations-hospitality',
-    'retail-leasing-malls-india',
+    'india-realty-2026-outlook','entertainment-zone-regulatory-india','horeca-tier2-supply-chain',
+    'horeca-tier2-supply-chain-deep-dive','mall-hotel-office-trinity','ibc-distressed-hospitality-2025',
+    'mall-mixed-use-integration','retail-leasing-trends-india-2026','debt-special-situations-india-hospitality-2026',
+    'greenfield-midscale-hotels','india-hospitality-2024','entertainment-destinations-india',
+    'horeca-procurement-strategy','debt-special-situations-hospitality','retail-leasing-malls-india',
     'greenfield-hotel-development',
   ]
 
@@ -267,9 +251,7 @@ ${insightIds.map(id => `  <url>
   </url>`).join('\n')}
 </urlset>`
 
-  return c.text(xml, 200, {
-    'Content-Type': 'application/xml; charset=UTF-8',
-  })
+  return c.text(xml, 200, { 'Content-Type': 'application/xml; charset=utf-8' })
 })
 
 // ── SEO: robots.txt ──────────────────────────────────────────────────────────
@@ -323,7 +305,7 @@ app.get('/api/mandate-locations', (c) => {
   c.header('Cache-Control', 'public, max-age=3600')
   return c.json({
     updated: 'Q1 2026',
-    total_value: '₹2,100 Cr+',
+    total_value: '₹1,165 Cr+',
     total_mandates: 8,
     locations: [
       {
