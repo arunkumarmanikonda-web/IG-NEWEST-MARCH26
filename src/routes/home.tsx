@@ -133,31 +133,7 @@ const SLIDES = [
   },
 ]
 
-app.get('/', async (c) => {
-  // ── CMS: fetch published row from D1 ─────────────────────────────────────
-  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
-  try {
-    const db = (c.env as any)?.DB
-    if (db) {
-      const row = await db.prepare(
-        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
-           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
-      ).bind('/').first()
-      if (row) {
-        cmsTitle    = (row.title        as string) || ''
-        cmsMeta     = (row.meta_desc    as string) || ''
-        cmsHeroH    = (row.hero_headline   as string) || ''
-        cmsHeroSub  = (row.hero_subheading as string) || ''
-        cmsBodyHtml = (row.body_html    as string) || ''
-      }
-    }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
-
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
-
+app.get('/', (c) => {
   const content = `
 
 <!-- ══ HERO CAROUSEL ════════════════════════════════════════════════════ -->
@@ -1421,22 +1397,22 @@ function filterRB(cat){
   </div>
 </div>
 
-${cmsZoneHtml}`
-  return c.html(layout(cmsTitle || 'Home', content, {
-    description: cmsMeta || "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
-    canonical: 'https://indiagully.com/',
-    ogImage: 'https://indiagully.com/static/og.jpg',
+`
+  return c.html(layout('Home', content, {
+    description: "India Gully. Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions. ₹1,165 Cr+ active mandate pipeline.",
+    canonical: 'https://india-gully.pages.dev/',
+    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     heroPreload: '/static/mandates/chail/chail-img1.jpg',
     jsonLd: JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://indiagully.com/#organization",
+          "@id": "https://india-gully.pages.dev/#organization",
           "name": "India Gully",
           "legalName": "Vivacious Entertainment and Hospitality Pvt. Ltd.",
-          "url": "https://indiagully.com",
-          "logo": "https://indiagully.com/assets/logo-white.png",
+          "url": "https://india-gully.pages.dev",
+          "logo": "https://india-gully.pages.dev/assets/logo-white.png",
           "description": "India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions.",
           "address": { "@type": "PostalAddress", "addressLocality": "New Delhi", "addressCountry": "IN" },
           "telephone": "+918988988988",
@@ -1447,10 +1423,10 @@ ${cmsZoneHtml}`
         },
         {
           "@type": "WebSite",
-          "@id": "https://indiagully.com/#website",
-          "url": "https://indiagully.com",
+          "@id": "https://india-gully.pages.dev/#website",
+          "url": "https://india-gully.pages.dev",
           "name": "India Gully",
-          "publisher": { "@id": "https://indiagully.com/#organization" }
+          "publisher": { "@id": "https://india-gully.pages.dev/#organization" }
         }
       ]
     })

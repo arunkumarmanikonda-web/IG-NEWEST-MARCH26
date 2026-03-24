@@ -3,33 +3,9 @@ import { layout } from '../lib/layout'
 
 const app = new Hono()
 
-app.get('/', async (c) => {
-  // ── CMS: fetch published row from D1 ─────────────────────────────────────
-  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
-  try {
-    const db = (c.env as any)?.DB
-    if (db) {
-      const row = await db.prepare(
-        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
-           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
-      ).bind('/contact').first()
-      if (row) {
-        cmsTitle    = (row.title        as string) || ''
-        cmsMeta     = (row.meta_desc    as string) || ''
-        cmsHeroH    = (row.hero_headline   as string) || ''
-        cmsHeroSub  = (row.hero_subheading as string) || ''
-        cmsBodyHtml = (row.body_html    as string) || ''
-      }
-    }
-  } catch (_) { /* D1 unavailable - fall through to defaults */ }
-
+app.get('/', (c) => {
   const service = c.req.query('service') || ''
   const mandate = c.req.query('mandate') || ''
-
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
 
   const content = `
 
@@ -46,11 +22,11 @@ app.get('/', async (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Contact &amp; RFQ</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Strategic Partnership &amp; Mandate Intake</h1>
-      <p class="lead-lt" style="max-width:540px;margin-bottom:2.5rem;">Initiate a confidential mandate enquiry, strategic advisory intake, or HORECA procurement RFQ. Every submission is received under a Pre-Mandate Confidentiality Protocol and reviewed by Executive Leadership within the Immediate Diagnostic Review Window — 24-hour acknowledgment, guaranteed.</p>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Let's Work<br><em style="color:var(--gold);font-style:italic;">Together</em></h1>
+      <p class="lead-lt" style="max-width:540px;margin-bottom:2.5rem;">Submit a mandate enquiry, HORECA RFQ or general inquiry. Our leadership team reviews all submissions within 24 hours.</p>
       <!-- Response commitments -->
       <div style="display:flex;flex-wrap:wrap;gap:1.5rem;">
-        ${[{icon:"bolt",t:"Accelerated Diagnostic","s":"Immediate Diagnostic Review Window"},{icon:"shield-alt",t:"Fiduciary Discretion","s":"Pre-Mandate Confidentiality Protocol"},{icon:"user-tie",t:"Executive Oversight","s":"Direct to Managing Director"}].map(i=>`<div style="display:flex;align-items:center;gap:.625rem;"><div class="ig-icon-box-sm"><i class="fas fa-${i.icon}" style="color:var(--gold);font-size:.65rem;"></i></div><div><div style="font-size:.78rem;font-weight:600;color:#fff;">${i.t}</div><div style="font-size:.67rem;color:rgba(255,255,255,.45);">${i.s}</div></div></div>`).join('')}
+        ${[{icon:"clock",t:"24h Response","s":"Guaranteed for all enquiries"},{icon:"shield-alt",t:"Confidential","s":"Mutual NDA framework"},{icon:"user-tie",t:"Leadership Review","s":"Direct to MD & ED"}].map(i=>`<div style="display:flex;align-items:center;gap:.625rem;"><div class="ig-icon-box-sm"><i class="fas fa-${i.icon}" style="color:var(--gold);font-size:.65rem;"></i></div><div><div style="font-size:.78rem;font-weight:600;color:#fff;">${i.t}</div><div style="font-size:.67rem;color:rgba(255,255,255,.45);">${i.s}</div></div></div>`).join('')}
       </div>
     </div>
   </div>
@@ -146,22 +122,22 @@ app.get('/', async (c) => {
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
             <div>
               <label class="ig-lbl">First Name *</label>
-              <input type="text" name="first_name" class="ig-inp" required placeholder="Legal first name">
+              <input type="text" name="first_name" class="ig-inp" required placeholder="First name">
             </div>
             <div>
               <label class="ig-lbl">Last Name *</label>
-              <input type="text" name="last_name" class="ig-inp" required placeholder="Legal last name">
+              <input type="text" name="last_name" class="ig-inp" required placeholder="Last name">
             </div>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
             <div>
               <label class="ig-lbl">Email Address *</label>
-              <input type="email" name="email" class="ig-inp" required placeholder="Institutional email address">
+              <input type="email" name="email" class="ig-inp" required placeholder="your@email.com">
             </div>
             <div>
               <label class="ig-lbl">Phone Number *</label>
-              <input type="tel" name="phone" class="ig-inp" required placeholder="Direct line or mobile">
+              <input type="tel" name="phone" class="ig-inp" required placeholder="+91 XXXXX XXXXX">
             </div>
           </div>
 
@@ -185,7 +161,7 @@ app.get('/', async (c) => {
 
           <div>
             <label class="ig-lbl">Project / Mandate Location</label>
-            <input type="text" name="location" class="ig-inp" placeholder="Asset city, state or region">
+            <input type="text" name="location" class="ig-inp" placeholder="City, State or Region">
           </div>
 
           <div>
@@ -193,10 +169,10 @@ app.get('/', async (c) => {
             <select name="scale" class="ig-inp">
               <option value="">Select scale</option>
               <option>Below ₹25 Crores</option>
-              <option>₹25 Cr, INR 100 Cr</option>
-              <option>INR 100 Cr, INR 500 Cr</option>
-              <option>INR 500 Cr, INR 2,000 Cr</option>
-              <option>Above INR 2,000 Cr</option>
+              <option>₹25 Cr, ₹100 Cr</option>
+              <option>₹100 Cr, ₹500 Cr</option>
+              <option>₹500 Cr, ₹2,000 Cr</option>
+              <option>Above ₹2,000 Cr</option>
             </select>
           </div>
 
@@ -213,7 +189,7 @@ app.get('/', async (c) => {
           </div>
 
           <button type="button" id="contact-submit-btn" onclick="igContactAjax()" class="btn btn-g" style="width:100%;justify-content:center;padding:1rem;font-size:.82rem;">
-            <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Institutional Mandate Submission
+            <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Mandate Enquiry
           </button>
 
           <p style="font-size:.7rem;color:var(--ink-muted);line-height:1.65;text-align:center;">All enquiries are treated with strict confidentiality. Our leadership team reviews all submissions within 24 hours.</p>
@@ -224,8 +200,8 @@ app.get('/', async (c) => {
 function igContactAjax() {
   var form = document.getElementById('contact-form');
   if (!form) return;
-  var firstName  = (form.querySelector('[name=first_name]')||{}).value||'';
-  var lastName  = (form.querySelector('[name=last_name]')||{}).value||'';
+  var fName  = (form.querySelector('[name=first_name]')||{}).value||'';
+  var lName  = (form.querySelector('[name=last_name]')||{}).value||'';
   var email  = (form.querySelector('[name=email]')||{}).value||'';
   var phone  = (form.querySelector('[name=phone]')||{}).value||'';
   var company= (form.querySelector('[name=company]')||{}).value||'';
@@ -234,8 +210,8 @@ function igContactAjax() {
   var scale  = (form.querySelector('[name=scale]')||{}).value||'';
   var message= (form.querySelector('[name=message]')||{}).value||'';
   var nda    = form.querySelector('[name=nda_consent]');
-  firstName=firstName.trim();lastName=lastName.trim();email=email.trim();phone=phone.trim();message=message.trim();
-  var name   = (firstName+' '+lastName).trim();
+  fName=fName.trim();lName=lName.trim();email=email.trim();phone=phone.trim();message=message.trim();
+  var name   = (fName+' '+lName).trim();
 
   function showErr(msg){
     var el=document.getElementById('contact-global-err');
@@ -245,8 +221,8 @@ function igContactAjax() {
   }
   var errEl=document.getElementById('contact-global-err');if(errEl)errEl.style.display='none';
 
-  if(!firstName||firstName.length<2){showErr('Please enter your first name.');return;}
-  if(!lastName||lastName.length<2){showErr('Please enter your last name.');return;}
+  if(!fName||fName.length<2){showErr('Please enter your first name.');return;}
+  if(!lName||lName.length<2){showErr('Please enter your last name.');return;}
   if(!email||email.indexOf('@')<1||email.split('@')[1].indexOf('.')<0){showErr('Please enter a valid email address.');return;}
   var cleaned=phone.replace(/[^0-9+]/g,'');
   if(!phone||cleaned.length<10){showErr('Enter a valid Indian mobile (+91 XXXXX XXXXX) or international number.');return;}
@@ -264,7 +240,7 @@ function igContactAjax() {
   .then(function(r){return r.json();})
   .then(function(d){
     if(!d.success){
-      if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Institutional Mandate Submission';}
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Mandate Enquiry';}
       showErr(d.error||'Submission failed. Please try again or email info@indiagully.com');
       return;
     }
@@ -277,7 +253,7 @@ function igContactAjax() {
     if(window.igToast)window.igToast('Enquiry submitted! A confirmation email has been sent.','success');
   })
   .catch(function(){
-    if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Institutional Mandate Submission';}
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane" style="margin-right:.5rem;"></i>Submit Mandate Enquiry';}
     showErr('Network error. Please email info@indiagully.com or call +91 8988 988 988.');
   });
 }
@@ -376,7 +352,7 @@ function igContactAjax() {
         <p class="eyebrow" style="margin-bottom:.4rem;color:var(--gold);">Direct Line</p>
         <h2 class="h2" style="color:#fff;margin:0;">Leadership Quick Dial</h2>
       </div>
-      <span class="sla-badge">Immediate Diagnostic Review Window</span>
+      <span class="sla-badge">Responds within 24 hours</span>
     </div>
     <div class="tel-grid" style="--bg:var(--ink);">
       <div class="tel-card">
@@ -422,9 +398,9 @@ function igContactAjax() {
 
     <!-- SLA Badges Row -->
     <div class="trust-row" style="margin-top:2.5rem;--bg:var(--ink);">
-      <div class="trust-item"><span class="sla-badge">Accelerated Diagnostic</span><span style="margin-left:.5rem;">Immediate Executive Review</span></div>
-      <div class="trust-item"><span class="sla-badge" style="background:rgba(26,58,107,.12);border-color:rgba(93,141,239,.25);color:#93c5fd;">Technical RFQ Turnaround SLA</span><span style="margin-left:.5rem;">48-hour HORECA RFQ SLA</span></div>
-      <div class="trust-item"><span class="sla-badge" style="background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.25);color:#c4b5fd;">Pre-Mandate Confidentiality Protocol</span><span style="margin-left:.5rem;">Mandatory execution before advisory commencement</span></div>
+      <div class="trust-item"><span class="sla-badge">24h Response</span><span style="margin-left:.5rem;">All enquiries acknowledged</span></div>
+      <div class="trust-item"><span class="sla-badge" style="background:rgba(26,58,107,.12);border-color:rgba(93,141,239,.25);color:#93c5fd;">48h Quote</span><span style="margin-left:.5rem;">HORECA RFQs</span></div>
+      <div class="trust-item"><span class="sla-badge" style="background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.25);color:#c4b5fd;">Mutual NDA</span><span style="margin-left:.5rem;">Before all mandates</span></div>
       <div class="trust-item">
         <span style="font-size:.78rem;color:rgba(255,255,255,.5);">📍 New Delhi · Chandigarh · Pan-India</span>
       </div>
@@ -434,17 +410,17 @@ function igContactAjax() {
 
 <!-- WhatsApp float handled by global ig-contact-fab in layout -->
 
-${cmsZoneHtml}`
-  return c.html(layout(cmsTitle || 'Contact & Enquiry', content, {
+`
+  return c.html(layout('Contact & Enquiry', content, {
     description: 'Contact India Gully, submit a mandate enquiry, HORECA RFQ or advisory request. Our leadership team responds within 24 hours.',
-    canonical: 'https://indiagully.com/contact',
-    ogImage: 'https://indiagully.com/static/og.jpg',
+    canonical: 'https://india-gully.pages.dev/contact',
+    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'ContactPage',
       name: 'Contact India Gully',
-      url: 'https://indiagully.com/contact',
-      description: 'Initiate a confidential mandate enquiry or HORECA RFQ. 24-hour diagnostic acknowledgment. Pre-Mandate Confidentiality Protocol executed on engagement commencement.',
+      url: 'https://india-gully.pages.dev/contact',
+      description: 'Submit a mandate enquiry or HORECA RFQ. 24h response guaranteed.',
       mainEntity: {
         '@type': 'Organization',
         name: 'India Gully',
@@ -453,7 +429,6 @@ ${cmsZoneHtml}`
         address: { '@type': 'PostalAddress', addressLocality: 'New Delhi', addressCountry: 'IN' }
       }
     }
-
   }))
 })
 

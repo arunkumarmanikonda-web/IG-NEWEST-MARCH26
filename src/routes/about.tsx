@@ -3,31 +3,7 @@ import { layout } from '../lib/layout'
 
 const app = new Hono()
 
-app.get('/', async (c) => {
-  // ── CMS: fetch published row from D1 ─────────────────────────────────────
-  let cmsTitle = '', cmsMeta = '', cmsHeroH = '', cmsHeroSub = '', cmsBodyHtml = ''
-  try {
-    const db = (c.env as any)?.DB
-    if (db) {
-      const row = await db.prepare(
-        `SELECT title, meta_desc, hero_headline, hero_subheading, body_html
-           FROM ig_cms_pages WHERE slug = ? AND status = 'published' LIMIT 1`
-      ).bind('/about').first()
-      if (row) {
-        cmsTitle    = (row.title        as string) || ''
-        cmsMeta     = (row.meta_desc    as string) || ''
-        cmsHeroH    = (row.hero_headline   as string) || ''
-        cmsHeroSub  = (row.hero_subheading as string) || ''
-        cmsBodyHtml = (row.body_html    as string) || ''
-      }
-    }
-  } catch (_) { /* D1 unavailable – fall through to defaults */ }
-
-  /* ── CMS body override zone ──────────────────────────────────────────── */
-  const cmsZoneHtml = cmsBodyHtml
-    ? `<section class="cms-body-override wrap" style="padding:2rem 0;">${cmsBodyHtml}</section>`
-    : ''
-
+app.get('/', (c) => {
   const content = `
 
 <!-- ABOUT HERO -->
@@ -532,26 +508,25 @@ app.get('/', async (c) => {
   </div>
 </div>
 
-${cmsZoneHtml}`
-  return c.html(layout(cmsTitle || 'About India Gully', content, {
-    description: cmsMeta || "About India Gully. Celebrating Desiness since 2017. Leadership, vision, values and the story behind India's premier multi-vertical advisory firm.",
-    canonical: 'https://indiagully.com/about',
-    ogImage: 'https://indiagully.com/static/og.jpg',
+`
+  return c.html(layout('About India Gully', content, {
+    description: "About India Gully. Celebrating Desiness since 2017. Leadership, vision, values and the story behind India's premier multi-vertical advisory firm.",
+    canonical: 'https://india-gully.pages.dev/about',
+    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'AboutPage',
       name: 'About India Gully',
-      url: 'https://indiagully.com/about',
+      url: 'https://india-gully.pages.dev/about',
       description: "India Gully (Vivacious Entertainment and Hospitality Pvt. Ltd.) — advisory firm celebrating Desiness since 2017.",
       mainEntity: {
         '@type': 'Organization',
         name: 'India Gully',
         legalName: 'Vivacious Entertainment and Hospitality Pvt. Ltd.',
         foundingDate: '2017',
-        url: 'https://indiagully.com',
+        url: 'https://india-gully.pages.dev',
         employee: [
           { '@type': 'Person', name: 'Arun Kumar Manikonda', jobTitle: 'Managing Director' },
-
           { '@type': 'Person', name: 'Pavan Kumar Manikonda', jobTitle: 'Executive Director' },
           { '@type': 'Person', name: 'Amit Jhingan', jobTitle: 'President, Real Estate' }
         ]
