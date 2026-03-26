@@ -7,8 +7,9 @@ const app = new Hono()
 // ── PIPELINE DATA ─────────────────────────────────────────────────────────────
 // Sector breakdown for donut chart
 const SECTOR_DATA = [
-  { sector: 'Real Estate',          value: 1620, color: '#1A3A6B', pct: 77.1 },
-  { sector: 'Hospitality',          value: 480, color: '#065F46', pct: 22.9 },
+  { sector: 'Real Estate',          value: 900, color: '#1A3A6B', pct: 77.3 },
+  { sector: 'Hospitality',          value: 245, color: '#065F46', pct: 21.1 },
+  { sector: 'Debt & Special',       value: 20,  color: '#b91c1c', pct: 1.7  },
 ]
 
 // Status stages
@@ -172,8 +173,8 @@ app.get('/', (c) => {
         { n: 'INR 2,100 Cr+', l: 'Active Pipeline',         sub: 'Total advisory value' },
         { n: `${listings.length}`,  l: 'Active Mandates',  sub: 'Open to qualified investors' },
         { n: '5',           l: 'Sectors',                  sub: 'Diversified verticals' },
-        { n: '9+',          l: 'Years',                    sub: 'Advisory track record since 2017' },
-        { n: 'INR 2,000 Cr+', l: 'Track Record',                          sub: 'Total transactions advised' },
+        { n: '8+',          l: 'Years',                    sub: 'Advisory track record' },
+        { n: 'INR 2,100 Cr+',  l: 'Mandate Pipeline Under Management',     sub: 'Since inception 2017' },
       ].map(s => `
       <div class="pip-kpi">
         <div class="pip-kpi-n">${s.n}</div>
@@ -219,7 +220,6 @@ app.get('/', (c) => {
             <div class="pip-sector-pct">${s.pct}%</div>
           </div>`).join('')}
         </div>
-        <p style="font-size:.6rem;color:var(--ink-faint);margin-top:1rem;line-height:1.5;text-align:center;">Includes listed mandates plus confidential advisory pipeline</p>
       </div>
 
       <!-- ── DEAL SIZE WATERFALL ── -->
@@ -367,16 +367,16 @@ app.get('/', (c) => {
 `
 
   return c.html(layout('Investor Pipeline Dashboard — India Gully', content, {
-    description: 'India Gully Investor Pipeline — INR 2,100 Cr+ active mandate pipeline under management. Institutional-grade mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access for qualified investors.',
-    canonical: 'https://indiagully.com/pipeline',
-    ogImage: 'https://indiagully.com/static/og-listings.jpg',
+    description: 'India Gully\'s live investor pipeline dashboard — INR 2,100 Cr+ in active advisory mandates across Real Estate, Hospitality, Retail, Entertainment and Debt verticals. NDA-protected access available.',
+    canonical: 'https://india-gully.pages.dev/pipeline',
+    ogImage: 'https://india-gully.pages.dev/static/og-listings.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Investor Pipeline Dashboard — India Gully',
       description: 'Live advisory pipeline of INR 2,100 Cr+ across Real Estate, Hospitality, and Debt verticals.',
-      url: 'https://indiagully.com/pipeline',
-      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
+      url: 'https://india-gully.pages.dev/pipeline',
+      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://india-gully.pages.dev' }
     }
   }))
 })

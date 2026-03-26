@@ -10,7 +10,7 @@ const RECENT_INSIGHTS = [
     date: 'March 2026',
     readTime: '9 min read',
     title: 'Cloud Kitchens & Dark Stores: India\'s HORECA Infrastructure Revolution',
-    excerpt: 'India\'s online food delivery GMV crossed ₹1,00,000 Cr in Q3 FY 2025-26. We map the cloud kitchen formats, dark store real estate economics, and the investment models disrupting traditional HORECA infrastructure.',
+    excerpt: 'India\'s online food delivery GMV crossed ₹1,00,000 Cr in Q3 FY26. We map the cloud kitchen formats, dark store real estate economics, and the investment models disrupting traditional HORECA infrastructure.',
     img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
     color: '#065F46',
   },
@@ -375,7 +375,7 @@ app.get('/', async (c) => {
       { icon:'registered',     color:'#B8960C', text:'MCA Registered · CIN U74999DL2017PTC323237' },
       { icon:'map-marked-alt', color:'#a78bfa', text:'Pan-India · Delhi · Chandigarh · Mumbai · Kerala' },
       { icon:'trophy',         color:'#fbbf24', text:'INR 2,000 Cr+ Transactions Advised' },
-      { icon:'calendar-alt',   color:'#34d399', text:'Established 2017 · 9+ Years' },
+      { icon:'calendar-alt',   color:'#34d399', text:'Established 2017 · 8+ Years' },
       { icon:'file-contract',  color:'#B8960C', text:'Mutual NDA Framework · All Mandates' },
       { icon:'concierge-bell', color:'#a78bfa', text:'20+ Hospitality Brand Partnerships' },
     ].concat([
@@ -819,7 +819,7 @@ app.get('/', async (c) => {
         { icon:'handshake',      color:'#7C3AED', bg:'rgba(124,58,237,.08)', border:'rgba(124,58,237,.18)', title:'Co-Advisory with EY & CBRE',   desc:'Trusted by India\'s top professional service firms as co-advisor on complex, multi-party institutional transactions requiring deep sector expertise.' },
         { icon:'map-marked-alt', color:'#B8960C', bg:'rgba(184,150,12,.08)', border:'rgba(184,150,12,.18)', title:'Pan-India Execution Footprint',           desc:'Active mandates in Delhi NCR, Chandigarh, Kasauli, Chail, Jaipur, Noida, Gurugram, Bengaluru, Mumbai and Kerala — Tier-1 to 3 markets.' },
       ].map((w, wi) => `
-      <div class="why-card" style="transition-delay:${wi*0.07}s;">
+      <div class="why-card reveal" style="transition-delay:${wi*0.07}s;">
         <div class="why-icon" style="background:${w.bg};border:1px solid ${w.border};">
           <i class="fas fa-${w.icon}" style="color:${w.color};font-size:1.1rem;"></i>
         </div>
@@ -860,7 +860,7 @@ app.get('/', async (c) => {
         const ss = { active: { bg:'rgba(184,150,12,.15)', text:'#D4AE2A', border:'rgba(184,150,12,.35)' }, negotiation: { bg:'rgba(59,130,246,.12)', text:'#60a5fa', border:'rgba(59,130,246,.3)' }, feasibility: { bg:'rgba(22,163,74,.1)', text:'#4ade80', border:'rgba(22,163,74,.25)' } }[l.statusType] || { bg:'rgba(184,150,12,.15)', text:'#D4AE2A', border:'rgba(184,150,12,.35)' }
         return `
       <a href="/listings/${l.id}"
-         class="ed-card"
+         class="ed-card reveal"
          style="display:block;text-decoration:none;transition-delay:${idx*0.1}s;"
          onmouseover="this.style.borderColor='rgba(184,150,12,.4)';this.style.boxShadow='0 24px 70px rgba(0,0,0,.5)';this.style.transform='translateY(-6px)'"
          onmouseout="this.style.borderColor='rgba(255,255,255,.08)';this.style.boxShadow='none';this.style.transform='translateY(0)'"
@@ -1040,7 +1040,7 @@ app.get('/', async (c) => {
         { icon:'utensils',  n:'03', title:'HORECA End-to-End',       desc:'One of the few consultants who also procure and supply, giving clients a single accountable partner from strategy to FF&E delivery.' },
         { icon:'bolt',      n:'04', title:'Execution-Led',           desc:'We stay involved through implementation, not just advisory. Turnkey delivery and hands-on project management is our differentiator.' },
       ].map((d, di) => `
-      <div class="diff-cell" style="transition-delay:${di*0.1}s;">
+      <div class="diff-cell reveal" style="transition-delay:${di*0.1}s;">
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:4rem;color:rgba(212,174,42,.18);line-height:1;margin-bottom:1.25rem;letter-spacing:-.05em;">${d.n}</div>
         <div class="ig-icon-box" style="margin-bottom:1.75rem;">
           <i class="fas fa-${d.icon}" style="color:var(--gold);font-size:.85rem;"></i>
@@ -1203,7 +1203,7 @@ function filterRB(cat){
     <!-- 3-column article cards -->
     <div class="insights-strip-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;">
       ${RECENT_INSIGHTS.map((a, idx) => `
-      <article class="ins-home-card" style="border:1px solid var(--border);overflow:hidden;transition:box-shadow .25s,transform .25s;" onmouseover="this.style.boxShadow='0 12px 40px rgba(0,0,0,.12)';this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
+      <article class="ins-home-card reveal" style="border:1px solid var(--border);overflow:hidden;transition:box-shadow .25s,transform .25s;" onmouseover="this.style.boxShadow='0 12px 40px rgba(0,0,0,.12)';this.style.transform='translateY(-3px)'" onmouseout="this.style.boxShadow='';this.style.transform=''">
         <!-- Thumbnail -->
         <a href="/insights/${a.id}" style="display:block;position:relative;height:168px;overflow:hidden;">
           <img src="${a.img}" alt="${a.title}" loading="lazy"
@@ -1253,7 +1253,7 @@ function filterRB(cat){
       </div>
       <div class="partners-grid">
         ${ADVISORY_PARTNERS.slice(0,4).map((p: any) => `
-        <div class="partner-card">
+        <div class="partner-card reveal">
           <div style="height:52px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
             <img src="${p.logo}" alt="${p.name}" style="max-width:140px;max-height:42px;width:auto;height:auto;object-fit:contain;"
                  loading="lazy" decoding="async"
@@ -1308,7 +1308,7 @@ function filterRB(cat){
         { title:'HORECA Supply — Mahindra Holidays & Resorts',        loc:'Pan-India · Multiple Locations',          icon:'🍽️', type:'HORECA Procurement',   value:'Pan-India', desc:"Established strategic HORECA supply partnership with Mahindra Holidays & Resorts, one of India's largest leisure hospitality companies, across their pan-India resort network." },
         { title:'Due Diligence — Adlabs Imagica for ECL',            loc:'INR 500 Cr Transaction · Maharashtra',       icon:'⚖️', type:'Client-Side SPOC',     value:'INR 500 Cr', desc:'Served as dedicated Client-Side SPOC for comprehensive due diligence in ECL\'s evaluation of Adlabs Imagica. Coordinated financial, legal and technical assessments for this landmark acquisition review.' },
       ].map((p, pi) => `
-      <div class="feature-card" style="padding:0;overflow:hidden;transition-delay:${pi*0.08}s;">
+      <div class="feature-card reveal" style="padding:0;overflow:hidden;transition-delay:${pi*0.08}s;">
         <!-- Colored top strip -->
         <div style="height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-lt),transparent);"></div>
         <div style="padding:2rem 1.75rem;">
@@ -1333,7 +1333,7 @@ function filterRB(cat){
 <div class="sec-pd" style="padding-top:7rem;padding-bottom:7rem;">
   <div class="wrap">
     <div style="display:grid;grid-template-columns:1fr 1.7fr;gap:5rem;align-items:start;" class="mob-stack">
-      <div>
+      <div class="reveal-l">
         <div class="gr"></div>
         <p class="eyebrow" style="margin-bottom:1rem;">Executive Leadership and Mandate Custodians</p>
         <h2 class="h2" style="margin-bottom:1.5rem;">Institutional Leadership.<br>Mandate Custodians.</h2>

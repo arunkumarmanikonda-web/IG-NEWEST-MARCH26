@@ -13,7 +13,7 @@ export function layout(title: string, content: string, opts?: {
   heroPreload?: string    // optional above-fold image URL to preload with high priority
 }) {
   const desc = opts?.description || "India Gully — Celebrating Desiness. India's premier multi-vertical advisory firm across Real Estate, Retail, Hospitality, Entertainment, Debt & HORECA Solutions."
-  const ogImg = opts?.ogImage || 'https://indiagully.com/static/og.jpg'
+  const ogImg = opts?.ogImage || 'https://india-gully.pages.dev/static/og.jpg'
 
   return `<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -881,7 +881,7 @@ textarea.ig-input{resize:vertical;min-height:140px}
 }
 @media(prefers-reduced-motion:reduce){
   .ticker-tr,.marquee-track{animation:none!important;}
-  .reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast{opacity:1!important;transform:none!important;}
+  .reveal,.reveal-l,.reveal-r,.reveal-scale{opacity:1!important;transform:none!important;}
 }
 @media(max-width:640px){
   .mob-img-full{width:100%!important;height:240px!important;object-fit:cover!important;}
@@ -1242,13 +1242,17 @@ body{overflow-x:hidden;}
 @media(max-width:560px){#trackRecord{grid-template-columns:1fr;}}
 
 /* ── Scroll-reveal ────────────────────────────── */
-/* Hard-fix: keep reveal sections visible at all times so content can never blank out. */
-.reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast,
-.reveal.visible,.reveal-l.visible,.reveal-r.visible,.reveal-scale.visible,.reveal-fast.visible{
-  opacity:1;
-  transform:none;
-  transition:none;
-}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+.reveal-l.visible{opacity:1;transform:translateX(0);}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
+.reveal-r.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(.95);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+/* Faster reveal variant */
+.reveal-fast{opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);}
+.reveal-fast.visible{opacity:1;transform:translateY(0);}
 
 /* ── Listing detail ──────────────────────────── */
 .listing-detail-grid{display:grid;grid-template-columns:1fr 390px;gap:4rem;align-items:start;}
@@ -1544,7 +1548,7 @@ ${opts?.noNav ? '' : `<nav id="ig-mob-bar" aria-label="Quick contact">
   <div class="wrap" style="padding-top:0;padding-bottom:0;">
     <div style="display:flex;align-items:center;justify-content:space-between;overflow-x:auto;gap:0;">
       ${[
-        {n:'₹2,100 Cr+',l:'Pipeline'},
+        {n:'₹1,165 Cr+',l:'Pipeline'},
         {n:'15+',        l:'Hotels'},
         {n:'35+',        l:'Retail Brands'},
         {n:'20+',        l:'Hotel Brands'},

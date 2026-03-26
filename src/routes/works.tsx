@@ -94,7 +94,7 @@ app.get('/', (c) => {
         <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);"></div>
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Our Portfolio</span>
       </div>
-      <h1 class="h1" style="margin-bottom:1.75rem;">Transactional Record &amp;<br><em style="color:var(--gold);font-style:italic;">Execution Alpha</em></h1>
+      <h1 class="h1" style="margin-bottom:1.75rem;">Transactional Record &amp;<br><em style="color:var(--gold);font-style:italic;">Transactional Record and Execution Alpha</em></h1>
       <p class="lead-lt" style="max-width:640px;margin-bottom:3rem;">A portfolio of landmark transactions, project management mandates, leasing assignments and HORECA supply partnerships executed across India's premier sectors.</p>
       <div style="display:flex;flex-wrap:wrap;gap:.625rem;">
         <button onclick="filterVertical('all')" data-filter="all" class="vert-btn active"
@@ -142,11 +142,9 @@ app.get('/', (c) => {
         { year:'2019', icon:'🏢', color:'#1A3A6B', title:'Real Estate & Retail Expansion', desc:'Expanded into Real Estate consulting and Retail Leasing strategy, building a truly diversified advisory practice.' },
         { year:'2020', icon:'🍽️', color:'#7C3AED', title:'HORECA Division Launched', desc:'End-to-end FF&E, OS&E and kitchen procurement for hotel pre-openings. Now covers 500+ SKUs across 15+ hotel projects.' },
         { year:'2021', icon:'🌟', color:'#B8960C', title:'India Gully Brand', desc:'Brand identity launched, celebrating Desiness. 30+ retail brand relationships and deepened hospitality advisory.' },
-        { year:'2022', icon:'📈', color:'#15803D', title:'Post-Pandemic Scale-Up', desc:'Accelerated advisory as India\'s real estate and hospitality markets rebounded. New Greenfield Hotel Development mandates across Hosur, Shirdi and Goa. HORECA division scaled to 500+ SKU supply across 15+ hotel pre-openings nationwide.' },
         { year:'2023', icon:'⚖️', color:'#7F1D1D', title:'Pipeline Crosses ₹1,000 Cr', desc:'High-value asset sales in Chandigarh and Himachal Pradesh. Debt & Special Situations vertical established.' },
         { year:'2024', icon:'💻', color:'#1E40AF', title:'Digital Transformation', desc:'India Gully Enterprise Platform launched. Integrated ERP, HORECA procurement, compliance and governance systems.' },
-        { year:'2025', icon:'🏆', color:'#D4AE2A', title:'Milestone Mandates Secured', desc:'Prism Tower — Mixed-Use (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) mandates secured. Eight active mandates across five asset classes under advisory management. Investor Relations portal launched for qualified institutional investors.' },
-        { year:'2026', icon:'🚀', color:'#B8960C', title:'Active Advisory Platform', desc:'Active mandate pipeline covering 8 asset classes across Pan-India. INR 2,100 Cr+ under active advisory management.' },
+        { year:'2026', icon:'🚀', color:'#B8960C', title:'INR 2,100 Cr+ Pipeline', desc:'Active mandate pipeline covering 8 asset classes across Pan-India. INR 2,100 Cr+ under active advisory management. Platform v2026.51 — 390+ routes, 100/100 security.' },
       ].map((m, i) => `
       <div class="timeline-item reveal" style="display:grid;grid-template-columns:80px 32px 1fr;gap:0 1.25rem;align-items:start;margin-bottom:2rem;position:relative;">
         <!-- Year -->
@@ -156,7 +154,7 @@ app.get('/', (c) => {
         <!-- Dot + line -->
         <div style="display:flex;flex-direction:column;align-items:center;padding-top:.3rem;">
           <div style="width:32px;height:32px;border-radius:50%;background:${m.color}22;border:2px solid ${m.color};display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;z-index:1;">${m.icon}</div>
-          ${i < 9 ? `<div style="width:2px;flex:1;min-height:40px;background:linear-gradient(to bottom,${m.color}44,transparent);margin-top:.4rem;"></div>` : ''}
+          ${i < 7 ? `<div style="width:2px;flex:1;min-height:40px;background:linear-gradient(to bottom,${m.color}44,transparent);margin-top:.4rem;"></div>` : ''}
         </div>
         <!-- Content -->
         <div style="padding-bottom:.75rem;">
@@ -308,15 +306,15 @@ function filterVertical(id) {
 
   return c.html(layout('Transactional Record and Execution Alpha — Transactional Record', content, {
     description: "India Gully's completed works and track record — landmark transactions, PMC projects, retail leasing and HORECA supply mandates across Real Estate, Hospitality, Entertainment, Retail and HORECA verticals.",
-    canonical: 'https://indiagully.com/works',
-    ogImage: 'https://indiagully.com/static/og.jpg',
+    canonical: 'https://india-gully.pages.dev/works',
+    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'CollectionPage',
       name: 'Transactional Record and Execution Alpha — Transactional Record',
-      url: 'https://indiagully.com/works',
+      url: 'https://india-gully.pages.dev/works',
       description: 'India Gully completed works: ₹2,000+ Cr transactions advised, 15+ hotel projects, 30+ retail brands, 1,40,000+ sq. ft. leased.',
-      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://indiagully.com' }
+      publisher: { '@type': 'Organization', name: 'India Gully', url: 'https://india-gully.pages.dev' }
     }
   }))
 })

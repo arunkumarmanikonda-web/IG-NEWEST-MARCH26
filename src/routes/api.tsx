@@ -371,10 +371,10 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'superadmin@indiagully.com': {
     identifier: 'superadmin@indiagully.com',
     salt: 'ig-salt-admin-v3-2026',
-    hash: '531e7f8d58df22dc04f4883380c7def8ea1f7a548938d62065d46cf1c011ec1c',
+    hash: '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
     role: 'Super Admin', portal: 'admin', dashboard: '/admin/dashboard',
     totp_secret: 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
+    mfa_required: true, demo_account: true, totp_demo_pin: '',
   },
   'demo@indiagully.com': {
     identifier: 'demo@indiagully.com',
@@ -407,63 +407,6 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
     role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
     totp_secret: 'WGYPMNQOOEEJT7VJKBE6ZMZDH3UEGYSK',
     mfa_required: false, demo_account: true, totp_demo_pin: '',
-  },
-  // ── Real Production Users (D1 primary; USER_STORE as fallback) ───────────
-  'akm@indiagully.com': {
-    identifier: 'akm@indiagully.com',
-    salt: 'ig-salt-board-akm-2026',
-    hash: 'cdd6bc852a717f91b12f69240f31e79a2395c0fc78933c1085a09898f9dbe5ad',
-    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
-    totp_secret: 'ZMUGY577GXFLTDG6KXKUT3DWZZXOA4JQ',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'pavan@indiagully.com': {
-    identifier: 'pavan@indiagully.com',
-    salt: 'ig-salt-board-pavan-2026',
-    hash: '1acec72c5694e8b9422a5dc4f53619e640df99c78d7ea50f265433a888b9c69c',
-    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
-    totp_secret: 'OGLMM2FKY3CI26XF2W6PMUPXMV3EY4DO',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'amit.jhingan@indiagully.com': {
-    identifier: 'amit.jhingan@indiagully.com',
-    salt: 'ig-salt-board-amit-2026',
-    hash: '93a39866cc13631cdc12d38c762869938bfcee2a649250c4952bce79ebebd836',
-    role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
-    totp_secret: 'BI6OWJWK2F5B3C6MZW2UJJOFAV7M3GSR',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'atul.rana@indiagully.com': {
-    identifier: 'atul.rana@indiagully.com',
-    salt: 'ig-salt-emp-atul-2026',
-    hash: 'f1868b84e10fb9ba07c183969b669591a82e97f55927cc1ef7fbf8d7bb1d8066',
-    role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
-    totp_secret: 'GX6QF2VEKJVQ6LYN7ZTV3SNHBUHPPQQU',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'hr@indiagully.com': {
-    identifier: 'hr@indiagully.com',
-    salt: 'ig-salt-hr-2026',
-    hash: 'b00b260813234b492e7d553c6baf9db49dff4cf30e3260cfb1d841ae1331508f',
-    role: 'Employee', portal: 'employee', dashboard: '/admin/hr',
-    totp_secret: '6CYKXRA3K7ENLOPSY5S25FECVXX3BT3Z',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'finance@indiagully.com': {
-    identifier: 'finance@indiagully.com',
-    salt: 'ig-salt-finance-2026',
-    hash: 'bea826a65411a726a511dfe3e9cc22f230e71854a74d923b8967724f98eedad7',
-    role: 'Employee', portal: 'employee', dashboard: '/admin/finance',
-    totp_secret: 'INRLENYXGKG66B4G7PVWZFG7NQLRJHUD',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
-  },
-  'legal@indiagully.com': {
-    identifier: 'legal@indiagully.com',
-    salt: 'ig-salt-legal-2026',
-    hash: '255f716a8d4c3476776ed5b2971806991ea67083befba1f311ab255270bb70ab',
-    role: 'Employee', portal: 'employee', dashboard: '/admin/governance',
-    totp_secret: 'CK76ZZNXPCGWCQNFQZDK4YTQH3DH2YL5',
-    mfa_required: true, demo_account: false, totp_demo_pin: '',
   },
 }
 
@@ -1776,17 +1719,6 @@ app.post('/payments/verify', async (c) => {
     }
 
     // L2: Live HMAC-SHA256 signature verification
-
-// ── HMAC-SHA256 helper — used for Razorpay signature verification (L2)
-async function computeHMACSHA256(secret: string, data: string): Promise<string> {
-  const key = await crypto.subtle.importKey(
-    'raw', new TextEncoder().encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
-  )
-  const sig  = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data))
-  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('')
-}
-
     if (env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_SECRET.includes('configure') && razorpay_signature) {
       const expectedSig = await computeHMACSHA256(
         env.RAZORPAY_KEY_SECRET,
@@ -2062,29 +1994,27 @@ app.get('/governance/registers', async (c) => {
   }
 
   if (db) {
-    try {
-      // D1 mode — count from ig_statutory_registers
-      const rows = await db.prepare(
-        `SELECT register_type, COUNT(*) as cnt, MAX(created_at) as last_updated FROM ig_statutory_registers GROUP BY register_type`
-      ).all()
-      const d1Map: Record<string, { cnt: number; last_updated: string }> = {}
-      for (const r of (rows.results as Array<Record<string, unknown>>)) {
-        d1Map[r.register_type as string] = {
-          cnt: Number(r.cnt),
-          last_updated: r.last_updated as string,
-        }
+    // D1 mode — count from ig_statutory_registers
+    const rows = await db.prepare(
+      `SELECT register_type, COUNT(*) as cnt, MAX(created_at) as last_updated FROM ig_statutory_registers GROUP BY register_type`
+    ).all()
+    const d1Map: Record<string, { cnt: number; last_updated: string }> = {}
+    for (const r of (rows.results as Array<Record<string, unknown>>)) {
+      d1Map[r.register_type as string] = {
+        cnt: Number(r.cnt),
+        last_updated: r.last_updated as string,
       }
-      const registers = Object.keys(REGISTER_SCHEMA).map(type => ({
-        type,
-        label: type.replace('-', ' ').replace(/\b\w/g, x => x.toUpperCase()),
-        fields: REGISTER_SCHEMA[type],
-        count: d1Map[type]?.cnt || 0,
-        last_updated: d1Map[type]?.last_updated || null,
-        companies_act_section: actSection[type] || '—',
-        storage: 'D1',
-      }))
-      return c.json({ registers, total: registers.length, storage: 'Cloudflare D1' })
-    } catch(_) { /* fall through to in-memory */ }
+    }
+    const registers = Object.keys(REGISTER_SCHEMA).map(type => ({
+      type,
+      label: type.replace('-', ' ').replace(/\b\w/g, x => x.toUpperCase()),
+      fields: REGISTER_SCHEMA[type],
+      count: d1Map[type]?.cnt || 0,
+      last_updated: d1Map[type]?.last_updated || null,
+      companies_act_section: actSection[type] || '—',
+      storage: 'D1',
+    }))
+    return c.json({ registers, total: registers.length, storage: 'Cloudflare D1' })
   }
 
   // In-memory fallback
@@ -2105,19 +2035,17 @@ app.get('/governance/registers/:type', async (c) => {
   const db = c.env?.DB
 
   if (db) {
-    try {
-      const rows = await db.prepare(
-        `SELECT * FROM ig_statutory_registers WHERE register_type = ? ORDER BY created_at DESC`
-      ).bind(type).all()
-      return c.json({
-        type,
-        fields: REGISTER_SCHEMA[type],
-        entries: rows.results,
-        count: rows.results.length,
-        companies_act: 'Maintained under Companies Act 2013',
-        storage: 'Cloudflare D1',
-      })
-    } catch(_) { /* fall through to in-memory */ }
+    const rows = await db.prepare(
+      `SELECT * FROM ig_statutory_registers WHERE register_type = ? ORDER BY created_at DESC`
+    ).bind(type).all()
+    return c.json({
+      type,
+      fields: REGISTER_SCHEMA[type],
+      entries: rows.results,
+      count: rows.results.length,
+      companies_act: 'Maintained under Companies Act 2013',
+      storage: 'Cloudflare D1',
+    })
   }
 
   const entries = REGISTER_STORE.get(type) || []
@@ -2212,7 +2140,7 @@ app.post('/hr/epfo/ecr', async (c) => {
     const employees = [
       { uan:'100000000001', name:'RAVI KUMAR',   epf_wages:45000, eps_wages:15000, epf_contrib:5400,  eps_contrib:1800, diff:3600  },
       { uan:'100000000002', name:'PRIYA SINGH',  epf_wages:38000, eps_wages:15000, epf_contrib:4560,  eps_contrib:1800, diff:2760  },
-      { uan:'100000000003', name:'PAVAN MANIKONDA',  epf_wages:35000, eps_wages:15000, epf_contrib:4200,  eps_contrib:1800, diff:2400  },
+      { uan:'100000000003', name:'AMIT SHARMA',  epf_wages:35000, eps_wages:15000, epf_contrib:4200,  eps_contrib:1800, diff:2400  },
     ]
 
     // EPFO ECR v2.0 format
@@ -2282,7 +2210,7 @@ app.get('/hr/esic/statement', async (c) => {
     esic_reg_no: 'E-31/DL/0000000001',
     employees_covered: 1,
     eligible_employees: [
-      { ip_no:'0000000001', name:'PAVAN MANIKONDA', gross:35000, esic_emp:263, esic_er:1138, total_contribution:1401 },
+      { ip_no:'0000000001', name:'AMIT SHARMA', gross:35000, esic_emp:263, esic_er:1138, total_contribution:1401 },
     ],
     total_employer_share: 1138, total_employee_share: 263, total_remittance: 1401,
     due_date: '15 Mar 2026', portal: 'https://esic.gov.in',
@@ -3031,7 +2959,7 @@ app.get('/market-data', (c) => {
       grade_a_office_vacancy: '15.8%',
       office_net_absorption_fy26: '47 Mn sqft (+8% YoY)',
       retail_mall_vacancy: '8.2%',
-      branded_hotel_pipeline: '1,35,000 keys (FY 2026-28)',
+      branded_hotel_pipeline: '1,35,000 keys (FY26-28)',
       hotel_transaction_h1fy26: '₹4,800 Cr',
       rbi_repo_rate: '6.25% (Feb 2026 -25bps)',
       inr_usd: '₹83.4',
@@ -3240,13 +3168,10 @@ app.get('/invoices', requireAnyAuth(), async (c) => {
 // Phase 19E: POST /invoices — create invoice in D1
 app.post('/invoices', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   try {
-    let body: any
-    try {
-      body = await c.req.json()
-    } catch {
+    const body = await c.req.json().catch(async () => {
       const fd = await c.req.parseBody() as Record<string,string>
-      body = fd
-    }
+      return fd
+    })
     const { client_name, description, amount, gst_rate = '18', due_date, sac_code = '998313' } = body as any
     if (!client_name || !amount) return c.json({ success: false, error: 'client_name and amount are required' }, 400)
 
@@ -3258,13 +3183,11 @@ app.post('/invoices', requireSession(), requireRole(['Super Admin'], ['admin']),
     const dueDt    = due_date || new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10)
 
     if (c.env?.DB) {
-      try {
-        await c.env.DB.prepare(
-          `INSERT INTO ig_invoices (invoice_number, client_name, description, sac_code, amount_net, amount_gst, amount_gross, status, due_date, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft', ?, datetime('now'))`
-        ).bind(invNo, client_name, description || '', sac_code, amtNet, amtGst, amtGross, dueDt).run()
-        return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'd1' })
-      } catch (_) { /* fall through to memory */ }
+      await c.env.DB.prepare(
+        `INSERT INTO ig_invoices (invoice_number, client_name, description, sac_code, amount_net, amount_gst, amount_gross, status, due_date, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'Draft', ?, datetime('now'))`
+      ).bind(invNo, client_name, description || '', sac_code, amtNet, amtGst, amtGross, dueDt).run()
+      return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'd1' })
     }
     return c.json({ success: true, invoice_number: invNo, client_name, amount_net: amtNet, amount_gst: amtGst, amount_gross: amtGross, status: 'Draft', due_date: dueDt, source: 'memory' })
   } catch (e: any) {
@@ -3858,16 +3781,12 @@ app.post('/auth/totp/enrol/remove', requireSession(), async (c) => {
   if (!confirm) return c.json({ success: false, error: 'Confirmation required.' }, 400)
 
   if (c.env?.DB) {
-    try {
-      await c.env.DB.prepare(
-        `DELETE FROM ig_totp_devices WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-      ).bind(identifier).run()
-      await c.env.DB.prepare(
-        `UPDATE ig_users SET totp_enabled = 0, totp_secret = NULL WHERE identifier = ?`
-      ).bind(identifier).run()
-    } catch (err) {
-      console.error('[TOTP REMOVE] D1 error:', err)
-    }
+    await c.env.DB.prepare(
+      `DELETE FROM ig_totp_devices WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+    ).bind(identifier).run()
+    await c.env.DB.prepare(
+      `UPDATE ig_users SET totp_enabled = 0, totp_secret = NULL WHERE identifier = ?`
+    ).bind(identifier).run()
   }
   await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_DEVICE_REMOVED', identifier, 'N/A', 'SUCCESS')
   return c.json({ success: true, message: 'TOTP device removed. You will be required to re-enrol on next login.' })
@@ -3880,18 +3799,12 @@ app.get('/auth/totp/enrol/status', requireSession(), async (c) => {
   let enrolled = false; let device_count = 0
 
   if (c.env?.DB) {
-    try {
-      const row = await c.env.DB.prepare(
-        `SELECT COUNT(*) AS cnt FROM ig_totp_devices
-         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?) AND confirmed = 1`
-      ).bind(identifier).first() as any
-      device_count = row?.cnt || 0
-      enrolled = device_count > 0
-    } catch (_) {
-      const u = USER_STORE[identifier]
-      enrolled = !!u?.totp_secret
-      device_count = enrolled ? 1 : 0
-    }
+    const row = await c.env.DB.prepare(
+      `SELECT COUNT(*) AS cnt FROM ig_totp_devices
+       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?) AND confirmed = 1`
+    ).bind(identifier).first() as any
+    device_count = row?.cnt || 0
+    enrolled = device_count > 0
   } else {
     const u = USER_STORE[identifier]
     enrolled = !!u?.totp_secret
@@ -3915,18 +3828,14 @@ app.post('/auth/webauthn/register/begin', requireSession(), async (c) => {
   // Collect existing credential IDs for this user (exclude allowCredentials)
   let existingCreds: { id: string; transports?: string[] }[] = []
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT credential_id, transports FROM ig_webauthn_credentials
-         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-      ).bind(identifier).all() as { results: any[] }
-      existingCreds = (rows.results || []).map((r: any) => ({
-        id: r.credential_id,
-        transports: r.transports ? JSON.parse(r.transports) : undefined,
-      }))
-    } catch (err) {
-      console.error('[WEBAUTHN REGISTER BEGIN] D1 error:', err)
-    }
+    const rows = await c.env.DB.prepare(
+      `SELECT credential_id, transports FROM ig_webauthn_credentials
+       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+    ).bind(identifier).all() as { results: any[] }
+    existingCreds = (rows.results || []).map((r: any) => ({
+      id: r.credential_id,
+      transports: r.transports ? JSON.parse(r.transports) : undefined,
+    }))
   }
 
   // Generate registration options using @simplewebauthn/server
@@ -4040,18 +3949,14 @@ app.post('/auth/webauthn/authenticate/begin', requireSession(), async (c) => {
 
   let allowCredentials: { id: string; transports?: string[] }[] = []
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT credential_id, transports FROM ig_webauthn_credentials
-         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-      ).bind(identifier).all() as { results: any[] }
-      allowCredentials = (rows.results || []).map((r: any) => ({
-        id: r.credential_id,
-        transports: r.transports ? JSON.parse(r.transports) : undefined,
-      }))
-    } catch (err) {
-      console.error('[WEBAUTHN AUTH BEGIN] D1 error:', err)
-    }
+    const rows = await c.env.DB.prepare(
+      `SELECT credential_id, transports FROM ig_webauthn_credentials
+       WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+    ).bind(identifier).all() as { results: any[] }
+    allowCredentials = (rows.results || []).map((r: any) => ({
+      id: r.credential_id,
+      transports: r.transports ? JSON.parse(r.transports) : undefined,
+    }))
   }
 
   const options = await generateAuthenticationOptions({
@@ -4094,17 +3999,11 @@ app.post('/auth/webauthn/authenticate/complete', requireSession(), async (c) => 
     return c.json({ success: false, error: 'D1 database not available for credential lookup.' }, 503)
   }
 
-  let credRow: any = null
-  try {
-    credRow = await c.env.DB.prepare(
-      `SELECT credential_id, public_key, counter, transports
-       FROM ig_webauthn_credentials
-       WHERE credential_id = ? AND user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-    ).bind(body.id, identifier).first() as any
-  } catch (err: any) {
-    console.error('[WEBAUTHN AUTH] Credential lookup error:', err)
-    return c.json({ success: false, error: 'Credential lookup failed.' }, 500)
-  }
+  const credRow = await c.env.DB.prepare(
+    `SELECT credential_id, public_key, counter, transports
+     FROM ig_webauthn_credentials
+     WHERE credential_id = ? AND user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
+  ).bind(body.id, identifier).first() as any
 
   if (!credRow) {
     return c.json({ success: false, error: 'Credential not found.' }, 404)
@@ -4405,13 +4304,11 @@ let CMS_APPROVAL_NEXT_ID = 1
 /** GET /api/cms/pages — List all CMS pages (admin only) */
 app.get('/cms/pages', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT id, slug, title, meta_title, meta_desc, status, version, author, updated_at, published_at
-         FROM ig_cms_pages ORDER BY updated_at DESC`
-      ).all()
-      return c.json({ success: true, pages: rows.results, storage: 'D1' })
-    } catch(_) { /* fall through to in-memory */ }
+    const rows = await c.env.DB.prepare(
+      `SELECT id, slug, title, meta_title, meta_desc, status, version, author, updated_at, published_at
+       FROM ig_cms_pages ORDER BY updated_at DESC`
+    ).all()
+    return c.json({ success: true, pages: rows.results, storage: 'D1' })
   }
   // In-memory fallback — fully functional CRUD
   const pages = Array.from(CMS_PAGES_STORE.values()).sort((a, b) =>
@@ -4424,17 +4321,15 @@ app.get('/cms/pages', requireSession(), requireRole(['Super Admin']), async (c) 
 app.get('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async (c) => {
   const id = c.req.param('id')
   if (c.env?.DB) {
-    try {
-      const row = id.startsWith('/') || id.includes('-')
-        ? await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE slug = ?`).bind(id).first()
-        : await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(Number(id)).first()
-      if (!row) return c.json({ success: false, error: 'Page not found' }, 404)
-      const versions = await c.env.DB.prepare(
-        `SELECT version, status, changed_by, change_note, created_at
-         FROM ig_cms_page_versions WHERE page_id = ? ORDER BY version DESC LIMIT 10`
-      ).bind((row as any).id).all()
-      return c.json({ success: true, page: row, versions: versions.results })
-    } catch(_) { /* fall through to in-memory */ }
+    const row = id.startsWith('/') || id.includes('-')
+      ? await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE slug = ?`).bind(id).first()
+      : await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(Number(id)).first()
+    if (!row) return c.json({ success: false, error: 'Page not found' }, 404)
+    const versions = await c.env.DB.prepare(
+      `SELECT version, status, changed_by, change_note, created_at
+       FROM ig_cms_page_versions WHERE page_id = ? ORDER BY version DESC LIMIT 10`
+    ).bind((row as any).id).all()
+    return c.json({ success: true, page: row, versions: versions.results })
   }
   // In-memory fallback
   const numId = Number(id)
@@ -4486,30 +4381,28 @@ app.put('/cms/pages/:id', requireSession(), requireRole(['Super Admin']), async 
   const newStatus = (session.role === 'admin' && reqStatus === 'published') ? 'published' : 'draft'
 
   if (c.env?.DB) {
-    try {
-      const existing = await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
-      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-      const newVersion = (existing.version || 1) + 1
+    const existing = await c.env.DB.prepare(`SELECT * FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
+    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+    const newVersion = (existing.version || 1) + 1
+    await c.env.DB.prepare(
+      `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(id, existing.version, existing.title, existing.body_html, existing.status, session.user, change_note || 'Draft update').run()
+    await c.env.DB.prepare(
+      `UPDATE ig_cms_pages SET
+         title=COALESCE(?,title), meta_title=COALESCE(?,meta_title), meta_desc=COALESCE(?,meta_desc),
+         og_image=COALESCE(?,og_image), hero_headline=COALESCE(?,hero_headline),
+         hero_subheading=COALESCE(?,hero_subheading), body_html=COALESCE(?,body_html),
+         status=?, version=?, author=?, updated_at=CURRENT_TIMESTAMP
+       WHERE id=?`
+    ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newStatus, newVersion, session.user, id).run()
+    if (newStatus === 'published') {
       await c.env.DB.prepare(
-        `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`
-      ).bind(id, existing.version, existing.title, existing.body_html, existing.status, session.user, change_note || 'Draft update').run()
-      await c.env.DB.prepare(
-        `UPDATE ig_cms_pages SET
-           title=COALESCE(?,title), meta_title=COALESCE(?,meta_title), meta_desc=COALESCE(?,meta_desc),
-           og_image=COALESCE(?,og_image), hero_headline=COALESCE(?,hero_headline),
-           hero_subheading=COALESCE(?,hero_subheading), body_html=COALESCE(?,body_html),
-           status=?, version=?, author=?, updated_at=CURRENT_TIMESTAMP
-         WHERE id=?`
-      ).bind(title, meta_title, meta_desc, og_image, hero_headline, hero_subheading, body_html, newStatus, newVersion, session.user, id).run()
-      if (newStatus === 'published') {
-        await c.env.DB.prepare(
-          `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note) VALUES (?, ?, ?, ?, 'published', ?, ?)`
-        ).bind(id, newVersion, title || existing.title, body_html || existing.body_html, session.user, 'Published directly by Super Admin').run()
-      }
-      await kvAuditLog(c.env?.IG_AUDIT_KV, newStatus === 'published' ? 'CMS_PAGE_PUBLISHED' : 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
-      return c.json({ success: true, page_id: id, version: newVersion, status: newStatus })
-    } catch(_) { /* fall through to in-memory */ }
+        `INSERT INTO ig_cms_page_versions (page_id, version, title, body_html, status, changed_by, change_note) VALUES (?, ?, ?, ?, 'published', ?, ?)`
+      ).bind(id, newVersion, title || existing.title, body_html || existing.body_html, session.user, 'Published directly by Super Admin').run()
+    }
+    await kvAuditLog(c.env?.IG_AUDIT_KV, newStatus === 'published' ? 'CMS_PAGE_PUBLISHED' : 'CMS_PAGE_UPDATED', session.user, 'N/A', String(id))
+    return c.json({ success: true, page_id: id, version: newVersion, status: newStatus })
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4537,16 +4430,14 @@ app.post('/cms/pages/:id/submit', requireSession(), requireRole(['Super Admin'])
   const approval_ref = `APR-${Date.now().toString(36).toUpperCase()}`
 
   if (c.env?.DB) {
-    try {
-      const existing = await c.env.DB.prepare(`SELECT id, slug, title FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
-      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-      await c.env.DB.prepare(
-        `INSERT INTO ig_cms_approvals (page_id, approval_ref, change_note, submitted_by) VALUES (?, ?, ?, ?)`
-      ).bind(id, approval_ref, change_note || 'Content update', session.user).run()
-      await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='pending', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_SUBMITTED', session.user, 'N/A', approval_ref)
-      return c.json({ success: true, approval_ref, status: 'pending', page_id: id })
-    } catch(_) { /* fall through to in-memory */ }
+    const existing = await c.env.DB.prepare(`SELECT id, slug, title FROM ig_cms_pages WHERE id = ?`).bind(id).first() as any
+    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+    await c.env.DB.prepare(
+      `INSERT INTO ig_cms_approvals (page_id, approval_ref, change_note, submitted_by) VALUES (?, ?, ?, ?)`
+    ).bind(id, approval_ref, change_note || 'Content update', session.user).run()
+    await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='pending', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_SUBMITTED', session.user, 'N/A', approval_ref)
+    return c.json({ success: true, approval_ref, status: 'pending', page_id: id })
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4564,18 +4455,16 @@ app.post('/cms/pages/:id/approve', requireSession(), requireRole(['Super Admin']
   const id = Number(c.req.param('id'))
 
   if (c.env?.DB) {
-    try {
-      const existing = await c.env.DB.prepare(`SELECT id, slug FROM ig_cms_pages WHERE id=?`).bind(id).first() as any
-      if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
-      await c.env.DB.prepare(
-        `UPDATE ig_cms_pages SET status='published', approved_by=?, approved_at=CURRENT_TIMESTAMP, published_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE id=?`
-      ).bind(session.user, id).run()
-      await c.env.DB.prepare(
-        `UPDATE ig_cms_approvals SET status='approved', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
-      ).bind(session.user, id).run()
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_PUBLISHED', session.user, 'N/A', existing.slug)
-      return c.json({ success: true, page_id: id, slug: existing.slug, status: 'published', published_at: new Date().toISOString() })
-    } catch(_) { /* fall through to in-memory */ }
+    const existing = await c.env.DB.prepare(`SELECT id, slug FROM ig_cms_pages WHERE id=?`).bind(id).first() as any
+    if (!existing) return c.json({ success: false, error: 'Page not found' }, 404)
+    await c.env.DB.prepare(
+      `UPDATE ig_cms_pages SET status='published', approved_by=?, approved_at=CURRENT_TIMESTAMP, published_at=CURRENT_TIMESTAMP, updated_at=CURRENT_TIMESTAMP WHERE id=?`
+    ).bind(session.user, id).run()
+    await c.env.DB.prepare(
+      `UPDATE ig_cms_approvals SET status='approved', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
+    ).bind(session.user, id).run()
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_PUBLISHED', session.user, 'N/A', existing.slug)
+    return c.json({ success: true, page_id: id, slug: existing.slug, status: 'published', published_at: new Date().toISOString() })
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4597,14 +4486,12 @@ app.post('/cms/pages/:id/reject', requireSession(), requireRole(['Super Admin'])
   const { reason } = await c.req.json() as { reason?: string }
 
   if (c.env?.DB) {
-    try {
-      await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
-      await c.env.DB.prepare(
-        `UPDATE ig_cms_approvals SET status='rejected', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
-      ).bind(session.user, id).run()
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_REJECTED', session.user, 'N/A', String(id))
-      return c.json({ success: true, page_id: id, status: 'rejected', reason: reason || 'No reason provided' })
-    } catch (_) { /* fall through to in-memory */ }
+    await c.env.DB.prepare(`UPDATE ig_cms_pages SET status='draft', updated_at=CURRENT_TIMESTAMP WHERE id=?`).bind(id).run()
+    await c.env.DB.prepare(
+      `UPDATE ig_cms_approvals SET status='rejected', reviewed_by=?, reviewed_at=CURRENT_TIMESTAMP WHERE page_id=? AND status='pending'`
+    ).bind(session.user, id).run()
+    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CMS_REJECTED', session.user, 'N/A', String(id))
+    return c.json({ success: true, page_id: id, status: 'rejected', reason: reason || 'No reason provided' })
   }
   // In-memory fallback
   const existing = CMS_PAGES_STORE.get(id)
@@ -4621,15 +4508,13 @@ app.post('/cms/pages/:id/reject', requireSession(), requireRole(['Super Admin'])
 /** GET /api/cms/approvals — List pending approvals */
 app.get('/cms/approvals', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT a.id, a.approval_ref, a.change_note, a.submitted_by, a.status, a.created_at,
-                p.slug, p.title
-         FROM ig_cms_approvals a JOIN ig_cms_pages p ON p.id = a.page_id
-         WHERE a.status = 'pending' ORDER BY a.created_at DESC`
-      ).all()
-      return c.json({ success: true, approvals: rows.results })
-    } catch(_) { /* fall through to in-memory */ }
+    const rows = await c.env.DB.prepare(
+      `SELECT a.id, a.approval_ref, a.change_note, a.submitted_by, a.status, a.created_at,
+              p.slug, p.title
+       FROM ig_cms_approvals a JOIN ig_cms_pages p ON p.id = a.page_id
+       WHERE a.status = 'pending' ORDER BY a.created_at DESC`
+    ).all()
+    return c.json({ success: true, approvals: rows.results })
   }
   // In-memory fallback
   const pending = Array.from(CMS_APPROVALS_STORE.values())
@@ -4729,13 +4614,11 @@ app.post('/payments/webhook', async (c) => {
 /** GET /api/payments/webhooks — List recent webhook events (admin only) */
 app.get('/payments/webhooks', requireSession(), requireRole(['Super Admin']), async (c) => {
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT id, event, order_id, payment_id, signature_valid, processed, created_at
-         FROM ig_razorpay_webhooks ORDER BY created_at DESC LIMIT 50`
-      ).all()
-      return c.json({ success: true, webhooks: rows.results, count: rows.results.length })
-    } catch (_) { /* fall through to empty state */ }
+    const rows = await c.env.DB.prepare(
+      `SELECT id, event, order_id, payment_id, signature_valid, processed, created_at
+       FROM ig_razorpay_webhooks ORDER BY created_at DESC LIMIT 50`
+    ).all()
+    return c.json({ success: true, webhooks: rows.results, count: rows.results.length })
   }
   return c.json({ success: true, webhooks: [], note: 'D1 not provisioned — webhook log unavailable' })
 })
@@ -5806,17 +5689,15 @@ app.delete('/documents/:key{.+}', requireSession(), requireRole(['Super Admin'])
 /** GET /api/insights — List published insights articles */
 app.get('/insights', async (c) => {
   if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT id, slug, category, date_label, title, excerpt, tags, read_time, author, view_count, created_at
-         FROM ig_insights WHERE status='published' ORDER BY created_at DESC`
-      ).all()
-      const articles = (rows.results || []).map((r: any) => ({
-        ...r,
-        tags: JSON.parse(r.tags || '[]'),
-      }))
-      return c.json({ success: true, articles, total: articles.length, source: 'D1' })
-    } catch (_) { /* fall through to static fallback */ }
+    const rows = await c.env.DB.prepare(
+      `SELECT id, slug, category, date_label, title, excerpt, tags, read_time, author, view_count, created_at
+       FROM ig_insights WHERE status='published' ORDER BY created_at DESC`
+    ).all()
+    const articles = (rows.results || []).map((r: any) => ({
+      ...r,
+      tags: JSON.parse(r.tags || '[]'),
+    }))
+    return c.json({ success: true, articles, total: articles.length, source: 'D1' })
   }
   // Fallback — static data matching ARTICLES in insights.tsx
   return c.json({
@@ -5838,27 +5719,15 @@ app.get('/insights', async (c) => {
 app.get('/insights/:slug', async (c) => {
   const slug = c.req.param('slug')
   if (c.env?.DB) {
-    try {
-      const article = await c.env.DB.prepare(`SELECT * FROM ig_insights WHERE slug=? AND status='published'`).bind(slug).first() as any
-      if (!article) return c.json({ success: false, error: 'Article not found' }, 404)
-      // Increment view count async
-      c.executionCtx?.waitUntil(
-        c.env.DB.prepare(`UPDATE ig_insights SET view_count=view_count+1 WHERE slug=?`).bind(slug).run().catch(() => {})
-      )
-      return c.json({ success: true, article: { ...article, tags: JSON.parse(article.tags || '[]') }, source: 'D1' })
-    } catch (_) { /* fall through to lightweight static fallback */ }
+    const article = await c.env.DB.prepare(`SELECT * FROM ig_insights WHERE slug=? AND status='published'`).bind(slug).first() as any
+    if (!article) return c.json({ success: false, error: 'Article not found' }, 404)
+    // Increment view count async
+    c.executionCtx?.waitUntil(
+      c.env.DB.prepare(`UPDATE ig_insights SET view_count=view_count+1 WHERE slug=?`).bind(slug).run()
+    )
+    return c.json({ success: true, article: { ...article, tags: JSON.parse(article.tags || '[]') } })
   }
-  const fallbackArticles = [
-    { slug:'india-realty-2026-outlook', category:'Real Estate', date_label:'February 2026', title:'India Real Estate 2026: Commercial & Hospitality Convergence', excerpt:"As hybrid work reshapes demand for Grade-A office space, India's commercial real estate is converging with hospitality-grade amenities.", tags:['Real Estate','Commercial','Hospitality','2026'], read_time:'10 min read' },
-    { slug:'entertainment-zone-regulatory-india', category:'Entertainment', date_label:'January 2026', title:'Navigating the Entertainment Zone Regulatory Landscape in India', excerpt:"India's entertainment real estate sector sits at the intersection of multiple regulatory frameworks, town planning, fire safety, excise and consumer protection laws.", tags:['Entertainment','Regulatory','Real Estate','Compliance'], read_time:'8 min read' },
-    { slug:'horeca-tier2-supply-chain', category:'HORECA', date_label:'December 2025', title:'Building Resilient HORECA Supply Chains in Tier 2 India', excerpt:'The rapid expansion of branded hospitality into Tier 2 and Tier 3 cities is exposing critical gaps in HORECA supply chains.', tags:['HORECA','Supply Chain','Tier 2','Operations'], read_time:'7 min read' },
-    { slug:'ibc-distressed-hospitality-2025', category:'Debt & Special Situations', date_label:'November 2025', title:'IBC 2025 Update: Hospitality Asset Resolution Trends', excerpt:'The 2025 IBC amendment and NCLT capacity expansion have accelerated resolution timelines for distressed hospitality assets.', tags:['IBC','NCLT','Distressed Assets','Hospitality','Debt'], read_time:'12 min read' },
-    { slug:'mall-mixed-use-integration', category:'Retail', date_label:'October 2025', title:'The Mall-Hotel-Office Trinity: Mixed-Use Integration', excerpt:'Mixed-use integration is reshaping how retail, office and hospitality assets create value together.', tags:['Retail','Mixed-Use','Real Estate'], read_time:'9 min read' },
-    { slug:'greenfield-midscale-hotels', category:'Hospitality', date_label:'September 2025', title:'The Greenfield Mid-Scale Hotel Opportunity: Project Economics for 2025-27', excerpt:"India's mid-scale hotel opportunity is increasingly attractive where land economics, brand fit and operating discipline align.", tags:['Hospitality','Greenfield'], read_time:'11 min read' },
-  ]
-  const article = fallbackArticles.find((a) => a.slug === slug)
-  if (article) return c.json({ success: true, article, source: 'static' })
-  return c.json({ success: false, error: 'Article not found' }, 404)
+  return c.json({ success: false, error: 'D1 not available' }, 503)
 })
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -12544,13 +12413,13 @@ app.get('/compliance/regulatory-filings', requireSession(), requireRole(['Super 
     api_version: '2026.33',
     spec: 'India Gully Regulatory Filings v2026.33',
     filings: [
-      { id: 'REG-001', regulator: 'MCA',  form: 'MGT-7 (Annual Return FY 2024-25)',    due_date: '2025-11-30', status: 'filed',     filed_date: '2025-11-28', penalty_risk: 'None' },
+      { id: 'REG-001', regulator: 'MCA',  form: 'MGT-7 (Annual Return FY24-25)',    due_date: '2025-11-30', status: 'overdue',   filed_date: null,         penalty_risk: 'High — ₹500/day' },
       { id: 'REG-002', regulator: 'MCA',  form: 'AOC-4 (Financial Statements)',     due_date: '2025-10-30', status: 'filed',     filed_date: '2025-10-28', penalty_risk: 'None' },
       { id: 'REG-003', regulator: 'MCA',  form: 'DIR-12 (Change of Directors)',     due_date: '2026-01-15', status: 'filed',     filed_date: '2026-01-10', penalty_risk: 'None' },
       { id: 'REG-004', regulator: 'SEBI', form: 'Q3 Financial Results (Reg 33)',    due_date: '2026-01-31', status: 'filed',     filed_date: '2026-01-30', penalty_risk: 'None' },
       { id: 'REG-005', regulator: 'SEBI', form: 'CG Report Q3 (Reg 27)',            due_date: '2026-01-21', status: 'filed',     filed_date: '2026-01-20', penalty_risk: 'None' },
-      { id: 'REG-006', regulator: 'GST',  form: 'GSTR-9 Annual Return FY 2024-25',    due_date: '2025-12-31', status: 'filed',     filed_date: '2025-12-28', penalty_risk: 'None' },
-      { id: 'REG-007', regulator: 'GST',  form: 'GSTR-9C Reconciliation FY 2024-25', due_date: '2025-12-31', status: 'filed',     filed_date: '2025-12-30', penalty_risk: 'None' },
+      { id: 'REG-006', regulator: 'GST',  form: 'GSTR-9 Annual Return FY24-25',    due_date: '2025-12-31', status: 'filed',     filed_date: '2025-12-28', penalty_risk: 'None' },
+      { id: 'REG-007', regulator: 'GST',  form: 'GSTR-9C Reconciliation FY24-25', due_date: '2025-12-31', status: 'filed',     filed_date: '2025-12-30', penalty_risk: 'None' },
       { id: 'REG-008', regulator: 'RBI',  form: 'FEMA FC-GPR (Foreign Investment)',due_date: '2026-02-28', status: 'filed',     filed_date: '2026-02-25', penalty_risk: 'None' },
       { id: 'REG-009', regulator: 'MCA',  form: 'MGT-14 (Board Resolutions Q3)',   due_date: '2026-02-15', status: 'filed',     filed_date: '2026-02-14', penalty_risk: 'None' },
       { id: 'REG-010', regulator: 'EPFO', form: 'PF Monthly Return Feb 2026',      due_date: '2026-03-15', status: 'due_soon',  filed_date: null,         penalty_risk: 'Medium if missed' },
@@ -13131,7 +13000,7 @@ app.get('/product/roadmap-status', requireSession(), requireRole(['Super Admin']
 })
 app.get('/product/sprint-velocity', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_LL2 = { round:'LL', endpoint:'LL2', title:'Sprint Velocity Tracker',
+  const FALLBACK_LL2 = { round:'LL', endpoint:'LL2', title:'Sprint Velocity Tracker', generated:new Date().toISOString(),
     current_sprint:{ id:'S14', points_committed:86, points_completed:82, velocity_pct:95.3, blockers:3 },
     trend:[ {sprint:'S1',pts:48},{sprint:'S5',pts:58},{sprint:'S9',pts:66},{sprint:'S11',pts:72},{sprint:'S13',pts:78},{sprint:'S14',pts:82} ],
     avg_velocity:68, team_size:9, blockers:[
@@ -13204,7 +13073,7 @@ app.get('/engineering/incident-log', requireSession(), requireRole(['Super Admin
 })
 app.get('/dpdp/product-data-privacy', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_LL5 = { round:'LL', endpoint:'LL5', title:'Product Data Privacy Assessment',
+  const FALLBACK_LL5 = { round:'LL', endpoint:'LL5', title:'Product Data Privacy Assessment', generated:new Date().toISOString(),
     overall_score_pct:83, features_assessed:12,
     items:[
       { feature:'Payroll Processing', pii_fields:18, consent_gate:true, data_minimised:true, status:'Compliant' },
@@ -13275,7 +13144,7 @@ app.get('/cs/health-score', requireSession(), requireRole(['Super Admin'], ['adm
 })
 app.get('/cs/churn-prediction', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_MM2 = { round:'MM', endpoint:'MM2',
+  const FALLBACK_MM2 = { round:'MM', endpoint:'MM2', generated:new Date().toISOString(),
     summary:{ high_risk:8, arr_at_risk_lakh:18.4, predicted_churn_90d:4, nrr_pct:118, gross_churn_pct:8.2 },
     high_risk_accounts:[
       { name:'Bake Street Bakeries', tier:'SME',     arr_lakh:2.4, churn_probability_pct:84, signal:'No login 58d; support ticket unanswered' },
@@ -13289,7 +13158,7 @@ app.get('/cs/churn-prediction', requireSession(), requireRole(['Super Admin'], [
 })
 app.get('/cs/onboarding-tracker', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_MM3 = { round:'MM', endpoint:'MM3',
+  const FALLBACK_MM3 = { round:'MM', endpoint:'MM3', generated:new Date().toISOString(),
     summary:{ total_active:12, on_track:9, delayed:3, avg_days_to_go_live:28, target_days:21, completion_pct:78 },
     accounts:[
       { name:'Acme Retail',      day:14, milestone:'Module config', status:'On Track' },
@@ -13314,7 +13183,7 @@ app.get('/cs/onboarding-tracker', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/cs/expansion-revenue', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_MM4 = { round:'MM', endpoint:'MM4',
+  const FALLBACK_MM4 = { round:'MM', endpoint:'MM4', generated:new Date().toISOString(),
     summary:{ upsell_pipeline_lakh:8.4, expansion_accounts:6, avg_expansion_pct:24, cross_sell_opps:9 },
     opportunities:[
       { account:'Acme Retail',        module:'HORECA Add-on',    arr_increase_lakh:3.2, readiness:'High' },
@@ -13337,7 +13206,7 @@ app.get('/cs/expansion-revenue', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/dpdp/cs-data-audit', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_MM5 = { round:'MM', endpoint:'MM5',
+  const FALLBACK_MM5 = { round:'MM', endpoint:'MM5', generated:new Date().toISOString(),
     categories_assessed:8, compliant:6, gaps:2, overall_score_pct:88,
     gaps_detail:[
       { category:'Customer data retention', issue:'Some accounts retain data >2yr past contract end — DPDP §8(7) violation', action:'Purge stale records quarterly' },
@@ -13359,7 +13228,7 @@ app.get('/dpdp/cs-data-audit', requireSession(), requireRole(['Super Admin'], ['
 })
 app.get('/compliance/support-sla', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_MM6 = { round:'MM', endpoint:'MM6',
+  const FALLBACK_MM6 = { round:'MM', endpoint:'MM6', generated:new Date().toISOString(),
     summary:{ csat:4.2, avg_resolution_hours:4.2, sla_breaches:2, open_tickets:18, p1_open:1, first_response_min:28 },
     by_tier:[
       { tier:'P1', target_h:1,  actual_h:1.4, breach:true  },
@@ -13406,7 +13275,7 @@ app.get('/procurement/vendor-scorecard', requireSession(), requireRole(['Super A
 })
 app.get('/procurement/po-tracker', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_NN2 = { round:'NN', endpoint:'NN2',
+  const FALLBACK_NN2 = { round:'NN', endpoint:'NN2', generated:new Date().toISOString(),
     summary:{ total_open:28, total_value_lakh:84.0, overdue:6, delayed_delivery:3, avg_po_cycle_days:14 },
     overdue_pos:[
       { po:'PO-2026-041', vendor:'Metro C&C',     value_lakh:8.4,  overdue_days:12, category:'HORECA' },
@@ -13424,7 +13293,7 @@ app.get('/procurement/po-tracker', requireSession(), requireRole(['Super Admin']
 })
 app.get('/procurement/spend-analysis', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_NN3 = { round:'NN', endpoint:'NN3',
+  const FALLBACK_NN3 = { round:'NN', endpoint:'NN3', generated:new Date().toISOString(),
     total_spend_cr:4.2, concentration_top5_pct:68, fy:'2025-26',
     by_month:[ {m:'Oct',lakh:28},{m:'Nov',lakh:32},{m:'Dec',lakh:48},{m:'Jan',lakh:36},{m:'Feb',lakh:42},{m:'Mar',lakh:24} ],
     top_vendors:[ {vendor:'AWS India',spend_lakh:84},{vendor:'EY India',spend_lakh:62},{vendor:'Zoho',spend_lakh:42},{vendor:'Twilio',spend_lakh:28},{vendor:'DocuSign',spend_lakh:22} ],
@@ -13486,7 +13355,7 @@ app.get('/dpdp/vendor-data-compliance', requireSession(), requireRole(['Super Ad
 })
 app.get('/compliance/msme-payments', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_NN6 = { round:'NN', endpoint:'NN6',
+  const FALLBACK_NN6 = { round:'NN', endpoint:'NN6', generated:new Date().toISOString(),
     total_msme_vendors:18, overdue_45d:4, overdue_value_lakh:8.4,
     overdue_vendors:[
       { vendor:'Lakshmi Print Works',   invoice:'INV-2026-028', amount_lakh:1.8, days_overdue:52, msme_type:'Micro' },
@@ -13506,7 +13375,7 @@ app.get('/compliance/msme-payments', requireSession(), requireRole(['Super Admin
 // -- OO-Round: ESG & Sustainability Intelligence --
 app.get('/esg/carbon-footprint', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO1 = { round:'OO', endpoint:'OO1',
+  const FALLBACK_OO1 = { round:'OO', endpoint:'OO1', generated:new Date().toISOString(),
     fy:'2025-26', total_tco2e:142, reduction_vs_fy25_pct:12,
     by_scope:[ {scope:'Scope 1 (Direct)',tco2e:28},{scope:'Scope 2 (Energy)',tco2e:84},{scope:'Scope 3 (Value chain)',tco2e:30} ],
     target_2027_tco2e:110, offset_purchased_tco2e:20,
@@ -13530,7 +13399,7 @@ app.get('/esg/carbon-footprint', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/esg/diversity-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO2 = { round:'OO', endpoint:'OO2',
+  const FALLBACK_OO2 = { round:'OO', endpoint:'OO2', generated:new Date().toISOString(),
     total_employees:47, women_pct:38, pwd_pct:12, senior_women_leaders:6,
     by_level:[ {level:'Executive',women_pct:28},{level:'Manager',women_pct:42},{level:'IC',women_pct:39} ],
     new_hires_women_pct:44, pay_equity_gap_pct:3.2,
@@ -13545,7 +13414,7 @@ app.get('/esg/diversity-metrics', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/esg/energy-consumption', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO3 = { round:'OO', endpoint:'OO3',
+  const FALLBACK_OO3 = { round:'OO', endpoint:'OO3', generated:new Date().toISOString(),
     total_mwh:284, renewable_pct:42, cost_lakh:18.4, cost_per_mwh_inr:6478,
     by_month:[ {m:'Oct',mwh:22},{m:'Nov',mwh:24},{m:'Dec',mwh:28},{m:'Jan',mwh:26},{m:'Feb',mwh:24},{m:'Mar',mwh:18} ],
     savings_from_green:{ mwh:119, cost_avoidance_lakh:7.6 },
@@ -13561,7 +13430,7 @@ app.get('/esg/energy-consumption', requireSession(), requireRole(['Super Admin']
 })
 app.get('/esg/social-impact', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO4 = { round:'OO', endpoint:'OO4',
+  const FALLBACK_OO4 = { round:'OO', endpoint:'OO4', generated:new Date().toISOString(),
     csr_hours:420, ngo_partners:3, contribution_lakh:8.4, beneficiaries:1240,
     initiatives:[
       { name:'Digital Literacy Drive',  partner:'Pratham NGO',     beneficiaries:480, spend_lakh:3.2, status:'Active' },
@@ -13580,7 +13449,7 @@ app.get('/esg/social-impact', requireSession(), requireRole(['Super Admin'], ['a
 })
 app.get('/dpdp/esg-data-governance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO5 = { round:'OO', endpoint:'OO5',
+  const FALLBACK_OO5 = { round:'OO', endpoint:'OO5', generated:new Date().toISOString(),
     data_categories_in_esg:8, with_consent:6, gaps:2,
     gap_details:[
       { category:'Location data (WFH tracking)', issue:'No consent gate for geolocation usage', action:'Add opt-in toggle in self-service portal' },
@@ -13591,7 +13460,7 @@ app.get('/dpdp/esg-data-governance', requireSession(), requireRole(['Super Admin
 })
 app.get('/compliance/sebi-brsr', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_OO6 = { round:'OO', endpoint:'OO6',
+  const FALLBACK_OO6 = { round:'OO', endpoint:'OO6', generated:new Date().toISOString(),
     principles_total:9, compliant:7, under_review:2, not_applicable:0,
     under_review_detail:[
       { principle:'P4 — Stakeholder Responsiveness', status:'Under Review', gap:'Formal grievance mechanism not yet published on website' },
@@ -13685,7 +13554,7 @@ app.get('/risk/operational-risk', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/risk/credit-exposure', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_PP4 = { round:'PP', endpoint:'PP4',
+  const FALLBACK_PP4 = { round:'PP', endpoint:'PP4', generated:new Date().toISOString(),
     ar_overdue_lakh:84, overdue_accounts:6, avg_debtor_days:42,
     aging:[ {bucket:'0-30d',amount_lakh:28,accounts:12},{bucket:'31-60d',amount_lakh:18,accounts:4},{bucket:'61-90d',amount_lakh:22,accounts:3},{bucket:'>90d',amount_lakh:16,accounts:3} ],
     high_risk:[
@@ -13704,7 +13573,7 @@ app.get('/risk/credit-exposure', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/dpdp/fraud-data-handling', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_PP5 = { round:'PP', endpoint:'PP5',
+  const FALLBACK_PP5 = { round:'PP', endpoint:'PP5', generated:new Date().toISOString(),
     sensitive_data_categories:6, governance_compliant:4, gaps:2,
     gap_details:[
       { category:'Biometric attendance',    issue:'Biometric data processed without explicit consent per DPDP §9', action:'Add consent form; explore non-biometric alternative' },
@@ -13715,7 +13584,7 @@ app.get('/dpdp/fraud-data-handling', requireSession(), requireRole(['Super Admin
 })
 app.get('/compliance/rbi-reporting', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_PP6 = { round:'PP', endpoint:'PP6',
+  const FALLBACK_PP6 = { round:'PP', endpoint:'PP6', generated:new Date().toISOString(),
     applicable_regulations:4, compliant:3, gaps:1,
     regulations:[
       { regulation:'KYC/AML (RBI Master Dir.)', status:'Gap', gap:'2 HORECA vendor payments without KYC documents', action:'Collect KYC within 30 days' },
@@ -13729,7 +13598,7 @@ app.get('/compliance/rbi-reporting', requireSession(), requireRole(['Super Admin
 // -- QQ-Round: Data Platform Intelligence --
 app.get('/data/pipeline-health', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_QQ1 = { round:'QQ', endpoint:'QQ1',
+  const FALLBACK_QQ1 = { round:'QQ', endpoint:'QQ1', generated:new Date().toISOString(),
     total_pipelines:28, active:25, failing:3, sla_compliance_pct:94,
     pipelines:[
       { name:'Payroll → GL Sync',    status:'Healthy', last_run:'2026-03-01 06:00', latency_ms:420  },
@@ -13750,7 +13619,7 @@ app.get('/data/pipeline-health', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/data/data-quality', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_QQ2 = { round:'QQ', endpoint:'QQ2',
+  const FALLBACK_QQ2 = { round:'QQ', endpoint:'QQ2', generated:new Date().toISOString(),
     overall_accuracy_pct:98.2, null_rate_pct:1.8, anomalies_detected:4,
     by_domain:[
       { domain:'HR/Payroll',  accuracy_pct:99.4, null_rate_pct:0.6, issues:0 },
@@ -13795,7 +13664,7 @@ app.get('/data/api-usage-metrics', requireSession(), requireRole(['Super Admin']
 })
 app.get('/dpdp/data-retention', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_QQ5 = { round:'QQ', endpoint:'QQ5',
+  const FALLBACK_QQ5 = { round:'QQ', endpoint:'QQ5', generated:new Date().toISOString(),
     data_types_mapped:18, within_policy:14, beyond_policy:4,
     beyond_policy_detail:[
       { type:'Payroll history', current_retention_years:7, policy_years:5, action:'Archive FY17-19 data to cold storage' },
@@ -13822,7 +13691,7 @@ app.get('/dpdp/data-retention', requireSession(), requireRole(['Super Admin'], [
 })
 app.get('/compliance/data-localisation', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_QQ6 = { round:'QQ', endpoint:'QQ6',
+  const FALLBACK_QQ6 = { round:'QQ', endpoint:'QQ6', generated:new Date().toISOString(),
     total_data_flows:6, india_resident:4, cross_border:2,
     flows:[
       { name:'Primary DB (D1/Cloudflare)', location:'India (Mumbai PoP)', compliant:true, note:'CF edge data residency configured' },
@@ -13852,7 +13721,7 @@ app.get('/compliance/data-localisation', requireSession(), requireRole(['Super A
 // -- RR-Round: Marketing Intelligence --
 app.get('/marketing/campaign-performance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_RR1 = { round:'RR', endpoint:'RR1',
+  const FALLBACK_RR1 = { round:'RR', endpoint:'RR1', generated:new Date().toISOString(),
     active_campaigns:12, total_spend_lakh:4.8, cac_inr:12400, roas:3.2,
     campaigns:[
       { name:'HORECA Decision Makers - LinkedIn', channel:'LinkedIn Ads', spend_lakh:1.4, leads:42, cac:33333, status:'Active' },
@@ -13888,7 +13757,7 @@ app.get('/marketing/lead-funnel', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/marketing/content-analytics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_RR3 = { round:'RR', endpoint:'RR3',
+  const FALLBACK_RR3 = { round:'RR', endpoint:'RR3', generated:new Date().toISOString(),
     total_assets:42, total_impressions:284000, blog_organic_pct:68,
     by_type:[ {type:'Blog',assets:18,impressions:193000,conv_rate_pct:2.8},{type:'Case Study',assets:8,impressions:42000,conv_rate_pct:6.4},{type:'Whitepaper',assets:6,impressions:28000,conv_rate_pct:8.2},{type:'Video',assets:10,impressions:21000,conv_rate_pct:4.2} ],
     top_content:{ title:'DPDP Act 2023 — HR Compliance Guide', impressions:42000, leads:84, conversion_pct:9.4 },
@@ -13908,7 +13777,7 @@ app.get('/marketing/content-analytics', requireSession(), requireRole(['Super Ad
 })
 app.get('/marketing/seo-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_RR4 = { round:'RR', endpoint:'RR4',
+  const FALLBACK_RR4 = { round:'RR', endpoint:'RR4', generated:new Date().toISOString(),
     domain_authority:42, total_keywords:284, position_1:18, avg_ctr_pct:4.2,
     organic_traffic_monthly:12840, backlinks:842, referring_domains:184,
     top_keywords:[ {kw:'DPDP compliance India',pos:2,monthly_searches:8400},{kw:'HRMS for hospitality',pos:1,monthly_searches:2800},{kw:'India real estate advisory',pos:4,monthly_searches:4200} ],
@@ -13928,7 +13797,7 @@ app.get('/marketing/seo-metrics', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/dpdp/marketing-consent', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_RR5 = { round:'RR', endpoint:'RR5',
+  const FALLBACK_RR5 = { round:'RR', endpoint:'RR5', generated:new Date().toISOString(),
     total_contacts:12400, consented_pct:94, legacy_pct:6, unsubscribed:480,
     consent_channels:[ {channel:'Email',consented:8840,total:9200},{channel:'SMS',consented:4840,total:5200},{channel:'WhatsApp',consented:2840,total:3000} ],
     actions:['Suppress 744 legacy contacts by 2026-04-01 per DPDP §7','Refresh consent for 480 unsubscribers with re-permission campaign'],
@@ -13948,7 +13817,7 @@ app.get('/dpdp/marketing-consent', requireSession(), requireRole(['Super Admin']
 })
 app.get('/compliance/spam-compliance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_RR6 = { round:'RR', endpoint:'RR6',
+  const FALLBACK_RR6 = { round:'RR', endpoint:'RR6', generated:new Date().toISOString(),
     dnd_violations:4, trai_dlt_registered:true, header_registered:true,
     violations:[
       { date:'2026-02-14', type:'SMS to DND number', mobile_masked:'98XXXXX842', action_taken:'Number suppressed; added to exclusion list' },
@@ -13972,7 +13841,7 @@ app.get('/compliance/spam-compliance', requireSession(), requireRole(['Super Adm
 // -- SS-Round: IT Operations Intelligence --
 app.get('/itops/asset-inventory', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS1 = { round:'SS', endpoint:'SS1',
+  const FALLBACK_SS1 = { round:'SS', endpoint:'SS1', generated:new Date().toISOString(),
     total_devices:284, end_of_life:12, unlicensed_software:6,
     by_type:[ {type:'Laptops',count:142,eol:4},{type:'Desktops',count:28,eol:6},{type:'Servers',count:8,eol:2},{type:'Mobile Devices',count:106,eol:0} ],
     sw_compliance:{ licensed:284, unlicensed:6, budget_needed_lakh:2.4 },
@@ -13981,7 +13850,7 @@ app.get('/itops/asset-inventory', requireSession(), requireRole(['Super Admin'],
 })
 app.get('/itops/patch-compliance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS2 = { round:'SS', endpoint:'SS2',
+  const FALLBACK_SS2 = { round:'SS', endpoint:'SS2', generated:new Date().toISOString(),
     compliance_pct:94, critical_outstanding:18, exploit_risk:2,
     by_severity:[ {sev:'Critical',total:18,patched:16,pct:89},{sev:'High',total:42,patched:40,pct:95},{sev:'Medium',total:84,patched:82,pct:98} ],
     exploit_details:[ {cve:'CVE-2025-28461',affected:'Node 18.x servers (2)',action:'Upgrade to Node 20 LTS — scheduled 2026-03-28'} ],
@@ -13996,7 +13865,7 @@ app.get('/itops/patch-compliance', requireSession(), requireRole(['Super Admin']
 })
 app.get('/itops/backup-status', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS3 = { round:'SS', endpoint:'SS3',
+  const FALLBACK_SS3 = { round:'SS', endpoint:'SS3', generated:new Date().toISOString(),
     success_pct:98.6, failures_last_7d:2, rto_hours:4, rpo_hours:1,
     by_system:[ {system:'D1 Database',last_backup:'2026-03-21 02:00',status:'Success'},{system:'R2 Object Store',last_backup:'2026-03-21 01:00',status:'Success'},{system:'KV Sessions',last_backup:'2026-03-20 22:00',status:'Failed — timeout'} ],
     last_restore_test:'2026-01-15', restore_test_status:'Passed (42 min)',
@@ -14011,7 +13880,7 @@ app.get('/itops/backup-status', requireSession(), requireRole(['Super Admin'], [
 })
 app.get('/itops/network-monitoring', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS4 = { round:'SS', endpoint:'SS4',
+  const FALLBACK_SS4 = { round:'SS', endpoint:'SS4', generated:new Date().toISOString(),
     uptime_pct:99.94, security_events_month:4, open_tickets:2,
     events:[ {event:'Port scan from 192.168.x.x',severity:'Low',status:'Blocked by WAF'},{event:'Brute force SSH attempt',severity:'Medium',status:'Blocked + IP banned'} ],
     bandwidth:{ ingress_gb_month:284, egress_gb_month:142, cdn_pct:84 },
@@ -14026,7 +13895,7 @@ app.get('/itops/network-monitoring', requireSession(), requireRole(['Super Admin
 })
 app.get('/dpdp/it-asset-data', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS5 = { round:'SS', endpoint:'SS5',
+  const FALLBACK_SS5 = { round:'SS', endpoint:'SS5', generated:new Date().toISOString(),
     asset_types_with_pii:12, encryption_compliant:9, missing_encryption:3,
     gaps:[ {asset:'Employee laptops (unmanaged)',issue:'3 devices without full-disk encryption',action:'Enforce BitLocker/FileVault via MDM by 2026-04-15'} ],
     data_types_on_assets:['Payroll files','HR documents','Client contracts','Source code'],
@@ -14035,7 +13904,7 @@ app.get('/dpdp/it-asset-data', requireSession(), requireRole(['Super Admin'], ['
 })
 app.get('/compliance/iso20000', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_SS6 = { round:'SS', endpoint:'SS6',
+  const FALLBACK_SS6 = { round:'SS', endpoint:'SS6', generated:new Date().toISOString(),
     processes_total:8, compliant:6, gaps:2,
     gap_detail:[
       { process:'Change Management',  gap:'No CAB (Change Advisory Board) formally constituted', action:'Form CAB with CTO, Head Engineering, Ops lead' },
@@ -14071,7 +13940,7 @@ app.get('/hr/attrition-analytics', requireSession(), requireRole(['Super Admin']
 })
 app.get('/hr/hiring-funnel', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_TT2 = { round:'TT', endpoint:'TT2',
+  const FALLBACK_TT2 = { round:'TT', endpoint:'TT2', generated:new Date().toISOString(),
     open_roles:28, total_applicants:420, avg_tthf_days:42, offers_made:12, accepted:8,
     by_dept:[ {dept:'Engineering',open:12,applicants:184},{dept:'Sales',open:8,applicants:124},{dept:'HR & Ops',open:4,applicants:62},{dept:'Finance',open:4,applicants:50} ],
     funnel:[ {stage:'Applied',count:420},{stage:'Screened',count:142},{stage:'Interviewed',count:48},{stage:'Offered',count:12},{stage:'Joined',count:8} ],
@@ -14098,7 +13967,7 @@ app.get('/hr/performance-distribution', requireSession(), requireRole(['Super Ad
 })
 app.get('/hr/learning-development', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_TT4 = { round:'TT', endpoint:'TT4',
+  const FALLBACK_TT4 = { round:'TT', endpoint:'TT4', generated:new Date().toISOString(),
     hrs_per_employee_year:84, budget_lakh:2.8, completion_pct:68, programs:8,
     programs_list:[
       { name:'DPDP Awareness & Compliance', enrolled:47, completed:42, hrs:4, mode:'e-Learning' },
@@ -14118,16 +13987,16 @@ app.get('/hr/learning-development', requireSession(), requireRole(['Super Admin'
 })
 app.get('/dpdp/employee-data-rights', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_TT5 = { round:'TT', endpoint:'TT5',
+  const FALLBACK_TT5 = { round:'TT', endpoint:'TT5', generated:new Date().toISOString(),
     pii_fields_mapped:142, right_to_access_requests:12, pending:8, fulfilled:4,
     pii_categories:[ {cat:'Identity (PAN/Aadhaar)',fields:8,encrypted:true},{cat:'Financial (CTC/bank)',fields:12,encrypted:true},{cat:'Contact',fields:6,encrypted:false},{cat:'Health/biometric',fields:4,encrypted:true} ],
-    pending_requests:[ {emp:'IG-EMP-0028',request:'Access payslips FY 2025-26',days_pending:18},{emp:'IG-EMP-0041',request:'Correct bank account',days_pending:6} ],
+    pending_requests:[ {emp:'IG-EMP-0028',request:'Access payslips FY25-26',days_pending:18},{emp:'IG-EMP-0041',request:'Correct bank account',days_pending:6} ],
     storage:'fallback', timestamp:new Date().toISOString() }
   return c.json({ ...FALLBACK_TT5, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/labour-law-dashboard', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_TT6 = { round:'TT', endpoint:'TT6',
+  const FALLBACK_TT6 = { round:'TT', endpoint:'TT6', generated:new Date().toISOString(),
     pf_compliance_pct:100, esi_compliance_pct:100, gratuity_accrued_lakh:18.4, open_notices:2,
     notices:[ {type:'Apprenticeship Act notice', authority:'Labour Dept - MH', received:'2026-02-10', status:'Response submitted 2026-02-28'}, {type:'POSH annual report due', authority:'Internal', due:'2026-04-15', status:'Draft in progress'} ],
     gratuity_by_dept:[ {dept:'Engineering',lakh:8.4},{dept:'Sales',lakh:4.8},{dept:'Finance',lakh:2.8},{dept:'HR & Ops',lakh:2.4} ],
@@ -14138,7 +14007,7 @@ app.get('/compliance/labour-law-dashboard', requireSession(), requireRole(['Supe
 // -- UU-Round: Partner & Channel Intelligence --
 app.get('/partners/channel-performance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU1 = { round:'UU', endpoint:'UU1', summary:{total_partners:28,arr_cr:4.2,top5_pct:72,gold_tier:4,silver_tier:12,bronze_tier:12},top_partners:[{name:'Hospitality Nexus Pvt Ltd',tier:'Gold',arr_lakh:48,region:'West'},{name:'HRMS Connect India',tier:'Gold',arr_lakh:42,region:'South'},{name:'RE Advisory Hub',tier:'Silver',arr_lakh:28,region:'North'}], storage:'fallback' }
+  const FALLBACK_UU1 = { round:'UU', endpoint:'UU1', summary:{total_partners:28,arr_cr:4.2,top5_pct:72,gold_tier:4,silver_tier:12,bronze_tier:12},top_partners:[{name:'Hospitality Nexus Pvt Ltd',tier:'Gold',arr_lakh:48,region:'West'},{name:'HRMS Connect India',tier:'Gold',arr_lakh:42,region:'South'},{name:'RE Advisory Hub',tier:'Silver',arr_lakh:28,region:'North'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(deal_value_lakh) AS pipe, COUNT(DISTINCT partner_name) AS partners FROM ig_partner_deals`).first() as any
@@ -14149,7 +14018,7 @@ app.get('/partners/channel-performance', requireSession(), requireRole(['Super A
 })
 app.get('/partners/deal-registration', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU2 = { round:'UU', endpoint:'UU2', summary:{registered:42,approved:18,conflicted:8,pending:16,total_value_lakh:184},conflicted:[{deal:'Sunrise Hotels',partner1:'Hospitality Nexus',partner2:'City Realty Pvt',status:'Escalated to VP Sales'}], storage:'fallback' }
+  const FALLBACK_UU2 = { round:'UU', endpoint:'UU2', summary:{registered:42,approved:18,conflicted:8,pending:16,total_value_lakh:184},conflicted:[{deal:'Sunrise Hotels',partner1:'Hospitality Nexus',partner2:'City Realty Pvt',status:'Escalated to VP Sales'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT deal_id, partner_name, client_name, deal_value_lakh, stage, expected_close, region FROM ig_partner_deals ORDER BY deal_value_lakh DESC LIMIT 20`).all()
@@ -14161,12 +14030,12 @@ app.get('/partners/deal-registration', requireSession(), requireRole(['Super Adm
 })
 app.get('/partners/partner-health', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU3 = { round:'UU', endpoint:'UU3', nps:62,partners_surveyed:28,at_risk:4,churn_alerts:2,by_tier:[{tier:'Gold',nps:74},{tier:'Silver',nps:62},{tier:'Bronze',nps:48}], storage:'fallback' }
+  const FALLBACK_UU3 = { round:'UU', endpoint:'UU3', nps:62,partners_surveyed:28,at_risk:4,churn_alerts:2,by_tier:[{tier:'Gold',nps:74},{tier:'Silver',nps:62},{tier:'Bronze',nps:48}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_UU3, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/partners/mdf-utilisation', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU4 = { round:'UU', endpoint:'UU4', mdf_allocated_lakh:18.4,utilised_pct:68,overdue_claims:3,by_activity:[{type:'Events/Webinars',allocated_lakh:8.4,utilised_lakh:6.2},{type:'Digital Marketing',allocated_lakh:6.0,utilised_lakh:4.8},{type:'Training',allocated_lakh:4.0,utilised_lakh:1.5}], storage:'fallback' }
+  const FALLBACK_UU4 = { round:'UU', endpoint:'UU4', mdf_allocated_lakh:18.4,utilised_pct:68,overdue_claims:3,by_activity:[{type:'Events/Webinars',allocated_lakh:8.4,utilised_lakh:6.2},{type:'Digital Marketing',allocated_lakh:6.0,utilised_lakh:4.8},{type:'Training',allocated_lakh:4.0,utilised_lakh:1.5}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT SUM(mdf_requested_lakh) AS req, SUM(mdf_approved_lakh) AS appr FROM ig_partner_deals`).first() as any
@@ -14178,19 +14047,19 @@ app.get('/partners/mdf-utilisation', requireSession(), requireRole(['Super Admin
 })
 app.get('/dpdp/partner-data-sharing', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU5 = { round:'UU', endpoint:'UU5', total_partners:28,dpas_signed:22,dpas_pending:6,high_risk:3,actions:['Chase 6 pending DPA signatures by 2026-04-30','Audit 3 high-risk partners for sub-processor compliance'], storage:'fallback' }
+  const FALLBACK_UU5 = { round:'UU', endpoint:'UU5', total_partners:28,dpas_signed:22,dpas_pending:6,high_risk:3,actions:['Chase 6 pending DPA signatures by 2026-04-30','Audit 3 high-risk partners for sub-processor compliance'], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_UU5, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/reseller-compliance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_UU6 = { round:'UU', endpoint:'UU6', total_agreements:8,current:6,expired:2,renewal_value_lakh:28,renewals:[{partner:'TechBridge Solutions',expiry:'2026-02-28',status:'Expired — renewal in negotiation'},{partner:'SME Catalyst Hub',expiry:'2026-03-15',status:'Expired — partner unresponsive'}], storage:'fallback' }
+  const FALLBACK_UU6 = { round:'UU', endpoint:'UU6', total_agreements:8,current:6,expired:2,renewal_value_lakh:28,renewals:[{partner:'TechBridge Solutions',expiry:'2026-02-28',status:'Expired — renewal in negotiation'},{partner:'SME Catalyst Hub',expiry:'2026-03-15',status:'Expired — partner unresponsive'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_UU6, storage:'fallback', generated:new Date().toISOString() })
 })
 
 // -- VV-Round: Innovation & R&D Intelligence --
 app.get('/innovation/idea-pipeline', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_VV1 = { round: 'VV', endpoint: 'VV1', title: 'VV1: Ideas', total_ideas:84,poc_stage:18,in_development:4,launched_ytd:2,ideas:[{id:'ID-041',title:'AI-driven payslip anomaly detection',stage:'POC',sponsor:'CTO'},{id:'ID-042',title:'WhatsApp self-service HR bot',stage:'Development',sponsor:'VP Engineering'},{id:'ID-043',title:'HORECA demand forecasting ML',stage:'Idea',sponsor:'Head HORECA'}], storage:'fallback' }
+  const FALLBACK_VV1 = { round: 'VV', endpoint: 'VV1', title: 'VV1: Ideas', generated: new Date().toISOString(), total_ideas:84,poc_stage:18,in_development:4,launched_ytd:2,ideas:[{id:'ID-041',title:'AI-driven payslip anomaly detection',stage:'POC',sponsor:'CTO'},{id:'ID-042',title:'WhatsApp self-service HR bot',stage:'Development',sponsor:'VP Engineering'},{id:'ID-043',title:'HORECA demand forecasting ML',stage:'Idea',sponsor:'Head HORECA'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const okrRow = await env.DB.prepare(
@@ -14206,7 +14075,7 @@ app.get('/innovation/idea-pipeline', requireSession(), requireRole(['Super Admin
 })
 app.get('/innovation/rd-spend', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV2', title: 'VV2: R&D', spend_lakh:42,pct_of_revenue:8.4,funded_projects:3,projects:[{name:'AI Salary Benchmarking',spend_lakh:18,status:'Active',partner:'IIT Mumbai'},{name:'HORECA Demand ML',spend_lakh:14,status:'Active',partner:'Internal'},{name:'NLP Compliance Assistant',spend_lakh:10,status:'POC',partner:'NASSCOM CoE'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV2', title: 'VV2: R&D', generated: new Date().toISOString(), spend_lakh:42,pct_of_revenue:8.4,funded_projects:3,projects:[{name:'AI Salary Benchmarking',spend_lakh:18,status:'Active',partner:'IIT Mumbai'},{name:'HORECA Demand ML',spend_lakh:14,status:'Active',partner:'Internal'},{name:'NLP Compliance Assistant',spend_lakh:10,status:'POC',partner:'NASSCOM CoE'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT SUM(value) AS total FROM ig_kpi_records WHERE metric_name LIKE '%R&D%' OR metric_name LIKE '%Innovation%' OR metric_name LIKE '%Research%'`).first() as any
@@ -14223,22 +14092,22 @@ app.get('/innovation/rd-spend', requireSession(), requireRole(['Super Admin'], [
 })
 app.get('/innovation/ai-ml-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV3', title: 'VV3: AI/ML', models_in_production:4,avg_accuracy_pct:94.2,retraining_needed:2,models:[{name:'Churn Predictor',accuracy_pct:96.4,version:'v2.1',last_trained:'2026-01-15'},{name:'Discount Approval Scorer',accuracy_pct:92.8,version:'v1.4',last_trained:'2025-11-20'},{name:'Invoice Anomaly Detector',accuracy_pct:94.6,version:'v3.0',last_trained:'2026-02-08'},{name:'Lead Scoring',accuracy_pct:91.2,version:'v1.8',last_trained:'2025-12-10',flag:'Retraining due'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV3', title: 'VV3: AI/ML', generated: new Date().toISOString(), models_in_production:4,avg_accuracy_pct:94.2,retraining_needed:2,models:[{name:'Churn Predictor',accuracy_pct:96.4,version:'v2.1',last_trained:'2026-01-15'},{name:'Discount Approval Scorer',accuracy_pct:92.8,version:'v1.4',last_trained:'2025-11-20'},{name:'Invoice Anomaly Detector',accuracy_pct:94.6,version:'v3.0',last_trained:'2026-02-08'},{name:'Lead Scoring',accuracy_pct:91.2,version:'v1.8',last_trained:'2025-12-10',flag:'Retraining due'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/innovation/patent-pipeline', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV4', title: 'VV4: Patents', patents_filed:3,granted:1,pending:2,portfolio_value_lakh:8.4,patents:[{id:'IN202621001234',title:'Method for automated TDS challan reconciliation',status:'Granted',filed:'2025-08-12'},{id:'IN202621004567',title:'AI-based FSSAI compliance scoring system',status:'Pending'},{id:'IN202621007890',title:'Privacy-preserving salary benchmarking via federated learning',status:'Pending'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV4', title: 'VV4: Patents', generated: new Date().toISOString(), patents_filed:3,granted:1,pending:2,portfolio_value_lakh:8.4,patents:[{id:'IN202621001234',title:'Method for automated TDS challan reconciliation',status:'Granted',filed:'2025-08-12'},{id:'IN202621004567',title:'AI-based FSSAI compliance scoring system',status:'Pending'},{id:'IN202621007890',title:'Privacy-preserving salary benchmarking via federated learning',status:'Pending'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/dpdp/ai-data-governance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV5', title: 'VV5: AI DPDP', models_using_pii:4,consent_compliant:2,missing_consent:2,gaps:[{model:'Churn Predictor',issue:'Uses customer email+usage patterns without analytics consent per §6',action:'Add consent checkbox at onboarding'},{model:'Lead Scoring',issue:'Uses contact behaviour data — consent notice not updated',action:'Update privacy notice and re-consent 8.4K leads'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV5', title: 'VV5: AI DPDP', generated: new Date().toISOString(), models_using_pii:4,consent_compliant:2,missing_consent:2,gaps:[{model:'Churn Predictor',issue:'Uses customer email+usage patterns without analytics consent per §6',action:'Add consent checkbox at onboarding'},{model:'Lead Scoring',issue:'Uses contact behaviour data — consent notice not updated',action:'Update privacy notice and re-consent 8.4K leads'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/it-act-ai', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_VV6_old = { round: 'VV', endpoint: 'VV6', title: 'VV6: IT Act AI', checklist_pct:78,items_completed:14,items_open:4,items:[{item:'Explainability documentation',status:'Complete'},{item:'Bias audit (salary benchmarking model)',status:'Open — due 2026-04-30'},{item:'Human override mechanism',status:'Complete'},{item:'Training data lineage',status:'Open — in progress'}], storage:'fallback' }
+  const FALLBACK_VV6_old = { round: 'VV', endpoint: 'VV6', title: 'VV6: IT Act AI', generated: new Date().toISOString(), checklist_pct:78,items_completed:14,items_open:4,items:[{item:'Explainability documentation',status:'Complete'},{item:'Bias audit (salary benchmarking model)',status:'Open — due 2026-04-30'},{item:'Human override mechanism',status:'Complete'},{item:'Training data lineage',status:'Open — in progress'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const okrRow = await env.DB.prepare(
@@ -14269,17 +14138,17 @@ app.get('/compliance/it-act-ai', requireSession(), requireRole(['Super Admin'], 
 // -- WW-Round: Financial Planning & Analysis Intelligence --
 app.get('/fpa/budget-forecast', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', fy:'FY 2026-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', generated: new Date().toISOString(), fy:'FY26-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/fpa/cash-flow-projection', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW2', title: 'WW2: Cash Flow', runway_months:12,monthly_burn_lakh:42,cash_balance_lakh:84,monthly_inflow_lakh:38,breakeven_month:'Nov 2026',by_month:[{m:'Apr',inflow:36,outflow:42},{m:'May',inflow:38,outflow:41},{m:'Jun',inflow:40,outflow:40},{m:'Jul',inflow:44,outflow:40}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW2', title: 'WW2: Cash Flow', generated: new Date().toISOString(), runway_months:12,monthly_burn_lakh:42,cash_balance_lakh:84,monthly_inflow_lakh:38,breakeven_month:'Nov 2026',by_month:[{m:'Apr',inflow:36,outflow:42},{m:'May',inflow:38,outflow:41},{m:'Jun',inflow:40,outflow:40},{m:'Jul',inflow:44,outflow:40}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/fpa/unit-economics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW3 = { round: 'WW', endpoint: 'WW3', title: 'WW3: Unit Economics', cac_inr:12400,ltv_inr:84000,ltv_cac_ratio:6.8,payback_months:14,arpu_lakh_annual:4.8,gross_margin_pct:72,nrr_pct:118, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW3 = { round: 'WW', endpoint: 'WW3', title: 'WW3: Unit Economics', generated: new Date().toISOString(), cac_inr:12400,ltv_inr:84000,ltv_cac_ratio:6.8,payback_months:14,arpu_lakh_annual:4.8,gross_margin_pct:72,nrr_pct:118, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14298,7 +14167,7 @@ app.get('/fpa/unit-economics', requireSession(), requireRole(['Super Admin'], ['
 })
 app.get('/fpa/fundraising-readiness', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW4 = { round: 'WW', endpoint: 'WW4', title: 'WW4: Fundraising', readiness_pct:84,data_room_pct:68,target_raise_cr:24,use_of_funds:[{area:'Product & Engg',pct:40},{area:'Sales & Marketing',pct:30},{area:'Ops & Compliance',pct:20},{area:'Reserve',pct:10}],key_milestones:[{milestone:'Audited FY26 financials',status:'In Progress'},{milestone:'Series A round closed',status:'Complete — Rs8.4Cr raised'},{milestone:'NDA data room sent to 6 investors',status:'Complete'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW4 = { round: 'WW', endpoint: 'WW4', title: 'WW4: Fundraising', generated: new Date().toISOString(), readiness_pct:84,data_room_pct:68,target_raise_cr:24,use_of_funds:[{area:'Product & Engg',pct:40},{area:'Sales & Marketing',pct:30},{area:'Ops & Compliance',pct:20},{area:'Reserve',pct:10}],key_milestones:[{milestone:'Audited FY26 financials',status:'In Progress'},{milestone:'Series A round closed',status:'Complete — Rs8.4Cr raised'},{milestone:'NDA data room sent to 6 investors',status:'Complete'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14317,12 +14186,12 @@ app.get('/fpa/fundraising-readiness', requireSession(), requireRole(['Super Admi
 })
 app.get('/dpdp/financial-data-classification', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW5', title: 'WW5: FP&A DPDP', financial_data_types:28,with_pii:6,classified:22,gaps:6,gap_detail:[{type:'Investor KYC documents',issue:'Stored beyond 5yr policy threshold'},{type:'Employee bank account details in payroll exports',issue:'Exported CSV unencrypted via email'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW5', title: 'WW5: FP&A DPDP', generated: new Date().toISOString(), financial_data_types:28,with_pii:6,classified:22,gaps:6,gap_detail:[{type:'Investor KYC documents',issue:'Stored beyond 5yr policy threshold'},{type:'Employee bank account details in payroll exports',issue:'Exported CSV unencrypted via email'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/roc-filings', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY 2025-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', generated: new Date().toISOString(), total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY25-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14376,12 +14245,12 @@ app.get('/regulatory/compliance-calendar', requireSession(), requireRole(['Super
 })
 app.get('/regulatory/policy-tracker', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX2', title: 'XX2: Policies', total_policies:28,outdated:6,under_review:4,current:18,policies:[{name:'Information Security Policy',version:'v3.2',last_reviewed:'2025-11-01',status:'Current'},{name:'DPDP Privacy Policy',version:'v2.0',last_reviewed:'2026-01-15',status:'Current'},{name:'HR Leave Policy',version:'v1.4',last_reviewed:'2024-06-01',status:'Outdated — review due'},{name:'Vendor Onboarding Policy',version:'v1.1',last_reviewed:'2023-12-01',status:'Outdated — major revision needed'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX2', title: 'XX2: Policies', generated: new Date().toISOString(), total_policies:28,outdated:6,under_review:4,current:18,policies:[{name:'Information Security Policy',version:'v3.2',last_reviewed:'2025-11-01',status:'Current'},{name:'DPDP Privacy Policy',version:'v2.0',last_reviewed:'2026-01-15',status:'Current'},{name:'HR Leave Policy',version:'v1.4',last_reviewed:'2024-06-01',status:'Outdated — review due'},{name:'Vendor Onboarding Policy',version:'v1.1',last_reviewed:'2023-12-01',status:'Outdated — major revision needed'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/regulatory/license-registry', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX3', title: 'XX3: Licenses', total_held:18,expiring_30d:2,renewal_fees_inr:84000,expiring:[{license:'FSSAI Central Licence (MH)',number:'11224999000184',expiry:'2026-04-12',fee_inr:55000},{license:'Shop & Establishment (MH)',number:'MH-MUM-0028492',expiry:'2026-04-28',fee_inr:29000}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX3', title: 'XX3: Licenses', generated: new Date().toISOString(), total_held:18,expiring_30d:2,renewal_fees_inr:84000,expiring:[{license:'FSSAI Central Licence (MH)',number:'11224999000184',expiry:'2026-04-12',fee_inr:55000},{license:'Shop & Establishment (MH)',number:'MH-MUM-0028492',expiry:'2026-04-28',fee_inr:29000}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN likelihood='High' OR likelihood='Critical' THEN 1 ELSE 0 END) AS high FROM ig_risk_registry WHERE category='Operational' OR category='IT'`).first() as any
@@ -14392,49 +14261,49 @@ app.get('/regulatory/license-registry', requireSession(), requireRole(['Super Ad
 })
 app.get('/regulatory/regulatory-change', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX4', title: 'XX4: Reg Changes', changes_tracked:8,high_impact:3,medium_impact:3,low_impact:2,high_impact_changes:[{regulation:'DPDP Rules 2025 (Final)',effective:'2026-04-01',impact:'Consent Management, DPO appointment, DFR registration all mandatory'},{regulation:'SEBI LODR Amendment 2025',effective:'2026-07-01',impact:'Enhanced governance disclosures for listed associates'},{regulation:'Labour Codes (4 codes) Implementation',effective:'2026-04-01',impact:'New wage definition, PF/ESI base change, leave policy update required'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX4', title: 'XX4: Reg Changes', generated: new Date().toISOString(), changes_tracked:8,high_impact:3,medium_impact:3,low_impact:2,high_impact_changes:[{regulation:'DPDP Rules 2025 (Final)',effective:'2026-04-01',impact:'Consent Management, DPO appointment, DFR registration all mandatory'},{regulation:'SEBI LODR Amendment 2025',effective:'2026-07-01',impact:'Enhanced governance disclosures for listed associates'},{regulation:'Labour Codes (4 codes) Implementation',effective:'2026-04-01',impact:'New wage definition, PF/ESI base change, leave policy update required'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/dpdp/regulatory-data-flows', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX5', title: 'XX5: DPDP Flows', total_flows:28,dpia_needed:6,dpia_completed:2,dpia_pending:4,pending_dpias:[{flow:'AI Salary Benchmarking',risk:'High — sensitive financial PII in ML model'},{flow:'WhatsApp HR Bot',risk:'Medium — conversational data storage'},{flow:'Attendance Geolocation',risk:'High — continuous location tracking'},{flow:'HR Analytics Dashboard',risk:'Medium — aggregate employee profiling'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX5', title: 'XX5: DPDP Flows', generated: new Date().toISOString(), total_flows:28,dpia_needed:6,dpia_completed:2,dpia_pending:4,pending_dpias:[{flow:'AI Salary Benchmarking',risk:'High — sensitive financial PII in ML model'},{flow:'WhatsApp HR Bot',risk:'Medium — conversational data storage'},{flow:'Attendance Geolocation',risk:'High — continuous location tracking'},{flow:'HR Analytics Dashboard',risk:'Medium — aggregate employee profiling'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/legal-entity-health', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX6', title: 'XX6: Entity Health', cin_status:'Active',moa_compliant:true,open_charges:2,charges:[{charge_id:'CHG-2024-001',amount_cr:2.4,charge_holder:'HDFC Bank Ltd',status:'Active — charged asset: office equipment'},{charge_id:'CHG-2023-008',amount_cr:0.8,charge_holder:'SIDBI',status:'Partially satisfied'}],roc_dues:null,agm_last:'2025-09-14',board_meetings_fy26:6, storage:'fallback' }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX6', title: 'XX6: Entity Health', generated: new Date().toISOString(), cin_status:'Active',moa_compliant:true,open_charges:2,charges:[{charge_id:'CHG-2024-001',amount_cr:2.4,charge_holder:'HDFC Bank Ltd',status:'Active — charged asset: office equipment'},{charge_id:'CHG-2023-008',amount_cr:0.8,charge_holder:'SIDBI',status:'Partially satisfied'}],roc_dues:null,agm_last:'2025-09-14',board_meetings_fy26:6, storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 
 // -- YY-Round: Platform Resilience Intelligence --
 app.get('/resilience/dr-readiness', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY1', title: 'YY1: DR', rto_hours:4,rpo_hours:1,readiness_pct:84,last_test:'2026-01-15',test_result:'Passed — full failover in 3h42m',gaps:['Cloudflare KV manual recovery not documented','Multi-region D1 replication not yet configured'], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY1', title: 'YY1: DR', generated: new Date().toISOString(), rto_hours:4,rpo_hours:1,readiness_pct:84,last_test:'2026-01-15',test_result:'Passed — full failover in 3h42m',gaps:['Cloudflare KV manual recovery not documented','Multi-region D1 replication not yet configured'], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/chaos-engineering', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_YY2 = { round: 'YY', endpoint: 'YY2', title: 'YY2: Chaos', experiments:4,passed:3,failed:1,failure_detail:{experiment:'D1 primary failover',result:'8 minute outage — read replica lag exceeded RTO',action:'Implement connection pooling + read replica routing'}, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_YY2 = { round: 'YY', endpoint: 'YY2', title: 'YY2: Chaos', generated: new Date().toISOString(), experiments:4,passed:3,failed:1,failure_detail:{experiment:'D1 primary failover',result:'8 minute outage — read replica lag exceeded RTO',action:'Implement connection pooling + read replica routing'}, storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...YY2, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/capacity-planning', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', peak_utilisation_pct:84,scaling_due:'Q2 FY 2026-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', generated: new Date().toISOString(), peak_utilisation_pct:84,scaling_due:'Q2 FY26-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...YY3, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/dependency-map', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY4', title: 'YY4: Dependencies', external_apis:28,spofs:4,sla_99_9:2,critical_deps:[{service:'Razorpay',sla:'99.9%',failover:'Queue + retry (15min)'},{service:'SendGrid',sla:'99.5%',failover:'SMS OTP fallback'},{service:'Cloudflare D1',sla:'99.9%',failover:'In-memory + KV cache'},{service:'NSDL for PAN verify',sla:'None',failover:'Manual verification'}],spof_mitigation:'Document manual fallback for NSDL and GSTN external calls', storage:'fallback' }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY4', title: 'YY4: Dependencies', generated: new Date().toISOString(), external_apis:28,spofs:4,sla_99_9:2,critical_deps:[{service:'Razorpay',sla:'99.9%',failover:'Queue + retry (15min)'},{service:'SendGrid',sla:'99.5%',failover:'SMS OTP fallback'},{service:'Cloudflare D1',sla:'99.9%',failover:'In-memory + KV cache'},{service:'NSDL for PAN verify',sla:'None',failover:'Manual verification'}],spof_mitigation:'Document manual fallback for NSDL and GSTN external calls', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/dpdp/resilience-data-protection', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY5', title: 'YY5: Resilience DPDP', backup_encryption:true,breach_notification_chain_documented:true,cert_in_notification_hours:6,gaps:['Breach simulation drill not conducted FY26','Processor notification chain (SendGrid/Twilio) not documented'],next_drill_date:'2026-05-15', storage:'fallback' }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY5', title: 'YY5: Resilience DPDP', generated: new Date().toISOString(), backup_encryption:true,breach_notification_chain_documented:true,cert_in_notification_hours:6,gaps:['Breach simulation drill not conducted FY26','Processor notification chain (SendGrid/Twilio) not documented'],next_drill_date:'2026-05-15', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/compliance/cert-in-resilience', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY6', title: 'YY6: CERT-In', plan_completeness_pct:94,open_gaps:1,gap:'Annual incident response drill not completed',notifications_sent_ytd:0,last_cert_in_update:'2026-01-15',plan_sections:[{section:'Detection & Reporting',status:'Complete'},{section:'Response Team',status:'Complete'},{section:'Communication',status:'Complete'},{section:'Annual Drill',status:'Pending — schedule by 2026-04-30'}], storage:'fallback' }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY6', title: 'YY6: CERT-In', generated: new Date().toISOString(), plan_completeness_pct:94,open_gaps:1,gap:'Annual incident response drill not completed',notifications_sent_ytd:0,last_cert_in_update:'2026-01-15',plan_sections:[{section:'Detection & Reporting',status:'Complete'},{section:'Response Team',status:'Complete'},{section:'Communication',status:'Complete'},{section:'Annual Drill',status:'Pending — schedule by 2026-04-30'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 
@@ -14478,7 +14347,7 @@ app.get('/executive/kpi-dashboard', requireSession(), requireRole(['Super Admin'
 })
 app.get('/executive/board-pack', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ2 = { round: 'ZZ', endpoint: 'ZZ2', title: 'ZZ2: Board Pack', sections:8,fy:'Q4 FY2025-26',arr_cr:8.4,arr_growth_yoy_pct:42,sections_detail:[{section:'CEO Letter',status:'Draft'},{section:'Financial P&L',status:'Pending Audit'},{section:'Board Resolutions',status:'Draft'},{section:'DPDP Compliance',status:'Complete'},{section:'Risk Register',status:'Complete'},{section:'Fundraising Update',status:'Confidential'},{section:'OKR Scorecard',status:'Draft'},{section:'Strategic Initiatives',status:'Draft'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ2 = { round: 'ZZ', endpoint: 'ZZ2', title: 'ZZ2: Board Pack', generated: new Date().toISOString(), sections:8,fy:'Q4 FY2025-26',arr_cr:8.4,arr_growth_yoy_pct:42,sections_detail:[{section:'CEO Letter',status:'Draft'},{section:'Financial P&L',status:'Pending Audit'},{section:'Board Resolutions',status:'Draft'},{section:'DPDP Compliance',status:'Complete'},{section:'Risk Register',status:'Complete'},{section:'Fundraising Update',status:'Confidential'},{section:'OKR Scorecard',status:'Draft'},{section:'Strategic Initiatives',status:'Draft'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_resolutions WHERE status='Approved'`).first() as any
@@ -14489,7 +14358,7 @@ app.get('/executive/board-pack', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/executive/investor-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ3 = { round: 'ZZ', endpoint: 'ZZ3', title: 'ZZ3: Investor', nrr_pct:118,gross_churn_pct:1.8,cac_payback_months:14,arr_cr:8.4,mrr_growth_mom_pct:4.2,magic_number:0.84,quick_ratio:3.6,investors:[{name:'Existing Angels',stake_pct:22,invested_cr:2.4},{name:'Founder Hold',stake_pct:68},{name:'ESOP Pool',stake_pct:10}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ3 = { round: 'ZZ', endpoint: 'ZZ3', title: 'ZZ3: Investor', generated: new Date().toISOString(), nrr_pct:118,gross_churn_pct:1.8,cac_payback_months:14,arr_cr:8.4,mrr_growth_mom_pct:4.2,magic_number:0.84,quick_ratio:3.6,investors:[{name:'Existing Angels',stake_pct:22,invested_cr:2.4},{name:'Founder Hold',stake_pct:68},{name:'ESOP Pool',stake_pct:10}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_mandates WHERE status='Active'`).first() as any
@@ -14500,7 +14369,7 @@ app.get('/executive/investor-metrics', requireSession(), requireRole(['Super Adm
 })
 app.get('/executive/strategic-initiatives', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ4 = { round: 'ZZ', endpoint: 'ZZ4', title: 'ZZ4: Initiatives', total:8,on_track:5,delayed:2,pivoting:1,initiatives:[{name:'Series B Fundraise',status:'On Track',progress_pct:68,owner:'CEO'},{name:'HORECA SaaS v2 Launch',status:'Delayed',progress_pct:52,blocker:'Regulatory approval'},{name:'South India Expansion',status:'On Track',progress_pct:74,owner:'VP Sales'},{name:'AI Payroll Engine',status:'Pivoting',progress_pct:34,note:'Scope reduced — focus on anomaly detection only'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ4 = { round: 'ZZ', endpoint: 'ZZ4', title: 'ZZ4: Initiatives', generated: new Date().toISOString(), total:8,on_track:5,delayed:2,pivoting:1,initiatives:[{name:'Series B Fundraise',status:'On Track',progress_pct:68,owner:'CEO'},{name:'HORECA SaaS v2 Launch',status:'Delayed',progress_pct:52,blocker:'Regulatory approval'},{name:'South India Expansion',status:'On Track',progress_pct:74,owner:'VP Sales'},{name:'AI Payroll Engine',status:'Pivoting',progress_pct:34,note:'Scope reduced — focus on anomaly detection only'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN status='On Track' THEN 1 ELSE 0 END) AS on_track FROM ig_okrs WHERE period='FY2025-26'`).first() as any
@@ -14511,7 +14380,7 @@ app.get('/executive/strategic-initiatives', requireSession(), requireRole(['Supe
 })
 app.get('/dpdp/executive-reporting', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ5 = { round: 'ZZ', endpoint: 'ZZ5', title: 'ZZ5: Executive DPDP', board_governance_score_pct:88,it_act_s72a_compliant:true,dpdp_board_training_complete:true,open_items:[{item:'DFR (Data Fiduciary Registration) submission',due:'2026-06-30',status:'Draft started'},{item:'Annual DPDP audit by external auditor',due:'2026-12-31',status:'RFP being prepared'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ5 = { round: 'ZZ', endpoint: 'ZZ5', title: 'ZZ5: Executive DPDP', generated: new Date().toISOString(), board_governance_score_pct:88,it_act_s72a_compliant:true,dpdp_board_training_complete:true,open_items:[{item:'DFR (Data Fiduciary Registration) submission',due:'2026-06-30',status:'Draft started'},{item:'Annual DPDP audit by external auditor',due:'2026-12-31',status:'RFP being prepared'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_dpdp_grievances`).first() as any
@@ -14522,7 +14391,7 @@ app.get('/dpdp/executive-reporting', requireSession(), requireRole(['Super Admin
 })
 app.get('/compliance/platform-certification', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'ZZ', endpoint: 'ZZ6', title: 'ZZ6: Platform', rounds_certified:26,total_routes:494,security_score:100,cert_date:'2026-03-21',phases_complete:['Phase A-Z','Phase AA-ZZ','Phase U','Phase V','Phase W'],d1_live_routes:391,stubs_remaining:2,build_size_mb:4.8,last_deploy:'2026-03-21T12:58:00Z',ci_status:'passing', storage:'fallback' }
+  const FALLBACK_STUB = { round: 'ZZ', endpoint: 'ZZ6', title: 'ZZ6: Platform', generated: new Date().toISOString(), rounds_certified:26,total_routes:494,security_score:100,cert_date:'2026-03-21',phases_complete:['Phase A-Z','Phase AA-ZZ','Phase U','Phase V','Phase W'],d1_live_routes:391,stubs_remaining:2,build_size_mb:4.8,last_deploy:'2026-03-21T12:58:00Z',ci_status:'passing', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback', generated:new Date().toISOString() })
 })
 
@@ -14934,7 +14803,7 @@ app.get('/esg/full-dashboard', requireSession(), requireRole(['Super Admin'], ['
 // Y5: Partner Full Dashboard
 app.get('/partner/full-dashboard', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_Y5 = { total_partners:28, active:24, gold:8, silver:12, bronze:8, pipeline_lakh:73.4, won_ytd_lakh:12.8, mdf_utilized_pct:69, storage:'fallback' }
+  const FALLBACK_Y5 = { total_partners:28, active:24, gold:8, silver:12, bronze:8, pipeline_lakh:73.4, won_ytd_lakh:12.8, mdf_utilized_pct:69, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN stage='won' THEN deal_value_lakh ELSE 0 END) AS won_value, SUM(deal_value_lakh) AS pipeline, SUM(mdf_approved_lakh) AS mdf_approved, SUM(mdf_requested_lakh) AS mdf_requested FROM ig_partner_deals`).first() as any
@@ -15085,7 +14954,7 @@ const ADMIN_USER_STORE = new Map<string, {id:number,name:string,email:string,rol
   {id:2,name:'Arun Manikonda', email:'akm@indiagully.com',       role:'Director',   portal:'board',  active:true, created_at:'2026-01-15',last_login:'02 Mar 2026'},
   {id:3,name:'Pavan Manikonda',email:'pavan@indiagully.com',     role:'Director',   portal:'board',  active:true, created_at:'2026-01-15',last_login:'02 Mar 2026'},
   {id:4,name:'Amit Jhingan',   email:'amit.jhingan@indiagully.com',role:'KMP',      portal:'board',  active:true, created_at:'2026-01-20',last_login:'01 Mar 2026'},
-  {id:5,name:'Jaipur Heritage Holdings',    email:'portal@indiagully.com',      role:'Client',     portal:'client', active:true, created_at:'2026-02-01',last_login:'02 Mar 2026'},
+  {id:5,name:'Demo Client',    email:'demo@indiagully.com',      role:'Client',     portal:'client', active:true, created_at:'2026-02-01',last_login:'02 Mar 2026'},
   {id:6,name:'Demo Employee',  email:'emp@indiagully.com',       role:'Employee',   portal:'employee',active:true,created_at:'2026-02-01',last_login:'01 Mar 2026'},
   {id:7,name:'Demo KMP',       email:'kmp@indiagully.com',       role:'KMP',        portal:'board',  active:true, created_at:'2026-02-10',last_login:'28 Feb 2026'},
   {id:8,name:'Ex Employee',    email:'ex.emp@indiagully.com',    role:'Employee',   portal:'employee',active:false,created_at:'2025-06-01',last_login:'01 Jan 2026'},
@@ -15561,7 +15430,6 @@ app.post('/cms/pages/:id/seo', requireSession(), requireRole(['Super Admin'], ['
     const body = await c.req.json() as Record<string, unknown>
     const savedAt = new Date().toISOString()
     const db = (c as any).env?.DB
-    let source = 'static'
     if (db) {
       try {
         // Try to update meta_title / meta_desc if columns exist, else update content JSON
@@ -15575,12 +15443,11 @@ app.post('/cms/pages/:id/seo', requireSession(), requireRole(['Super Admin'], ['
           await db.prepare(
             `UPDATE ig_cms_pages SET content = ?, updated_at = ? WHERE id = ?`
           ).bind(JSON.stringify(content), savedAt, existing.id).run()
-          source = 'D1'
         }
       } catch(_) { /* non-fatal */ }
     }
     return c.json({ success: true, page_id: id, page: body.page, saved_at: savedAt,
-                    source,
+                    source: db ? 'D1' : 'static',
                     message: `SEO tags for page ${id} saved.` })
   } catch { return c.json({ success: false, error: 'SEO save failed' }, 500) }
 })
@@ -16228,7 +16095,7 @@ app.get('/finance/bank-statement', requireSession(), requireRole(['Super Admin']
     total_debits: 740000,
     source: 'static',
     transactions: [
-      {date:'28 Feb 2026',narration:'NEFT CREDIT - Jaipur Heritage Holdings Pvt. Ltd.',type:'Credit',amount:250160,balance:5620000},
+      {date:'28 Feb 2026',narration:'NEFT CREDIT - Demo Client Corp',type:'Credit',amount:250160,balance:5620000},
       {date:'27 Feb 2026',narration:'IMPS DEBIT - Deloitte Consulting',type:'Debit',amount:141600,balance:5369840},
       {date:'25 Feb 2026',narration:'RTGS CREDIT - Entertainment Ventures',type:'Credit',amount:320000,balance:5511440},
       {date:'22 Feb 2026',narration:'NEFT DEBIT - Office Rent Q1',type:'Debit',amount:185000,balance:5191440},
@@ -16925,7 +16792,7 @@ app.get('/risk/register', requireSession(), requireRole(['Super Admin'], ['admin
     total: 6, high: 2, medium: 3, low: 1, mitigated: 2, open: 4, risk_score: 38, source: 'static',
     risks: [
       {id:'RSK-001',category:'Regulatory',title:'GST audit trigger — high transaction volume',probability:'Medium',impact:'High',score:12,owner:'CFO',status:'Mitigating',review_date:'31 Mar 2026'},
-      {id:'RSK-002',category:'Credit',title:'Overdue receivable — Jaipur Heritage Holdings ₹1.8L',probability:'High',impact:'Medium',score:12,owner:'CEO',status:'Active',review_date:'10 Mar 2026'},
+      {id:'RSK-002',category:'Credit',title:'Overdue receivable — Demo Client ₹1.8L',probability:'High',impact:'Medium',score:12,owner:'CEO',status:'Active',review_date:'10 Mar 2026'},
       {id:'RSK-003',category:'Legal',title:'EY Retainer contract expiry',probability:'High',impact:'Medium',score:9,owner:'Legal',status:'Escalated',review_date:'20 Mar 2026'},
       {id:'RSK-004',category:'Cyber',title:'Failed login attempts from external IP',probability:'Medium',impact:'High',score:9,owner:'CISO',status:'Mitigating',review_date:'15 Mar 2026'},
     ]
@@ -17316,7 +17183,7 @@ app.get('/hr/form16/generate', requireSession(), async (c) => {
   }
   return c.json({
     success: true, fiscal_year, source: 'static',
-    employee: { name: 'AMIT JHINGAN', pan: 'AACPJ1234K', designation: 'President — Real Estate' },
+    employee: { name: 'AMIT SHARMA', pan: 'ABCDE1234F', designation: 'President' },
     gross_salary: 420000, tds_deducted: 42000,
     form16_ref: `F16-STATIC-${fiscal_year}`,
     generated_at: new Date().toISOString(),
@@ -17469,8 +17336,8 @@ app.get('/leads', requireSession(), async (c) => {
   }
   // Demo data
   return c.json({ success: true, total: 12, leads: [
-    { id:'LEAD-001', name:'Arjun Mehta', email:'arjun@mehtafamilyoffice.com', phone:'+91 98XXX XXXXX', org:'Mehta Family Office', mandate:'prism-tower-gurgaon', mandateTitle:'Prism Tower — Mixed-Use', type:'nda_acceptance', ts:'2026-03-12T09:15:00Z' },
-    { id:'LEAD-002', name:'Priya Sharma',  email:'priya@nexuspe.in',     phone:'+91 97XXX XXXXX', org:'Nexus Private Equity',  mandate:'belcibo-hospitality-platform', mandateTitle:'Belcibo Hospitality Platform', type:'nda_acceptance', ts:'2026-03-11T14:30:00Z' },
+    { id:'LEAD-001', name:'Rajesh Kumar', email:'rajesh@xyzfamily.com', phone:'+91 98XXX XXXXX', org:'XYZ Family Office', mandate:'prism-tower-gurgaon', mandateTitle:'Prism Tower — Mixed-Use', type:'nda_acceptance', ts:'2026-03-12T09:15:00Z' },
+    { id:'LEAD-002', name:'Priya Sharma',  email:'priya@abcpe.com',     phone:'+91 97XXX XXXXX', org:'ABC Private Equity',  mandate:'belcibo-hospitality-platform', mandateTitle:'Belcibo Hospitality Platform', type:'nda_acceptance', ts:'2026-03-11T14:30:00Z' },
     { id:'LEAD-003', name:'Vikram Singh',  email:'vikram@hotelsco.com', phone:'+91 96XXX XXXXX', org:'Vikram Hotels Ltd',   mandate:'hotel-rajshree-chandigarh', mandateTitle:'Hotel Rajshree & Spa', type:'nda_acceptance', ts:'2026-03-10T11:45:00Z' },
     { id:'LEAD-004', name:'Ananya Patel',  email:'ananya@reit.in',      phone:'+91 95XXX XXXXX', org:'Delta REIT Fund',     mandate:'ambience-tower-north-delhi', mandateTitle:'Ambience Tower — Adaptive Reuse', type:'nda_acceptance', ts:'2026-03-09T16:00:00Z' },
     { id:'LEAD-005', name:'Suresh Nair',   email:'suresh@heritage.co',  phone:'+91 94XXX XXXXX', org:'Heritage Hotels Co.', mandate:'welcomheritage-santa-roza-kasauli', mandateTitle:'WelcomHeritage Santa Roza', type:'nda_acceptance', ts:'2026-03-08T10:20:00Z' },
@@ -17500,7 +17367,7 @@ app.get('/mandate-analytics', async (c) => {
     } catch (_) { /* D1 unavailable — fall through */ }
   }
   return c.json({
-    success: true, total_mandates: 8, active_mandates: 6, pipeline_value_cr: 2100,
+    success: true, total_mandates: 8, active_mandates: 6, pipeline_value_cr: 1165,
     by_sector: [
       { sector:'Hospitality', count: 4, value: 770 },
       { sector:'Real Estate', count: 2, value: 350 },
@@ -17820,7 +17687,7 @@ app.get('/partner/revenue-attribution', requireSession(), requireRole(['Super Ad
 // VV: Partner Health Scorecard
 app.get('/partner/health-scorecard', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round:'VV',
+  const FALLBACK_STUB = { round:'VV', generated:new Date().toISOString(),
     total_partners:28, healthy:18, at_risk:6, churned_ytd:4,
     scorecard:[
       { partner:'EY India',   score:84, trend:'Stable',   revenue_lakh:84,  satisfaction:4.2 },
@@ -17972,1577 +17839,3 @@ app.post('/mandates', requireSession(), requireRole(['Super Admin'], ['admin']),
     return c.json({ success:false, error: e.message }, 500)
   }
 })
-
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PHASE P1 — PRIORITY 1 AUTH ENDPOINTS (11 routes)
-// Commit: Phase P1-Auth: TOTP enrol begin/confirm, OTP channel aliases,
-//         WebAuthn aliases (register-begin/complete/finish, authenticate),
-//         totp/enroll alias
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A1 · base32Encode helper (needed for TOTP secret generation)
-// Generates a cryptographically random 20-byte secret and encodes as Base32
-// so it can be stored in D1 and used with any TOTP authenticator app.
-// ─────────────────────────────────────────────────────────────────────────────
-function base32Encode(bytes: Uint8Array): string {
-  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
-  let bits = ''
-  for (const b of bytes) bits += b.toString(2).padStart(8, '0')
-  let out = ''
-  for (let i = 0; i + 5 <= bits.length; i += 5) out += alpha[parseInt(bits.slice(i, i + 5), 2)]
-  return out
-}
-
-function generateTOTPSecret(): string {
-  const raw = crypto.getRandomValues(new Uint8Array(20))
-  return base32Encode(raw)
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A2 · POST /auth/totp/enrol/begin  ← P0 BLOCKER — required before first login
-//
-// Flow:
-//  1. Requires a valid session (user must be logged in via temp password with
-//     mfa_required=true but totp_enabled=0 — the login handler allows this
-//     single-use window for enrollment).
-//  2. Generates a fresh TOTP secret.
-//  3. Stores it as PENDING in KV with 10-min TTL (not yet activated).
-//  4. Returns an otpauth:// URI + Google Charts QR URL.
-//  5. User scans QR in Google Authenticator / Authy.
-//  6. Then calls /enrol/confirm with first 6-digit code to activate.
-// ─────────────────────────────────────────────────────────────────────────────
-app.post('/auth/totp/enrol/begin', requireSession(), async (c) => {
-  try {
-    const session    = c.get('session') as SessionData
-    const identifier = session.user
-
-    // Prevent re-enrollment if already confirmed (unless admin override)
-    if (c.env?.DB) {
-      const row: any = await c.env.DB.prepare(
-        `SELECT totp_enabled FROM ig_users WHERE identifier = ? AND is_active = 1`
-      ).bind(identifier).first()
-      if (row?.totp_enabled === 1) {
-        return c.json({
-          success: false,
-          error: 'TOTP already enrolled. Use /auth/totp/enrol/remove first to re-enroll.',
-          already_enrolled: true,
-        }, 409)
-      }
-    }
-
-    // Generate new secret
-    const secret = generateTOTPSecret()
-
-    // Store pending secret in KV — 10-minute window to confirm
-    const pendingKey = `totp_pending:${identifier}`
-    if (c.env?.IG_SESSION_KV) {
-      await c.env.IG_SESSION_KV.put(
-        pendingKey,
-        JSON.stringify({ secret, created_at: Date.now() }),
-        { expirationTtl: 600 }
-      )
-    }
-
-    // Build otpauth URI per RFC 6238 / Google Authenticator spec
-    const label    = encodeURIComponent(`India Gully:${identifier}`)
-    const issuer   = encodeURIComponent('India Gully Enterprise Platform')
-    const otpauth  = `otpauth://totp/${label}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`
-
-    // Google Charts QR — 200×200, error correction level M
-    const qrUrl    = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(otpauth)}&choe=UTF-8`
-
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_BEGIN', identifier, 'N/A', 'PENDING')
-
-    return c.json({
-      success:        true,
-      identifier,
-      otpauth_uri:    otpauth,
-      qr_url:         qrUrl,
-      secret,                   // shown once — user should save this as backup code
-      expires_in:     600,
-      instructions:   'Scan the QR code with Google Authenticator or Authy. Then call POST /api/auth/totp/enrol/confirm with your first 6-digit code to activate.',
-      backup_note:    'Store the secret above as a backup recovery code in a secure location.',
-    })
-  } catch (err) {
-    console.error('[TOTP/ENROL/BEGIN]', err)
-    return c.json({ success: false, error: 'Failed to begin TOTP enrollment.' }, 500)
-  }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A3 · POST /auth/totp/enrol/confirm  ← P0 BLOCKER
-//
-// Flow:
-//  1. Reads pending TOTP secret from KV.
-//  2. Verifies the 6-digit code against it (±1 window for clock skew).
-//  3. On success: writes secret + totp_enabled=1 to D1, deletes KV pending.
-//  4. Audit logs TOTP_ENROLLED.
-//  5. User can now log in with full MFA flow.
-// ─────────────────────────────────────────────────────────────────────────────
-app.post('/auth/totp/enrol/confirm', requireSession(), async (c) => {
-  try {
-    const session    = c.get('session') as SessionData
-    const identifier = session.user
-    const { code }   = await c.req.json() as { code?: string }
-
-    if (!code || !/^\d{6}$/.test(code)) {
-      return c.json({ success: false, error: 'A 6-digit code is required.' }, 400)
-    }
-
-    // Retrieve pending secret
-    const pendingKey = `totp_pending:${identifier}`
-    let pendingSecret = ''
-    if (c.env?.IG_SESSION_KV) {
-      const raw = await c.env.IG_SESSION_KV.get(pendingKey)
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        pendingSecret = parsed.secret || ''
-      }
-    }
-
-    if (!pendingSecret) {
-      return c.json({
-        success: false,
-        error: 'No pending TOTP enrollment found. Please call /auth/totp/enrol/begin first. Enrollment window may have expired (10 minutes).',
-      }, 410)
-    }
-
-    // Verify submitted code against pending secret
-    const valid = await verifyTOTP(pendingSecret, code)
-    if (!valid) {
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_FAIL', identifier, 'N/A', 'INVALID_CODE')
-      return c.json({ success: false, error: 'Invalid TOTP code. Please try again — check your device clock is correct.' }, 400)
-    }
-
-    // Activate: write to D1
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `UPDATE ig_users
-         SET totp_secret = ?, totp_enabled = 1, updated_at = CURRENT_TIMESTAMP
-         WHERE identifier = ? AND is_active = 1`
-      ).bind(pendingSecret, identifier).run()
-
-      // Also insert into ig_totp_devices for multi-device tracking
-      await c.env.DB.prepare(
-        `INSERT OR IGNORE INTO ig_totp_devices (user_id, device_name, totp_secret, confirmed, created_at)
-         SELECT id, 'Primary Authenticator App', ?, 1, CURRENT_TIMESTAMP
-         FROM ig_users WHERE identifier = ?`
-      ).bind(pendingSecret, identifier).run().catch(() => {/* table may not exist yet — ignore */})
-    }
-
-    // Clean up pending KV entry
-    if (c.env?.IG_SESSION_KV) {
-      await c.env.IG_SESSION_KV.delete(pendingKey)
-    }
-
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROLLED', identifier, 'N/A', 'SUCCESS')
-
-    return c.json({
-      success:          true,
-      identifier,
-      totp_enabled:     true,
-      message:          'TOTP enrollment complete. You can now log in with your authenticator app.',
-      next_step:        'Log in at https://indiagully.com/portal/employee or /portal/board using your email and password, then enter the 6-digit code from your authenticator app.',
-    })
-  } catch (err) {
-    console.error('[TOTP/ENROL/CONFIRM]', err)
-    return c.json({ success: false, error: 'TOTP confirmation failed.' }, 500)
-  }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A4 · POST /auth/totp/enroll  (US-spelling alias → enrol/confirm logic)
-// ─────────────────────────────────────────────────────────────────────────────
-app.post('/auth/totp/enroll', requireSession(), async (c) => {
-  // Delegate to enrol/confirm semantics — accepts { code } body same as confirm
-  try {
-    const session    = c.get('session') as SessionData
-    const identifier = session.user
-    const body       = await c.req.json() as { code?: string; action?: string }
-
-    // If action=begin, delegate to begin flow inline
-    if (body.action === 'begin' || !body.code) {
-      const secret   = generateTOTPSecret()
-      const pendingKey = `totp_pending:${identifier}`
-      if (c.env?.IG_SESSION_KV) {
-        await c.env.IG_SESSION_KV.put(pendingKey, JSON.stringify({ secret, created_at: Date.now() }), { expirationTtl: 600 })
-      }
-      const label   = encodeURIComponent(`India Gully:${identifier}`)
-      const issuer  = encodeURIComponent('India Gully Enterprise Platform')
-      const otpauth = `otpauth://totp/${label}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`
-      const qrUrl   = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(otpauth)}&choe=UTF-8`
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROL_BEGIN', identifier, 'N/A', 'PENDING')
-      return c.json({ success: true, action: 'begin', otpauth_uri: otpauth, qr_url: qrUrl, secret, expires_in: 600 })
-    }
-
-    // Otherwise treat as confirm
-    const { code } = body
-    if (!code || !/^\d{6}$/.test(code)) {
-      return c.json({ success: false, error: 'A 6-digit code is required for confirm action.' }, 400)
-    }
-    const pendingKey = `totp_pending:${identifier}`
-    let pendingSecret = ''
-    if (c.env?.IG_SESSION_KV) {
-      const raw = await c.env.IG_SESSION_KV.get(pendingKey)
-      if (raw) pendingSecret = JSON.parse(raw).secret || ''
-    }
-    if (!pendingSecret) return c.json({ success: false, error: 'No pending enrollment. Call with action:"begin" first.' }, 410)
-    const valid = await verifyTOTP(pendingSecret, code)
-    if (!valid) return c.json({ success: false, error: 'Invalid TOTP code.' }, 400)
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `UPDATE ig_users SET totp_secret=?, totp_enabled=1, updated_at=CURRENT_TIMESTAMP WHERE identifier=? AND is_active=1`
-      ).bind(pendingSecret, identifier).run()
-    }
-    if (c.env?.IG_SESSION_KV) await c.env.IG_SESSION_KV.delete(pendingKey)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'TOTP_ENROLLED', identifier, 'N/A', 'SUCCESS')
-    return c.json({ success: true, totp_enabled: true, message: 'TOTP enrollment complete.' })
-  } catch (err) {
-    console.error('[TOTP/ENROLL]', err)
-    return c.json({ success: false, error: 'TOTP enrollment failed.' }, 500)
-  }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A5 · POST /auth/otp/send?channel=email  (query-param alias)
-// P1-A6 · POST /auth/otp/send?channel=sms    (query-param alias)
-// P1-A7 · POST /auth/email-otp/send          (path alias for email OTP)
-// P1-A8 · POST /auth/sms-otp/send            (path alias for SMS OTP)
-//
-// All four delegate to the existing /auth/otp/send body handler, injecting the
-// channel from the URL so callers don't need to repeat it in the body.
-// ─────────────────────────────────────────────────────────────────────────────
-app.post('/auth/email-otp/send', async (c) => {
-  try {
-    const body       = await c.req.json() as { identifier?: string; purpose?: string }
-    const { identifier, purpose } = body
-    if (!identifier || !purpose) {
-      return c.json({ success: false, error: 'identifier and purpose are required.' }, 400)
-    }
-    const otp       = generateOTP()
-    const otpKey    = `otp:email:${identifier}:${purpose}`
-    if (c.env?.IG_SESSION_KV) {
-      await c.env.IG_SESSION_KV.put(otpKey, JSON.stringify({ otp, expires: Date.now() + 600000 }), { expirationTtl: 600 })
-    }
-    let delivered = false; let delivery_id = ''
-    const sgKey = (c.env as any)?.SENDGRID_API_KEY
-    if (sgKey && sgKey.startsWith('SG.')) {
-      try {
-        const sgRes = await fetch('https://api.sendgrid.com/v3/mail/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sgKey}` },
-          body: JSON.stringify({
-            personalizations: [{ to: [{ email: identifier }] }],
-            from: { email: 'noreply@indiagully.com', name: 'India Gully Security' },
-            subject: `Your India Gully OTP — ${purpose}`,
-            content: [{ type: 'text/html', value: `<p>Your one-time password is: <strong style="font-size:1.5rem;letter-spacing:0.2em">${otp}</strong></p><p>Expires in <strong>10 minutes</strong>. Do not share.</p>` }],
-          }),
-        })
-        delivered   = sgRes.ok
-        delivery_id = sgRes.headers.get('X-Message-Id') || ''
-      } catch { /* stub fallback */ }
-    }
-    if (!delivered) console.log(`[EMAIL OTP STUB] To: ${identifier} | OTP: ${otp} | Purpose: ${purpose}`)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'EMAIL_OTP_SENT', identifier, 'N/A', delivered ? 'DELIVERED' : 'STUB')
-    return c.json({ success: true, channel: 'email', identifier, delivered, delivery_id: delivery_id || null, expires_in: 600, note: delivered ? 'OTP sent via email.' : 'Set SENDGRID_API_KEY secret for live delivery.' })
-  } catch (err) {
-    console.error('[EMAIL-OTP/SEND]', err)
-    return c.json({ success: false, error: 'Failed to send email OTP.' }, 500)
-  }
-})
-
-app.post('/auth/sms-otp/send', async (c) => {
-  try {
-    const body       = await c.req.json() as { identifier?: string; purpose?: string }
-    const { identifier, purpose } = body
-    if (!identifier || !purpose) {
-      return c.json({ success: false, error: 'identifier (phone) and purpose are required.' }, 400)
-    }
-    const otp    = generateOTP()
-    const otpKey = `otp:sms:${identifier}:${purpose}`
-    if (c.env?.IG_SESSION_KV) {
-      await c.env.IG_SESSION_KV.put(otpKey, JSON.stringify({ otp, expires: Date.now() + 600000 }), { expirationTtl: 600 })
-    }
-    let delivered = false; let delivery_id = ''
-    const twilioSid   = (c.env as any)?.TWILIO_ACCOUNT_SID
-    const twilioToken = (c.env as any)?.TWILIO_AUTH_TOKEN
-    const twilioFrom  = (c.env as any)?.TWILIO_FROM_NUMBER || '+12345678901'
-    if (twilioSid && twilioSid.startsWith('AC') && twilioToken) {
-      try {
-        const creds  = btoa(`${twilioSid}:${twilioToken}`)
-        const smsRes = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
-          method: 'POST',
-          headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ To: identifier, From: twilioFrom, Body: `Your India Gully OTP is ${otp}. Expires in 10 minutes. Do not share.` }).toString(),
-        })
-        const smsData: any = await smsRes.json()
-        delivered   = smsRes.ok && smsData.sid
-        delivery_id = smsData.sid || ''
-      } catch { /* stub fallback */ }
-    }
-    if (!delivered) console.log(`[SMS OTP STUB] To: ${identifier} | OTP: ${otp} | Purpose: ${purpose}`)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'SMS_OTP_SENT', identifier, 'N/A', delivered ? 'DELIVERED' : 'STUB')
-    return c.json({ success: true, channel: 'sms', identifier, delivered, delivery_id: delivery_id || null, expires_in: 600, note: delivered ? 'OTP sent via SMS.' : 'Set TWILIO_* secrets for live SMS delivery.' })
-  } catch (err) {
-    console.error('[SMS-OTP/SEND]', err)
-    return c.json({ success: false, error: 'Failed to send SMS OTP.' }, 500)
-  }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P1-A9  · POST /auth/webauthn/register-begin    (hyphen alias of register/begin)
-// P1-A10 · POST /auth/webauthn/register-complete (hyphen alias of register/complete)
-// P1-A11 · POST /auth/webauthn/register-finish   (alias of register-complete)
-// P1-A12 · POST /auth/webauthn/authenticate      (hyphen alias of authenticate/begin+complete)
-//
-// The existing routes use slash notation (/register/begin).  The pending list
-// uses hyphen notation (/register-begin).  These thin proxy handlers forward
-// to the slash-notation handlers via internal Hono fetch so we don't duplicate
-// the full attestation logic.
-// ─────────────────────────────────────────────────────────────────────────────
-app.post('/auth/webauthn/register-begin', requireSession(), async (c) => {
-  // Proxy to /auth/webauthn/register/begin
-  const session    = c.get('session') as SessionData
-  const identifier = session.user
-  let existingCreds: { id: string; transports?: string[] }[] = []
-  if (c.env?.DB) {
-    try {
-      const rows = await c.env.DB.prepare(
-        `SELECT credential_id, transports FROM ig_webauthn_credentials
-         WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-      ).bind(identifier).all() as { results: any[] }
-      existingCreds = (rows.results || []).map((r: any) => ({
-        id: r.credential_id,
-        transports: r.transports ? JSON.parse(r.transports) : undefined,
-      }))
-    } catch (err) {
-      console.error('[WEBAUTHN REGISTER-BEGIN ALIAS] D1 error:', err)
-    }
-  }
-  const options = await generateRegistrationOptions({
-    rpName: RP_NAME, rpID: RP_ID,
-    userID: new TextEncoder().encode(identifier),
-    userName: identifier, userDisplayName: identifier,
-    timeout: 60000, attestationType: 'none',
-    excludeCredentials: existingCreds as any,
-    authenticatorSelection: { authenticatorAttachment: 'platform', requireResidentKey: false, userVerification: 'required' },
-    supportedAlgorithmIDs: [-7, -257],
-  })
-  const chalKey = `webauthn_challenge:${identifier}`
-  if (c.env?.IG_SESSION_KV) {
-    await c.env.IG_SESSION_KV.put(chalKey, JSON.stringify({ challenge: options.challenge, type: 'registration', ts: Date.now() }), { expirationTtl: 300 })
-  }
-  await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_BEGIN', identifier, 'N/A', 'CHALLENGE_ISSUED')
-  return c.json(options)
-})
-
-app.post('/auth/webauthn/register-complete', requireSession(), async (c) => {
-  // Proxy to /auth/webauthn/register/complete logic
-  const session    = c.get('session') as SessionData
-  const identifier = session.user
-  const body       = await c.req.json() as any
-  const chalKey    = `webauthn_challenge:${identifier}`
-  let expectedChallenge = ''
-  if (c.env?.IG_SESSION_KV) {
-    const raw = await c.env.IG_SESSION_KV.get(chalKey)
-    if (raw) expectedChallenge = JSON.parse(raw).challenge
-    await c.env.IG_SESSION_KV.delete(chalKey)
-  }
-  if (!expectedChallenge) return c.json({ success: false, error: 'Registration challenge expired. Call register-begin again.' }, 410)
-  try {
-    const verification = await verifyRegistrationResponse({
-      response: body, expectedChallenge, expectedOrigin: RP_ORIGIN, expectedRPID: RP_ID, requireUserVerification: true,
-    })
-    if (!verification.verified || !verification.registrationInfo) {
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_FAIL', identifier, 'N/A', 'ATTESTATION_FAIL')
-      return c.json({ success: false, error: 'Attestation verification failed.' }, 400)
-    }
-    const { credential, credentialDeviceType, credentialBackedUp } = verification.registrationInfo
-    const credentialId  = Buffer.from(credential.id).toString('base64url')
-    const publicKeyCose = Buffer.from(credential.publicKey).toString('base64url')
-    const counter       = credential.counter
-    const transports    = body?.response?.transports ? JSON.stringify(body.response.transports) : null
-    const deviceType    = credentialDeviceType === 'multiDevice' ? 'platform' : 'cross-platform'
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR REPLACE INTO ig_webauthn_credentials
-           (user_id, credential_id, public_key, counter, device_type, device_name, transports, backed_up, last_used)
-         SELECT id, ?, ?, ?, ?, 'Security Key', ?, ?, CURRENT_TIMESTAMP FROM ig_users WHERE identifier = ?`
-      ).bind(credentialId, publicKeyCose, counter, deviceType, transports, credentialBackedUp ? 1 : 0, identifier).run()
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTERED', identifier, 'N/A', 'SUCCESS')
-    return c.json({ success: true, verified: true, credential_id: credentialId, device_type: deviceType, backed_up: credentialBackedUp, counter })
-  } catch (err: any) {
-    console.error('[WEBAUTHN REGISTER-COMPLETE]', err)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTER_ERROR', identifier, 'N/A', err?.message || 'ERROR')
-    return c.json({ success: false, error: 'Attestation error: ' + (err?.message || 'unknown') }, 500)
-  }
-})
-
-// register-finish is identical to register-complete
-app.post('/auth/webauthn/register-finish', requireSession(), async (c) => {
-  const session    = c.get('session') as SessionData
-  const identifier = session.user
-  const body       = await c.req.json() as any
-  const chalKey    = `webauthn_challenge:${identifier}`
-  let expectedChallenge = ''
-  if (c.env?.IG_SESSION_KV) {
-    const raw = await c.env.IG_SESSION_KV.get(chalKey)
-    if (raw) expectedChallenge = JSON.parse(raw).challenge
-    await c.env.IG_SESSION_KV.delete(chalKey)
-  }
-  if (!expectedChallenge) return c.json({ success: false, error: 'Registration challenge expired. Call register-begin again.' }, 410)
-  try {
-    const verification = await verifyRegistrationResponse({
-      response: body, expectedChallenge, expectedOrigin: RP_ORIGIN, expectedRPID: RP_ID, requireUserVerification: true,
-    })
-    if (!verification.verified || !verification.registrationInfo) return c.json({ success: false, error: 'Attestation failed.' }, 400)
-    const { credential, credentialDeviceType, credentialBackedUp } = verification.registrationInfo
-    const credentialId  = Buffer.from(credential.id).toString('base64url')
-    const publicKeyCose = Buffer.from(credential.publicKey).toString('base64url')
-    const deviceType    = credentialDeviceType === 'multiDevice' ? 'platform' : 'cross-platform'
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR REPLACE INTO ig_webauthn_credentials
-           (user_id, credential_id, public_key, counter, device_type, device_name, transports, backed_up, last_used)
-         SELECT id, ?, ?, ?, ?, 'Security Key', ?, ?, CURRENT_TIMESTAMP FROM ig_users WHERE identifier = ?`
-      ).bind(credentialId, publicKeyCose, credential.counter, deviceType,
-        body?.response?.transports ? JSON.stringify(body.response.transports) : null,
-        credentialBackedUp ? 1 : 0, identifier).run()
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_REGISTERED', identifier, 'N/A', 'SUCCESS')
-    return c.json({ success: true, verified: true, credential_id: credentialId, device_type: deviceType })
-  } catch (err: any) {
-    return c.json({ success: false, error: 'Attestation error: ' + (err?.message || 'unknown') }, 500)
-  }
-})
-
-// POST /auth/webauthn/authenticate — Alias combining begin+complete in one call
-// For clients that prefer a two-round-trip approach but call a single path.
-// Body: { action: 'begin' } → returns challenge
-// Body: { action: 'complete', response: {...} } → verifies assertion
-app.post('/auth/webauthn/authenticate', requireSession(), async (c) => {
-  try {
-    const session    = c.get('session') as SessionData
-    const identifier = session.user
-    const body       = await c.req.json() as any
-    const action     = body?.action || (body?.response ? 'complete' : 'begin')
-
-    if (action === 'begin') {
-      // Generate authentication options
-      let allowCreds: { id: string; type: 'public-key'; transports?: AuthenticatorTransportFuture[] }[] = []
-      if (c.env?.DB) {
-        const rows = await c.env.DB.prepare(
-          `SELECT credential_id, transports FROM ig_webauthn_credentials
-           WHERE user_id = (SELECT id FROM ig_users WHERE identifier = ?)`
-        ).bind(identifier).all() as { results: any[] }
-        allowCreds = (rows.results || []).map((r: any) => ({
-          id: r.credential_id,
-          type: 'public-key' as const,
-          transports: r.transports ? JSON.parse(r.transports) : undefined,
-        }))
-      }
-      const options = await generateAuthenticationOptions({
-        rpID: RP_ID,
-        allowCredentials: allowCreds as any,
-        userVerification: 'required',
-        timeout: 60000,
-      })
-      const chalKey = `webauthn_auth_challenge:${identifier}`
-      if (c.env?.IG_SESSION_KV) {
-        await c.env.IG_SESSION_KV.put(chalKey, JSON.stringify({ challenge: options.challenge, ts: Date.now() }), { expirationTtl: 300 })
-      }
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTH_BEGIN', identifier, 'N/A', 'CHALLENGE_ISSUED')
-      return c.json({ success: true, action: 'begin', ...options })
-    }
-
-    // action === 'complete'
-    const chalKey = `webauthn_auth_challenge:${identifier}`
-    let expectedChallenge = ''
-    if (c.env?.IG_SESSION_KV) {
-      const raw = await c.env.IG_SESSION_KV.get(chalKey)
-      if (raw) expectedChallenge = JSON.parse(raw).challenge
-      await c.env.IG_SESSION_KV.delete(chalKey)
-    }
-    if (!expectedChallenge) return c.json({ success: false, error: 'Authentication challenge expired. Call with action:"begin" again.' }, 410)
-
-    const authResponse = body.response || body
-    let storedCredential: any = null
-    if (c.env?.DB) {
-      storedCredential = await c.env.DB.prepare(
-        `SELECT credential_id, public_key, counter, transports FROM ig_webauthn_credentials
-         WHERE credential_id = ?`
-      ).bind(authResponse.id || authResponse.rawId).first() as any
-    }
-    if (!storedCredential) return c.json({ success: false, error: 'Unknown credential. Please register this device first.' }, 404)
-
-    const verification = await verifyAuthenticationResponse({
-      response:          authResponse,
-      expectedChallenge,
-      expectedOrigin:    RP_ORIGIN,
-      expectedRPID:      RP_ID,
-      credential: {
-        id:         storedCredential.credential_id,
-        publicKey:  Buffer.from(storedCredential.public_key, 'base64url'),
-        counter:    storedCredential.counter,
-        transports: storedCredential.transports ? JSON.parse(storedCredential.transports) : undefined,
-      },
-      requireUserVerification: true,
-    })
-
-    if (!verification.verified) {
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTH_FAIL', identifier, 'N/A', 'ASSERTION_FAIL')
-      return c.json({ success: false, error: 'WebAuthn authentication failed.' }, 400)
-    }
-
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `UPDATE ig_webauthn_credentials SET counter = ?, last_used = CURRENT_TIMESTAMP WHERE credential_id = ?`
-      ).bind(verification.authenticationInfo.newCounter, storedCredential.credential_id).run()
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'WEBAUTHN_AUTHENTICATED', identifier, 'N/A', 'SUCCESS')
-    return c.json({ success: true, action: 'complete', verified: true, new_counter: verification.authenticationInfo.newCounter, message: 'WebAuthn authentication verified.' })
-  } catch (err: any) {
-    console.error('[WEBAUTHN/AUTHENTICATE]', err)
-    return c.json({ success: false, error: 'WebAuthn authentication error: ' + (err?.message || 'unknown') }, 500)
-  }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// END PHASE P1 AUTH ENDPOINTS
-// ─────────────────────────────────────────────────────────────────────────────
-
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// PHASE P2–P5 — ALL 22 REMAINING PENDING ENDPOINTS
-// Groups: DPDP(6 new), Payments(4), Notifications(3), Contracts(2),
-//         Documents(1), Finance(1), HR(2), Integrations(1), Invoices(1), Admin(1)
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P2 · DPDP COMPLIANCE (6 new routes)
-// Existing: /dpdp/consent (record+withdraw combined), /dpdp/dpo-summary,
-//           /dpdp/dpo/withdrawals(?), /dpdp/dsr(?)
-// Missing:  explicit /consent/record, /consent/withdraw, /dpo/dashboard,
-//           /dpo/withdrawals, /rights/access|correct|erase|nominate
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/dpdp/consent/record — explicit consent recording endpoint (Art. 5-6) */
-app.post('/dpdp/consent/record', async (c) => {
-  try {
-    const { user_id, purposes, channel, consent_version } = await c.req.json() as {
-      user_id?: string; purposes?: string[]; channel?: string; consent_version?: string
-    }
-    if (!user_id || !purposes || !Array.isArray(purposes) || purposes.length === 0) {
-      return c.json({ success: false, error: 'user_id and purposes[] required.' }, 400)
-    }
-    const consent_id  = `CONS-${Date.now()}`
-    const now         = new Date().toISOString()
-    const valid_until = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-    const ip          = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown'
-    const version     = consent_version || '2026-03-01'
-
-    if (c.env?.DB) {
-      try {
-        await c.env.DB.prepare(
-          `INSERT INTO ig_dpdp_consents
-             (user_id, purposes, consent_given, ip_address, consent_version, valid_until, created_at)
-           VALUES (?, ?, 1, ?, ?, ?, ?)`
-        ).bind(user_id, JSON.stringify(purposes), ip, version, valid_until, now).run()
-      } catch (_) { /* D1 unavailable */ }
-    }
-
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_CONSENT_RECORDED', user_id, ip, `${purposes.length} purposes`)
-
-    return c.json({
-      success: true, consent_id, user_id,
-      purposes_accepted: purposes,
-      channel: channel || 'web',
-      consent_version: version,
-      recorded_at: now,
-      valid_until,
-      storage: c.env?.DB ? 'D1' : 'response-only',
-      dpdp_section: 'Section 6 — Notice and Consent',
-      rights: {
-        withdraw:  'POST /api/dpdp/consent/withdraw',
-        access:    'POST /api/dpdp/rights/access',
-        correct:   'POST /api/dpdp/rights/correct',
-        erase:     'POST /api/dpdp/rights/erase',
-        nominate:  'POST /api/dpdp/rights/nominate',
-        grievance: 'POST /api/dpdp/grievance',
-      },
-    })
-  } catch { return c.json({ success: false, error: 'Consent recording failed.' }, 500) }
-})
-
-/** POST /api/dpdp/consent/withdraw — withdraw one or all consents (Art. 8) */
-app.post('/dpdp/consent/withdraw', async (c) => {
-  try {
-    const { user_id, purposes, withdraw_all, reason } = await c.req.json() as {
-      user_id?: string; purposes?: string[]; withdraw_all?: boolean; reason?: string
-    }
-    if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
-
-    const withdrawal_ref = `WD-${Date.now()}`
-    const now            = new Date().toISOString()
-    const ip             = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown'
-    const scope          = withdraw_all ? ['all'] : (purposes || [])
-
-    let storage = 'response-only'
-    if (c.env?.DB) {
-      try {
-        // Mark consents as withdrawn in D1
-        if (withdraw_all) {
-          await c.env.DB.prepare(
-            `UPDATE ig_dpdp_consents SET withdrawn_at=?, is_active=0 WHERE user_id=? AND is_active=1`
-          ).bind(now, user_id).run().catch(() => {
-            // column name fallback
-            c.env!.DB!.prepare(
-              `UPDATE ig_dpdp_consents SET valid_until=? WHERE user_id=?`
-            ).bind(now, user_id).run()
-          })
-        } else if (scope.length > 0) {
-          await c.env.DB.prepare(
-            `UPDATE ig_dpdp_consents SET withdrawn_at=? WHERE user_id=? AND purposes LIKE ?`
-          ).bind(now, user_id, `%${scope[0]}%`).run().catch(() => {})
-        }
-
-        // Log withdrawal
-        await c.env.DB.prepare(
-          `INSERT OR IGNORE INTO ig_dpdp_withdrawals
-             (withdrawal_ref, user_id, purposes, withdraw_all, reason, ip_address, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?)`
-        ).bind(withdrawal_ref, user_id, JSON.stringify(scope), withdraw_all ? 1 : 0, reason || '', ip, now).run()
-          .catch(() => {
-            // Table may have different schema
-            c.env!.DB!.prepare(
-              `INSERT OR IGNORE INTO ig_dpdp_withdrawals (withdrawal_ref, user_id, timestamp)
-               VALUES (?, ?, ?)`
-            ).bind(withdrawal_ref, user_id, now).run()
-          })
-
-        // Create DPO alert
-        await c.env.DB.prepare(
-          `INSERT INTO ig_dpo_alerts (alert_type, severity, title, body, entity_ref)
-           VALUES ('consent_withdrawal', 'medium', ?, ?, ?)`
-        ).bind(
-          `Consent Withdrawal — ${user_id}`,
-          `User ${user_id} withdrew ${withdraw_all ? 'ALL consents' : `consent for: ${scope.join(', ')}`}. Ref: ${withdrawal_ref}`,
-          withdrawal_ref
-        ).run().catch(() => {})
-        storage = 'D1'
-      } catch (_) { /* D1 unavailable */ }
-    }
-
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_CONSENT_WITHDRAWN', user_id, ip,
-      `${withdrawal_ref}:${withdraw_all ? 'ALL' : scope.join(',')}`)
-
-    return c.json({
-      success: true,
-      withdrawal_ref,
-      user_id,
-      withdrawn_purposes: withdraw_all ? 'all' : scope,
-      withdraw_all: !!withdraw_all,
-      withdrawn_at: now,
-      storage,
-      dpdp_section: 'Section 6(3) — Right to Withdraw Consent',
-      dpo_notified: true,
-      dpo_contact: 'dpo@indiagully.com',
-      note: 'Your consent has been withdrawn. Data processing for specified purposes will cease. Statutory retention obligations still apply under applicable law.',
-      next_steps: {
-        erasure_request: 'POST /api/dpdp/rights/erase',
-        data_access:     'POST /api/dpdp/rights/access',
-        grievance:       'POST /api/dpdp/grievance',
-      },
-    })
-  } catch { return c.json({ success: false, error: 'Consent withdrawal failed.' }, 500) }
-})
-
-/** GET /api/dpdp/dpo/dashboard — DPO command dashboard (Super Admin / DPO role) */
-app.get('/dpdp/dpo/dashboard', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const db = c.env?.DB
-  let metrics = {
-    open_rights_requests:      0,
-    unread_dpo_alerts:         0,
-    consent_withdrawals_7d:    0,
-    consent_given_7d:          0,
-    pending_grievances:        0,
-    overdue_requests:          0,
-  }
-  let recentAlerts:   any[] = []
-  let recentRequests: any[] = []
-  let dbAvailable = false
-
-  if (db) {
-    try {
-      const [rr, al, wd, cg, gr, od, alertRows, rrRows] = await Promise.all([
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_rights_requests WHERE status='pending'`).first(),
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpo_alerts WHERE is_read=0`).first().catch(() =>
-          db.prepare(`SELECT COUNT(*) AS n FROM ig_dpo_alerts WHERE read=0`).first()),
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_withdrawals WHERE created_at > datetime('now','-7 days')`).first().catch(() =>
-          db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_withdrawals WHERE timestamp > datetime('now','-7 days')`).first()),
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_consents WHERE created_at > datetime('now','-7 days') AND consent_given=1`).first(),
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_grievances WHERE status='pending'`).first().catch(() => ({ n: 0 })),
-        db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_rights_requests WHERE status='pending' AND due_date < date('now')`).first(),
-        db.prepare(`SELECT id, alert_type, severity, title, body, created_at FROM ig_dpo_alerts ORDER BY created_at DESC LIMIT 10`).all(),
-        db.prepare(`SELECT request_ref, user_id, request_type, status, due_date, created_at FROM ig_dpdp_rights_requests ORDER BY created_at DESC LIMIT 10`).all(),
-      ])
-      metrics = {
-        open_rights_requests:   (rr as any)?.n || 0,
-        unread_dpo_alerts:      (al as any)?.n || 0,
-        consent_withdrawals_7d: (wd as any)?.n || 0,
-        consent_given_7d:       (cg as any)?.n || 0,
-        pending_grievances:     (gr as any)?.n || 0,
-        overdue_requests:       (od as any)?.n || 0,
-      }
-      recentAlerts   = (alertRows as any)?.results || []
-      recentRequests = (rrRows as any)?.results || []
-      dbAvailable    = true
-    } catch (_) { /* fallback */ }
-  }
-
-  const compliance_score = Math.round(
-    ((10 - Math.min(metrics.open_rights_requests, 5)) / 10) * 80 +
-    (metrics.overdue_requests === 0 ? 20 : 0)
-  )
-
-  return c.json({
-    success: true,
-    dashboard: 'DPO Command Dashboard',
-    generated_at: new Date().toISOString(),
-    dpo: { name: 'Designated DPO', email: 'dpo@indiagully.com', framework: 'DPDP Act 2023 + Rules 2025' },
-    database_available: dbAvailable,
-    metrics,
-    compliance_score_pct: compliance_score,
-    recent_alerts:   recentAlerts,
-    recent_requests: recentRequests,
-    quick_actions: [
-      { action: 'View all rights requests', endpoint: 'GET /api/dpdp/rights/*' },
-      { action: 'View withdrawals',         endpoint: 'GET /api/dpdp/dpo/withdrawals' },
-      { action: 'Record consent',           endpoint: 'POST /api/dpdp/consent/record' },
-      { action: 'Process DSR',              endpoint: 'GET /api/dpdp/dsr/*' },
-    ],
-    sla_reminder: 'Rights requests must be responded to within 30 days (Section 11-14 DPDP Act 2023)',
-  })
-})
-
-/** GET /api/dpdp/dpo/withdrawals — list consent withdrawals with pagination */
-app.get('/dpdp/dpo/withdrawals', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const limit  = Math.min(parseInt(c.req.query('limit') || '50'), 200)
-  const offset = parseInt(c.req.query('offset') || '0')
-  const db     = c.env?.DB
-
-  if (db) {
-    try {
-      const rows = await db.prepare(
-        `SELECT withdrawal_ref, user_id, purposes, withdraw_all, reason, ip_address, created_at
-         FROM ig_dpdp_withdrawals ORDER BY created_at DESC LIMIT ? OFFSET ?`
-      ).bind(limit, offset).all().catch(() =>
-        db.prepare(
-          `SELECT withdrawal_ref, user_id, timestamp AS created_at FROM ig_dpdp_withdrawals
-           ORDER BY timestamp DESC LIMIT ? OFFSET ?`
-        ).bind(limit, offset).all()
-      )
-      const countRow = await db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_withdrawals`).first() as any
-      return c.json({
-        success: true,
-        total: countRow?.n || 0,
-        returned: (rows as any)?.results?.length || 0,
-        offset, limit,
-        withdrawals: (rows as any)?.results || [],
-        source: 'D1',
-      })
-    } catch (_) { /* fallback */ }
-  }
-
-  return c.json({
-    success: true, total: 0, returned: 0, offset, limit,
-    withdrawals: [],
-    source: 'empty — D1 not available or no withdrawals recorded yet',
-  })
-})
-
-/** POST /api/dpdp/rights/access  — request access to personal data (Section 11) */
-app.post('/dpdp/rights/access', async (c) => {
-  try {
-    const { user_id, details, contact_email } = await c.req.json() as { user_id?: string; details?: string; contact_email?: string }
-    if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
-    const ref = `RR-ACCESS-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
-    const now = new Date().toISOString(); const deadline = new Date(Date.now() + 30*24*60*60*1000).toISOString()
-    let storage = 'response-only'
-    if (c.env?.DB) {
-      try {
-        await c.env.DB.prepare(
-          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-           VALUES (?, ?, 'access', ?, 'pending', 30, ?, ?, ?)`
-        ).bind(ref, user_id, details || 'Access request', deadline, now, now).run().catch(() => {
-          c.env!.DB!.prepare(
-            `INSERT OR IGNORE INTO ig_dpdp_rights (ref, user_id, action, status, details, ip_address, deadline, created_at)
-             VALUES (?, ?, 'access', 'Received', ?, ?, ?, ?)`
-          ).bind(ref, user_id, details || '', ip, deadline, now).run()
-        })
-        await c.env.DB.prepare(
-          `INSERT INTO ig_dpo_alerts (alert_type, severity, title, body, entity_ref) VALUES ('rights_request','info',?,?,?)`
-        ).bind(`Rights Access — ${user_id}`, `User ${user_id} requested data access. Ref: ${ref}`, ref).run().catch(() => {})
-        storage = 'D1'
-      } catch (_) { /* fall back to response-only */ }
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_ACCESS', user_id, ip, ref)
-    return c.json({ success: true, ref, user_id, action: 'access', status: 'Received', sla_days: 30, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 11 — Right of Access', storage })
-  } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
-})
-
-/** POST /api/dpdp/rights/correct — request correction of personal data (Section 12) */
-app.post('/dpdp/rights/correct', async (c) => {
-  try {
-    const { user_id, field, current_value, correct_value, details } = await c.req.json() as any
-    if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
-    const ref = `RR-CORRECT-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
-    const now = new Date().toISOString(); const deadline = new Date(Date.now() + 15*24*60*60*1000).toISOString()
-    let storage = 'response-only'
-    if (c.env?.DB) {
-      try {
-        await c.env.DB.prepare(
-          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-           VALUES (?, ?, 'correct', ?, 'pending', 15, ?, ?, ?)`
-        ).bind(ref, user_id, JSON.stringify({ field, current_value, correct_value, details }), deadline, now, now).run().catch(() => {
-          c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'correct','Received',?,?,?,?)`)
-            .bind(ref, user_id, details || '', ip, deadline, now).run()
-        })
-        await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','info',?,?,?)`)
-          .bind(`Rights Correct — ${user_id}`, `Correction request: ${field || 'field'} by ${user_id}. Ref: ${ref}`, ref).run().catch(() => {})
-        storage = 'D1'
-      } catch (_) { /* fall back to response-only */ }
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_CORRECT', user_id, ip, ref)
-    return c.json({ success: true, ref, user_id, action: 'correct', field: field || 'unspecified', status: 'Received', sla_days: 15, deadline, dpo_contact: 'dpo@indiagully.com', dpdp_section: 'Section 12 — Right to Correction', storage })
-  } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
-})
-
-/** POST /api/dpdp/rights/erase — right of erasure (Section 13) */
-app.post('/dpdp/rights/erase', async (c) => {
-  try {
-    const { user_id, scope, reason } = await c.req.json() as { user_id?: string; scope?: string; reason?: string }
-    if (!user_id) return c.json({ success: false, error: 'user_id required.' }, 400)
-    const ref = `RR-ERASE-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
-    const now = new Date().toISOString(); const deadline = new Date(Date.now() + 30*24*60*60*1000).toISOString()
-    let storage = 'response-only'
-    if (c.env?.DB) {
-      try {
-        await c.env.DB.prepare(
-          `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-             (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-           VALUES (?, ?, 'erase', ?, 'pending', 30, ?, ?, ?)`
-        ).bind(ref, user_id, `Erasure of: ${scope || 'all data'}. Reason: ${reason || 'not provided'}`, deadline, now, now).run().catch(() => {
-          c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'erase','Received',?,?,?,?)`)
-            .bind(ref, user_id, reason || '', ip, deadline, now).run()
-        })
-        await c.env.DB.prepare(`INSERT INTO ig_dpo_alerts (alert_type,severity,title,body,entity_ref) VALUES ('rights_request','high',?,?,?)`)
-          .bind(`⚠️ Erasure Request — ${user_id}`, `User ${user_id} requested data erasure. Scope: ${scope || 'all'}. Ref: ${ref}. Due: ${deadline}`, ref).run().catch(() => {})
-        storage = 'D1'
-      } catch (_) { /* fall back to response-only */ }
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_ERASE', user_id, ip, ref)
-    return c.json({
-      success: true, ref, user_id, action: 'erase',
-      scope: scope || 'all personal data',
-      status: 'Received', sla_days: 30, deadline,
-      dpo_contact: 'dpo@indiagully.com',
-      dpdp_section: 'Section 13 — Right of Erasure',
-      storage,
-      note: 'Statutory retention obligations (e.g., GST, Companies Act) may prevent immediate erasure of certain records.',
-    })
-  } catch { return c.json({ success: false, error: 'Rights request failed.' }, 500) }
-})
-
-/** POST /api/dpdp/rights/nominate — nominate a representative (Section 14) */
-app.post('/dpdp/rights/nominate', async (c) => {
-  try {
-    const { user_id, nominee_name, nominee_email, nominee_phone, relationship } = await c.req.json() as any
-    if (!user_id || !nominee_name) return c.json({ success: false, error: 'user_id and nominee_name required.' }, 400)
-    const ref = `RR-NOMINATE-${Date.now()}`; const ip = c.req.header('CF-Connecting-IP') || 'unknown'
-    const now = new Date().toISOString(); const deadline = new Date(Date.now() + 15*24*60*60*1000).toISOString()
-    if (c.env?.DB) {
-      await c.env.DB.prepare(
-        `INSERT OR IGNORE INTO ig_dpdp_rights_requests
-           (request_ref, user_id, request_type, description, status, sla_days, due_date, created_at, updated_at)
-         VALUES (?, ?, 'nominate', ?, 'pending', 15, ?, ?, ?)`
-      ).bind(ref, user_id, JSON.stringify({ nominee_name, nominee_email, nominee_phone, relationship }), deadline, now, now).run().catch(() => {
-        c.env!.DB!.prepare(`INSERT OR IGNORE INTO ig_dpdp_rights (ref,user_id,action,status,details,ip_address,deadline,created_at) VALUES (?,?,'nominate','Received',?,?,?,?)`)
-          .bind(ref, user_id, `Nominee: ${nominee_name}`, ip, deadline, now).run()
-      })
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'DPDP_RIGHTS_NOMINATE', user_id, ip, ref)
-    return c.json({ success: true, ref, user_id, action: 'nominate', nominee_name, nominee_email: nominee_email || null, status: 'Received', sla_days: 15, deadline, dpdp_section: 'Section 14 — Right to Nominate', storage: c.env?.DB ? 'D1' : 'response-only' })
-  } catch { return c.json({ success: false, error: 'Nomination request failed.' }, 500) }
-})
-
-/** GET /api/dpdp/rights — list all pending rights requests (DPO view) */
-app.get('/dpdp/rights', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const limit  = Math.min(parseInt(c.req.query('limit') || '50'), 200)
-  const status = c.req.query('status') || 'pending'
-  const type   = c.req.query('type') || ''
-  const db = c.env?.DB
-  if (db) {
-    try {
-      const where  = type ? `WHERE status=? AND request_type=?` : `WHERE status=?`
-      const params = type ? [status, type, limit] : [status, limit]
-      const rows   = await db.prepare(
-        `SELECT request_ref, user_id, request_type, status, sla_days, due_date, created_at
-         FROM ig_dpdp_rights_requests ${where} ORDER BY due_date ASC LIMIT ?`
-      ).bind(...params).all()
-      const countRow = await db.prepare(`SELECT COUNT(*) AS n FROM ig_dpdp_rights_requests WHERE status=?`).bind(status).first() as any
-      return c.json({ success: true, total: countRow?.n || 0, returned: (rows as any)?.results?.length || 0, status_filter: status, type_filter: type || 'all', rights_requests: (rows as any)?.results || [], source: 'D1' })
-    } catch (_) { /* fallback */ }
-  }
-  return c.json({ success: true, total: 0, returned: 0, rights_requests: [], source: 'empty — D1 not available' })
-})
-
-/** GET /api/dpdp/dsr/* — DSR (Data Subject Request) wildcard handler */
-app.get('/dpdp/dsr/:action?', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const action = c.req.param('action') || 'list'
-  const db = c.env?.DB
-  if (action === 'list' || action === 'requests') {
-    if (db) {
-      try {
-        const rows = await db.prepare(
-          `SELECT request_ref, user_id, request_type, status, sla_days, due_date, created_at
-           FROM ig_dpdp_rights_requests ORDER BY created_at DESC LIMIT 50`
-        ).all()
-        return c.json({ success: true, action: 'list', total: (rows as any)?.results?.length || 0, dsr_requests: (rows as any)?.results || [], source: 'D1' })
-      } catch (_) { /* fallback */ }
-    }
-    return c.json({ success: true, action: 'list', total: 0, dsr_requests: [], source: 'D1 unavailable' })
-  }
-  if (action === 'stats') {
-    if (db) {
-      try {
-        const stats = await db.prepare(
-          `SELECT request_type, status, COUNT(*) AS count FROM ig_dpdp_rights_requests GROUP BY request_type, status`
-        ).all()
-        return c.json({ success: true, action: 'stats', stats: (stats as any)?.results || [], generated_at: new Date().toISOString() })
-      } catch (_) { /* fallback */ }
-    }
-    return c.json({ success: true, action: 'stats', stats: [], generated_at: new Date().toISOString() })
-  }
-  return c.json({ success: true, action, message: `DSR action '${action}' acknowledged`, available_actions: ['list', 'stats', 'requests'] })
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P3 · PAYMENTS (4 missing — /order, /refund, /settlements, /subscription)
-// Note: /payments/verify-signature already exists (/payments/verify covers it)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/payments/order — alias of /payments/create-order (Razorpay) */
-app.post('/payments/order', async (c) => {
-  // Delegate to /payments/create-order logic
-  try {
-    const env = c.env as any
-    const { amount_paise, amount, invoice_id, client_id, description, currency } = await c.req.json() as any
-    const paise = amount_paise || (amount ? Math.round(parseFloat(amount) * 100) : 0)
-    if (!paise || paise < 100) return c.json({ success: false, error: 'amount_paise must be ≥ 100.' }, 400)
-    if (env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_ID.includes('XXXX')) {
-      const auth   = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`)
-      const rzpRes = await fetch('https://api.razorpay.com/v1/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${auth}` },
-        body: JSON.stringify({ amount: paise, currency: currency || 'INR', receipt: invoice_id || `rcpt_${Date.now()}`, notes: { invoice_id: invoice_id || '', client_id: client_id || '', description: description || '' } }),
-      })
-      if (!rzpRes.ok) { const e = await rzpRes.json() as any; return c.json({ success: false, error: (e as any)?.error?.description || 'Order creation failed' }, 400) }
-      const order = await rzpRes.json() as any
-      if (env?.DB) { await env.DB.prepare(`INSERT OR IGNORE INTO ig_razorpay_webhooks (event,payload_json,order_id,payment_id,signature_valid,processed) VALUES ('order.created',?,?,NULL,0,0)`).bind(JSON.stringify({ order_id: order.id, amount: paise }), order.id).run().catch(()=>{}) }
-      return c.json({ success: true, order_id: order.id, amount_paise: order.amount, currency: order.currency, status: order.status, invoice_id, razorpay_key: env.RAZORPAY_KEY_ID, created_at: new Date(order.created_at * 1000).toISOString(), live: true })
-    }
-    const order_id = `order_${Date.now().toString(36)}_demo`
-    return c.json({ success: true, order_id, invoice_id, amount_paise: paise, currency: currency || 'INR', status: 'created', razorpay_key: 'rzp_test_XXXX', live: false, note: 'Demo mode — set RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/payments/verify-signature — HMAC-SHA256 Razorpay signature verification */
-app.post('/payments/verify-signature', async (c) => {
-  // Alias of /payments/verify with explicit naming
-  try {
-    const env = c.env as any
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await c.req.json() as any
-    if (!razorpay_order_id || !razorpay_payment_id) return c.json({ success: false, error: 'order_id and payment_id required.' }, 400)
-    if (env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_SECRET.includes('configure') && razorpay_signature) {
-      const expectedSig = await computeHMACSHA256(env.RAZORPAY_KEY_SECRET, `${razorpay_order_id}|${razorpay_payment_id}`)
-      const valid = safeEqual(expectedSig, razorpay_signature)
-      if (!valid) return c.json({ success: false, error: 'Signature verification failed — possible tampered data.' }, 400)
-      return c.json({ success: true, signature_valid: true, payment_id: razorpay_payment_id, order_id: razorpay_order_id, verified_at: new Date().toISOString(), live: true })
-    }
-    return c.json({ success: true, signature_valid: false, payment_id: razorpay_payment_id, order_id: razorpay_order_id, verified_at: new Date().toISOString(), live: false, note: 'Demo mode — set RAZORPAY_KEY_SECRET to enable live signature verification.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/payments/refund — initiate Razorpay refund */
-app.post('/payments/refund', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const env = c.env as any
-    const { payment_id, amount_paise, reason, notes } = await c.req.json() as any
-    if (!payment_id) return c.json({ success: false, error: 'payment_id required.' }, 400)
-    if (env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_ID.includes('XXXX')) {
-      const auth   = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`)
-      const body: any = { speed: 'normal', notes: notes || { reason: reason || 'Customer request' } }
-      if (amount_paise) body.amount = amount_paise
-      const rzpRes = await fetch(`https://api.razorpay.com/v1/payments/${payment_id}/refund`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${auth}` },
-        body: JSON.stringify(body),
-      })
-      if (!rzpRes.ok) { const e = await rzpRes.json() as any; return c.json({ success: false, error: (e as any)?.error?.description || 'Refund failed' }, 400) }
-      const refund = await rzpRes.json() as any
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'PAYMENT_REFUND_INITIATED', payment_id, 'N/A', `REF-${refund.id}`)
-      return c.json({ success: true, refund_id: refund.id, payment_id, amount_paise: refund.amount, status: refund.status, speed: refund.speed_processed, created_at: new Date(refund.created_at * 1000).toISOString(), live: true })
-    }
-    const refund_id = `rfnd_${Date.now().toString(36)}_demo`
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'PAYMENT_REFUND_DEMO', payment_id, 'N/A', refund_id)
-    return c.json({ success: true, refund_id, payment_id, amount_paise: amount_paise || 0, status: 'processed', live: false, note: 'Demo mode — set Razorpay secrets for live refunds.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** GET /api/payments/settlements — list Razorpay settlement reports */
-app.get('/payments/settlements', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const env  = c.env as any
-    const from = c.req.query('from') || ''
-    const to   = c.req.query('to')   || ''
-    if (env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_ID.includes('XXXX')) {
-      const auth  = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`)
-      const url   = `https://api.razorpay.com/v1/settlements${from ? `?from=${from}&to=${to}` : ''}`
-      const res   = await fetch(url, { headers: { 'Authorization': `Basic ${auth}` } })
-      if (res.ok) { const data = await res.json() as any; return c.json({ success: true, count: data.count, source: 'razorpay', settlements: data.items || [] }) }
-    }
-    // Static demo fallback
-    return c.json({
-      success: true, count: 2, source: 'demo',
-      settlements: [
-        { id: `setl_${Date.now().toString(36)}`, entity: 'settlement', amount: 245000, status: 'processed', fees: 6125, tax: 1102, created_at: new Date(Date.now() - 7*24*60*60*1000).toISOString() },
-        { id: `setl_${(Date.now()-1000).toString(36)}`, entity: 'settlement', amount: 180000, status: 'processed', fees: 4500, tax: 810, created_at: new Date(Date.now() - 14*24*60*60*1000).toISOString() },
-      ],
-      note: 'Demo data — set Razorpay secrets for live settlement data.',
-    })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/payments/subscription — create Razorpay subscription */
-app.post('/payments/subscription', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const env = c.env as any
-    const { plan_id, customer_id, total_count, quantity, start_at, notify_info, notes } = await c.req.json() as any
-    if (!plan_id) return c.json({ success: false, error: 'plan_id required.' }, 400)
-    if (env?.RAZORPAY_KEY_ID && env?.RAZORPAY_KEY_SECRET && !env.RAZORPAY_KEY_ID.includes('XXXX')) {
-      const auth   = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`)
-      const body   = { plan_id, total_count: total_count || 12, quantity: quantity || 1, ...(start_at && { start_at }), ...(customer_id && { customer_id }), ...(notify_info && { notify_info }), ...(notes && { notes }) }
-      const rzpRes = await fetch('https://api.razorpay.com/v1/subscriptions', {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${auth}` },
-        body: JSON.stringify(body),
-      })
-      if (!rzpRes.ok) { const e = await rzpRes.json() as any; return c.json({ success: false, error: (e as any)?.error?.description || 'Subscription creation failed' }, 400) }
-      const sub = await rzpRes.json() as any
-      await kvAuditLog(c.env?.IG_AUDIT_KV, 'SUBSCRIPTION_CREATED', customer_id || plan_id, 'N/A', sub.id)
-      return c.json({ success: true, subscription_id: sub.id, plan_id, status: sub.status, current_start: sub.current_start, current_end: sub.current_end, total_count: sub.total_count, live: true })
-    }
-    const sub_id = `sub_${Date.now().toString(36)}_demo`
-    return c.json({ success: true, subscription_id: sub_id, plan_id, status: 'created', total_count: total_count || 12, live: false, note: 'Demo mode — set Razorpay secrets for live subscriptions.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P4 · NOTIFICATIONS (3)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/notifications/send-email — transactional email via SendGrid */
-app.post('/notifications/send-email', requireSession(), async (c) => {
-  try {
-    const { to, subject, html, text, template_id, dynamic_data, from_name } = await c.req.json() as any
-    if (!to || !subject) return c.json({ success: false, error: 'to and subject required.' }, 400)
-    const sgKey = (c.env as any)?.SENDGRID_API_KEY
-    let delivered = false; let message_id = ''
-    if (sgKey && sgKey.startsWith('SG.')) {
-      const payload: any = {
-        personalizations: [{ to: [{ email: to }], ...(template_id && dynamic_data && { dynamic_template_data: dynamic_data }) }],
-        from: { email: 'noreply@indiagully.com', name: from_name || 'India Gully Platform' },
-        subject,
-        ...(template_id ? { template_id } : { content: [{ type: 'text/html', value: html || `<p>${text || subject}</p>` }] }),
-      }
-      try {
-        const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sgKey}` },
-          body: JSON.stringify(payload),
-        })
-        delivered  = res.ok
-        message_id = res.headers.get('X-Message-Id') || ''
-      } catch (_) { /* stub */ }
-    }
-    if (!delivered) console.log(`[EMAIL STUB] To: ${to} | Subject: ${subject}`)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'NOTIFICATION_EMAIL', to, 'N/A', delivered ? 'DELIVERED' : 'STUB')
-    return c.json({ success: true, channel: 'email', to, subject, delivered, message_id: message_id || null, sent_at: new Date().toISOString(), note: delivered ? null : 'Set SENDGRID_API_KEY for live delivery.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/notifications/send-sms — transactional SMS via Twilio */
-app.post('/notifications/send-sms', requireSession(), async (c) => {
-  try {
-    const { to, message, from_number } = await c.req.json() as any
-    if (!to || !message) return c.json({ success: false, error: 'to (phone) and message required.' }, 400)
-    const twilioSid   = (c.env as any)?.TWILIO_ACCOUNT_SID
-    const twilioToken = (c.env as any)?.TWILIO_AUTH_TOKEN
-    const twilioFrom  = from_number || (c.env as any)?.TWILIO_FROM_NUMBER || '+12345678901'
-    let delivered = false; let message_sid = ''
-    if (twilioSid && twilioSid.startsWith('AC') && twilioToken) {
-      try {
-        const creds  = btoa(`${twilioSid}:${twilioToken}`)
-        const res    = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
-          method: 'POST', headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ To: to, From: twilioFrom, Body: message }).toString(),
-        })
-        const data: any = await res.json()
-        delivered    = res.ok && data.sid
-        message_sid  = data.sid || ''
-      } catch (_) { /* stub */ }
-    }
-    if (!delivered) console.log(`[SMS STUB] To: ${to} | Message: ${message}`)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'NOTIFICATION_SMS', to, 'N/A', delivered ? 'DELIVERED' : 'STUB')
-    return c.json({ success: true, channel: 'sms', to, delivered, message_sid: message_sid || null, sent_at: new Date().toISOString(), note: delivered ? null : 'Set TWILIO_* secrets for live SMS delivery.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/notifications/send-whatsapp — WhatsApp via Meta Cloud API or Twilio */
-app.post('/notifications/send-whatsapp', requireSession(), async (c) => {
-  try {
-    const { to, message, template_name, template_params } = await c.req.json() as any
-    if (!to || !message) return c.json({ success: false, error: 'to (phone with country code) and message required.' }, 400)
-    const waToken   = (c.env as any)?.WHATSAPP_TOKEN
-    const waPhoneId = (c.env as any)?.WHATSAPP_PHONE_ID
-    let delivered = false; let wamid = ''
-    // Meta Cloud API (preferred)
-    if (waToken && waPhoneId && !waToken.includes('PENDING')) {
-      try {
-        const res  = await fetch(`https://graph.facebook.com/v17.0/${waPhoneId}/messages`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${waToken}` },
-          body: JSON.stringify({
-            messaging_product: 'whatsapp', to,
-            ...(template_name ? {
-              type: 'template',
-              template: { name: template_name, language: { code: 'en_IN' }, ...(template_params && { components: [{ type: 'body', parameters: template_params.map((p: string) => ({ type: 'text', text: p })) }] }) },
-            } : { type: 'text', text: { body: message, preview_url: false } }),
-          }),
-        })
-        const data: any = await res.json()
-        delivered = res.ok && data.messages?.[0]?.id
-        wamid     = data.messages?.[0]?.id || ''
-      } catch (_) { /* fallback to Twilio WA */ }
-    }
-    // Twilio WhatsApp fallback
-    if (!delivered) {
-      const twilioSid   = (c.env as any)?.TWILIO_ACCOUNT_SID
-      const twilioToken = (c.env as any)?.TWILIO_AUTH_TOKEN
-      const twilioFrom  = (c.env as any)?.TWILIO_FROM_NUMBER
-      if (twilioSid && twilioSid.startsWith('AC') && twilioToken && twilioFrom) {
-        try {
-          const creds = btoa(`${twilioSid}:${twilioToken}`)
-          const res   = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
-            method: 'POST', headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ To: `whatsapp:${to}`, From: `whatsapp:${twilioFrom}`, Body: message }).toString(),
-          })
-          const data: any = await res.json()
-          delivered = res.ok && data.sid
-          wamid     = data.sid || ''
-        } catch (_) { /* stub */ }
-      }
-    }
-    if (!delivered) console.log(`[WHATSAPP STUB] To: ${to} | Message: ${message}`)
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'NOTIFICATION_WHATSAPP', to, 'N/A', delivered ? 'DELIVERED' : 'STUB')
-    return c.json({ success: true, channel: 'whatsapp', to, delivered, wamid: wamid || null, sent_at: new Date().toISOString(), note: delivered ? null : 'Set WHATSAPP_TOKEN+WHATSAPP_PHONE_ID or TWILIO_* secrets.' })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · CONTRACTS (2) — clause-check, esign/send-envelope
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/contracts/clause-check — AI-powered clause risk analysis */
-app.post('/contracts/clause-check', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const { contract_text, contract_id, focus_areas } = await c.req.json() as any
-    if (!contract_text && !contract_id) return c.json({ success: false, error: 'contract_text or contract_id required.' }, 400)
-    const scan_ref = `CLAUSE-${Date.now().toString(36).toUpperCase()}`
-    // Heuristic clause analysis (no external LLM dependency)
-    const text   = (contract_text || '').toLowerCase()
-    const flags: { clause: string; risk: string; recommendation: string; section?: string }[] = []
-    if (!text.includes('dpdp') && !text.includes('data protection') && !text.includes('personal data')) {
-      flags.push({ clause: 'Data Protection', risk: 'HIGH', recommendation: 'Add DPDP Act 2023 data processing clause. Data principal rights must be explicitly addressed.', section: 'Suggested: Section 7' })
-    }
-    if (!text.includes('arbitration') && !text.includes('dispute resolution')) {
-      flags.push({ clause: 'Dispute Resolution', risk: 'MEDIUM', recommendation: 'Specify arbitration clause — recommend seat at Delhi per Arbitration & Conciliation Act 1996.', section: 'Suggested: Section 12' })
-    }
-    if (!text.includes('intellectual property') && !text.includes('ip ownership') && !text.includes('work for hire')) {
-      flags.push({ clause: 'IP Ownership', risk: 'MEDIUM', recommendation: 'Clarify IP ownership for custom deliverables. Ambiguity may lead to disputes.', section: 'Suggested: Section 9' })
-    }
-    if (!text.includes('limitation of liability') && !text.includes('indemnif')) {
-      flags.push({ clause: 'Indemnification & Liability', risk: 'HIGH', recommendation: 'Add indemnification clause and cap on liability. Indian courts have upheld blanket liability exclusions.', section: 'Suggested: Section 11' })
-    }
-    if (!text.includes('governing law') && !text.includes('jurisdiction')) {
-      flags.push({ clause: 'Governing Law', risk: 'MEDIUM', recommendation: 'Specify Indian law as governing law and jurisdiction (recommend Delhi High Court for IG contracts).', section: 'Suggested: Section 15' })
-    }
-    if (!text.includes('confidential') && !text.includes('nda') && !text.includes('non-disclosure')) {
-      flags.push({ clause: 'Confidentiality', risk: 'MEDIUM', recommendation: 'Add mutual NDA clause. Required for client data and advisory mandates.', section: 'Suggested: Section 6' })
-    }
-    if (text.includes('perpetual') && !text.includes('termination')) {
-      flags.push({ clause: 'Term & Termination', risk: 'HIGH', recommendation: 'Perpetual contracts without termination rights are enforceable in India but risky — add termination for convenience clause.', section: 'Section 14' })
-    }
-    const risk_score = flags.length === 0 ? 'Low' : flags.filter(f => f.risk === 'HIGH').length >= 2 ? 'High' : flags.filter(f => f.risk === 'HIGH').length === 1 ? 'Medium' : 'Low'
-    if (c.env?.DB && contract_id) {
-      await c.env.DB.prepare(`UPDATE ig_contracts SET last_scanned=CURRENT_TIMESTAMP WHERE id=?`).bind(contract_id).run().catch(() => {})
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'CONTRACT_CLAUSE_SCAN', 'system', 'N/A', scan_ref)
-    return c.json({
-      success: true, scan_ref, contract_id: contract_id || null,
-      risk_score, flag_count: flags.length, flags,
-      compliance_check: { indian_law: !text.includes('english law') && !text.includes('us law'), dpdp_compliant: !flags.find(f => f.clause === 'Data Protection'), arbitration_clause: !!text.includes('arbitration'), confidentiality: !!text.includes('confidential') },
-      suggestions: flags.map(f => f.recommendation),
-      scanned_at: new Date().toISOString(),
-      note: 'Analysis based on Indian contract law heuristics. Engage legal counsel for production contracts.',
-    })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-/** POST /api/contracts/esign/send-envelope — DocuSign e-sign envelope dispatch */
-app.post('/contracts/esign/send-envelope', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const env = c.env as any
-    const { signers, document_name, document_base64, contract_id, subject, message } = await c.req.json() as any
-    if (!signers || !Array.isArray(signers) || signers.length === 0) {
-      return c.json({ success: false, error: 'signers array required. Each: { name, email }' }, 400)
-    }
-    const envelope_id = `ENV-${Date.now().toString(36).toUpperCase()}`
-    const docuApiKey  = env?.DOCUSIGN_API_KEY
-    const docuAcctId  = env?.DOCUSIGN_ACCOUNT_ID
-
-    if (docuApiKey && docuAcctId && !docuApiKey.includes('PENDING')) {
-      try {
-        const signersPayload = signers.map((s: any, i: number) => ({
-          email: s.email, name: s.name,
-          recipientId: String(i + 1),
-          routingOrder: String(i + 1),
-          tabs: { signHereTabs: [{ anchorString: s.anchor || `**Signature_${i + 1}**`, anchorUnits: 'pixels' }] },
-        }))
-        const envelopeBody = {
-          emailSubject: subject || `Please sign: ${document_name || 'India Gully Agreement'}`,
-          emailBlurb:   message || 'Please review and sign the attached document.',
-          documents: [{
-            documentBase64: document_base64 || btoa('India Gully Contract Document'),
-            name: document_name || 'Agreement.pdf',
-            fileExtension: 'pdf', documentId: '1',
-          }],
-          recipients: { signers: signersPayload },
-          status: 'sent',
-        }
-        const dsRes = await fetch(`https://demo.docusign.net/restapi/v2.1/accounts/${docuAcctId}/envelopes`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${docuApiKey}` },
-          body: JSON.stringify(envelopeBody),
-        })
-        if (dsRes.ok) {
-          const data = await dsRes.json() as any
-          if (c.env?.DB && contract_id) {
-            await c.env.DB.prepare(`UPDATE ig_contracts SET docusign_envelope_id=?, status='Sent for Signature' WHERE id=?`).bind(data.envelopeId, contract_id).run().catch(() => {})
-          }
-          await kvAuditLog(c.env?.IG_AUDIT_KV, 'ESIGN_ENVELOPE_SENT', signers[0]?.email, 'N/A', data.envelopeId)
-          return c.json({ success: true, envelope_id: data.envelopeId, status: data.status, signers_count: signers.length, sent_at: new Date().toISOString(), live: true })
-        }
-      } catch (_) { /* fallback */ }
-    }
-
-    // Demo stub
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'ESIGN_ENVELOPE_STUB', signers[0]?.email || 'unknown', 'N/A', envelope_id)
-    return c.json({
-      success: true, envelope_id, status: 'sent_demo',
-      signers: signers.map((s: any, i: number) => ({ ...s, status: 'pending', routing_order: i + 1 })),
-      document_name: document_name || 'Agreement.pdf',
-      sent_at: new Date().toISOString(), live: false,
-      docusign_url: `https://app.docusign.com/sign/${envelope_id}`,
-      note: 'Demo mode — set DOCUSIGN_API_KEY + DOCUSIGN_ACCOUNT_ID for live e-signing.',
-    })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · DOCUMENTS — /documents/:key already registered at line 5627.
-//   Adding explicit short-form alias /documents/key/:path for encoded keys
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** GET /api/documents/signed-url/:key — return a short-lived signed URL for R2 object */
-app.get('/documents/signed-url/:key{.+}', requireSession(), async (c) => {
-  try {
-    const env   = c.env as any
-    const r2Key = decodeURIComponent(c.req.param('key'))
-    if (!env?.DOCS_BUCKET) {
-      return c.json({ success: false, error: 'R2 bucket not configured.', note: 'Create bucket: npx wrangler r2 bucket create india-gully-docs, then uncomment r2_buckets in wrangler.jsonc.', demo_mode: true }, 200)
-    }
-    // R2 doesn't natively support pre-signed URLs in Workers — return direct access
-    const object = await env.DOCS_BUCKET.head(r2Key)
-    if (!object) return c.json({ success: false, error: 'Document not found.' }, 404)
-    return c.json({ success: true, r2_key: r2Key, content_type: object.httpMetadata?.contentType, size: object.size, etag: object.etag, download_url: `/api/documents/${encodeURIComponent(r2Key)}`, expires_in: 300 })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · FINANCE — e-Invoice generation via NIC IRP v1.03
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/finance/einvoice/generate — generate GST e-Invoice (NIC IRP) */
-app.post('/finance/einvoice/generate', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  try {
-    const env = c.env as any
-    const { invoice_id, seller_gstin, buyer_gstin, invoice_date, invoice_number, taxable_value, igst_amount, cgst_amount, sgst_amount, total_value, hsn_code, description } = await c.req.json() as any
-    if (!invoice_number || !taxable_value) return c.json({ success: false, error: 'invoice_number and taxable_value required.' }, 400)
-
-    const gstin       = seller_gstin || env?.GSTIN || 'PENDING_GSTIN'
-    const clientId    = env?.GST_CLIENT_ID
-    const clientSecret = env?.GST_CLIENT_SECRET
-
-    // Live NIC IRP call when GST credentials are set
-    if (clientId && clientSecret && !clientId.includes('PENDING') && gstin !== 'PENDING_GSTIN') {
-      try {
-        // Step 1: Get auth token from IRP
-        const authRes = await fetch('https://einvoice1.gst.gov.in/ims/otp/generateTokenByGstin', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'client_id': clientId, 'client_secret': clientSecret },
-          body: JSON.stringify({ action: 'ACCESSTOKEN', username: gstin }),
-        })
-        if (authRes.ok) {
-          const authData = await authRes.json() as any
-          const irn_token = authData?.data?.AuthToken
-          if (irn_token) {
-            // Step 2: Generate IRN
-            const irnRes = await fetch('https://einvoice1.gst.gov.in/ims/einvoice/generateIRN', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'user_name': gstin, 'authtoken': irn_token },
-              body: JSON.stringify({
-                Version: '1.1', TranDtls: { TaxSch: 'GST', SupTyp: 'B2B' },
-                DocDtls: { Typ: 'INV', No: invoice_number, Dt: invoice_date || new Date().toISOString().slice(0,10).split('-').reverse().join('/') },
-                SellerDtls: { Gstin: gstin },
-                BuyerDtls: { Gstin: buyer_gstin || 'URP' },
-                ValDtls: { TotInvVal: parseFloat(total_value || taxable_value), TaxableVal: parseFloat(taxable_value), IgstAmt: parseFloat(igst_amount || 0), CgstAmt: parseFloat(cgst_amount || 0), SgstAmt: parseFloat(sgst_amount || 0) },
-                ItemList: [{ SlNo: '1', PrdDesc: description || 'Advisory Services', IsServc: 'Y', HsnCd: hsn_code || '998313', UnitPrice: parseFloat(taxable_value), TotAmt: parseFloat(taxable_value), AssAmt: parseFloat(taxable_value), GstRt: parseFloat(igst_amount || 0) > 0 ? 18 : 9, IgstAmt: parseFloat(igst_amount || 0), CgstAmt: parseFloat(cgst_amount || 0), SgstAmt: parseFloat(sgst_amount || 0), TotItemVal: parseFloat(total_value || taxable_value) }],
-              }),
-            })
-            if (irnRes.ok) {
-              const irnData = await irnRes.json() as any
-              const irn = irnData?.data?.Irn || `IRN_LIVE_${Date.now()}`
-              if (c.env?.DB && invoice_id) {
-                await c.env.DB.prepare(`UPDATE ig_invoices SET irn=?, einvoice_status='generated' WHERE id=?`).bind(irn, invoice_id).run().catch(() => {})
-              }
-              await kvAuditLog(c.env?.IG_AUDIT_KV, 'EINVOICE_GENERATED', gstin, 'N/A', irn)
-              return c.json({ success: true, irn, invoice_number, signed_qr_code: irnData?.data?.SignedQRCode, ack_number: irnData?.data?.AckNo, ack_date: irnData?.data?.AckDt, live: true })
-            }
-          }
-        }
-      } catch (_) { /* fallback to demo */ }
-    }
-
-    // Demo stub — returns realistic IRN format
-    const demo_irn = `${gstin.slice(0,2)}${Date.now().toString(36).toUpperCase().slice(0,10)}${invoice_number.replace(/[^A-Z0-9]/gi,'').slice(0,8).toUpperCase()}`
-    const ack_no   = `24${String(Date.now()).slice(-12)}`
-    if (c.env?.DB && invoice_id) {
-      await c.env.DB.prepare(`UPDATE ig_invoices SET irn=?, einvoice_status='demo' WHERE id=?`).bind(demo_irn, invoice_id).run().catch(() => {})
-    }
-    await kvAuditLog(c.env?.IG_AUDIT_KV, 'EINVOICE_DEMO', gstin, 'N/A', demo_irn)
-    return c.json({
-      success: true, irn: demo_irn, invoice_number, ack_number: ack_no, ack_date: new Date().toISOString().slice(0,10),
-      taxable_value: parseFloat(taxable_value), total_value: parseFloat(total_value || taxable_value),
-      signed_qr_code: `DEMO_QR_${demo_irn}`, live: false,
-      setup_guide: { register: 'https://einvoice1.gst.gov.in/Others/UserManual', gsps: ['mastergst.com', 'cleartax.in'], secrets: ['GSTIN', 'GST_CLIENT_ID', 'GST_CLIENT_SECRET'] },
-      note: 'Demo IRN — set GSTIN, GST_CLIENT_ID, GST_CLIENT_SECRET secrets for live NIC IRP generation.',
-    })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · HR — /hr/payroll and /hr/payslip
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** GET /api/hr/payroll — payroll summary with D1 data */
-app.get('/hr/payroll', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const db = c.env?.DB
-  if (db) {
-    try {
-      const runs = await db.prepare(
-        `SELECT id, month, year, status, total_gross, total_deductions, total_net, fy_year, created_at
-         FROM ig_payroll_runs ORDER BY year DESC, month DESC LIMIT 12`
-      ).all()
-      const latest: any = (runs as any)?.results?.[0]
-      const employeeCount = await db.prepare(`SELECT COUNT(*) AS n FROM ig_employees WHERE is_active=1`).first() as any
-      return c.json({
-        success: true, source: 'D1',
-        current_month: { month: latest?.month || new Date().toLocaleString('en-IN',{month:'long'}), year: latest?.year || new Date().getFullYear(), status: latest?.status || 'Pending', total_gross: latest?.total_gross || 0, total_net: latest?.total_net || 0, total_deductions: latest?.total_deductions || 0, employees: employeeCount?.n || 0 },
-        history: (runs as any)?.results || [],
-        actions: { run_payroll: 'POST /api/hr/payroll/run', download_payslip: 'GET /api/hr/payslip?employee_id=IG-EMP-XXXX&month=Mar&year=2026' },
-      })
-    } catch (_) { /* fallback */ }
-  }
-  return c.json({
-    success: true, source: 'static',
-    current_month: { month: 'March', year: 2026, status: 'Pending', total_gross: 1950000, total_net: 1521000, total_deductions: 429000, employees: 5 },
-    history: [
-      { month: 'February', year: 2026, status: 'Completed', total_gross: 1950000, total_net: 1521000 },
-      { month: 'January',  year: 2026, status: 'Completed', total_gross: 1950000, total_net: 1521000 },
-    ],
-    note: 'Static data — bind D1 for live payroll data.',
-  })
-})
-
-/** GET /api/hr/payslip — individual payslip download */
-app.get('/hr/payslip', requireSession(), async (c) => {
-  const session     = c.get('session') as SessionData
-  const employee_id = c.req.query('employee_id') || session.user
-  const month       = c.req.query('month') || new Date().toLocaleString('en-IN', { month: 'long' })
-  const year        = parseInt(c.req.query('year') || String(new Date().getFullYear()))
-  const db = c.env?.DB
-
-  // Non-admin users can only access their own payslip
-  if (!['Super Admin', 'Admin'].includes(session.role) && employee_id !== session.user) {
-    return c.json({ success: false, error: 'Access denied — you can only access your own payslip.' }, 403)
-  }
-
-  if (db) {
-    try {
-      const payslip = await db.prepare(
-        `SELECT ps.*, e.name AS employee_name, e.department, e.designation
-         FROM ig_payslips ps JOIN ig_employees e ON ps.employee_id=e.employee_id
-         WHERE ps.employee_id=? AND ps.month=? AND ps.year=?`
-      ).bind(employee_id, month, year).first() as any
-      if (payslip) {
-        return c.json({ success: true, source: 'D1', payslip })
-      }
-    } catch (_) { /* fallback */ }
-  }
-
-  // Static fallback
-  const gross   = 230000
-  const tds     = Math.round(gross * 0.10)
-  const pf      = Math.round(gross * 0.12)
-  const net     = gross - tds - pf
-  return c.json({
-    success: true, source: 'static',
-    payslip: {
-      employee_id, employee_name: 'Employee', month, year,
-      department: 'Operations', designation: 'Manager',
-      earnings: { basic: Math.round(gross * 0.5), hra: Math.round(gross * 0.4), special_allowance: Math.round(gross * 0.1), gross },
-      deductions: { tds, pf_employee: pf, total_deductions: tds + pf },
-      net_pay: net,
-      payment_date: `28 ${month} ${year}`,
-      payment_mode: 'Bank Transfer — IMPS',
-    },
-    note: 'Static data — payslip will show live data once D1 is seeded with payroll runs.',
-  })
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · INTEGRATIONS — /integrations/sendgrid/webhook
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** POST /api/integrations/sendgrid/webhook — inbound SendGrid event webhook */
-app.post('/integrations/sendgrid/webhook', async (c) => {
-  try {
-    const events = await c.req.json() as any[]
-    if (!Array.isArray(events)) return c.json({ success: false, error: 'Expected array of SendGrid events.' }, 400)
-    let processed = 0
-    for (const event of events) {
-      const { email, event: eventType, timestamp, message_id, reason, status } = event as any
-      const audit_detail = `${eventType}:${email}:${message_id || 'unknown'}`
-      await kvAuditLog(c.env?.IG_AUDIT_KV, `SENDGRID_${(eventType || 'unknown').toUpperCase()}`, email || 'unknown', 'sendgrid-webhook', status || reason || 'received')
-      if (c.env?.DB) {
-        await c.env.DB.prepare(
-          `INSERT OR IGNORE INTO ig_email_queue (recipient, status, sent_at, message_id) VALUES (?, ?, ?, ?)`
-        ).bind(email || '', eventType || 'unknown', new Date((timestamp || Date.now() / 1000) * 1000).toISOString(), message_id || '').run().catch(() => {})
-      }
-      processed++
-    }
-    return c.json({ success: true, events_received: events.length, events_processed: processed, processed_at: new Date().toISOString() })
-  } catch (err) { return c.json({ success: false, error: String(err) }, 500) }
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · INVOICES — GET /invoices/:id — single invoice by ID
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** GET /api/invoices/:id — single invoice detail */
-app.get('/invoices/:id', requireSession(), async (c) => {
-  const id = c.req.param('id')
-  const db = c.env?.DB
-  if (db) {
-    try {
-      const row = await db.prepare(
-        `SELECT id, invoice_number, client_name, description, sac_code,
-                amount_net, amount_gst, amount_gross, status, due_date, paid_date, irn, einvoice_status, created_at
-         FROM ig_invoices WHERE id=? OR invoice_number=?`
-      ).bind(id, id).first()
-      if (row) return c.json({ success: true, source: 'D1', invoice: row })
-    } catch (_) { /* fallback */ }
-  }
-  // Static fallback by invoice_number
-  const staticInvoices: any = {
-    'INV-2026-001': { invoice_number: 'INV-2026-001', client_name: 'Maple Resorts Pvt. Ltd.', amount_net: 250000, amount_gst: 45000, amount_gross: 295000, status: 'Paid', due_date: '2026-01-31', paid_date: '2026-01-28', sac_code: '998313', irn: null, created_at: '2026-01-01' },
-    'INV-2026-002': { invoice_number: 'INV-2026-002', client_name: 'Heritage Hotels Group',   amount_net: 150000, amount_gst: 27000, amount_gross: 177000, status: 'Overdue', due_date: '2026-02-28', paid_date: null, sac_code: '998313', irn: null, created_at: '2026-02-01' },
-    'INV-2026-004': { invoice_number: 'INV-2026-004', client_name: 'Delhi NCR Developers',    amount_net: 400000, amount_gst: 72000, amount_gross: 472000, status: 'Sent', due_date: '2026-03-31', paid_date: null, sac_code: '997212', irn: null, created_at: '2026-03-01' },
-  }
-  if (staticInvoices[id]) return c.json({ success: true, source: 'static', invoice: staticInvoices[id] })
-  return c.json({ success: false, error: `Invoice '${id}' not found.` }, 404)
-})
-
-// ─────────────────────────────────────────────────────────────────────────────
-// P5 · ADMIN — GET /admin/audit-log — explicit alias of /audit-log
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** GET /api/admin/audit-log — alias of /api/audit-log with extra filter support */
-app.get('/admin/audit-log', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
-  const limit  = Math.min(parseInt(c.req.query('limit') || '50'), 200)
-  const module = c.req.query('module') || ''
-  const user   = c.req.query('user')   || ''
-  const from   = c.req.query('from')   || ''
-  const db     = c.env?.DB
-
-  // Pull from KV audit log first (recent events)
-  const kvEntries: any[] = []
-  // KV doesn't support range queries — fall through to D1
-
-  if (db) {
-    try {
-      const conditions: string[] = []
-      const params:     any[]    = []
-      if (module) { conditions.push('module = ?'); params.push(module) }
-      if (user)   { conditions.push('actor LIKE ?'); params.push(`%${user}%`) }
-      if (from)   { conditions.push('created_at >= ?'); params.push(from) }
-      const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-      params.push(limit)
-      const rows = await db.prepare(
-        `SELECT id, created_at AS time, actor AS user, module, action, ip_address AS ip, 'Success' AS status
-         FROM ig_audit_log ${where} ORDER BY created_at DESC LIMIT ?`
-      ).bind(...params).all()
-      const countRow = await db.prepare(
-        `SELECT COUNT(*) AS n FROM ig_audit_log${where ? ` ${where.replace('LIMIT ?', '')}` : ''}`
-      ).bind(...params.slice(0, -1)).first() as any
-      if ((rows as any)?.results?.length > 0) {
-        return c.json({ success: true, total: countRow?.n || (rows as any).results.length, returned: (rows as any).results.length, filters: { module: module || 'all', user: user || 'all', from: from || 'all' }, source: 'D1', entries: (rows as any).results })
-      }
-    } catch (_) { /* fallback */ }
-  }
-
-  // Static fallback
-  const staticEntries = [
-    { id:'AUD-001', time:'2026-03-21 09:00:00', user:'superadmin@indiagully.com', module:'Auth',     action:'Phase P1 auth endpoints deployed', ip:'internal', status:'Success' },
-    { id:'AUD-002', time:'2026-03-21 08:00:00', user:'superadmin@indiagully.com', module:'Security', action:'Migration 0017 applied — 8 real users seeded', ip:'internal', status:'Success' },
-    { id:'AUD-003', time:'2026-03-20 16:00:00', user:'akm@indiagully.com',         module:'Portal',   action:'Board portal label updated to accept email', ip:'49.x.x.x', status:'Success' },
-    { id:'AUD-004', time:'2026-03-05 08:02:36', user:'superadmin@indiagully.com', module:'Security', action:'Platform deployed to Cloudflare Pages', ip:'27.x.x.x', status:'Success' },
-    { id:'AUD-005', time:'2026-03-04 15:45:33', user:'akm@indiagully.com',         module:'Mandates', action:'New mandate created — MP-2026-004', ip:'49.x.x.x', status:'Success' },
-  ].filter((e:any) => (!module || e.module === module) && (!user || e.user.includes(user))).slice(0, limit)
-  return c.json({ success: true, total: staticEntries.length, returned: staticEntries.length, filters: { module: module || 'all', user: user || 'all', from: from || 'all' }, source: 'static', entries: staticEntries })
-})
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// END PHASE P2–P5 ENDPOINTS
-// ═══════════════════════════════════════════════════════════════════════════════

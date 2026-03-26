@@ -315,7 +315,7 @@ updateCompare();
 `
   return c.html(layout('Mandate Comparison Tool', html, {
     description: 'Compare up to 3 India Gully active mandates side-by-side. Analyse location, sector, value, highlights and specifications in one view.',
-    canonical: 'https://indiagully.com/compare',
+    canonical: '/compare',
   }))
 })
 

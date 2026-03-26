@@ -160,7 +160,7 @@ app.get('/', (c) => {
         <span style="font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);">Join Us</span>
       </div>
       <h1 class="h1" style="margin-bottom:1.75rem;">Careers at<br><em style="color:var(--gold);font-style:italic;">India Gully</em></h1>
-      <p class="lead-lt" style="max-width:640px;margin-bottom:2.5rem;">We are a lean, high-performance institutional advisory firm operating at the intersection of Real Estate, Hospitality, Retail, Entertainment and HORECA. We look for people with intellectual curiosity, commercial hunger and the ability to get things done — at the highest standards.</p>
+      <p class="lead-lt" style="max-width:640px;margin-bottom:2.5rem;">We are a lean, high-performance advisory firm operating at the intersection of real estate, hospitality, retail and HORECA. We look for people with intellectual curiosity, commercial hunger and the ability to get things done — regardless of background.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
         <a href="#open-positions" class="btn btn-g">View Open Positions</a>
         <a href="/contact" style="display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;padding:.75rem 0;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">
@@ -282,25 +282,25 @@ app.get('/', (c) => {
       <div style="display:flex;flex-direction:column;gap:.625rem;margin-bottom:1.25rem;">
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Full Name *</label>
-          <input id="apply-name" type="text" placeholder="Full legal name" autocomplete="name"
+          <input id="apply-name" type="text" placeholder="Your full name" autocomplete="name"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Email Address *</label>
-          <input id="apply-email" type="email" placeholder="Professional email address" autocomplete="email"
+          <input id="apply-email" type="email" placeholder="your@email.com" autocomplete="email"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">Phone / WhatsApp *</label>
-          <input id="apply-phone" type="tel" placeholder="Mobile number" autocomplete="tel"
+          <input id="apply-phone" type="tel" placeholder="+91 98XXX XXXXX" autocomplete="tel"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
         <div>
           <label style="display:block;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.25rem;">LinkedIn Profile</label>
-          <input id="apply-linkedin" type="url" placeholder="https://linkedin.com/in/your-profile"
+          <input id="apply-linkedin" type="url" placeholder="https://linkedin.com/in/yourname"
                  style="width:100%;box-sizing:border-box;border:1px solid var(--border);padding:.6rem .875rem;font-size:.875rem;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;"
                  onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'">
         </div>
@@ -438,16 +438,16 @@ document.getElementById('apply-modal').addEventListener('click', function(e){
 
   return c.html(layout('Careers — Join India Gully', content, {
     description: 'Join India Gully\'s high-performance advisory team. We are hiring across Transaction Advisory, HORECA Procurement, Business Development and Research. Celebrating Desiness since 2017.',
-    canonical: 'https://indiagully.com/careers',
-    ogImage: 'https://indiagully.com/static/og.jpg',
+    canonical: 'https://india-gully.pages.dev/careers',
+    ogImage: 'https://india-gully.pages.dev/static/og.jpg',
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'JobPosting',
       hiringOrganization: {
         '@type': 'Organization',
         name: 'India Gully',
-        sameAs: 'https://indiagully.com',
-        logo: 'https://indiagully.com/assets/logo-white.png'
+        sameAs: 'https://india-gully.pages.dev',
+        logo: 'https://india-gully.pages.dev/assets/logo-white.png'
       },
       jobLocation: { '@type': 'Place', address: { '@type': 'PostalAddress', addressLocality: 'New Delhi', addressCountry: 'IN' } },
       employmentType: 'FULL_TIME',
