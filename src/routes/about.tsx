@@ -59,7 +59,7 @@ app.get('/', async (c) => {
 <div class="sec-wh" style="padding-top:7rem;">
   <div class="wrap">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;" class="mob-stack">
-      <div>
+      <div class="reveal-l">
         <div class="gr"></div>
         <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Mandate &amp; Strategic Positioning</p>
         <h2 class="h2" style="margin-bottom:3rem;">Strategic Vision and Advisory Mission</h2>
@@ -76,7 +76,7 @@ app.get('/', async (c) => {
         </div>
       </div>
 
-      <div>
+      <div class="reveal-r">
         <div class="gr"></div>
         <p class="eyebrow" style="margin-bottom:.875rem;">Core Values</p>
         <h2 class="h2" style="margin-bottom:3rem;">The Principles<br>That Guide Us</h2>
@@ -130,7 +130,7 @@ app.get('/', async (c) => {
       <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;margin-bottom:2.5rem;align-items:center;">
         ${i%2===0 ? `
         <div style="padding-right:3rem;text-align:right;">
-          <div class="card card-lift" style="padding:1.75rem;display:inline-block;text-align:left;max-width:360px;">
+          <div class="card card-lift reveal-l" style="padding:1.75rem;display:inline-block;text-align:left;max-width:360px;">
             <div style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--gold);line-height:1;margin-bottom:.625rem;">${t.year}</div>
             <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;">${t.desc}</p>
           </div>
@@ -145,7 +145,7 @@ app.get('/', async (c) => {
           <div style="width:16px;height:16px;background:var(--gold);border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 3px var(--gold-line);"></div>
         </div>
         <div style="padding-left:3rem;">
-          <div class="card card-lift" style="padding:1.75rem;max-width:360px;">
+          <div class="card card-lift reveal-r" style="padding:1.75rem;max-width:360px;">
             <div style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--gold);line-height:1;margin-bottom:.625rem;">${t.year}</div>
             <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;">${t.desc}</p>
           </div>
@@ -168,7 +168,7 @@ app.get('/', async (c) => {
     </div>
 
     <!-- ── ARUN MANIKONDA — Featured MD Profile ──────────────────── -->
-    <div style="background:var(--parch);border:1px solid var(--border);overflow:hidden;margin-bottom:2rem;max-width:1080px;margin:0 auto 2.5rem;">
+    <div class="reveal" style="background:var(--parch);border:1px solid var(--border);overflow:hidden;margin-bottom:2rem;max-width:1080px;margin:0 auto 2.5rem;">
       <!-- Gold top accent -->
       <div style="height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-lt),transparent);"></div>
       <div style="display:grid;grid-template-columns:320px 1fr;gap:0;" class="mob-stack">
@@ -438,7 +438,7 @@ app.get('/', async (c) => {
         { n:'30+', label:'Retail Brands', sub:'Brand partnerships in NCR & Gurugram', icon:'tag', color:'#1A3A6B' },
         { n:'8+', label:'Years', sub:'Established 2017, incorporated in Delhi', icon:'calendar-alt', color:'#B8960C' },
       ].map(s => `
-      <div style="padding:2rem;border:1px solid var(--border-lt);text-align:center;transition:all .28s;position:relative;overflow:hidden;" onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.transform='translateY(0)'">
+      <div class="reveal" style="padding:2rem;border:1px solid var(--border-lt);text-align:center;transition:all .28s;position:relative;overflow:hidden;" onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.transform='translateY(0)'">
         <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,${s.color},transparent);opacity:0;transition:opacity .3s;" class="num-top"></div>
         <i class="fas fa-${s.icon}" style="font-size:1.1rem;color:${s.color};margin-bottom:1rem;display:block;"></i>
         <div class="count-up" data-target="${s.n}" style="font-family:'DM Serif Display',Georgia,serif;font-size:1.85rem;color:${s.color};line-height:1;margin-bottom:.5rem;letter-spacing:-.02em;">${s.n}</div>
@@ -466,7 +466,7 @@ app.get('/', async (c) => {
         { icon:'registered',    color:'#B8960C', bg:'rgba(184,150,12,.08)',border:'rgba(184,150,12,.2)', title:'MCA Registered',            sub:'CIN: U74999DL2017PTC323237' },
         { icon:'map-marked-alt',color:'#7C3AED', bg:'rgba(124,58,237,.08)',border:'rgba(124,58,237,.2)', title:'Pan-India Network',         sub:'Delhi · Chandigarh · Mumbai · Kerala' },
       ].map(a => `
-      <div style="display:flex;align-items:center;gap:.75rem;background:${a.bg};border:1px solid ${a.border};padding:.75rem 1.25rem;border-radius:3px;flex:0 1 auto;white-space:nowrap;transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div class="reveal" style="display:flex;align-items:center;gap:.75rem;background:${a.bg};border:1px solid ${a.border};padding:.75rem 1.25rem;border-radius:3px;flex:0 1 auto;white-space:nowrap;transition:transform .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
         <i class="fas fa-${a.icon}" style="color:${a.color};font-size:.85rem;flex-shrink:0;"></i>
         <div>
           <div style="font-size:.68rem;font-weight:700;color:var(--ink);letter-spacing:.02em;">${a.title}</div>
