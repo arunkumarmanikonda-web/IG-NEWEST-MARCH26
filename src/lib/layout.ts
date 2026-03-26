@@ -244,6 +244,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
   --surface:#FFFFFF;--surface-2:#F8F5F0;
   /* Elevation */
   --nav-h:76px;
+  --dpdp-offset:0px;
   --shadow-xs:0 1px 3px rgba(0,0,0,.04);
   --shadow-sm:0 2px 8px rgba(0,0,0,.06);
   --shadow-md:0 8px 32px rgba(0,0,0,.09);
@@ -258,7 +259,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
   --t-cinema:.75s cubic-bezier(.77,0,.175,1);
 }
 html{scroll-behavior:smooth}
-body{font-family:"DM Sans",system-ui,sans-serif;background:var(--parch);color:var(--ink);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+body{font-family:"DM Sans",system-ui,sans-serif;background:var(--parch);color:var(--ink);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;padding-bottom:var(--dpdp-offset);transition:padding-bottom .25s ease}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;}
@@ -457,7 +458,7 @@ button{font-family:inherit;}
 
 /* ── HERO CAROUSEL ──────────────────────────── */
 /* Pull carousel up behind the fixed nav so no blank band shows above it */
-.car{position:relative;overflow:hidden;height:calc(100vh + var(--nav-h));margin-top:calc(-1 * var(--nav-h));min-height:640px;max-height:1076px}
+.car{position:relative;overflow:hidden;height:calc(82vh + var(--nav-h));margin-top:calc(-1 * var(--nav-h));min-height:560px;max-height:860px}
 .car-track{display:flex;height:100%;transition:transform var(--t-cinema)}
 .car-slide{flex:0 0 100%;position:relative;overflow:hidden}
 .car-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.1);transition:transform 11s cubic-bezier(.4,0,.2,1)}
@@ -467,7 +468,7 @@ button{font-family:inherit;}
 .car-ov-btm{position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to top,rgba(3,3,6,.65) 0%,transparent 100%)}
 .car-ov-gold{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 85%,rgba(184,150,12,.06) 0%,transparent 55%)}
 /* Car body: flex-start so text is always below the fixed header, never overlapping it */
-.car-body{position:relative;z-index:2;height:100%;display:flex;align-items:flex-start;padding-top:calc(var(--nav-h) + 5rem);padding-bottom:8rem;}
+.car-body{position:relative;z-index:2;height:100%;display:flex;align-items:flex-start;padding-top:calc(var(--nav-h) + 3.5rem);padding-bottom:5rem;}
 /* slide text animation — staggered reveal */
 .s-txt{opacity:0;transform:translateY(32px);transition:opacity .85s cubic-bezier(.4,0,.2,1) .25s,transform .85s cubic-bezier(.4,0,.2,1) .25s}
 .car-slide.on .s-txt{opacity:1;transform:translateY(0)}
@@ -846,9 +847,11 @@ textarea.ig-input{resize:vertical;min-height:140px}
   }
 }
 @media(max-width:768px){
-  .car{height:92vh;min-height:540px;max-height:800px;}
+  .car{height:74vh;min-height:480px;max-height:720px;}
+  .car-body{padding-top:calc(var(--nav-h) + 2.5rem);padding-bottom:3rem;}
   .car-arr{display:none;}
   .car-ct{display:none;}
+  .hero-spoc-strip,.hero-slide-label{display:none!important;}
 }
 @media(max-width:900px){
   .listing-layout{display:flex!important;flex-direction:column!important;gap:2rem!important;}
@@ -1467,6 +1470,76 @@ body{overflow-x:hidden;}
 .tn-thumb{width:80px;height:58px;overflow:hidden;flex-shrink:0;cursor:pointer;border:2px solid transparent;transition:border-color .2s,opacity .2s;opacity:.6;}
 .tn-thumb.on{border-color:var(--gold);opacity:1;}
 .tn-thumb img{width:100%;height:100%;object-fit:cover;}
+
+.ig-site-footer{position:relative;z-index:2}
+.ig-footer-legal{
+  display:flex;
+  gap:1rem 1.25rem;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+}
+.ig-footer-link{
+  font-size:.65rem;
+  color:rgba(255,255,255,.38);
+  transition:color .2s ease;
+}
+.ig-footer-link:hover{color:rgba(184,150,12,.85);}
+.ig-footer-pref-btn{
+  background:rgba(184,150,12,.08);
+  border:1px solid rgba(184,150,12,.26);
+  color:rgba(255,255,255,.82);
+  padding:.38rem .7rem;
+  cursor:pointer;
+  transition:all .2s ease;
+  font-size:.62rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.ig-footer-pref-btn:hover{
+  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
+  color:#fff;
+  border-color:var(--gold);
+}
+.ig-footer-tour-btn{
+  background:none;
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.45);
+  padding:.22rem .6rem;
+  font-size:.6rem;
+  cursor:pointer;
+  transition:all .2s;
+}
+.ig-footer-tour-btn:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+body.ig-dpdp-open .ig-site-footer{
+  padding-bottom:calc(var(--dpdp-offset) + 1rem);
+}
+#dpdp-banner{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:12px;
+  max-width:1080px;
+  margin:0 auto;
+  z-index:9800;
+}
+@media(max-width:768px){
+  .ig-footer-legal{
+    justify-content:flex-start;
+    gap:.75rem 1rem;
+  }
+  .ig-footer-pref-btn{
+    width:100%;
+    justify-content:center;
+  }
+  body.ig-dpdp-open .ig-site-footer{
+    padding-bottom:calc(var(--dpdp-offset) + .75rem);
+  }
+}
+
 </style>
 </head>
 <body class="${opts?.bodyClass || ''}">
@@ -1690,7 +1763,7 @@ const NAV = `
 
 // ── FOOTER ──────────────────────────────────────────────────────────────────
 const FOOTER = `
-<footer style="background:#060606;border-top:1px solid rgba(184,150,12,.15);position:relative;overflow:hidden;">
+<footer class="ig-site-footer" style="background:#060606;border-top:1px solid rgba(184,150,12,.15);position:relative;overflow:hidden;">
   <!-- Footer background grid -->
   <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(184,150,12,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(184,150,12,.02) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;"></div>
   <!-- Footer radial glow -->
@@ -1774,19 +1847,16 @@ const FOOTER = `
   <div style="position:relative;border-top:1px solid rgba(255,255,255,.04);">
     <div class="wrap" style="padding-top:1rem;padding-bottom:1rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.875rem;">
       <p style="font-size:.65rem;color:rgba(255,255,255,.38);">© 2026 Vivacious Entertainment and Hospitality Pvt. Ltd. All rights reserved. India Gully™ is a registered brand.</p>
-      <div style="display:flex;gap:1.5rem;font-size:.65rem;color:rgba(255,255,255,.38);align-items:center;flex-wrap:wrap;">
-        <a href="/legal/privacy"    style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Privacy Policy</a>
-        <a href="/legal/cookies"    style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Cookie Policy</a>
-        <button onclick="window.igOpenDpdpPreferences && window.igOpenDpdpPreferences()" aria-label="Manage privacy preferences"
-                style="background:none;border:none;color:rgba(255,255,255,.38);padding:0;cursor:pointer;transition:color .2s;font-size:.65rem;">
+      <div class="ig-footer-legal">
+        <a href="/legal/privacy" class="ig-footer-link">Privacy Policy</a>
+        <a href="/legal/cookies" class="ig-footer-link">Cookie Policy</a>
+        <button onclick="window.igOpenDpdpPreferences && window.igOpenDpdpPreferences()" aria-label="Manage privacy preferences" class="ig-footer-pref-btn">
           Manage Privacy Preferences
         </button>
-        <a href="/legal/terms"      style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Terms of Use</a>
-        <a href="/legal/disclaimer" style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Disclaimer</a>
-        <span style="color:rgba(255,255,255,.2);">GSTIN: 07AAGCV0867P1ZN</span>
-        <button onclick="igStartTour && igStartTour()" aria-label="Start guided tour"
-                style="background:none;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.45);padding:.22rem .6rem;font-size:.6rem;cursor:pointer;transition:all .2s;"
-                onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,.18)';this.style.color='rgba(255,255,255,.45)'">
+        <a href="/legal/terms" class="ig-footer-link">Terms of Use</a>
+        <a href="/legal/disclaimer" class="ig-footer-link">Disclaimer</a>
+        <span style="color:rgba(255,255,255,.2);font-size:.65rem;">GSTIN: 07AAGCV0867P1ZN</span>
+        <button onclick="igStartTour && igStartTour()" aria-label="Start guided tour" class="ig-footer-tour-btn">
           <i class="fas fa-compass" style="margin-right:.3rem;"></i>Tour
         </button>
       </div>
@@ -2125,10 +2195,10 @@ const SCRIPTS = (_nonce?: string) => `
     banner.setAttribute('role','dialog');
     banner.setAttribute('aria-modal','true');
     banner.setAttribute('aria-label','DPDP Data Consent Notice');
-    banner.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:9800;'
-      +'background:#0A0A0A;border-top:2px solid var(--gold,#B8960C);'
-      +'padding:1rem 1.5rem;display:flex;align-items:flex-start;'
-      +'gap:1.25rem;flex-wrap:wrap;box-shadow:0 -4px 30px rgba(0,0,0,.6);';
+    banner.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:9800;max-width:1080px;margin:0 auto;'
+      +'background:#0A0A0A;border:1px solid rgba(184,150,12,.24);border-top:2px solid var(--gold,#B8960C);border-radius:16px;'
+      +'padding:.9rem 1rem;display:flex;align-items:flex-start;'
+      +'gap:1rem;flex-wrap:wrap;box-shadow:0 -4px 30px rgba(0,0,0,.6);';
 
     banner.innerHTML=''
       +'<div style="flex:1;min-width:260px;">'
@@ -2254,6 +2324,19 @@ const SCRIPTS = (_nonce?: string) => `
       }).catch(function(){});
     };
   })();
+
+  function syncDpdpOffset(){
+    try{
+      var banner=document.getElementById('dpdp-banner');
+      var open=!!(banner && banner.offsetParent !== null);
+      var h=open?Math.ceil(banner.getBoundingClientRect().height+24):0;
+      document.documentElement.style.setProperty('--dpdp-offset',h+'px');
+      if(document.body) document.body.classList.toggle('ig-dpdp-open',open);
+    }catch(e){}
+  }
+  window.addEventListener('load',syncDpdpOffset);
+  window.addEventListener('resize',syncDpdpOffset);
+  new MutationObserver(function(){ syncDpdpOffset(); }).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class']});
 
   /* ── DPDP PREFERENCES DRAWER — allows re-managing consent after banner dismissed ── */
   window.igOpenDpdpPreferences=function(){

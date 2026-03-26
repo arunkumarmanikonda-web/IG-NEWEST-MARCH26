@@ -201,7 +201,7 @@ app.get('/legal/terms', (c) => c.html(legalPage('Terms of Use', `
 <p>These Terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in New Delhi.</p>
 
 <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">7. Contact</h2>
-<p>For queries: <a href="mailto:info@indiagully.com" style="color:var(--gold);">info@indiagully.com</a> · +91 8988 988 988</p>
+<p>For queries: <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a> · +91 8988 988 988</p>
 `)))
 
 app.get('/legal/disclaimer', (c) => c.html(legalPage('Disclaimer', `
@@ -223,7 +223,7 @@ app.get('/legal/disclaimer', (c) => c.html(legalPage('Disclaimer', `
 <p>India Gully operates in compliance with applicable Indian laws including the Companies Act 2013, RERA, SEBI guidelines (where applicable), and GST legislation. This Platform does not constitute a public offer of any kind.</p>
 
 <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">Contact</h2>
-<p>For legal queries: <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, New Delhi, <a href="mailto:info@indiagully.com" style="color:var(--gold);">info@indiagully.com</a></p>
+<p>For legal queries: <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, New Delhi, <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a></p>
 `)))
 
 // ── SEO: sitemap.xml ─────────────────────────────────────────────────────────
@@ -484,7 +484,7 @@ app.notFound((c) => {
   </main>
   <footer class="footer-bar">
     &copy; 2026 Vivacious Entertainment and Hospitality Pvt. Ltd. &middot; India Gully &middot;
-    <a href="mailto:info@indiagully.com" style="color:rgba(184,150,12,.5);text-decoration:none;">info@indiagully.com</a>
+    <a href="mailto:dpo@indiagully.com" style="color:rgba(184,150,12,.5);text-decoration:none;">dpo@indiagully.com</a>
   </footer>
 </body>
 </html>`, 404)

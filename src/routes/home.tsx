@@ -187,12 +187,12 @@ app.get('/', async (c) => {
 
             <!-- Display headline -->
             <div class="s-txt">
-              <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(3.4rem,7.5vw,7rem);line-height:1.01;color:#fff;letter-spacing:-.025em;font-weight:400;margin-bottom:1.75rem;">
+              <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:clamp(2.75rem,6vw,5.5rem);line-height:1.01;color:#fff;letter-spacing:-.025em;font-weight:400;margin-bottom:1.75rem;">
                 ${s.h1a}<br>
                 <em style="font-style:italic;color:var(--gold);display:inline-block;position:relative;">${s.h1b}<span style="position:absolute;bottom:-.15em;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-lt),transparent);opacity:.5;"></span></em><br>
                 <span style="font-size:.48em;font-weight:300;color:rgba(255,255,255,.42);letter-spacing:-.01em;">${s.h1c}</span>
               </h1>
-              <p style="font-size:1.05rem;line-height:1.9;color:rgba(255,255,255,.62);max-width:560px;margin-bottom:2.5rem;font-weight:400;">${s.sub}</p>
+              <p style="font-size:.98rem;line-height:1.82;color:rgba(255,255,255,.62);max-width:540px;margin-bottom:2rem;font-weight:400;">${s.sub}</p>
             </div>
 
             <!-- CTAs -->
@@ -203,7 +203,7 @@ app.get('/', async (c) => {
 
             ${(s as any).type === 'mandate' && (s as any).spoc ? `
             <!-- Mandate SPOC strip -->
-            <div style="display:inline-flex;align-items:center;gap:.75rem;margin-top:1.5rem;padding:.5rem 1rem .5rem .5rem;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);border:1px solid rgba(184,150,12,.25);">
+            <div class="hero-spoc-strip" style="display:inline-flex;align-items:center;gap:.75rem;margin-top:1.25rem;padding:.5rem 1rem .5rem .5rem;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);border:1px solid rgba(184,150,12,.25);">
               <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.78rem;flex-shrink:0;">A</div>
               <div>
                 <div style="font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.15rem;">Strategic Lead · India Gully</div>
@@ -221,7 +221,7 @@ app.get('/', async (c) => {
       </div>
 
       <!-- Slide label — bottom right -->
-      <div style="position:absolute;bottom:3.5rem;right:2.5rem;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;">
+      <div class="hero-slide-label" style="position:absolute;bottom:2.25rem;right:2rem;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;">
         ${(s as any).type === 'mandate' ? `<div style="background:rgba(184,150,12,.85);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:.25rem;">Active Mandate - Pre-Mandate Confidentiality Protocol Required</div>` : `<div style="background:rgba(26,58,107,.7);padding:.22rem .6rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.25rem;">Advisory Services</div>`}
         <div style="width:1px;height:40px;background:linear-gradient(180deg,transparent,rgba(184,150,12,.5));margin-left:auto;"></div>
         <span style="font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.3);">${s.label}</span>
@@ -316,26 +316,6 @@ app.get('/', async (c) => {
   });
 })();
 </script>
-
-<!-- ══ GOLD SERVICE TICKER ═══════════════════════════════════════════════ -->
-<div class="ticker" role="marquee" aria-label="India Gully services">
-  <div class="ticker-tr">
-    ${[
-      'Real Estate Capital Markets and Strategic Transaction Ecosystem','Capital Markets and Strategic Transaction Ecosystem','Retail Leasing Strategy',
-      'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
-      'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
-      'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      'INR 2,100 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
-    ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
-    ${[
-      'Real Estate Capital Markets and Strategic Transaction Ecosystem','Capital Markets and Strategic Transaction Ecosystem','Retail Leasing Strategy',
-      'Hotel Management Advisory','Entertainment Destinations','Debt & Special Situations',
-      'HORECA Solutions','Brand On-Boarding','Financial Feasibility','Project Management',
-      'Asset Management','Greenfield Hotels','Mall Leasing','FF&E Procurement',
-      'INR 2,100 Cr+ Pipeline','15+ Hotel Projects','35+ Retail Brands','Pan-India Execution Footprint'
-    ].map(t=>`<span style="font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,0,0,.75);padding:0 2.5rem;">${t}</span><span style="color:rgba(0,0,0,.25);font-size:.45rem;flex-shrink:0;">◆</span>`).join('')}
-  </div>
-</div>
 
 <!-- ══ STATS BAR ════════════════════════════════════════════════════════ -->
 <div style="position:relative;z-index:1;" id="homeStatsSection">
