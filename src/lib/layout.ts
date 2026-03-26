@@ -1241,18 +1241,21 @@ body{overflow-x:hidden;}
 @media(max-width:900px){#trackRecord{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:560px){#trackRecord{grid-template-columns:1fr;}}
 
-/* ── Scroll-reveal ────────────────────────────── */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal.visible{opacity:1;transform:translateY(0);}
-.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal-l.visible{opacity:1;transform:translateX(0);}
-.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .75s cubic-bezier(.4,0,.2,1),transform .75s cubic-bezier(.4,0,.2,1);}
-.reveal-r.visible{opacity:1;transform:translateX(0);}
-.reveal-scale{opacity:0;transform:scale(.95);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);}
-.reveal-scale.visible{opacity:1;transform:scale(1);}
-/* Faster reveal variant */
-.reveal-fast{opacity:0;transform:translateY(18px);transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);}
-.reveal-fast.visible{opacity:1;transform:translateY(0);}
+/* ── Scroll-reveal hardening ──────────────────── */
+/*
+  Hard fix: public content must never start hidden.
+  These classes now default to visible so stale JS, partial deploys,
+  blocked IntersectionObserver, or edge-cache mismatch cannot blank sections.
+*/
+.reveal,.reveal-l,.reveal-r,.reveal-scale,.reveal-fast{
+  opacity:1;
+  transform:none;
+  transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1);
+}
+.reveal.visible,.reveal-l.visible,.reveal-r.visible,.reveal-scale.visible,.reveal-fast.visible{
+  opacity:1;
+  transform:none;
+}
 
 /* ── Listing detail ──────────────────────────── */
 .listing-detail-grid{display:grid;grid-template-columns:1fr 390px;gap:4rem;align-items:start;}

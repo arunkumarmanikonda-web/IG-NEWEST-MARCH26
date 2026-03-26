@@ -1253,15 +1253,16 @@ function filterRB(cat){
       </div>
       <div class="partners-grid">
         ${ADVISORY_PARTNERS.slice(0,4).map((p: any) => `
-        <div class="partner-card reveal">
-          <div style="height:52px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
-            <img src="${p.logo}" alt="${p.name}" style="max-width:140px;max-height:42px;width:auto;height:auto;object-fit:contain;"
-                 loading="lazy" decoding="async"
-                 onerror="this.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-            <div style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
+        <div class="partner-card">
+          <div style="height:72px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:.75rem 1rem;background:${p.logoBg || '#fff'};border:1px solid rgba(17,17,17,.08);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);overflow:hidden;">
+            <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '122px' : '140px'};max-height:46px;width:auto;height:auto;object-fit:contain;object-position:center;display:block;filter:contrast(1.08) saturate(1.02);"
+                 loading="eager" decoding="async"
+                 onerror="this.style.display='none';this.parentElement.querySelector('.partner-fallback').style.display='flex'">
+            <div class="partner-fallback" style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
               <span style="font-size:.78rem;font-weight:800;letter-spacing:.06em;color:${p.textColor || '#fff'};">${p.abbr}</span>
             </div>
           </div>
+          <div style="display:inline-flex;align-items:center;justify-content:center;padding:.22rem .6rem;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.05);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;">${p.abbr}</div>
           <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--ink);margin-bottom:.25rem;">${p.name}</div>
           <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">${p.sub}</div>
         </div>`).join('')}
@@ -1272,14 +1273,15 @@ function filterRB(cat){
     <div style="display:flex;justify-content:center;margin-top:1.75rem;">
       ${ADVISORY_PARTNERS.slice(4).map((p: any) => `
       <div class="partner-card" style="padding:1.75rem 3rem;">
-        <div style="height:52px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
-          <img src="${p.logo}" alt="${p.name}" style="max-width:150px;max-height:46px;width:auto;height:auto;object-fit:contain;"
-               loading="lazy" decoding="async"
-               onerror="this.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-          <div style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
+        <div style="height:72px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:.75rem 1rem;background:${p.logoBg || '#fff'};border:1px solid rgba(17,17,17,.08);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);overflow:hidden;">
+          <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '128px' : '150px'};max-height:48px;width:auto;height:auto;object-fit:contain;object-position:center;display:block;filter:contrast(1.08) saturate(1.02);"
+               loading="eager" decoding="async"
+               onerror="this.style.display='none';this.parentElement.querySelector('.partner-fallback').style.display='flex'">
+          <div class="partner-fallback" style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
             <span style="font-size:.78rem;font-weight:800;letter-spacing:.06em;color:${p.textColor || '#fff'};">${p.abbr}</span>
           </div>
         </div>
+        <div style="display:inline-flex;align-items:center;justify-content:center;padding:.22rem .6rem;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.05);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 auto .7rem;">${p.abbr}</div>
         <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--ink);text-align:center;margin-bottom:.25rem;">${p.name}</div>
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-align:center;">${p.sub}</div>
       </div>`).join('')}
