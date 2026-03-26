@@ -398,39 +398,28 @@ app.get('/', async (c) => {
   </style>
 </div>
 
-<!-- ══ PARTNER MARQUEE ══════════════════════════════════════════════════ -->
-<div class="partner-marquee-section" style="background:var(--parch-dk);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 0;overflow:hidden;">
-  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0;">
-    <div class="partner-marquee-label" style="flex-shrink:0;padding:0 1.5rem;font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted);white-space:nowrap;">
-      Advisory Partners
-    </div>
-    <div class="marquee-outer" style="flex:1;">
-      <div class="marquee-track">
-        ${[
-          '🏛️ EY (Ernst & Young)',
-          '🏢 CBRE India',
-          '📊 ANAROCK',
-          '⚖️ Pipara & Co LLP',
-          '💼 Resurgent India',
-          '🏨 Sarovar Hotels',
-          '🏪 CGH Earth',
-          '🏖️ Mahindra Holidays',
-          '🏝️ WelcomHeritage',
-          '🎰 Pride Hotels',
-          '🍽️ Maple Resorts',
-          '🏛️ EY (Ernst & Young)',
-          '🏢 CBRE India',
-          '📊 ANAROCK',
-          '⚖️ Pipara & Co LLP',
-          '💼 Resurgent India',
-          '🏨 Sarovar Hotels',
-          '🏪 CGH Earth',
-          '🏖️ Mahindra Holidays',
-          '🏝️ WelcomHeritage',
-          '🎰 Pride Hotels',
-          '🍽️ Maple Resorts',
-        ].map(p => `<span class="marquee-item">${p}</span>`).join('')}
+<!-- ══ ADVISORY PARTNER LOGO STRIP ══════════════════════════════════════ -->
+<div class="partner-logo-strip">
+  <div class="wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.35rem;">
+      <div>
+        <p class="eyebrow" style="margin-bottom:.45rem;">Institutional Collaborations</p>
+        <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.45rem;color:var(--ink);margin:0;">Advisory Partner Logos — always visible</h2>
       </div>
+      <p style="max-width:520px;font-size:.84rem;line-height:1.8;color:var(--ink-soft);margin:0;">Our principal transaction-advisory partners are rendered as a fixed logo grid instead of a scrolling marquee, so EY, CBRE, ANAROCK, Pipara &amp; Co LLP, and Resurgent India stay fully visible on every refresh.</p>
+    </div>
+    <div class="partner-strip-grid">
+      ${ADVISORY_PARTNERS.map((p: any) => `
+      <div class="partner-logo-chip">
+        <div class="partner-logo-chip__frame" style="background:${p.abbr==='EY' ? '#2a2a2a' : (p.logoBg || '#fff')};">
+          <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '136px' : '148px'};max-height:44px;width:auto;height:auto;object-fit:contain;display:block;"
+               loading="eager" decoding="async"
+               onerror="this.style.display='none';this.parentElement.querySelector('.partner-logo-chip__fallback').style.display='flex'">
+          <div class="partner-logo-chip__fallback" style="display:none;background:${p.color};color:${p.textColor || '#fff'};">${p.abbr}</div>
+        </div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--ink);margin-bottom:.22rem;">${p.name}</div>
+        <div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">${p.sub}</div>
+      </div>`).join('')}
     </div>
   </div>
 </div>
@@ -1241,51 +1230,34 @@ function filterRB(cat){
 <!-- ══ ADVISORY PARTNERS ══════════════════════════════════════════════ -->
 <div class="sec-pd" style="padding-top:7rem;padding-bottom:7rem;">
   <div class="wrap">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;" class="mob-stack">
-      <div>
-        <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:1rem;">Capital Markets and Strategic Transaction Ecosystem</p>
-        <h2 class="h2" style="margin-bottom:1.5rem;">Strategic Advisory<br>Ecosystem</h2>
-        <p class="lead" style="margin-bottom:2rem;">India Gully synergizes with globally recognized institutional advisory and consulting firms, bringing institutional credibility, financial rigour and sector depth to complex mandates.</p>
-        <div style="padding:1.25rem 1.5rem;border-left:3px solid var(--gold);background:rgba(184,150,12,.04);">
-          <p style="font-size:.82rem;line-height:1.8;color:var(--ink-soft);">Joint advisory with Ernst &amp; Young on the <strong style="color:var(--ink);">₹1,350+ Cr Entertainment City Limited divestment</strong> — India's largest entertainment real estate transaction.</p>
-        </div>
-      </div>
-      <div class="partners-grid">
-        ${ADVISORY_PARTNERS.slice(0,4).map((p: any) => `
-        <div class="partner-card">
-          <div style="height:72px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:.75rem 1rem;background:${p.logoBg || '#fff'};border:1px solid rgba(17,17,17,.08);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);overflow:hidden;">
-            <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '122px' : '140px'};max-height:46px;width:auto;height:auto;object-fit:contain;object-position:center;display:block;filter:contrast(1.08) saturate(1.02);"
-                 loading="eager" decoding="async"
-                 onerror="this.style.display='none';this.parentElement.querySelector('.partner-fallback').style.display='flex'">
-            <div class="partner-fallback" style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
-              <span style="font-size:.78rem;font-weight:800;letter-spacing:.06em;color:${p.textColor || '#fff'};">${p.abbr}</span>
-            </div>
-          </div>
-          <div style="display:inline-flex;align-items:center;justify-content:center;padding:.22rem .6rem;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.05);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;">${p.abbr}</div>
-          <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--ink);margin-bottom:.25rem;">${p.name}</div>
-          <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">${p.sub}</div>
-        </div>`).join('')}
-      </div>
+    <div style="text-align:center;max-width:760px;margin:0 auto 3rem;">
+      <div class="gr-c"></div>
+      <p class="eyebrow" style="margin-bottom:1rem;">Capital Markets and Strategic Transaction Ecosystem</p>
+      <h2 class="h2" style="margin-bottom:1.25rem;">Strategic Advisory Ecosystem</h2>
+      <p class="lead" style="margin:0 auto;max-width:620px;">India Gully collaborates with globally recognised institutional firms on complex mandates. This section now uses a fixed responsive grid rather than offset cards, preventing clipped logos and ensuring the EY identity stays visible.</p>
     </div>
-    <!-- 5th partner centred -->
-    ${ADVISORY_PARTNERS.slice(4).length > 0 ? `
-    <div style="display:flex;justify-content:center;margin-top:1.75rem;">
-      ${ADVISORY_PARTNERS.slice(4).map((p: any) => `
-      <div class="partner-card" style="padding:1.75rem 3rem;">
-        <div style="height:72px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:.75rem 1rem;background:${p.logoBg || '#fff'};border:1px solid rgba(17,17,17,.08);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35);overflow:hidden;">
-          <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '128px' : '150px'};max-height:48px;width:auto;height:auto;object-fit:contain;object-position:center;display:block;filter:contrast(1.08) saturate(1.02);"
+
+    <div class="advisory-home-grid">
+      ${ADVISORY_PARTNERS.map((p: any) => `
+      <div class="advisory-home-card">
+        <div class="advisory-home-card__frame" style="background:${p.abbr==='EY' ? '#2a2a2a' : (p.logoBg || '#fff')};">
+          <img src="${p.logo}" alt="${p.name}" style="max-width:${p.abbr==='EY' ? '150px' : '164px'};max-height:52px;width:auto;height:auto;object-fit:contain;display:block;"
                loading="eager" decoding="async"
                onerror="this.style.display='none';this.parentElement.querySelector('.partner-fallback').style.display='flex'">
-          <div class="partner-fallback" style="display:none;align-items:center;justify-content:center;width:130px;height:42px;background:${p.color};border-radius:2px;">
-            <span style="font-size:.78rem;font-weight:800;letter-spacing:.06em;color:${p.textColor || '#fff'};">${p.abbr}</span>
+          <div class="partner-fallback" style="display:none;align-items:center;justify-content:center;width:136px;height:44px;background:${p.color};border-radius:4px;">
+            <span style="font-size:.8rem;font-weight:800;letter-spacing:.08em;color:${p.textColor || '#fff'};">${p.abbr}</span>
           </div>
         </div>
-        <div style="display:inline-flex;align-items:center;justify-content:center;padding:.22rem .6rem;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.05);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 auto .7rem;">${p.abbr}</div>
-        <div style="font-family:'DM Serif Display',Georgia,serif;font-size:.95rem;color:var(--ink);text-align:center;margin-bottom:.25rem;">${p.name}</div>
-        <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-align:center;">${p.sub}</div>
+        <div style="display:inline-flex;align-items:center;justify-content:center;padding:.24rem .62rem;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.05);font-size:.58rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">${p.abbr}</div>
+        <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1rem;color:var(--ink);margin-bottom:.3rem;">${p.name}</div>
+        <div style="font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;">${p.sub}</div>
+        <p style="font-size:.78rem;line-height:1.75;color:var(--ink-soft);margin:0;">${p.abbr==='EY' ? 'Joint advisory partner on marquee strategic transactions including the Entertainment City divestment mandate.' : p.abbr==='CBRE' ? 'Real estate, capital-markets, and institutional property advisory support for complex mandates.' : p.abbr==='ANAROCK' ? 'Property consultancy and market intelligence across hospitality and mixed-use assignments.' : p.abbr==='PIPARA' ? 'Chartered accountancy, diligence, and financial-structuring support where required.' : 'Investment-banking support for structured raises, special situations, and transaction execution.'}</p>
       </div>`).join('')}
-    </div>` : ''}
+    </div>
+
+    <div style="margin-top:2rem;padding:1.25rem 1.5rem;border-left:3px solid var(--gold);background:rgba(184,150,12,.04);max-width:920px;margin-left:auto;margin-right:auto;">
+      <p style="font-size:.82rem;line-height:1.8;color:var(--ink-soft);margin:0;">Highlighted collaboration: <strong style="color:var(--ink);">India Gully + Ernst &amp; Young</strong> on the <strong style="color:var(--ink);">₹1,350+ Cr Entertainment City Limited divestment</strong>, supported by a visibly stable public-facing partner presentation.</p>
+    </div>
   </div>
 </div>
 

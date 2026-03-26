@@ -640,7 +640,7 @@ export const RETAIL_BRANDS: Array<{ name: string; svg: string; color: string; ca
 
 // Transaction Advisory partners
 export const ADVISORY_PARTNERS = [
-  { name: 'Ernst & Young',   abbr: 'EY',        logo: '/static/partners/ey.jpg',              color: '#FFE600', textColor: '#2E2E2E', sub: 'Transaction Advisory & Assurance',  logoBg: '#fff' },
+  { name: 'Ernst & Young',   abbr: 'EY',        logo: '/static/partners/ey.jpg',              color: '#FFE600', textColor: '#2E2E2E', sub: 'Transaction Advisory & Assurance',  logoBg: '#2a2a2a' },
   { name: 'CBRE',            abbr: 'CBRE',       logo: '/static/partners/cbre.png',            color: '#006A4D', textColor: '#fff',    sub: 'Real Estate & Capital Markets',     logoBg: '#fff' },
   { name: 'ANAROCK',         abbr: 'ANAROCK',    logo: '/static/partners/anarock.jpg',         color: '#E4003A', textColor: '#fff',    sub: 'Property Consultants',              logoBg: '#fff' },
   { name: 'Pipara & Co LLP', abbr: 'PIPARA',     logo: '/static/partners/pipara-co.png',       color: '#1A5276', textColor: '#fff',    sub: 'Chartered Accountants',             logoBg: '#fff' },
