@@ -55,75 +55,104 @@ app.get('/', async (c) => {
   </div>
 </div>
 
-<!-- COMPANY TRAJECTORY + VISION -->
-<div class="sec-wh" style="padding-top:6rem;">
+<!-- VISION & MISSION -->
+<div class="sec-wh" style="padding-top:7rem;">
   <div class="wrap">
-    <div style="text-align:center;max-width:720px;margin:0 auto 3.25rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;" class="mob-stack">
+      <div>
+        <div class="gr"></div>
+        <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Mandate &amp; Strategic Positioning</p>
+        <h2 class="h2" style="margin-bottom:3rem;">Strategic Vision and Advisory Mission</h2>
+
+        <div style="border-left:3px solid var(--gold);padding:1.75rem 2rem;background:linear-gradient(135deg,rgba(184,150,12,.04),transparent);margin-bottom:1.75rem;position:relative;">
+          <div style="position:absolute;top:1.5rem;left:-3px;width:3px;height:40px;background:linear-gradient(180deg,var(--gold),var(--gold-lt));"></div>
+          <p style="font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;">Vision</p>
+          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To be India's preeminent force in Real Estate, Hospitality, and Entertainment - integrating institutional rigour with bespoke advisory and trading solutions, while setting the benchmark for excellence across every vertical."</p>
+        </div>
+
+        <div style="border-left:3px solid var(--border);padding:1.75rem 2rem;background:var(--parch);">
+          <p style="font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.75rem;">Mission</p>
+          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);line-height:1.7;font-style:italic;">"To empower stakeholders through a unique synergy of data-driven strategy and Yield-Centric Focus - delivering high-impact advisory, world-class hospitality, and entertainment experiences that benchmark the standards of excellence."</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="gr"></div>
+        <p class="eyebrow" style="margin-bottom:.875rem;">Core Values</p>
+        <h2 class="h2" style="margin-bottom:3rem;">The Principles<br>That Guide Us</h2>
+
+        <div style="display:flex;flex-direction:column;gap:0;">
+          ${[
+            { icon:'⚖️', name:'Institutional Integrity',   desc:'We operate with the transparency and discipline of a global institution. By acting as true fiduciaries, we ensure every engagement is rooted in ethical conduct and the best interests of our stakeholders.' },
+            { icon:'🏆', name:'Benchmark Excellence',  desc:'We do not just follow industry standards; we define them. Our pursuit of excellence is relentless, ensuring every engagement sets a higher bar for operational excellence.' },
+            { icon:'🎯', name:'Yield-Centric Partnership', desc:'We build long-term relationships centered on measurable success. Our focus remains on creating a unique synergy that delivers sustained value and high-impact results for our clients and communities.' },
+            { icon:'💡', name:'Strategic Innovation',  desc:'We synthesize data-driven strategy with bespoke thinking to solve complex challenges. By embracing new methodologies, we transform traditional sectors and deliver outcomes that set new industry benchmarks.' },
+          ].map(v => `
+          <div style="display:flex;gap:1.5rem;padding:1.75rem 0;border-bottom:1px solid var(--border);align-items:flex-start;transition:background .2s;" onmouseover="this.style.background='rgba(184,150,12,.02)'" onmouseout="this.style.background='transparent'">
+            <span style="font-size:1.6rem;flex-shrink:0;width:40px;text-align:center;">${v.icon}</span>
+            <div>
+              <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;color:var(--ink);margin-bottom:.4rem;">${v.name}</h3>
+              <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;">${v.desc}</p>
+            </div>
+          </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNEY / TIMELINE -->
+<div class="sec-pd" style="padding-top:7rem;">
+  <div class="wrap">
+    <div style="text-align:center;max-width:580px;margin:0 auto 5rem;">
       <div class="gr-c"></div>
       <p class="eyebrow" style="margin-bottom:.875rem;">Institutional Trajectory</p>
-      <h2 class="h2" style="margin-bottom:1rem;">The India Gully Trajectory:<br>From Vision to Force</h2>
-      <p class="lead" style="max-width:640px;margin:0 auto;">Nine years of building India's most trusted multi-vertical institutional advisory practice — from a specialist founding team to an INR 2,100 Cr+ mandate pipeline. The timeline has been restored as a fixed visual timeline, not a hidden or delayed reveal block.</p>
+      <h2 class="h2">The India Gully Trajectory:<br>From Vision to Force</h2>
+      <p class="lead" style="margin-top:1.25rem;">Eight years of building India's most trusted multi-vertical institutional advisory practice - from a specialist founding team to an INR 2,100 Cr+ mandate pipeline.</p>
     </div>
 
-    <div class="about-timeline">
+    <div style="position:relative;max-width:920px;margin:0 auto;">
+      <!-- Centre line -->
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--gold-line),var(--border),transparent);transform:translateX(-50%);"></div>
+
       ${[
-        { year:'2017', title:'The Genesis', desc:'Incorporated as Vivacious Entertainment and Hospitality Pvt. Ltd. in New Delhi. India Gully entered the market with a specialist founding team and a mandate-led approach to hospitality and entertainment advisory.' },
-        { year:'2018', title:'Operational Command', desc:'Launched hotel-management and pre-opening capabilities, securing early mandates for brands including Cygnett, Regenta, and Radisson.' },
-        { year:'2019', title:'Multi-Vertical Expansion', desc:'Integrated Real Estate Strategy and Retail Leasing, transforming from a specialist boutique into a broader institutional advisory platform.' },
-        { year:'2020', title:'Supply Chain Integration', desc:'Added HORECA Supplies, enabling end-to-end FF&E, OS&E, kitchen procurement, and operational support across hotel projects.' },
-        { year:'2021', title:'The India Gully Identity', desc:'Rebranded as India Gully and expanded retail leasing relationships with 30+ major brands across fashion, F&B, and entertainment.' },
-        { year:'2022', title:'Post-Pandemic Acceleration', desc:'Scaled into greenfield hospitality mandates and resumed active advisory across recovering hospitality and real-estate markets.' },
-        { year:'2023', title:'Scaling the Pipeline', desc:'Completed the landmark INR 1,350 Cr+ Entertainment City Limited divestment alongside EY and launched Debt & Special Situations for complex mandates.' },
-        { year:'2024', title:'The Intelligence Layer', desc:'Digitised core workflows through the India Gully Enterprise Platform, integrating advisory execution, governance, and procurement intelligence.' },
-        { year:'2025', title:'INR 2,100 Cr+ Active Pipeline', desc:'Added Prism Tower (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) while scaling mixed-use, hospitality, and special-situations work.' },
-        { year:'2026', title:'Investor-Relations Era', desc:'Launched the India Gully Investor Relations portal, strengthened platform security, and expanded live mandates across five asset classes.' },
-      ].map((t, i) => `
-      <div class="about-timeline-row">
-        <div class="about-timeline-year">${t.year}</div>
-        <div class="about-timeline-dot"></div>
-        <div class="about-timeline-card">
-          <div style="font-size:.64rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem;">${String(i + 1).padStart(2,'0')} / 10</div>
-          <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.22rem;color:var(--ink);margin-bottom:.55rem;">${t.title}</h3>
-          <p style="font-size:.9rem;color:var(--ink-soft);line-height:1.85;margin:0;">${t.desc}</p>
+        { year:'2017', desc:'The Genesis. Incorporated as Vivacious Entertainment and Hospitality Pvt. Ltd. in New Delhi. Hit the ground running with a specialist founding team, injecting structured advisory into the vibrant but fragmented Hospitality and Entertainment sectors.' },
+        { year:'2018', desc:'Operational Command. Launched our Hotel Management and Pre-opening vertical - securing inaugural mandates for marquee brands including Cygnett, Regenta, and Radisson, setting a new pace for North Indian hospitality.' },
+        { year:'2019', desc:'Multi-Vertical Expansion. Breaking the silo of single-sector firms, we integrated Real Estate Strategy and Retail Leasing. This cross-pollination created a diversified advisory engine capable of solving complex, high-stakes urban challenges.' },
+        { year:'2020', desc:'Supply Chain Integration. The launch of our HORECA Supplies vertical closed the loop between strategy and reality. By providing end-to-end FF&E, OS&E, and Kitchen Procurement, we became the on-ground engine for hotel pre-openings across India.' },
+        { year:'2021', desc:'The India Gully Identity. Rebranded as India Gully - a name that celebrates Desiness with a global edge. Aggressively scaled our Retail Leasing practice, anchoring our influence with 30+ powerhouse brand relationships in Fashion, F&B, and Entertainment.' },
+        { year:'2023', desc:'Scaling the Pipeline. Growth shifted into high gear with Greenfield Hotel Projects in Hosur, Shirdi, and Goa. Completed the landmark INR 1,350 Cr+ Entertainment City Limited divestment alongside EY - a 100% shareholder-consented transaction. Pioneered the Debt &amp; Special Situations vertical to navigate the market\'s most complex financial mandates.' },
+        { year:'2024', desc:'The Intelligence Layer. Went fully digital with the India Gully Enterprise Platform (ERP). By integrating advisory management, governance, and HORECA procurement into one proprietary system, we ensured that our Institutional Rigour is now automated and unshakeable.' },
+        { year:'2025', desc:'INR 2,100 Cr+ active advisory pipeline. Prism Tower (INR 400 Cr) and Belcibo Hospitality Platform (INR 100 Cr) mandates added. Co-advisory with EY on mixed-use transactions. Debt & Special Situations vertical scales with distressed hospitality and real estate mandates.' },
+        { year:'2026', desc:'India Gully Investor Relations portal launched. /invest page goes live for qualified institutional investors and family offices. CERT-In OWASP Top-10 security compliance achieved. Eight active mandates across five asset classes.' },
+      ].map((t,i) => `
+      <div style="display:grid;grid-template-columns:1fr 44px 1fr;gap:0;margin-bottom:2.5rem;align-items:center;">
+        ${i%2===0 ? `
+        <div style="padding-right:3rem;text-align:right;">
+          <div class="card card-lift" style="padding:1.75rem;display:inline-block;text-align:left;max-width:360px;">
+            <div style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--gold);line-height:1;margin-bottom:.625rem;">${t.year}</div>
+            <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;">${t.desc}</p>
+          </div>
         </div>
-      </div>`).join('')}
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;max-width:1100px;margin:4.5rem auto 0;" class="mob-stack">
-      <div class="card" style="padding:2rem;">
-        <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:.75rem;">Strategic Vision</p>
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.6rem;color:var(--ink);margin-bottom:1rem;">Institutional Vision and Advisory Mission</h3>
-        <div style="border-left:3px solid var(--gold);padding:1.25rem 1.5rem;background:linear-gradient(135deg,rgba(184,150,12,.05),transparent);margin-bottom:1rem;">
-          <div style="font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem;">Vision</div>
-          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.08rem;color:var(--ink);line-height:1.75;margin:0;font-style:italic;">To be India's preeminent force in real estate, hospitality, and entertainment — integrating institutional rigour with bespoke advisory and trading solutions.</p>
+        <div style="display:flex;justify-content:center;position:relative;z-index:1;">
+          <div style="width:16px;height:16px;background:var(--gold);border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 3px var(--gold-line);"></div>
         </div>
-        <div style="border-left:3px solid var(--border);padding:1.25rem 1.5rem;background:var(--parch);">
-          <div style="font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.55rem;">Mission</div>
-          <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.08rem;color:var(--ink);line-height:1.75;margin:0;font-style:italic;">To empower stakeholders through data-driven strategy, yield-centric focus, and execution discipline that delivers measurable outcomes across every vertical.</p>
+        <div></div>
+        ` : `
+        <div></div>
+        <div style="display:flex;justify-content:center;position:relative;z-index:1;">
+          <div style="width:16px;height:16px;background:var(--gold);border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 3px var(--gold-line);"></div>
         </div>
+        <div style="padding-left:3rem;">
+          <div class="card card-lift" style="padding:1.75rem;max-width:360px;">
+            <div style="font-family:'DM Serif Display',Georgia,serif;font-size:2.25rem;color:var(--gold);line-height:1;margin-bottom:.625rem;">${t.year}</div>
+            <p style="font-size:.875rem;color:var(--ink-soft);line-height:1.8;">${t.desc}</p>
+          </div>
+        </div>
+        `}
       </div>
-
-      <div class="card" style="padding:2rem;">
-        <div class="gr"></div>
-        <p class="eyebrow" style="margin-bottom:.75rem;">Core Values</p>
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.6rem;color:var(--ink);margin-bottom:1rem;">The Principles That Guide Us</h3>
-        <div style="display:grid;gap:.85rem;">
-          ${[
-            { icon:'⚖️', name:'Institutional Integrity', desc:'We operate with the transparency and discipline of a global institution, acting as fiduciary partners to stakeholders.' },
-            { icon:'🏆', name:'Benchmark Excellence', desc:'We do not merely follow standards — we raise them through execution quality, governance, and delivery.' },
-            { icon:'🎯', name:'Yield-Centric Partnership', desc:'Every engagement is structured around long-term value creation and measurable outcomes.' },
-            { icon:'💡', name:'Strategic Innovation', desc:'We blend market knowledge with data, systems, and bespoke thinking to solve complex mandate problems.' },
-          ].map(v => `
-          <div style="display:flex;gap:1rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid var(--border);">
-            <span style="font-size:1.45rem;line-height:1;width:36px;text-align:center;flex-shrink:0;">${v.icon}</span>
-            <div>
-              <div style="font-family:'DM Serif Display',Georgia,serif;font-size:1.05rem;color:var(--ink);margin-bottom:.28rem;">${v.name}</div>
-              <p style="font-size:.88rem;color:var(--ink-soft);line-height:1.75;margin:0;">${v.desc}</p>
-            </div>
-          </div>`).join('')}
-        </div>
-      </div>
+      `).join('')}
     </div>
   </div>
 </div>

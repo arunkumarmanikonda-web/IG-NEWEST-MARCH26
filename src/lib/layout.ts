@@ -1231,27 +1231,6 @@ body{overflow-x:hidden;}
 }
 .partner-card:hover{border-color:rgba(184,150,12,.3);box-shadow:0 10px 32px rgba(0,0,0,.08);transform:translateY(-3px);}
 
-/* ── Public partner/logo presentation ────────── */
-.partner-logo-strip{background:var(--parch-dk);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2rem 0;}
-.partner-strip-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem;}
-.partner-logo-chip{background:#fff;border:1px solid var(--border);padding:1.25rem 1rem;text-align:center;min-height:172px;display:flex;flex-direction:column;justify-content:flex-start;transition:border-color var(--t-med),box-shadow var(--t-med),transform var(--t-med);}
-.partner-logo-chip:hover{border-color:rgba(184,150,12,.3);box-shadow:0 12px 30px rgba(0,0,0,.08);transform:translateY(-2px);}
-.partner-logo-chip__frame{height:72px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:.8rem 1rem;border:1px solid rgba(17,17,17,.08);border-radius:4px;overflow:hidden;}
-.partner-logo-chip__fallback{width:132px;height:42px;display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:.08em;border-radius:4px;}
-.advisory-home-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.25rem;}
-.advisory-home-card{border:1px solid var(--border);padding:1.5rem;text-align:center;background:#fff;transition:border-color var(--t-med),box-shadow var(--t-med),transform var(--t-med);}
-.advisory-home-card:hover{border-color:rgba(184,150,12,.3);box-shadow:0 12px 32px rgba(0,0,0,.08);transform:translateY(-3px);}
-.advisory-home-card__frame{height:86px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;padding:1rem;border:1px solid rgba(17,17,17,.08);border-radius:4px;overflow:hidden;}
-.about-timeline{position:relative;max-width:980px;margin:0 auto;}
-.about-timeline::before{content:'';position:absolute;left:118px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),rgba(184,150,12,.2));}
-.about-timeline-row{display:grid;grid-template-columns:92px 28px 1fr;gap:1rem;align-items:flex-start;position:relative;padding:0 0 1.35rem 0;}
-.about-timeline-year{font-family:'DM Serif Display',Georgia,serif;font-size:1.55rem;color:var(--gold);line-height:1;padding-top:.55rem;text-align:right;}
-.about-timeline-dot{width:16px;height:16px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 3px var(--gold-line);margin-top:.75rem;position:relative;z-index:1;}
-.about-timeline-card{background:#fff;border:1px solid var(--border);padding:1.35rem 1.5rem;box-shadow:0 12px 28px rgba(0,0,0,.05);}
-@media(max-width:1100px){.partner-strip-grid,.advisory-home-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
-@media(max-width:768px){.partner-strip-grid,.advisory-home-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.about-timeline::before{left:74px;}.about-timeline-row{grid-template-columns:56px 24px 1fr;gap:.85rem;}.about-timeline-year{font-size:1.15rem;padding-top:.4rem;}}
-@media(max-width:560px){.partner-strip-grid,.advisory-home-grid{grid-template-columns:1fr;}.about-timeline::before{left:18px;}.about-timeline-row{grid-template-columns:24px 1fr;gap:.85rem;padding-left:0;}.about-timeline-year{text-align:left;grid-column:1 / -1;padding:0 0 .2rem 2.2rem;}.about-timeline-dot{margin-top:.35rem;}.about-timeline-card{grid-column:2;}}
-
 /* ── Featured mandates ───────────────────────── */
 #featuredMandates{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;margin-bottom:1.75rem;}
 @media(max-width:900px){#featuredMandates{grid-template-columns:repeat(2,1fr);}}
@@ -2355,32 +2334,6 @@ const SCRIPTS = (_nonce?: string) => `
       }).catch(function(){drawer.remove();});
     };
   };
-
-  (function(){
-    var path=window.location.pathname;
-    var isLoginPage=(path==='/admin'||path==='/portal'||path==='/portal/client'
-      ||path==='/portal/employee'||path==='/portal/board'||path.endsWith('/login'));
-    if(isLoginPage) return;
-    function ensureLauncher(){
-      var btn=document.getElementById('dpdp-launcher');
-      if(!btn){
-        btn=document.createElement('button');
-        btn.id='dpdp-launcher';
-        btn.type='button';
-        btn.setAttribute('aria-label','Open privacy and cookie settings');
-        btn.textContent='Privacy & Cookies';
-        btn.style.cssText='position:fixed;left:16px;bottom:18px;z-index:9700;background:#111;color:#fff;border:1px solid rgba(184,150,12,.38);padding:.62rem .9rem;font-size:.68rem;font-weight:700;letter-spacing:.06em;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);';
-        btn.onclick=function(){
-          if(typeof window.igOpenDpdpPreferences==='function') window.igOpenDpdpPreferences();
-        };
-        document.body.appendChild(btn);
-      }
-      btn.style.bottom=document.getElementById('dpdp-banner') ? '96px' : '18px';
-    }
-    ensureLauncher();
-    setTimeout(ensureLauncher,600);
-    window.addEventListener('resize',ensureLauncher);
-  })();
 
   /* ── DARK MODE ────────────────────────────────────────────────────────── */
   (function(){
