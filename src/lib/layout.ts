@@ -2632,3 +2632,4 @@ const SCRIPTS = (_nonce?: string) => `
 ;(window as any).igGovDownloadAppointment = (window as any).igGovDownloadAppointmentLetter;
 ;(window as any).igGovSendComplianceReminder = (window as any).igGovSendEventReminder;
 ;(window as any).igWfTestRun = (window as any).igWfRunTest;
+

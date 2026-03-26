@@ -132,13 +132,13 @@ app.get('/legal/privacy', (c) => c.html(legalPage('Privacy Policy', `
 <p>Personal data is retained for as long as necessary to fulfil the purposes for which it was collected, or as required by applicable law (typically 7-8 years for financial and statutory records under Indian law).</p>
 
 <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">5. Your Rights</h2>
-<p>Under applicable Indian data protection laws, you have the right to access, correct, or request deletion of your personal data. To exercise any right, write to: <a href="mailto:info@indiagully.com" style="color:var(--gold);">info@indiagully.com</a>.</p>
+<p>Under applicable Indian data protection laws, and where applicable GDPR and CCPA/CPRA, you may request access, correction, deletion, portability, objection, restriction, consent withdrawal, and grievance redressal. To exercise any right, write to: <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a>.</p>
 
 <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">6. Security</h2>
 <p>We implement appropriate technical and organisational measures including 2FA authentication, encrypted storage, access logging, and IP whitelisting to protect your personal data against unauthorised access or disclosure.</p>
 
 <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">7. Contact</h2>
-<p>For privacy-related queries: <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, New Delhi, India. Email: <a href="mailto:info@indiagully.com" style="color:var(--gold);">info@indiagully.com</a></p>
+<p>For privacy-related queries: <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, C-205, Rohini Heights, DDA HIG Flats, Sector 29, Rohini, New Delhi 110085, India. Email: <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a></p>
 `)))
 
 app.get('/legal/terms', (c) => c.html(legalPage('Terms of Use', `
@@ -210,6 +210,7 @@ app.get('/sitemap.xml', (c) => {
     { url: '/careers',       priority: '0.75', freq: 'monthly' },
     { url: '/invest',        priority: '0.85', freq: 'monthly' },
     { url: '/legal/privacy',    priority: '0.3', freq: 'yearly' },
+    { url: '/legal/cookies',    priority: '0.3', freq: 'yearly' },
     { url: '/legal/terms',      priority: '0.3', freq: 'yearly' },
     { url: '/legal/disclaimer', priority: '0.3', freq: 'yearly' },
   ]
@@ -492,3 +493,4 @@ app.onError((err, c) => {
 })
 
 export default app
+
