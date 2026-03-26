@@ -382,7 +382,7 @@ app.get('/', async (c) => {
 <div class="partner-marquee-section" style="background:var(--parch-dk);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 0;overflow:hidden;">
   <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0;">
     <div class="partner-marquee-label" style="flex-shrink:0;padding:0 1.5rem;font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted);white-space:nowrap;">
-      Advisory Partners
+      Our Partners
     </div>
     <div class="marquee-outer" style="flex:1;">
       <div class="marquee-track">
