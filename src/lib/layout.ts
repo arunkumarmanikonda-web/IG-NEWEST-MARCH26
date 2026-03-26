@@ -1776,6 +1776,11 @@ const FOOTER = `
       <p style="font-size:.65rem;color:rgba(255,255,255,.38);">© 2026 Vivacious Entertainment and Hospitality Pvt. Ltd. All rights reserved. India Gully™ is a registered brand.</p>
       <div style="display:flex;gap:1.5rem;font-size:.65rem;color:rgba(255,255,255,.38);align-items:center;flex-wrap:wrap;">
         <a href="/legal/privacy"    style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Privacy Policy</a>
+        <a href="/legal/cookies"    style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Cookie Policy</a>
+        <button onclick="window.igOpenDpdpPreferences && window.igOpenDpdpPreferences()" aria-label="Manage privacy preferences"
+                style="background:none;border:none;color:rgba(255,255,255,.38);padding:0;cursor:pointer;transition:color .2s;font-size:.65rem;">
+          Manage Privacy Preferences
+        </button>
         <a href="/legal/terms"      style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Terms of Use</a>
         <a href="/legal/disclaimer" style="transition:color .2s;" onmouseover="this.style.color='rgba(184,150,12,.8)'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Disclaimer</a>
         <span style="color:rgba(255,255,255,.2);">GSTIN: 07AAGCV0867P1ZN</span>
@@ -2136,6 +2141,7 @@ const SCRIPTS = (_nonce?: string) => `
           +'<strong style="color:rgba(255,255,255,.8);">Digital Personal Data Protection Act 2023</strong>. '
           +'Essential processing is mandatory. Choose optional purposes below. '
           +'<a href="/legal/privacy" style="color:var(--gold,#B8960C);text-decoration:underline;">Privacy Policy</a>'
+          +'&nbsp;|&nbsp;<a href="/legal/cookies" style="color:var(--gold,#B8960C);text-decoration:underline;">Cookie Policy</a>'
           +'&nbsp;|&nbsp;<a href="mailto:dpo@indiagully.com" style="color:var(--gold,#B8960C);text-decoration:underline;">DPO</a>'
         +'</div>'
         // Per-purpose toggle row
@@ -2632,4 +2638,5 @@ const SCRIPTS = (_nonce?: string) => `
 ;(window as any).igGovDownloadAppointment = (window as any).igGovDownloadAppointmentLetter;
 ;(window as any).igGovSendComplianceReminder = (window as any).igGovSendEventReminder;
 ;(window as any).igWfTestRun = (window as any).igWfRunTest;
+
 

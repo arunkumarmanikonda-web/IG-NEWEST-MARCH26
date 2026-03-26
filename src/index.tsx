@@ -141,6 +141,44 @@ app.get('/legal/privacy', (c) => c.html(legalPage('Privacy Policy', `
 <p>For privacy-related queries: <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, C-205, Rohini Heights, DDA HIG Flats, Sector 29, Rohini, New Delhi 110085, India. Email: <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a></p>
 `)))
 
+app.get('/legal/cookies', (c) => c.html(legalPage('Cookie Policy', `
+<p style="color:var(--ink-muted);font-size:.82rem;margin-bottom:1.75rem;">Effective Date: 1 January 2025 - Last Updated: 26 March 2026</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">1. Scope</h2>
+<p>This Cookie Policy explains how India Gully, operated by <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong>, uses cookies and similar technologies on indiagully.com and related pages. It is intended to support disclosures under the GDPR, CCPA/CPRA, and India''s Digital Personal Data Protection Act, 2023.</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">2. What Cookies Are</h2>
+<p>Cookies are small text files placed on your browser or device when you visit a website. We may also use local storage, pixels, tags, SDKs, and similar technologies for security, functionality, analytics, communications, and consent management.</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">3. Categories We Use</h2>
+<ul style="margin:.875rem 0;padding-left:1.5rem;">
+  <li style="margin-bottom:.5rem;"><strong>Essential:</strong> required for site security, session continuity, fraud prevention, accessibility, and storing your privacy choices.</li>
+  <li style="margin-bottom:.5rem;"><strong>Analytics:</strong> used to measure usage, improve performance, and understand engagement trends.</li>
+  <li style="margin-bottom:.5rem;"><strong>Marketing:</strong> used for outreach measurement, campaign attribution, remarketing, and relevant communications where permitted by law.</li>
+  <li style="margin-bottom:.5rem;"><strong>Third-Party Integrations:</strong> used when embedded services or vendor tools are enabled, such as communications, document workflows, maps, payment, or support tools.</li>
+</ul>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">4. Legal Basis and Consent</h2>
+<p>Essential technologies may be used because they are necessary for secure operation of the website and our legitimate business purposes, or to perform requested services. Non-essential analytics, marketing, and third-party integrations are intended to be enabled only after your affirmative choice through our consent interface, except where another lawful basis clearly applies.</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">5. How to Manage Your Choices</h2>
+<p>You can use the consent banner when it appears, or reopen your preferences at any time using the <strong>Manage Privacy Preferences</strong> control in the footer. You may also change browser settings to block or delete cookies, although some essential features may stop working correctly if you disable strictly necessary technologies.</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">6. Examples of Technologies</h2>
+<ul style="margin:.875rem 0;padding-left:1.5rem;">
+  <li style="margin-bottom:.5rem;"><strong>Consent storage:</strong> records your privacy selections and banner version.</li>
+  <li style="margin-bottom:.5rem;"><strong>Security/session tools:</strong> help maintain secure access, load balancing, and abuse prevention.</li>
+  <li style="margin-bottom:.5rem;"><strong>Analytics tags:</strong> help us understand page visits, engagement, and technical performance.</li>
+  <li style="margin-bottom:.5rem;"><strong>Marketing tags:</strong> may support attribution, remarketing, and audience measurement if enabled by you.</li>
+  <li style="margin-bottom:.5rem;"><strong>Embedded service tools:</strong> may be set by vendors when you interact with communications, payment, or document-signing features.</li>
+</ul>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">7. Your Privacy Rights</h2>
+<p>Depending on your jurisdiction, you may have rights relating to access, correction, deletion, portability, objection, restriction, consent withdrawal, opting out of sale or sharing, limiting use of sensitive personal information, and grievance redressal. Please review our <a href="/legal/privacy" style="color:var(--gold);">Privacy Policy</a> for full details.</p>
+
+<h2 style="font-family:''DM Serif Display'',Georgia,serif;font-size:1.35rem;color:var(--ink);margin-bottom:.875rem;margin-top:2rem;">8. Contact</h2>
+<p>For cookie and privacy questions, contact <strong>Vivacious Entertainment and Hospitality Pvt. Ltd.</strong> at <a href="mailto:dpo@indiagully.com" style="color:var(--gold);">dpo@indiagully.com</a>.</p>
+`)))
 app.get('/legal/terms', (c) => c.html(legalPage('Terms of Use', `
 <p style="color:var(--ink-muted);font-size:.82rem;margin-bottom:1.75rem;">Effective Date: 1 January 2025 · Last Updated: 4 March 2026</p>
 
@@ -267,7 +305,7 @@ app.get('/robots.txt', (c) => {
 
 // ── SEO: humans.txt ──────────────────────────────────────────────────────────
 app.get('/humans.txt', (c) => c.text(
-  `/* TEAM */\nIndia Gully Advisory — Vivacious Entertainment and Hospitality Pvt. Ltd.\nNew Delhi, India\ninfo@indiagully.com\n\n/* SITE */\nLast update: ${new Date().toISOString().split('T')[0]}\nLanguage: English\nDoctype: HTML5\n`,
+  `/* TEAM */\nIndia Gully Advisory — Vivacious Entertainment and Hospitality Pvt. Ltd.\nNew Delhi, India\ndpo@indiagully.com\n\n/* SITE */\nLast update: ${new Date().toISOString().split('T')[0]}\nLanguage: English\nDoctype: HTML5\n`,
   200, { 'Content-Type': 'text/plain; charset=utf-8' }
 ))
 
@@ -493,4 +531,5 @@ app.onError((err, c) => {
 })
 
 export default app
+
 
