@@ -22,6 +22,35 @@ const CAT_IMAGES: Record<string, string> = {
 }
 
 // ── ARTICLES ─────────────────────────────────────────────────────────────────
+const INSIGHTS_IMAGE_BASE = 'https://cdn.indiagully.com/insights'
+
+const ARTICLE_IMAGE_KEYS: Record<string, string> = {
+  'india-realty-2026-outlook': 'india-realty-2026-outlook.webp',
+  'entertainment-zone-regulatory-india': 'entertainment-zone-regulatory-india.webp',
+  'horeca-tier2-supply-chain': 'horeca-tier2-supply-chain.webp',
+  'ibc-distressed-hospitality-2025': 'ibc-distressed-hospitality-2025.webp',
+  'mall-mixed-use-integration': 'mall-mixed-use-integration.webp',
+  'greenfield-midscale-hotels': 'greenfield-midscale-hotels.webp',
+  'india-hospitality-2024': 'india-hospitality-2024.webp',
+  'entertainment-destinations-india': 'entertainment-destinations-india.webp',
+  'horeca-procurement-strategy': 'horeca-procurement-strategy.webp',
+  'debt-special-situations-hospitality': 'debt-special-situations-hospitality.webp',
+  'retail-leasing-malls-india': 'retail-leasing-malls-india.webp',
+  'greenfield-hotel-development': 'greenfield-hotel-development.webp',
+  'mall-hotel-office-trinity': 'mall-hotel-office-trinity.webp',
+  'horeca-tier2-supply-chain-deep-dive': 'horeca-tier2-supply-chain-deep-dive.webp',
+  'retail-leasing-trends-india-2026': 'retail-leasing-trends-india-2026.webp',
+  'debt-special-situations-india-hospitality-2026': 'debt-special-situations-india-hospitality-2026.webp',
+  'horeca-cloud-kitchen-india-2026': 'horeca-cloud-kitchen-india-2026.webp',
+  'india-hospitality-brand-strategy-2026': 'india-hospitality-brand-strategy-2026.webp',
+  'entertainment-destination-development-india-2026': 'entertainment-destination-development-india-2026.webp',
+}
+
+const imageForArticle = (article: { id: string; category: string }) => {
+  const file = ARTICLE_IMAGE_KEYS[article.id]
+  if (file) return `${INSIGHTS_IMAGE_BASE}/${file}`
+  return CAT_IMAGES[article.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'
+}
 const ARTICLES = [
   {
     id: 'india-realty-2026-outlook',
@@ -1372,7 +1401,7 @@ app.get('/', (c) => {
          onmouseover="this.style.borderColor='rgba(184,150,12,.3)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='var(--border-lt)';this.style.boxShadow='none'">
       <!-- Image side -->
       <div style="position:relative;min-height:380px;overflow:hidden;background:#111;">
-        <img src="${CAT_IMAGES[featured.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
+        <img src="${imageForArticle(featured) || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
              alt="${featured.title}"
              style="width:100%;height:100%;object-fit:cover;transition:transform 8s cubic-bezier(.4,0,.2,1);" loading="eager"
              onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
@@ -1403,7 +1432,7 @@ app.get('/', (c) => {
       ${rest.map((a, i) => `
       <article class="ins-card" data-cat="${a.category}" style="animation:fadeUp .5s ease ${i * 0.06}s both;">
         <div class="ins-card__img">
-          <img src="${CAT_IMAGES[a.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
+          <img src="${imageForArticle(a) || '/static/mandates/chandigarh/chandigarh-img2.webp'}"
                alt="${a.title}" loading="lazy">
           <div class="ins-card__overlay"></div>
           <div style="position:absolute;top:.875rem;left:.875rem;">${catBadge(a.category)}</div>
@@ -1542,7 +1571,7 @@ app.get('/:id', (c) => {
   if (!article) return c.redirect('/insights')
 
   const relatedArticles = ARTICLES.filter(a => a.id !== id && (a.category === article.category || a.tags.some((t: string) => article.tags.includes(t)))).slice(0, 3)
-  const catImg = CAT_IMAGES[article.category] || '/static/mandates/chandigarh/chandigarh-img2.webp'
+  const catImg = imageForArticle(article) || '/static/mandates/chandigarh/chandigarh-img2.webp'
 
   const content = `
 <!-- Phase 11D: Reading progress bar -->
@@ -1747,7 +1776,7 @@ ${relatedArticles.length ? `
       <a href="/insights/${r.id}" style="display:block;background:#fff;border:1px solid var(--border);overflow:hidden;transition:all .25s;text-decoration:none;"
          onmouseover="this.style.borderColor='var(--gold)';this.style.boxShadow='0 8px 28px rgba(0,0,0,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
         <div style="height:140px;overflow:hidden;position:relative;background:#1a1a1a;">
-          <img src="${CAT_IMAGES[r.category] || ''}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+          <img src="${imageForArticle(r) || ''}" alt="${r.title}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5),transparent);"></div>
           <div style="position:absolute;top:.75rem;left:.75rem;">${catBadge(r.category)}</div>
         </div>
@@ -1869,7 +1898,7 @@ ${relatedArticles.length ? `
 
   return c.html(layout(article.title, content, {
     description: article.excerpt,
-    ogImage: CAT_IMAGES[article.category],
+    ogImage: imageForArticle(article),
     canonical: `https://india-gully.pages.dev/insights/${article.id}`,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -1878,7 +1907,7 @@ ${relatedArticles.length ? `
           '@type': 'Article',
           headline: article.title,
           description: article.excerpt,
-          image: CAT_IMAGES[article.category],
+          image: imageForArticle(article),
           datePublished: article.date,
           author: { '@type': 'Organization', name: 'India Gully Research', url: 'https://india-gully.pages.dev' },
           publisher: {
