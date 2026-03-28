@@ -1639,8 +1639,6 @@ app.get('/:id', (c) => {
             <i class="fab fa-linkedin-in" style="font-size:.72rem;"></i>LinkedIn
           </a>
           <a href="https://wa.me/?text=${encodeURIComponent(article.title + ' — India Gully Research https://india-gully.pages.dev/insights/' + article.id)}" target="_blank" rel="noopener" title="Share on WhatsApp"
-             style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:#25D366;color:#fff;text-decoration:none;border-radius:4px;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-            <i class="fab fa-whatsapp" style="font-size:.72rem;"></i>WhatsApp
           </a>
           <button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://india-gully.pages.dev/insights/${article.id}').then(function(){igToast('Link copied!','success')}).catch(function(){igToast('Copy link manually','info')})" title="Copy link"
              style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .875rem;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--parch-dk);color:var(--ink);border:1px solid var(--border);cursor:pointer;border-radius:4px;transition:all .2s;" onmouseover="this.style.background='var(--gold-pale)'" onmouseout="this.style.background='var(--parch-dk)'">
