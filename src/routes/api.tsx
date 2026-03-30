@@ -371,7 +371,7 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'superadmin@indiagully.com': {
     identifier: 'superadmin@indiagully.com',
     salt: 'ig-salt-admin-v3-2026',
-    hash: '0710e299d5de37a3aab1ac14b07b0ba9897d6050f2d8d6c081b5f0939e9b7e4e',
+    hash: '610f07d87f63f71d784dc99dd258c7e1b6c2bb8986e45b150934c7b655269125',
     role: 'Super Admin', portal: 'admin', dashboard: '/admin/dashboard',
     totp_secret: 'CG5LSHWCQHZL7TV7CQE6Z3DJIAO2MMBZ',
     mfa_required: true, demo_account: true, totp_demo_pin: '',
@@ -379,7 +379,7 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'demo@indiagully.com': {
     identifier: 'demo@indiagully.com',
     salt: 'ig-salt-client-v3-2026',
-    hash: '4c4cab256567b00115b6a6e9014569afe7e05cabd16633929a0031730fb7faca',
+    hash: '54b1b021fa7278991b965a110dec8e5c9fbed252e14ae03c14781f7df7271be9',
     role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
     totp_secret: 'VCPFNOW2QGBUBUTF2MCQXFCLVCPPOXJU',
     mfa_required: true, demo_account: true, totp_demo_pin: '',
@@ -387,7 +387,7 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'IG-EMP-0001': {
     identifier: 'IG-EMP-0001',
     salt: 'ig-salt-emp-v3-2026',
-    hash: '819a5723b41c76ca06d205ff86911c800ee2de0e6eb81365bca9b826f0bc56b1',
+    hash: 'a5df047855d19abd2888a37bad4840b5cce88696bfe1a4985065dd0e3dad5a1b',
     role: 'Employee', portal: 'employee', dashboard: '/portal/employee/dashboard',
     totp_secret: 'B3S56WWK5R6NSEDML5ARXTDXCVRUXZ67',
     mfa_required: true, demo_account: true, totp_demo_pin: '',
@@ -395,7 +395,7 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'IG-KMP-0001': {
     identifier: 'IG-KMP-0001',
     salt: 'ig-salt-board-v3-2026',
-    hash: '0a964f672593bd3bd0964d1551588a365593519bd3d9f7bbbd0679347352e816',
+    hash: '258a2ef873ad50fa1abf1f8a215016d89008c27b8b30e7da6b8e79419192a865',
     role: 'Board', portal: 'board', dashboard: '/portal/board/dashboard',
     totp_secret: 'FMWCS4OPGN73MK3LFQOCZYFLW555NAWN',
     mfa_required: true, demo_account: true, totp_demo_pin: '',
@@ -403,7 +403,7 @@ const USER_STORE: Record<string, { salt:string; hash:string; role:string; portal
   'qa@indiagully.com': {
     identifier: 'qa@indiagully.com',
     salt: 'ig-salt-qa-v3-2026',
-    hash: '9fa32eacc8b9baf0a2e6f564cae45ae40e97110136d05d420e7bbd50554709d8',
+    hash: 'cf766a4a2b230cb681224b44ee2350a63f325d29c9d8f12526f45082b126f9af',
     role: 'Client', portal: 'client', dashboard: '/portal/client/dashboard',
     totp_secret: 'WGYPMNQOOEEJT7VJKBE6ZMZDH3UEGYSK',
     mfa_required: false, demo_account: true, totp_demo_pin: '',
