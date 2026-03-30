@@ -14059,7 +14059,7 @@ app.get('/compliance/reseller-compliance', requireSession(), requireRole(['Super
 // -- VV-Round: Innovation & R&D Intelligence --
 app.get('/innovation/idea-pipeline', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_VV1 = { round: 'VV', endpoint: 'VV1', title: 'VV1: Ideas', generated: new Date().toISOString(), total_ideas:84,poc_stage:18,in_development:4,launched_ytd:2,ideas:[{id:'ID-041',title:'AI-driven payslip anomaly detection',stage:'POC',sponsor:'CTO'},{id:'ID-042',title:'WhatsApp self-service HR bot',stage:'Development',sponsor:'VP Engineering'},{id:'ID-043',title:'HORECA demand forecasting ML',stage:'Idea',sponsor:'Head HORECA'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_VV1 = { round: 'VV', endpoint: 'VV1', title: 'VV1: Ideas', total_ideas:84,poc_stage:18,in_development:4,launched_ytd:2,ideas:[{id:'ID-041',title:'AI-driven payslip anomaly detection',stage:'POC',sponsor:'CTO'},{id:'ID-042',title:'WhatsApp self-service HR bot',stage:'Development',sponsor:'VP Engineering'},{id:'ID-043',title:'HORECA demand forecasting ML',stage:'Idea',sponsor:'Head HORECA'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const okrRow = await env.DB.prepare(
@@ -14075,7 +14075,7 @@ app.get('/innovation/idea-pipeline', requireSession(), requireRole(['Super Admin
 })
 app.get('/innovation/rd-spend', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV2', title: 'VV2: R&D', generated: new Date().toISOString(), spend_lakh:42,pct_of_revenue:8.4,funded_projects:3,projects:[{name:'AI Salary Benchmarking',spend_lakh:18,status:'Active',partner:'IIT Mumbai'},{name:'HORECA Demand ML',spend_lakh:14,status:'Active',partner:'Internal'},{name:'NLP Compliance Assistant',spend_lakh:10,status:'POC',partner:'NASSCOM CoE'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV2', title: 'VV2: R&D', spend_lakh:42,pct_of_revenue:8.4,funded_projects:3,projects:[{name:'AI Salary Benchmarking',spend_lakh:18,status:'Active',partner:'IIT Mumbai'},{name:'HORECA Demand ML',spend_lakh:14,status:'Active',partner:'Internal'},{name:'NLP Compliance Assistant',spend_lakh:10,status:'POC',partner:'NASSCOM CoE'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT SUM(value) AS total FROM ig_kpi_records WHERE metric_name LIKE '%R&D%' OR metric_name LIKE '%Innovation%' OR metric_name LIKE '%Research%'`).first() as any
@@ -14092,22 +14092,22 @@ app.get('/innovation/rd-spend', requireSession(), requireRole(['Super Admin'], [
 })
 app.get('/innovation/ai-ml-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV3', title: 'VV3: AI/ML', generated: new Date().toISOString(), models_in_production:4,avg_accuracy_pct:94.2,retraining_needed:2,models:[{name:'Churn Predictor',accuracy_pct:96.4,version:'v2.1',last_trained:'2026-01-15'},{name:'Discount Approval Scorer',accuracy_pct:92.8,version:'v1.4',last_trained:'2025-11-20'},{name:'Invoice Anomaly Detector',accuracy_pct:94.6,version:'v3.0',last_trained:'2026-02-08'},{name:'Lead Scoring',accuracy_pct:91.2,version:'v1.8',last_trained:'2025-12-10',flag:'Retraining due'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV3', title: 'VV3: AI/ML', models_in_production:4,avg_accuracy_pct:94.2,retraining_needed:2,models:[{name:'Churn Predictor',accuracy_pct:96.4,version:'v2.1',last_trained:'2026-01-15'},{name:'Discount Approval Scorer',accuracy_pct:92.8,version:'v1.4',last_trained:'2025-11-20'},{name:'Invoice Anomaly Detector',accuracy_pct:94.6,version:'v3.0',last_trained:'2026-02-08'},{name:'Lead Scoring',accuracy_pct:91.2,version:'v1.8',last_trained:'2025-12-10',flag:'Retraining due'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/innovation/patent-pipeline', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV4', title: 'VV4: Patents', generated: new Date().toISOString(), patents_filed:3,granted:1,pending:2,portfolio_value_lakh:8.4,patents:[{id:'IN202621001234',title:'Method for automated TDS challan reconciliation',status:'Granted',filed:'2025-08-12'},{id:'IN202621004567',title:'AI-based FSSAI compliance scoring system',status:'Pending'},{id:'IN202621007890',title:'Privacy-preserving salary benchmarking via federated learning',status:'Pending'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV4', title: 'VV4: Patents', patents_filed:3,granted:1,pending:2,portfolio_value_lakh:8.4,patents:[{id:'IN202621001234',title:'Method for automated TDS challan reconciliation',status:'Granted',filed:'2025-08-12'},{id:'IN202621004567',title:'AI-based FSSAI compliance scoring system',status:'Pending'},{id:'IN202621007890',title:'Privacy-preserving salary benchmarking via federated learning',status:'Pending'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/dpdp/ai-data-governance', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV5', title: 'VV5: AI DPDP', generated: new Date().toISOString(), models_using_pii:4,consent_compliant:2,missing_consent:2,gaps:[{model:'Churn Predictor',issue:'Uses customer email+usage patterns without analytics consent per §6',action:'Add consent checkbox at onboarding'},{model:'Lead Scoring',issue:'Uses contact behaviour data — consent notice not updated',action:'Update privacy notice and re-consent 8.4K leads'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'VV', endpoint: 'VV5', title: 'VV5: AI DPDP', models_using_pii:4,consent_compliant:2,missing_consent:2,gaps:[{model:'Churn Predictor',issue:'Uses customer email+usage patterns without analytics consent per §6',action:'Add consent checkbox at onboarding'},{model:'Lead Scoring',issue:'Uses contact behaviour data — consent notice not updated',action:'Update privacy notice and re-consent 8.4K leads'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/compliance/it-act-ai', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_VV6_old = { round: 'VV', endpoint: 'VV6', title: 'VV6: IT Act AI', generated: new Date().toISOString(), checklist_pct:78,items_completed:14,items_open:4,items:[{item:'Explainability documentation',status:'Complete'},{item:'Bias audit (salary benchmarking model)',status:'Open — due 2026-04-30'},{item:'Human override mechanism',status:'Complete'},{item:'Training data lineage',status:'Open — in progress'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_VV6_old = { round: 'VV', endpoint: 'VV6', title: 'VV6: IT Act AI', checklist_pct:78,items_completed:14,items_open:4,items:[{item:'Explainability documentation',status:'Complete'},{item:'Bias audit (salary benchmarking model)',status:'Open — due 2026-04-30'},{item:'Human override mechanism',status:'Complete'},{item:'Training data lineage',status:'Open — in progress'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const okrRow = await env.DB.prepare(
@@ -14138,17 +14138,17 @@ app.get('/compliance/it-act-ai', requireSession(), requireRole(['Super Admin'], 
 // -- WW-Round: Financial Planning & Analysis Intelligence --
 app.get('/fpa/budget-forecast', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', generated: new Date().toISOString(), fy:'FY26-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW1', title: 'WW1: Budget Forecast', fy:'FY26-27',plan_cr:18.4,scenarios:[{name:'Base',revenue_cr:18.4,growth_pct:38},{name:'Bull',revenue_cr:24.0,growth_pct:80},{name:'Bear',revenue_cr:14.2,growth_pct:7}],key_assumptions:['Series B close Q1 FY27','HORECA module 3x growth','Enterprise deals 4+ signed'], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/fpa/cash-flow-projection', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW2', title: 'WW2: Cash Flow', generated: new Date().toISOString(), runway_months:12,monthly_burn_lakh:42,cash_balance_lakh:84,monthly_inflow_lakh:38,breakeven_month:'Nov 2026',by_month:[{m:'Apr',inflow:36,outflow:42},{m:'May',inflow:38,outflow:41},{m:'Jun',inflow:40,outflow:40},{m:'Jul',inflow:44,outflow:40}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW2', title: 'WW2: Cash Flow', runway_months:12,monthly_burn_lakh:42,cash_balance_lakh:84,monthly_inflow_lakh:38,breakeven_month:'Nov 2026',by_month:[{m:'Apr',inflow:36,outflow:42},{m:'May',inflow:38,outflow:41},{m:'Jun',inflow:40,outflow:40},{m:'Jul',inflow:44,outflow:40}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/fpa/unit-economics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW3 = { round: 'WW', endpoint: 'WW3', title: 'WW3: Unit Economics', generated: new Date().toISOString(), cac_inr:12400,ltv_inr:84000,ltv_cac_ratio:6.8,payback_months:14,arpu_lakh_annual:4.8,gross_margin_pct:72,nrr_pct:118, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW3 = { round: 'WW', endpoint: 'WW3', title: 'WW3: Unit Economics', cac_inr:12400,ltv_inr:84000,ltv_cac_ratio:6.8,payback_months:14,arpu_lakh_annual:4.8,gross_margin_pct:72,nrr_pct:118, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14167,7 +14167,7 @@ app.get('/fpa/unit-economics', requireSession(), requireRole(['Super Admin'], ['
 })
 app.get('/fpa/fundraising-readiness', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW4 = { round: 'WW', endpoint: 'WW4', title: 'WW4: Fundraising', generated: new Date().toISOString(), readiness_pct:84,data_room_pct:68,target_raise_cr:24,use_of_funds:[{area:'Product & Engg',pct:40},{area:'Sales & Marketing',pct:30},{area:'Ops & Compliance',pct:20},{area:'Reserve',pct:10}],key_milestones:[{milestone:'Audited FY26 financials',status:'In Progress'},{milestone:'Series A round closed',status:'Complete — Rs8.4Cr raised'},{milestone:'NDA data room sent to 6 investors',status:'Complete'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW4 = { round: 'WW', endpoint: 'WW4', title: 'WW4: Fundraising', readiness_pct:84,data_room_pct:68,target_raise_cr:24,use_of_funds:[{area:'Product & Engg',pct:40},{area:'Sales & Marketing',pct:30},{area:'Ops & Compliance',pct:20},{area:'Reserve',pct:10}],key_milestones:[{milestone:'Audited FY26 financials',status:'In Progress'},{milestone:'Series A round closed',status:'Complete — Rs8.4Cr raised'},{milestone:'NDA data room sent to 6 investors',status:'Complete'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14186,12 +14186,12 @@ app.get('/fpa/fundraising-readiness', requireSession(), requireRole(['Super Admi
 })
 app.get('/dpdp/financial-data-classification', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW5', title: 'WW5: FP&A DPDP', generated: new Date().toISOString(), financial_data_types:28,with_pii:6,classified:22,gaps:6,gap_detail:[{type:'Investor KYC documents',issue:'Stored beyond 5yr policy threshold'},{type:'Employee bank account details in payroll exports',issue:'Exported CSV unencrypted via email'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'WW', endpoint: 'WW5', title: 'WW5: FP&A DPDP', financial_data_types:28,with_pii:6,classified:22,gaps:6,gap_detail:[{type:'Investor KYC documents',issue:'Stored beyond 5yr policy threshold'},{type:'Employee bank account details in payroll exports',issue:'Exported CSV unencrypted via email'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/compliance/roc-filings', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', generated: new Date().toISOString(), total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY25-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_WW6 = { round: 'WW', endpoint: 'WW6', title: 'WW6: ROC Filings', total_filings:8,current:7,delayed:1,delayed_detail:[{filing:'AOC-4 (Financial Statements FY25-26)',due:'2026-12-30',status:'Draft in progress — auditor review pending'}],next_due:{filing:'MGT-7 (Annual Return)',due:'2026-11-30',status:'Upcoming'}, storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const invRow = await env.DB.prepare(
@@ -14245,12 +14245,12 @@ app.get('/regulatory/compliance-calendar', requireSession(), requireRole(['Super
 })
 app.get('/regulatory/policy-tracker', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX2', title: 'XX2: Policies', generated: new Date().toISOString(), total_policies:28,outdated:6,under_review:4,current:18,policies:[{name:'Information Security Policy',version:'v3.2',last_reviewed:'2025-11-01',status:'Current'},{name:'DPDP Privacy Policy',version:'v2.0',last_reviewed:'2026-01-15',status:'Current'},{name:'HR Leave Policy',version:'v1.4',last_reviewed:'2024-06-01',status:'Outdated — review due'},{name:'Vendor Onboarding Policy',version:'v1.1',last_reviewed:'2023-12-01',status:'Outdated — major revision needed'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX2', title: 'XX2: Policies', total_policies:28,outdated:6,under_review:4,current:18,policies:[{name:'Information Security Policy',version:'v3.2',last_reviewed:'2025-11-01',status:'Current'},{name:'DPDP Privacy Policy',version:'v2.0',last_reviewed:'2026-01-15',status:'Current'},{name:'HR Leave Policy',version:'v1.4',last_reviewed:'2024-06-01',status:'Outdated — review due'},{name:'Vendor Onboarding Policy',version:'v1.1',last_reviewed:'2023-12-01',status:'Outdated — major revision needed'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/regulatory/license-registry', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX3', title: 'XX3: Licenses', generated: new Date().toISOString(), total_held:18,expiring_30d:2,renewal_fees_inr:84000,expiring:[{license:'FSSAI Central Licence (MH)',number:'11224999000184',expiry:'2026-04-12',fee_inr:55000},{license:'Shop & Establishment (MH)',number:'MH-MUM-0028492',expiry:'2026-04-28',fee_inr:29000}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX3', title: 'XX3: Licenses', total_held:18,expiring_30d:2,renewal_fees_inr:84000,expiring:[{license:'FSSAI Central Licence (MH)',number:'11224999000184',expiry:'2026-04-12',fee_inr:55000},{license:'Shop & Establishment (MH)',number:'MH-MUM-0028492',expiry:'2026-04-28',fee_inr:29000}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const row = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN likelihood='High' OR likelihood='Critical' THEN 1 ELSE 0 END) AS high FROM ig_risk_registry WHERE category='Operational' OR category='IT'`).first() as any
@@ -14261,49 +14261,49 @@ app.get('/regulatory/license-registry', requireSession(), requireRole(['Super Ad
 })
 app.get('/regulatory/regulatory-change', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX4', title: 'XX4: Reg Changes', generated: new Date().toISOString(), changes_tracked:8,high_impact:3,medium_impact:3,low_impact:2,high_impact_changes:[{regulation:'DPDP Rules 2025 (Final)',effective:'2026-04-01',impact:'Consent Management, DPO appointment, DFR registration all mandatory'},{regulation:'SEBI LODR Amendment 2025',effective:'2026-07-01',impact:'Enhanced governance disclosures for listed associates'},{regulation:'Labour Codes (4 codes) Implementation',effective:'2026-04-01',impact:'New wage definition, PF/ESI base change, leave policy update required'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX4', title: 'XX4: Reg Changes', changes_tracked:8,high_impact:3,medium_impact:3,low_impact:2,high_impact_changes:[{regulation:'DPDP Rules 2025 (Final)',effective:'2026-04-01',impact:'Consent Management, DPO appointment, DFR registration all mandatory'},{regulation:'SEBI LODR Amendment 2025',effective:'2026-07-01',impact:'Enhanced governance disclosures for listed associates'},{regulation:'Labour Codes (4 codes) Implementation',effective:'2026-04-01',impact:'New wage definition, PF/ESI base change, leave policy update required'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/dpdp/regulatory-data-flows', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX5', title: 'XX5: DPDP Flows', generated: new Date().toISOString(), total_flows:28,dpia_needed:6,dpia_completed:2,dpia_pending:4,pending_dpias:[{flow:'AI Salary Benchmarking',risk:'High — sensitive financial PII in ML model'},{flow:'WhatsApp HR Bot',risk:'Medium — conversational data storage'},{flow:'Attendance Geolocation',risk:'High — continuous location tracking'},{flow:'HR Analytics Dashboard',risk:'Medium — aggregate employee profiling'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX5', title: 'XX5: DPDP Flows', total_flows:28,dpia_needed:6,dpia_completed:2,dpia_pending:4,pending_dpias:[{flow:'AI Salary Benchmarking',risk:'High — sensitive financial PII in ML model'},{flow:'WhatsApp HR Bot',risk:'Medium — conversational data storage'},{flow:'Attendance Geolocation',risk:'High — continuous location tracking'},{flow:'HR Analytics Dashboard',risk:'Medium — aggregate employee profiling'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/compliance/legal-entity-health', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX6', title: 'XX6: Entity Health', generated: new Date().toISOString(), cin_status:'Active',moa_compliant:true,open_charges:2,charges:[{charge_id:'CHG-2024-001',amount_cr:2.4,charge_holder:'HDFC Bank Ltd',status:'Active — charged asset: office equipment'},{charge_id:'CHG-2023-008',amount_cr:0.8,charge_holder:'SIDBI',status:'Partially satisfied'}],roc_dues:null,agm_last:'2025-09-14',board_meetings_fy26:6, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'XX', endpoint: 'XX6', title: 'XX6: Entity Health', cin_status:'Active',moa_compliant:true,open_charges:2,charges:[{charge_id:'CHG-2024-001',amount_cr:2.4,charge_holder:'HDFC Bank Ltd',status:'Active — charged asset: office equipment'},{charge_id:'CHG-2023-008',amount_cr:0.8,charge_holder:'SIDBI',status:'Partially satisfied'}],roc_dues:null,agm_last:'2025-09-14',board_meetings_fy26:6, storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 
 // -- YY-Round: Platform Resilience Intelligence --
 app.get('/resilience/dr-readiness', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY1', title: 'YY1: DR', generated: new Date().toISOString(), rto_hours:4,rpo_hours:1,readiness_pct:84,last_test:'2026-01-15',test_result:'Passed — full failover in 3h42m',gaps:['Cloudflare KV manual recovery not documented','Multi-region D1 replication not yet configured'], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY1', title: 'YY1: DR', rto_hours:4,rpo_hours:1,readiness_pct:84,last_test:'2026-01-15',test_result:'Passed — full failover in 3h42m',gaps:['Cloudflare KV manual recovery not documented','Multi-region D1 replication not yet configured'], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/resilience/chaos-engineering', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_YY2 = { round: 'YY', endpoint: 'YY2', title: 'YY2: Chaos', generated: new Date().toISOString(), experiments:4,passed:3,failed:1,failure_detail:{experiment:'D1 primary failover',result:'8 minute outage — read replica lag exceeded RTO',action:'Implement connection pooling + read replica routing'}, storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_YY2 = { round: 'YY', endpoint: 'YY2', title: 'YY2: Chaos', experiments:4,passed:3,failed:1,failure_detail:{experiment:'D1 primary failover',result:'8 minute outage — read replica lag exceeded RTO',action:'Implement connection pooling + read replica routing'}, storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...YY2, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/capacity-planning', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', generated: new Date().toISOString(), peak_utilisation_pct:84,scaling_due:'Q2 FY26-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_YY3 = { round: 'YY', endpoint: 'YY3', title: 'YY3: Capacity', peak_utilisation_pct:84,scaling_due:'Q2 FY26-27',capex_lakh:18,bottlenecks:['Payroll batch processing spikes CPU to 92% on run days','Report generation concurrency >4 leads to timeout'],scaling_plan:'Horizontal scaling + queue-based payroll processing by Q2', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...YY3, storage:'fallback', generated:new Date().toISOString() })
 })
 app.get('/resilience/dependency-map', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY4', title: 'YY4: Dependencies', generated: new Date().toISOString(), external_apis:28,spofs:4,sla_99_9:2,critical_deps:[{service:'Razorpay',sla:'99.9%',failover:'Queue + retry (15min)'},{service:'SendGrid',sla:'99.5%',failover:'SMS OTP fallback'},{service:'Cloudflare D1',sla:'99.9%',failover:'In-memory + KV cache'},{service:'NSDL for PAN verify',sla:'None',failover:'Manual verification'}],spof_mitigation:'Document manual fallback for NSDL and GSTN external calls', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY4', title: 'YY4: Dependencies', external_apis:28,spofs:4,sla_99_9:2,critical_deps:[{service:'Razorpay',sla:'99.9%',failover:'Queue + retry (15min)'},{service:'SendGrid',sla:'99.5%',failover:'SMS OTP fallback'},{service:'Cloudflare D1',sla:'99.9%',failover:'In-memory + KV cache'},{service:'NSDL for PAN verify',sla:'None',failover:'Manual verification'}],spof_mitigation:'Document manual fallback for NSDL and GSTN external calls', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/dpdp/resilience-data-protection', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY5', title: 'YY5: Resilience DPDP', generated: new Date().toISOString(), backup_encryption:true,breach_notification_chain_documented:true,cert_in_notification_hours:6,gaps:['Breach simulation drill not conducted FY26','Processor notification chain (SendGrid/Twilio) not documented'],next_drill_date:'2026-05-15', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY5', title: 'YY5: Resilience DPDP', backup_encryption:true,breach_notification_chain_documented:true,cert_in_notification_hours:6,gaps:['Breach simulation drill not conducted FY26','Processor notification chain (SendGrid/Twilio) not documented'],next_drill_date:'2026-05-15', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 app.get('/compliance/cert-in-resilience', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY6', title: 'YY6: CERT-In', generated: new Date().toISOString(), plan_completeness_pct:94,open_gaps:1,gap:'Annual incident response drill not completed',notifications_sent_ytd:0,last_cert_in_update:'2026-01-15',plan_sections:[{section:'Detection & Reporting',status:'Complete'},{section:'Response Team',status:'Complete'},{section:'Communication',status:'Complete'},{section:'Annual Drill',status:'Pending — schedule by 2026-04-30'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'YY', endpoint: 'YY6', title: 'YY6: CERT-In', plan_completeness_pct:94,open_gaps:1,gap:'Annual incident response drill not completed',notifications_sent_ytd:0,last_cert_in_update:'2026-01-15',plan_sections:[{section:'Detection & Reporting',status:'Complete'},{section:'Response Team',status:'Complete'},{section:'Communication',status:'Complete'},{section:'Annual Drill',status:'Pending — schedule by 2026-04-30'}], storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 
@@ -14347,7 +14347,7 @@ app.get('/executive/kpi-dashboard', requireSession(), requireRole(['Super Admin'
 })
 app.get('/executive/board-pack', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ2 = { round: 'ZZ', endpoint: 'ZZ2', title: 'ZZ2: Board Pack', generated: new Date().toISOString(), sections:8,fy:'Q4 FY2025-26',arr_cr:8.4,arr_growth_yoy_pct:42,sections_detail:[{section:'CEO Letter',status:'Draft'},{section:'Financial P&L',status:'Pending Audit'},{section:'Board Resolutions',status:'Draft'},{section:'DPDP Compliance',status:'Complete'},{section:'Risk Register',status:'Complete'},{section:'Fundraising Update',status:'Confidential'},{section:'OKR Scorecard',status:'Draft'},{section:'Strategic Initiatives',status:'Draft'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ2 = { round: 'ZZ', endpoint: 'ZZ2', title: 'ZZ2: Board Pack', sections:8,fy:'Q4 FY2025-26',arr_cr:8.4,arr_growth_yoy_pct:42,sections_detail:[{section:'CEO Letter',status:'Draft'},{section:'Financial P&L',status:'Pending Audit'},{section:'Board Resolutions',status:'Draft'},{section:'DPDP Compliance',status:'Complete'},{section:'Risk Register',status:'Complete'},{section:'Fundraising Update',status:'Confidential'},{section:'OKR Scorecard',status:'Draft'},{section:'Strategic Initiatives',status:'Draft'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_resolutions WHERE status='Approved'`).first() as any
@@ -14358,7 +14358,7 @@ app.get('/executive/board-pack', requireSession(), requireRole(['Super Admin'], 
 })
 app.get('/executive/investor-metrics', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ3 = { round: 'ZZ', endpoint: 'ZZ3', title: 'ZZ3: Investor', generated: new Date().toISOString(), nrr_pct:118,gross_churn_pct:1.8,cac_payback_months:14,arr_cr:8.4,mrr_growth_mom_pct:4.2,magic_number:0.84,quick_ratio:3.6,investors:[{name:'Existing Angels',stake_pct:22,invested_cr:2.4},{name:'Founder Hold',stake_pct:68},{name:'ESOP Pool',stake_pct:10}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ3 = { round: 'ZZ', endpoint: 'ZZ3', title: 'ZZ3: Investor', nrr_pct:118,gross_churn_pct:1.8,cac_payback_months:14,arr_cr:8.4,mrr_growth_mom_pct:4.2,magic_number:0.84,quick_ratio:3.6,investors:[{name:'Existing Angels',stake_pct:22,invested_cr:2.4},{name:'Founder Hold',stake_pct:68},{name:'ESOP Pool',stake_pct:10}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_mandates WHERE status='Active'`).first() as any
@@ -14369,7 +14369,7 @@ app.get('/executive/investor-metrics', requireSession(), requireRole(['Super Adm
 })
 app.get('/executive/strategic-initiatives', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ4 = { round: 'ZZ', endpoint: 'ZZ4', title: 'ZZ4: Initiatives', generated: new Date().toISOString(), total:8,on_track:5,delayed:2,pivoting:1,initiatives:[{name:'Series B Fundraise',status:'On Track',progress_pct:68,owner:'CEO'},{name:'HORECA SaaS v2 Launch',status:'Delayed',progress_pct:52,blocker:'Regulatory approval'},{name:'South India Expansion',status:'On Track',progress_pct:74,owner:'VP Sales'},{name:'AI Payroll Engine',status:'Pivoting',progress_pct:34,note:'Scope reduced — focus on anomaly detection only'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ4 = { round: 'ZZ', endpoint: 'ZZ4', title: 'ZZ4: Initiatives', total:8,on_track:5,delayed:2,pivoting:1,initiatives:[{name:'Series B Fundraise',status:'On Track',progress_pct:68,owner:'CEO'},{name:'HORECA SaaS v2 Launch',status:'Delayed',progress_pct:52,blocker:'Regulatory approval'},{name:'South India Expansion',status:'On Track',progress_pct:74,owner:'VP Sales'},{name:'AI Payroll Engine',status:'Pivoting',progress_pct:34,note:'Scope reduced — focus on anomaly detection only'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total, SUM(CASE WHEN status='On Track' THEN 1 ELSE 0 END) AS on_track FROM ig_okrs WHERE period='FY2025-26'`).first() as any
@@ -14380,7 +14380,7 @@ app.get('/executive/strategic-initiatives', requireSession(), requireRole(['Supe
 })
 app.get('/dpdp/executive-reporting', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_ZZ5 = { round: 'ZZ', endpoint: 'ZZ5', title: 'ZZ5: Executive DPDP', generated: new Date().toISOString(), board_governance_score_pct:88,it_act_s72a_compliant:true,dpdp_board_training_complete:true,open_items:[{item:'DFR (Data Fiduciary Registration) submission',due:'2026-06-30',status:'Draft started'},{item:'Annual DPDP audit by external auditor',due:'2026-12-31',status:'RFP being prepared'}], storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_ZZ5 = { round: 'ZZ', endpoint: 'ZZ5', title: 'ZZ5: Executive DPDP', board_governance_score_pct:88,it_act_s72a_compliant:true,dpdp_board_training_complete:true,open_items:[{item:'DFR (Data Fiduciary Registration) submission',due:'2026-06-30',status:'Draft started'},{item:'Annual DPDP audit by external auditor',due:'2026-12-31',status:'RFP being prepared'}], storage:'fallback', generated:new Date().toISOString() }
   if (env?.DB) {
     try {
       const rows = await env.DB.prepare(`SELECT COUNT(*) AS total FROM ig_dpdp_grievances`).first() as any
@@ -14391,7 +14391,7 @@ app.get('/dpdp/executive-reporting', requireSession(), requireRole(['Super Admin
 })
 app.get('/compliance/platform-certification', requireSession(), requireRole(['Super Admin'], ['admin']), async (c) => {
   const env = (c as any).env
-  const FALLBACK_STUB = { round: 'ZZ', endpoint: 'ZZ6', title: 'ZZ6: Platform', generated: new Date().toISOString(), rounds_certified:26,total_routes:494,security_score:100,cert_date:'2026-03-21',phases_complete:['Phase A-Z','Phase AA-ZZ','Phase U','Phase V','Phase W'],d1_live_routes:391,stubs_remaining:2,build_size_mb:4.8,last_deploy:'2026-03-21T12:58:00Z',ci_status:'passing', storage:'fallback', generated:new Date().toISOString() }
+  const FALLBACK_STUB = { round: 'ZZ', endpoint: 'ZZ6', title: 'ZZ6: Platform', rounds_certified:26,total_routes:494,security_score:100,cert_date:'2026-03-21',phases_complete:['Phase A-Z','Phase AA-ZZ','Phase U','Phase V','Phase W'],d1_live_routes:391,stubs_remaining:2,build_size_mb:4.8,last_deploy:'2026-03-21T12:58:00Z',ci_status:'passing', storage:'fallback', generated:new Date().toISOString() }
   return c.json({ ...FALLBACK_STUB, storage:'fallback' })
 })
 
