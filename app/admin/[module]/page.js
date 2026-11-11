@@ -244,7 +244,7 @@ export default async function Module({ params }) {
               ["Consent preferences & audit", "Active"],
               [
                 "Resend transactional delivery",
-                "Resend queue and signed delivery webhooks implemented; sender activation and delivery test pending",
+                "Resend is verified in preview: enquiry acknowledgements and internal notifications delivered; signed delivery events and recovery schedule active",
               ],
               ["Google Workspace user mail", "Awaiting OAuth integration"],
               [
@@ -262,7 +262,7 @@ export default async function Module({ params }) {
               ],
               [
                 "Payments, inventory & Vyapar",
-                "Razorpay invoice-request checkout implemented; credentials and sandbox transaction pending. Vyapar sync and full inventory/store remain pending.",
+                "Razorpay sandbox checkout verified; payment/refund reconciliation and capture audit available. Live activation, Vyapar sync and full inventory/store remain pending.",
               ],
             ].map(([a, b]) => (
               <tr key={a}>
