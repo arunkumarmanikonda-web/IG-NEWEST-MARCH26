@@ -34,3 +34,9 @@ Generated imagery is illustrative. CMS content using `/images/generated/<uuid>.<
 - Live OpenAI output, Runway generation/import and Fast2SMS delivery remain unverified because their website keys are not configured.
 
 Official interfaces checked: [OpenAI API keys](https://developers.openai.com/api/docs/guides/api-keys), [Runway OpenAPI](https://docs.dev.runwayml.com/openapi.json), [Runway outputs](https://docs.dev.runwayml.com/assets/outputs/), [Runway pricing](https://docs.dev.runwayml.com/guides/pricing/), [Fast2SMS DLT](https://docs.fast2sms.com/reference/dlt-sms-single), [Fast2SMS authorization](https://docs.fast2sms.com/reference/authorization).
+
+### Preview observations
+
+Implementation commit `994294c` deployed READY as `dpl_Fts9X3RvLJRAZQKJY3QxN6QHuemz`; GitHub Actions run `43090152550` passed. The existing owner MFA session opened the deployed settings and creative studio. OpenAI connection check correctly returned “No API key is configured”. A public-only dummy creative brief was rejected before queuing because Runway is disabled; the job table remains empty. No keys were entered and no provider spend occurred.
+
+The opportunity page exposed its one-page brief; the hotel brief rendered its logo, hero, database facts and enquiry CTA without horizontal overflow (1,348px viewport, 1,080px sheet height). The cloud browser did not expose a print dialog, so completed PDF export is not claimed. The print stylesheet hides the utility bar and site navigation/footer. Generated public images bypass Next image optimization so withdrawal is not defeated by that cache; copies already obtained while public cannot be recalled.
