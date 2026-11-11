@@ -50,6 +50,7 @@ export default async function AdminLayout({ children }) {
             ["audit", "Audit trail"],
             ["automation", "AI & automation"],
             ["ai", "AI drafting studio"],
+            ["creative", "Creatives & service SMS"],
             ["settings", "Integrations & legal settings"],
             ["payments", "Invoices & payments"],
             ["privacy", "Privacy & grievances"],

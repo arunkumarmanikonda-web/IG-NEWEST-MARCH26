@@ -1,4 +1,5 @@
 import {providerCredentialPresence} from '../../../lib/provider-credentials.mjs';
+import ProviderStudio from "../provider-studio";
 import PaymentsManager from "../payments-manager";
 import ClientsManager from "../clients-manager";
 import AIManager from "../ai-manager";
@@ -16,6 +17,12 @@ const date = (value) =>
 export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if(module==='creative') {
+    const {data,error}=await client.from('ig_provider_jobs').select('*').order('created_at',{ascending:false}).limit(50);
+    const smsAllowed=profile.roles.includes('owner');let template='';
+    if(smsAllowed){const config=await client.rpc('ig_config_list');template=config.data?.find(c=>c.id==='fast2sms')?.settings?.template_text||'';}
+    return error?<p>Creative operations are temporarily unavailable.</p>:<ProviderStudio jobs={data||[]} smsAllowed={smsAllowed} template={template}/>;
+  }
   if(module==='ai') {const {data,error}=await client.from('ig_ai_jobs').select('*').order('created_at',{ascending:false}).limit(50);return error?<p>AI drafting requires practice content permissions.</p>:<AIManager jobs={data||[]}/>;}
   if(module==='clients') {
     const tables=['ig_clients','ig_client_contacts','ig_engagements','ig_data_rooms'];
@@ -260,12 +267,14 @@ export default async function Module({ params, searchParams }) {
                 "Resend transactional delivery",
                 "Resend is verified in preview: enquiry acknowledgements and internal notifications delivered; signed delivery events and recovery schedule active",
               ],
-              ["Google Workspace user mail", "Awaiting OAuth integration"],
+              ["Google Workspace user mail", "Awaiting per-user OAuth integration"],
+              ["HORECA procurement engine", "Service pages and database product publishing available; RFQ/BOQ, vendor comparison, stock and fulfilment engine not complete."],
+              ["PMC delivery engine", "Service pages, engagement records and private reports available; programme, budget, variations, RFI and site-progress registers not complete."],
               [
                 "OpenAI / creative generation",
-                "Source-based OpenAI editorial/SEO/ad-copy drafts implemented; API credential and live provider acceptance pending. Creative briefs available; image/video generation not connected.",
+                "OpenAI editorial, SEO and advertising drafts; Runway image/video jobs, private storage and review controls implemented. Provider API keys and live workflow acceptance remain pending.",
               ],
-              ["SMS / Fast2SMS", "Awaiting provider and approved templates"],
+              ["SMS / Fast2SMS", "DLT service-message queue, recipient permission reference and daily limits implemented. API key, approved DLT details and handset-delivery acceptance remain pending."],
               [
                 "NDA signing & data rooms",
                 "Project NDA requests, versioned acceptance, private rooms, watermarked previews and file permissions; legal template approval pending",

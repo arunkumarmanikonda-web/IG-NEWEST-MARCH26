@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHero, ContactBand, LinkButton } from "./components";
 export default function PublishedContent({ item }) {
   const d = item.public_data;
@@ -21,6 +22,8 @@ export default function PublishedContent({ item }) {
         )}
       </PageHero>
       <article className="prose-section">
+        {d.image?.startsWith("/images/generated/")&&<p className="fine-note">Illustrative AI-generated concept. This is not a photograph of the listed property, product or completed project.</p>}
+        {item.kind==="opportunity"&&<p><Link className="text-link" href={"/opportunities/"+item.slug+"/teaser"} target="_blank">Open one-page opportunity brief →</Link></p>}
         {!!item.tags?.length && (
           <p>{item.tags.map((t) => t.label).join(" · ")}</p>
         )}
@@ -47,7 +50,7 @@ export default function PublishedContent({ item }) {
         {item.kind === "product" && (
           <p className="fine-note">
             Request a quotation to confirm specification, availability, taxes
-            and delivery. Online checkout is not activated.
+            and delivery. Purchase and payment follow an approved quotation.
           </p>
         )}
       </article>

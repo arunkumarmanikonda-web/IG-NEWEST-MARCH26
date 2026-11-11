@@ -53,3 +53,7 @@ See [governance-and-integrations.md](./governance-and-integrations.md) for the c
 ## Client engagement and AI drafting update · 12 November 2026
 
 See [client-engagements.md](./client-engagements.md) and [ai-editorial.md](./ai-editorial.md). Added private client/contact/engagement administration, one-action sharing to multiple independently authenticated contacts, per-contact download rights, individual secure-link circulation and email-code sign-in. Feasibility, valuation, forensic audit and operational audit are included under Transaction Advisory. Validation: 95 Node tests, production build, 25 rollback-only client-room assertions and 12 rollback-only AI assertions passed. The hosted schema and sign-in-code email template are updated; provider credentials and production acceptance gates remain as listed above.
+
+## 11 November 2026 provider and engine audit
+
+See [provider-studio.md](provider-studio.md) and [platform-audit-2026-11-11.md](platform-audit-2026-11-11.md). Runway creative jobs/private storage/review controls and Fast2SMS DLT service-message jobs are now implemented, but no website keys or live acceptance are present. HORECA now reads published product records into a searchable catalogue; the full procurement/inventory engine and PMC operational registers remain incomplete. Published opportunities have a database-derived one-page print brief. These changes do not remove any production launch gate.
