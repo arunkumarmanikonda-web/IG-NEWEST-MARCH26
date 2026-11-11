@@ -1,3 +1,0 @@
-openai:
-  api_key: ${GENSPARK_TOKEN}
-  base_url: https://www.genspark.ai/api/llm_proxy/v1

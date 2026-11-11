@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {POST} from '../app/api/valuation/route.js';
+const make=(body,type='application/json')=>new Request('https://example.test/api/valuation',{method:'POST',headers:{'Content-Type':type},body});
+test('DCF API returns independent zero-growth result without caching',async()=>{const r=await POST(make(JSON.stringify({method:'dcf',year1:80,growth:0,discount:13,exitCap:9.5,exitCost:0,years:10})));const d=await r.json();const expected=8e6*((1-1.13**-10)/.13)+(8e6/.095)*1.13**-10;assert.equal(r.status,200);assert.ok(Math.abs(d.value-expected)<1e-6);assert.equal(d.schedule[9].cashFlow,8000000);assert.equal(r.headers.get('Cache-Control'),'no-store');});
+for(const [label,body,status,type] of [['malformed JSON','{',400,'application/json'],['missing fields','{}',422,'application/json'],['null input','null',422,'application/json'],['oversized body','x'.repeat(9000),413,'application/json'],['unsupported content type','{}',415,'text/plain'],['zero capitalisation rate',JSON.stringify({method:'income',noi:120,reserve:3.6,capRate:0}),422,'application/json']])test(label,async()=>assert.equal((await POST(make(body,type))).status,status));
