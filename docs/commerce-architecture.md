@@ -1,11 +1,11 @@
 # HORECA commerce and Vyapar
-11 November 2026. Architecture recommendation; no commerce provider has been provisioned.
+11 November 2026. Supabase is provisioned for the application backend. No commerce provider has been provisioned. Neon is an alternative Postgres provider, not a replacement for Shopify.
 
 ## Recommended division of responsibilities
 | System | Responsibility |
 |---|---|
 | India Gully Next.js on Vercel | Branded customer experience, practice pages, opportunities, procurement workspace and customer portal |
-| Neon Postgres | Application records, users/access relationships, CMS revisions, enquiries, RFQs, quote approvals, consent history, integration outbox and audit trail; it is not an ecommerce engine |
+| Supabase Postgres and Auth | Application records, users/access relationships, CMS revisions, enquiries, RFQs, quote approvals, consent history, integration outbox and audit trail; it is not an ecommerce engine |
 | Shopify | Standard SKU catalogue, authoritative online stock, cart, hosted checkout and commercial order state |
 | Vyapar | Existing books, GST invoicing and accounting workflow, subject to confirmed supported interfaces |
 
@@ -25,7 +25,7 @@ Obtain the actual product edition/version and official integration documentation
 - Keep credentials and accounting files private. Never scrape a desktop application's internals or edit its local database to imitate a supported integration.
 
 ## A wholly custom store
-Possible if selected by the owner, but it needs a commerce service in addition to Neon. The implementation must cover inventory reservation and release, prices/taxes, shipping, partial fulfilment, payments/refunds, credit notes, reconciliations, fraud controls, audit and recovery. AI can prepare copy, suggest substitutions, prioritise exceptions and draft communications. Tax, money, stock and authorisation must use deterministic rules and verified events.
+Possible if selected by the owner, but it needs a commerce service in addition to Supabase. The implementation must cover inventory reservation and release, prices/taxes, shipping, partial fulfilment, payments/refunds, credit notes, reconciliations, fraud controls, audit and recovery. AI can prepare copy, suggest substitutions, prioritise exceptions and draft communications. Tax, money, stock and authorisation must use deterministic rules and verified events.
 
 For India's project procurement business, the recommended starting point is a custom procurement workflow plus a managed commerce core for standard direct purchases. No zero-defect guarantee is made. Acceptance is measured by tested workflows, concurrency/idempotency checks, reconciliation and recovery drills.
 

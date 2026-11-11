@@ -15,8 +15,8 @@ Updated 11 November 2026. The live domain must remain on its existing host until
 ## Blocking provider state
 | Capability | Current state | Required evidence before launch |
 |---|---|---|
-| Database / identity | Supabase project creation rejected for overdue organisation invoices; existing projects inactive. Neon is available but not connected. | Provisioned database, migrations, real verified sign-up/login, staff MFA, cross-role negative tests, session revocation and recovery |
-| CMS / CRUD | Not implemented against a real provider | Create, update, publish, archive/restore, taxonomy change and user lifecycle each persisted and audited |
+| Database / identity | Dedicated Supabase preview in Mumbai; real password/MFA and session tests pass | Production isolation/configuration, SMTP, correct auth redirect allowlist, real email verification and recovery, compromised-password protection |
+| CMS / CRUD | Database-backed content/user/category operations with audit; opportunities and articles read published snapshots | Owner onboarding, authenticated browser acceptance, complete static-section field mapping, media uploads and revision rollback UI |
 | Resend | No installation or website credential | Verified sending domain, actual acknowledgement plus three recipient deliveries, webhook verification, retries and suppression |
 | Google Workspace | No website OAuth client or mailbox grants | Per-user authorisation, encrypted tokens, scoped access, disconnect and thread tests |
 | AI | No website generation integration | Authenticated and budgeted OpenAI draft generation, evidence references, revision review and failure tests |
@@ -25,12 +25,15 @@ Updated 11 November 2026. The live domain must remain on its existing host until
 | Vyapar | Public API not verified | Official supported interface for the actual licence/version; otherwise approved file exchange with reconciliation |
 | NDA | No signing provider or approved template | Reviewed template, authenticated signer, verified provider event, signed evidence, restricted download/revocation tests |
 | SMS | Fast2SMS not configured | Account, sender/template configuration, consent rules and delivery test |
-| Marketing / SEM | Draft strategy only | Consents, audience suppression, approved caps, provider access and independently verified conversions |
+| Marketing / SEM | Consent preferences persist; campaigns remain paused drafts | Suppression processing, unsubscribe delivery links, approved caps, provider access and independently verified conversions |
 | Operations | Production acceptance outstanding | Backups and restore drill, monitoring, incident owner, retention, security review, mobile and accessibility QA |
 
-The connected Vercel service can deploy and provision Blob. The separate CLI has no authenticated session and marketplace discovery returned `login_required`. Database/login code must not be labelled operational until a real backend is provisioned and tested.
+The connected Vercel service can deploy and provision Blob. The separate CLI has no authenticated session and marketplace discovery returned `login_required`. The real preview backend is now provisioned and tested. Verification email delivery, owner onboarding and production configuration remain blocked.
 
 ## Search and conversion acceptance
 Confirm every canonical resolves, redirects preserve valuable old URLs, private paths stay excluded, structured data matches visible facts, and sitemap includes only approved public content. Do not advertise old portfolio references as current sale mandates. Do not set `lead_submitted` on button clicks or a mailto opening: count it only after a server-persisted enquiry. Record payment conversions only from verified provider events. Enable analytics/remarketing according to the selected consent policy. Review debt/financial-services ad eligibility for the intended market before enabling that campaign.
 
 Official references checked: [Google favicon](https://developers.google.com/search/docs/appearance/favicon-in-search), [Google robots](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag), [Google supported meta tags](https://developers.google.com/search/docs/crawling-indexing/special-tags), [Google Ads responsive search ads](https://developers.google.com/google-ads/api/docs/responsive-search-ads/create-responsive-search-ads).
+
+## PR #3 merge gates
+Keep this PR in draft until: (1) the current commit passes CI and deployed preview checks; (2) Supabase Auth Site URL, preview callback allowlist, password strength/leaked-password checks and SMTP are configured; (3) AKM completes verified registration, TOTP and owner invitation activation; (4) production environment receives its own migrated database and secrets, or a separately approved staging-only release strategy is implemented. Full live-domain acceptance additionally requires the provider and operational rows above.

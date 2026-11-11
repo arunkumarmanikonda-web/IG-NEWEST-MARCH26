@@ -1,0 +1,54 @@
+import { accountContext } from "../../../../lib/supabase/server";
+import {
+  readJson,
+  privateJson,
+  HttpError,
+  errorJson,
+} from "../../../../lib/http.mjs";
+const methods = {
+  account: "ig_account_update",
+  invitation: "ig_accept_invitation",
+  invitation_revoke: "ig_revoke_invitation",
+  content: "ig_save_content",
+  publication: "ig_content_action",
+  taxonomy: "ig_taxonomy_action",
+  users: "ig_users_action",
+  enquiry: "ig_enquiry_update",
+};
+export async function POST(request) {
+  try {
+    const body = await readJson(request, 140000),
+      rpc = methods[body.module];
+    if (!rpc) throw new HttpError("Unknown operation");
+    const { client, user, profile, aal } = await accountContext();
+    if (!user || !profile || profile.status !== "active")
+      throw new HttpError("Active sign-in required", 401);
+    if (!["account", "invitation"].includes(body.module) && aal !== "aal2")
+      throw new HttpError("Complete multi-factor authentication", 403);
+    const { data, error } = await client.rpc(
+      rpc,
+      body.module === "invitation" ? {} : { p: body.payload },
+    );
+    if (error) {
+      const status =
+        error.code === "42501"
+          ? 403
+          : error.code === "40001" ||
+              error.code === "23503" ||
+              error.code === "23505"
+            ? 409
+            : 400;
+      throw new HttpError(
+        error.code === "23503"
+          ? "This record is still referenced. Reassign its references first."
+          : error.code === "23505"
+            ? "That reference already exists."
+            : error.message,
+        status,
+      );
+    }
+    return privateJson({ ok: true, data });
+  } catch (e) {
+    return errorJson(e);
+  }
+}

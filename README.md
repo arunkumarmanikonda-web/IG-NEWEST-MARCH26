@@ -1,23 +1,25 @@
 # India Gully platform rebuild
 
-Public rebuild merged to main; backend/search readiness work is on `backend/2026-11`. Existing indiagully.com production is unchanged.
+Vercel project `india-gully` is connected to this repository. Backend work is on `backend/2026-11`, PR #3. The existing indiagully.com domain remains on its current host.
 
-## Implemented
-Premium public advisory site, six practice pages, hospitality projects / PMC, HORECA procurement, four public portfolio references with search and taxonomy filters, three perspectives, leadership, contact, privacy and terms pages. Official enquiry details: hello@indiagully.com and +91 89889 88988. The contact brief opens the visitor's email client; it does not claim a server submission. The original server-side valuation API, three calculation models, CSV exports and print views are retained.
+## Working in the isolated preview
+- Public advisory site, six practices, hospitality/PMC, HORECA procurement, valuation API, original branding, SVG favicons and gated search indexing.
+- Dedicated Supabase project in Mumbai with password authentication, TOTP MFA, server-side sessions, role permissions enforced in the database and immediate session revocation.
+- CMS drafts, revisions, exact-revision publishing, archive/restore/delete and separate public snapshots. Opportunities and perspectives read the database; other content types have published URLs. Existing static practice/layout sections still need full CMS field mapping.
+- Editable categories/tags, staff invitations and revocation, user roles/status/profile editing, account closure, last-owner protection, audit trail and consent preferences.
+- Enquiry persistence, request deduplication, rate limiting and four pending delivery records: three named internal recipients plus the customer. Messages are NOT sent until Resend is configured.
 
-## Integration status
-The managed CMS, authentication, customer database, commerce, email, SMS, NDA signing, Google Workspace mailboxes and AI / marketing providers are NOT connected. There is no simulated admin account or fake order state. Taxonomy labels are currently editable in source, pending the CMS. Runway's ChatGPT connection is not a website API credential.
+## Environment boundary
+The database is `india-gully-preview`, reference `wktdgczjdocsnfgvcsat`. Its credentials are scoped to Vercel Preview and Development only. Production database/auth configuration is deliberately not shared with this test environment. Do not merge PR #3 or connect the live domain until the merge gates in [launch readiness](docs/launch-readiness.md) are resolved.
 
-Vercel has been reactivated. Project `india-gully` is linked to this repository; the merged public site is deployed at https://india-gully.vercel.app. Private Blob storage is provisioned in Mumbai. Supabase database creation was rejected for overdue organisation invoices. Neon and commerce provider provisioning remain pending.
+## Not yet activated
+Verification/recovery email delivery and auth redirects need dashboard configuration and end-to-end testing. Resend, Google Workspace mailbox OAuth, OpenAI/Runway generation, SMS, NDA signing/private downloads, commerce/checkout, Vyapar synchronisation and marketing delivery are not active. Recorded consents and delivery jobs do not imply a campaign or email was sent. Compromised-password protection must be enabled in Supabase Auth before launch.
 
-## Validation
-The merged homepage and income valuation flow were verified in the deployed browser. Search/privacy changes pass 54 tests and the production build. See the exact-commit Rebuild quality workflow. Full mobile/accessibility and end-to-end provider validation remain outstanding.
+## Development and verification
+Node 22+. `npm ci`, `npm test`, `npm run build`. See `env.example` for variable names; keep values in ignored `.env.local` or Vercel environment settings. No service-role credential is used by the application.
 
-## Development
-Node 22+. Run `npm ci`, `npm test`, `npm run build`. Provision actual provider resources before integrating private workflows. No customer data, private dossier, API key or token belongs in this repository.
+SQL schema changes live under `supabase/migrations` and are applied through the Supabase connector. Migration filenames are created with the Supabase CLI; the hosted migration ledger may use its own timestamp when applied through MCP. Do not blindly replay them onto this provisioned project. Apply the ordered files only to a new empty project, or reconcile the migration ledger before introducing CLI deployment automation.
 
-## Extended operating platform
-See [platform-expansion.md](docs/platform-expansion.md) for the AI CMS, editable taxonomy, registration and consent, NDA signing, user CRUD, per-user mail, enquiry routing, personalised marketing, SEO/SEM and security acceptance requirements. Pure domain modules under `lib/domain` implement permission and eligibility checks without pretending that providers are connected. Tests include negative cases for cross-user NDA access, revoked consent, mailbox grants and spend limits.
+Live integration scripts under `scripts/verify-*.mjs` use disposable fixtures in an isolated preview. `verify-supabase.mjs` tests Auth/MFA, RLS and CRUD; `verify-enquiries.mjs` tests ingestion and deduplication; `verify-web.mjs` starts the production server and tests the HTTP/session boundary. Fixture files and passwords are never committed. Pre-verified test identities do not prove registration email delivery. Always remove fixtures after testing.
 
-## Launch and commerce decisions
-[Launch readiness](docs/launch-readiness.md) records verified work and actual blockers. [Commerce architecture](docs/commerce-architecture.md) separates custom HORECA procurement, Neon, Shopify and the existing Vyapar accounting workflow. Search campaign drafts are in `lib/search-marketing.mjs`.
+Detailed scope: [platform expansion](docs/platform-expansion.md), [backend handover](docs/backend-handover.md), [launch readiness](docs/launch-readiness.md), [commerce architecture](docs/commerce-architecture.md).
