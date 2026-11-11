@@ -177,13 +177,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           ["asset_class", "Asset class"],
           ["transaction_type", "Transaction type"],
           ["price_label", "Approved price label"],
-          [
-            "reference",
-            "job_title",
-            "expertise",
-            "sort_order",
-            "Public reference",
-          ],
+          ["reference", "Public reference"],
           ["image", "Approved image path"],
           ["image_alt", "Image description"],
         ].map(([k, label]) => (

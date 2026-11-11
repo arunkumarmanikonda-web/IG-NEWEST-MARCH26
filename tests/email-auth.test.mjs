@@ -23,3 +23,10 @@ test('recovery has a fixed security destination and uses the recovery token type
   assert.deepEqual(result, { ok: true, next: '/account/security' });
   assert.equal(emailVerification({ email: 'user@example.com', token: '123456', purpose: 'email' }).type, 'email');
 });
+
+test('email-code sign-in verifies only the email token type with a fixed account destination',async()=>{
+ let received;
+ const result=await verifyEmailCode({verifyOtp:async value=>{received=value;return {data:{session:{},user:{email_confirmed_at:'now'}}};}},{email:'CLIENT@example.com',token:'123456',purpose:'login',next:'https://evil.example'});
+ assert.deepEqual(received,{email:'client@example.com',token:'123456',type:'email'});
+ assert.deepEqual(result,{ok:true,next:'/account'});
+});

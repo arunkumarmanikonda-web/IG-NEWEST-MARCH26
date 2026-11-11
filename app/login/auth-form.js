@@ -4,6 +4,7 @@ import Link from "next/link";
 export default function AuthForm({ register = false }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
+    [emailCode, setEmailCode] = useState(false),
     [recovery, setRecovery] = useState(false);
   async function submit(event) {
     event.preventDefault();
@@ -15,7 +16,7 @@ export default function AuthForm({ register = false }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: recovery ? "recover" : register ? "signup" : "signin",
+          action: recovery ? "recover" : register ? "signup" : emailCode ? "email_code" : "signin",
           email: form.get("email"),
           password: form.get("password"),
           name: form.get("name"),
@@ -65,7 +66,7 @@ export default function AuthForm({ register = false }) {
           maxLength={254}
         />
       </label>
-      {!recovery && (
+      {!recovery && !emailCode && (
         <label>
           Password
           <input
@@ -79,7 +80,7 @@ export default function AuthForm({ register = false }) {
           <small>At least 12 characters.</small>
         </label>
       )}
-      {register && (
+      {(register || (emailCode && !recovery)) && (
         <fieldset>
           <legend>Required agreements</legend>
           <label className="check">
@@ -116,11 +117,16 @@ export default function AuthForm({ register = false }) {
             ? "Request recovery email"
             : register
               ? "Create account"
-              : "Sign in"}
+              : emailCode ? "Email a sign-in code" : "Sign in"}
       </button>
       <p role="status" className="portal-message">
         {message}
       </p>
+      {!register && (
+        <button className="text-button" type="button" onClick={() => {setEmailCode(!emailCode);setRecovery(false);setMessage("");}}>
+          {emailCode ? "Use my password instead" : "Sign in with a one-time email code"}
+        </button>
+      )}
       {!register && (
         <p><Link href="/auth/verify">Verify your email or request a new code</Link></p>
       )}

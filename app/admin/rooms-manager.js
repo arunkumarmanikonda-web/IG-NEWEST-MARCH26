@@ -20,26 +20,39 @@ export default function RoomsManager({
   rules,
   requests,
   opportunities,
+  engagements = [],
+  contacts = [],
+  initialRoom,
 }) {
   const router = useRouter(),
-    [selected, setSelected] = useState(rooms[0]?.id || ""),
+    [selected, setSelected] = useState(rooms.some(r=>r.id===initialRoom)?initialRoom:rooms[0]?.id || ""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [destination, setDestination] = useState(""),
     [allowDownloads, setAllowDownloads] = useState(false),
+    [selectedContacts, setSelectedContacts] = useState([]),
     [jobs, setJobs] = useState([]),
     [progress, setProgress] = useState({});
   const prepared = useRef(new Map());
+  const circulationKey = useRef(null);
   const room = rooms.find((x) => x.id === selected),
     roomFiles = files.filter((x) => x.room_id === selected && !x.preview_for),
     roomGrants = grants.filter((x) => x.room_id === selected),
     roomFolders = folders.filter((x) => x.room_id === selected);
+  const engagement=engagements.find(e=>e.id===room?.engagement_id);
+  const eligibleContacts=contacts.filter(c=>c.client_id===engagement?.client_id && c.active && c.portal_enabled);
+  async function notifyContacts(){setBusy(true);setMessage('');try{
+    if(!circulationKey.current||circulationKey.current.room!==room.id)circulationKey.current={room:room.id,id:crypto.randomUUID()};
+    const result=await portalAction('room_notify',{room_id:room.id,batch_id:circulationKey.current.id});
+    setMessage(result.queued+' separate secure-portal notices queued. Delivery is processed automatically.');
+    circulationKey.current=null;
+  }catch(e){setMessage(e.message);}finally{setBusy(false);}}
   async function run(p) {
     setBusy(true);
     setMessage("");
     try {
       const result = await portalAction("rooms", p);
-      setMessage("Saved.");
+      setMessage(p.action==='contact_grant_bulk'?result.added+' contacts given access in one action. '+result.existing_unchanged+' existing grants left unchanged.':'Saved.');
       router.refresh();
       return result;
     } catch (e) {
@@ -154,10 +167,11 @@ export default function RoomsManager({
     <section className="workspace-card">
       <h2>Project data rooms</h2>
       <p>
-        Each room belongs to one opportunity. Client access requires a signed
-        and approved NDA for that same project. Originals are private; view-only
-        previews are watermarked.
+        Opportunity rooms require a signed and approved project NDA. Client
+        engagement rooms use the administrator-confirmed engagement and
+        confidentiality terms. Originals are private; view-only previews are watermarked.
       </p>
+      <p><Link href="/admin/clients">Create clients, contacts and engagement report rooms →</Link></p>
       <p role="status" className="portal-message">
         {message}
       </p>
@@ -203,6 +217,7 @@ export default function RoomsManager({
           disabled={busy}
           onChange={(e) => {
             setSelected(e.target.value);
+            setSelectedContacts([]);
             setDestination("");
             setJobs([]);
             setProgress({});
@@ -514,16 +529,17 @@ export default function RoomsManager({
               </tbody>
             </table>
           </div>
-          <h3>Share access after NDA approval</h3>
+          <h3>{engagement?'Share with authorised client contacts':'Share access after NDA approval'}</h3>
+          {engagement&&<p>Engagement: {engagement.reference}. {engagement.confidentiality_confirmed?'Confidentiality authority recorded.':'Confirm the executed confidentiality terms in Clients & engagements before granting access.'} Each contact signs in with its own verified email.</p>}
           <form
             className="workspace-form"
             onSubmit={(e) => {
               e.preventDefault();
               const f = new FormData(e.currentTarget);
               run({
-                action: "grant",
+                action: engagement ? "contact_grant_bulk" : "grant",
                 room_id: room.id,
-                nda_request_id: f.get("nda"),
+                ...(engagement ? {contact_ids:f.getAll("contact_id")} : {nda_request_id: f.get("nda")}),
                 download_mode: f.get("mode"),
                 expires_at: new Date(
                   f.get("expiry") + "T23:59:59+05:30",
@@ -531,7 +547,12 @@ export default function RoomsManager({
               });
             }}
           >
-            <label>
+            {engagement?<fieldset className="wide"><legend>Share once with multiple client contacts</legend>
+              <button type="button" className="text-button" onClick={()=>setSelectedContacts(eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=>c.id))}>Select all available contacts</button>
+              <button type="button" className="text-button" onClick={()=>setSelectedContacts([])}>Clear selection</button>
+              {eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=><label className="check" key={c.id}><input type="checkbox" name="contact_id" value={c.id} checked={selectedContacts.includes(c.id)} onChange={event=>setSelectedContacts(ids=>event.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id))}/>{c.name} · {c.email}</label>)}
+              <p>One action activates this room separately for every selected email. Existing grants and individual file overrides are preserved.</p>
+            </fieldset>:<label>
               Client and project-specific NDA
               <select name="nda" required>
                 <option value="">Select an approved request</option>
@@ -548,7 +569,7 @@ export default function RoomsManager({
                     </option>
                   ))}
               </select>
-            </label>
+            </label>}
             <label>
               Download mode
               <select name="mode">
@@ -572,15 +593,16 @@ export default function RoomsManager({
               Activate in client dashboard
             </button>
           </form>
+          {engagement&&<div className="workspace-note"><p>Circulation sends separate notices only to active contacts with circulation enabled and unexpired room access. Reports remain inside the portal. Changing a circulation preference never changes download rights.</p><button type="button" disabled={busy||!room.active} onClick={notifyContacts}>Notify authorised circulation contacts</button></div>}
           {roomGrants.map((g) => {
             const n = requests.find((x) => x.id === g.nda_request_id);
+            const contact=contacts.find(c=>c.id===g.contact_id);
             return (
               <article className="workspace-card" key={g.id + "-" + g.version}>
-                <h3>{n?.signed_name || g.user_id}</h3>
+                <h3>{contact?.name || n?.signed_name || g.user_id}</h3>
                 <p>
-                  {n?.agreement_snapshot?.recipient_email} ·{" "}
-                  {g.active ? "Active" : "Revoked"} · NDA{" "}
-                  {n?.agreement_snapshot?.version}
+                  {contact?.email || n?.agreement_snapshot?.recipient_email} ·{" "}
+                  {g.active ? "Active" : "Revoked"} · {contact?'Engagement access':'NDA '+n?.agreement_snapshot?.version}
                 </p>
                 <form
                   className="workspace-form"

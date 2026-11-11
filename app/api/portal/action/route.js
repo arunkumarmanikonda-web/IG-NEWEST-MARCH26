@@ -20,6 +20,9 @@ const methods = {
   privacy: "ig_privacy_request",
   policies: "ig_policy_publish",
   payments: "ig_payment_admin",
+  clients: "ig_client_manage",
+  room_notify: "ig_room_notify",
+  ai_save: "ig_ai_save",
 };
 export async function POST(request) {
   try {

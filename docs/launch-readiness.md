@@ -1,5 +1,5 @@
 # India Gully launch acceptance
-Updated 11 November 2026. The live domain must remain on its existing host until the full acceptance suite passes.
+Updated 12 November 2026 (India Standard Time). The live domain must remain on its existing host until the full acceptance suite passes.
 
 ## Implemented and tested
 - GitHub repository is linked to Vercel project `india-gully`; the merged public site is deployed.
@@ -19,11 +19,11 @@ Updated 11 November 2026. The live domain must remain on its existing host until
 | CMS / CRUD | Database-backed content/user/category operations with audit; published snapshots; real owner login and protected CMS access observed | Remaining role-by-role browser acceptance, complete static-section field mapping, media uploads and revision rollback UI |
 | Resend | Verified sender, acknowledgement plus three recipient notifications delivered; signed webhooks and recovery cron active | Production credential isolation and acceptance; forced-retry/bounce operational drills and production monitoring |
 | Google Workspace | No website OAuth client or mailbox grants | Per-user authorisation, encrypted tokens, scoped access, disconnect and thread tests |
-| AI | No website generation integration | Authenticated and budgeted OpenAI draft generation, evidence references, revision review and failure tests |
+| AI | Source-based OpenAI drafting studio implemented with practice/MFA checks, request/token caps and unpublished-save review; disabled with no credential | API key and funded account, live generation acceptance; creative-provider connection remains pending |
 | Runway | ChatGPT connector is not a website API credential | Provider account, credential, queue/retry/cancellation and output rights/provenance |
 | HORECA commerce | Razorpay invoice collection enabled in preview test mode; INR 1 checkout captured; customer/admin reconciliation verified; signed relay and duplicate receipt checks passed | Provider refund attempt rejected with HTTP 400; resolve and complete refund/failure/webhook-only recovery acceptance. Full catalogue/pricing/stock/cart, reviewed commercial policies and production/live credentials remain pending |
 | Vyapar | Public API not verified | Official supported interface for the actual licence/version; otherwise approved file exchange with reconciliation |
-| NDA / data rooms | Typed-name, versioned acceptance; project review/grants; private folders, bulk upload, watermarked previews and download rules | Owner-approved legal wording, real client acceptance, production storage/retention/restore and optional certified signature provider |
+| NDA / data rooms | Typed-name, versioned acceptance; project review/grants; private folders, bulk upload, watermarked previews and download rules; private client engagements with one-action multi-email sharing | Owner-approved legal wording, real client acceptance, production storage/retention/restore and optional certified signature provider |
 | SMS | Fast2SMS not configured | Account, sender/template configuration, consent rules and delivery test |
 | Marketing / SEM | Consent preferences persist; campaigns remain paused drafts | Suppression processing, unsubscribe delivery links, approved caps, provider access and independently verified conversions |
 | Operations | Production acceptance outstanding | Backups and restore drill, monitoring, incident owner, retention, security review, mobile and accessibility QA |
@@ -49,3 +49,7 @@ The merchant webhook now subscribes to `payment.captured`, `payment.failed`, `re
 
 ## Governance and payments update · 11 November 2026
 See [governance-and-integrations.md](./governance-and-integrations.md) for the current implementation and complete activation blockers. Policies/settings, practice rights, privacy requests, Resend enquiry delivery and Razorpay invoice collection have been added. This does not clear the public-launch gates.
+
+## Client engagement and AI drafting update · 12 November 2026
+
+See [client-engagements.md](./client-engagements.md) and [ai-editorial.md](./ai-editorial.md). Added private client/contact/engagement administration, one-action sharing to multiple independently authenticated contacts, per-contact download rights, individual secure-link circulation and email-code sign-in. Feasibility, valuation, forensic audit and operational audit are included under Transaction Advisory. Validation: 95 Node tests, production build, 25 rollback-only client-room assertions and 12 rollback-only AI assertions passed. The hosted schema and sign-in-code email template are updated; provider credentials and production acceptance gates remain as listed above.

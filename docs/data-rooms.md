@@ -48,3 +48,7 @@ Executables, active HTML/SVG and macro-enabled Office documents are outside the 
 The included legal template is a draft. Only the owner can activate a reviewed version. Review project-specific conditions before publishing an agreement; some CIRP mandates require the process owner's own NDA or eligibility documents.
 
 Before production: configure and verify email delivery, complete real staff verification/password rotation/MFA, deploy an isolated production database and private bucket, add retention/backup/restore procedures, capacity and malware scanning decisions, and perform a live device acceptance test. Marketing, payment, AI and mail integrations are separate capabilities.
+
+## Private client engagements
+
+Rooms also support private feasibility, valuation and audit assignments without a public listing. A single share action creates independent grants for all selected client contacts. Each email signs in separately to the same room; permission changes remain individual. This does not relax the opportunity/CIRP NDA workflow. See [client-engagements.md](./client-engagements.md).

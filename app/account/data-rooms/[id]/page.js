@@ -23,7 +23,7 @@ export default async function Page({ params }) {
         <div className="eyebrow">CONFIDENTIAL / AUTHORISED ACCESS</div>
         <h1>{data[0].title}</h1>
         <p>
-          Access is personal to your account and subject to your project NDA.
+          Access is personal to your account and subject to {data[0].room_type==='engagement'?'the agreed engagement and confidentiality terms':'your project NDA'}.
           Original downloads are available only where explicitly permitted.
         </p>
         <RoomViewer room={data[0]} email={user.email} />

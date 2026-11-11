@@ -1,5 +1,7 @@
 import {providerCredentialPresence} from '../../../lib/provider-credentials.mjs';
 import PaymentsManager from "../payments-manager";
+import ClientsManager from "../clients-manager";
+import AIManager from "../ai-manager";
 import SettingsManager from "../settings-manager";
 import PrivacyRequests from "../../account/privacy/requests";
 import {currentPolicies} from "../../../lib/policies";
@@ -11,9 +13,16 @@ import { accountContext } from "../../../lib/supabase/server";
 import { TaxonomyManager, UserManager, EnquiryManager } from "../managers";
 const date = (value) =>
   new Date(value).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-export default async function Module({ params }) {
+export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if(module==='ai') {const {data,error}=await client.from('ig_ai_jobs').select('*').order('created_at',{ascending:false}).limit(50);return error?<p>AI drafting requires practice content permissions.</p>:<AIManager jobs={data||[]}/>;}
+  if(module==='clients') {
+    const tables=['ig_clients','ig_client_contacts','ig_engagements','ig_data_rooms'];
+    const r=await Promise.all(tables.map(t=>client.from(t).select('*').order('created_at',{ascending:false}).limit(1000)));
+    if(r.some(x=>x.error))return <p role="alert">Client records are unavailable. Check your practice permissions.</p>;
+    return <ClientsManager clients={r[0].data} contacts={r[1].data} engagements={r[2].data} rooms={r[3].data} roomAdmin={profile.roles.some(x=>['owner','administrator'].includes(x))}/>;
+  }
   if(module==='payments'){const [{data:users,error:ue},{data,error}]=await Promise.all([client.rpc('ig_admin_users'),client.from('ig_payment_requests').select('*').order('created_at',{ascending:false}).limit(250)]);return error||ue?<p>Payment administration requires administrator access.</p>:<PaymentsManager items={data||[]} users={users.users}/>;}
   if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:<SettingsManager configs={data.map(c=>({...c,environment_fields:providerCredentialPresence(c.id,process.env)}))} release={release}/>;}
   if(module==='privacy') {if(!profile.roles.includes('owner'))return <p>Super-user access is required.</p>;const {data,error}=await client.from('ig_privacy_requests').select('*').order('created_at',{ascending:false}).limit(250);return error?<p>Register unavailable.</p>:<PrivacyRequests items={data||[]} admin/>;}
@@ -27,6 +36,8 @@ export default async function Module({ params }) {
       "ig_room_grants",
       "ig_room_file_rules",
       "ig_nda_requests",
+      "ig_engagements",
+      "ig_client_contacts",
     ];
     const results = await Promise.all(
       tables.map((t) => client.from(t).select("*").limit(2000)),
@@ -47,6 +58,9 @@ export default async function Module({ params }) {
         grants={results[3].data}
         rules={results[4].data}
         requests={results[5].data}
+        engagements={results[6].data}
+        contacts={results[7].data}
+        initialRoom={(await searchParams)?.room}
         opportunities={opportunities || []}
       />
     );
@@ -249,7 +263,7 @@ export default async function Module({ params }) {
               ["Google Workspace user mail", "Awaiting OAuth integration"],
               [
                 "OpenAI / creative generation",
-                "Awaiting provider connection and controlled draft workflow",
+                "Source-based OpenAI editorial/SEO/ad-copy drafts implemented; API credential and live provider acceptance pending. Creative briefs available; image/video generation not connected.",
               ],
               ["SMS / Fast2SMS", "Awaiting provider and approved templates"],
               [

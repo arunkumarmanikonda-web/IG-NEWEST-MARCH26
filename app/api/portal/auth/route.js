@@ -1,5 +1,6 @@
 import { serverClient } from "../../../../lib/supabase/server";
 import { verifyEmailCode } from "../../../../lib/email-auth.mjs";
+import { anonymousServerClient } from "../../../../lib/runtime-config";
 import {
   readJson,
   requestOrigin,
@@ -21,6 +22,19 @@ export async function POST(request) {
       throw new HttpError("Enter a valid email address");
     if (p.action === "verify")
       return privateJson(await verifyEmailCode(client.auth, p));
+    if (p.action === "email_code") {
+      if (p.terms !== true || p.privacy !== true || p.dataUse !== true)
+        throw new HttpError("Accept the terms, privacy notice and data usage policy");
+      const eligibility = await anonymousServerClient().rpc("ig_client_login_eligible", {
+        secret: process.env.INTEGRATION_MASTER_KEY, email_address: email,
+      });
+      if (eligibility.error) throw new HttpError("Email sign-in is temporarily unavailable", 503);
+      // Only pre-authorised CRM contacts may create an account through this flow.
+      // Existing users can use OTP without changing their role, MFA or policy gates.
+      await client.auth.signInWithOtp({ email, options: { shouldCreateUser: eligibility.data === true } });
+      return privateJson({ ok: true, next: "/auth/verify?purpose=login",
+        message: "If this email is registered or authorised by India Gully, a sign-in code has been requested." });
+    }
     if (p.action === "resend") {
       const { error } = await client.auth.resend({ type: "signup", email });
       if (error) throw new HttpError("Please wait before requesting another code. Contact hello@indiagully.com if the problem continues.", 429);

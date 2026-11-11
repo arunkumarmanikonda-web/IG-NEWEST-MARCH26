@@ -22,8 +22,8 @@ export default async function Page() {
         <Link href="/account">← Your dashboard</Link>
         <h1>Your project data rooms.</h1>
         <p>
-          Access appears here after your project-specific NDA is signed,
-          reviewed and shared by an administrator.
+          Your team shares engagement reports here after approving your access.
+          Opportunity rooms additionally require a reviewed, project-specific NDA.
         </p>
         {error ? (
           <p role="alert">Data rooms are temporarily unavailable.</p>
@@ -35,7 +35,7 @@ export default async function Page() {
                 key={r.id}
                 href={"/account/data-rooms/" + r.id}
               >
-                <div className="eyebrow">PRIVATE PROJECT ROOM</div>
+                <div className="eyebrow">{r.room_type==='engagement'?'CLIENT REPORT ROOM':'PRIVATE PROJECT ROOM'}</div>
                 <h2>{r.title}</h2>
                 <p>{r.files.length} files · Open authorised room ↗</p>
               </Link>
