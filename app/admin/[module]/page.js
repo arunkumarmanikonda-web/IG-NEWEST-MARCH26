@@ -1,3 +1,7 @@
+import MediaLibrary from "../media-library";
+import OperationsWorkspace from "../operations/workspace";
+import ContentRegister from "../content-register";
+import IntakeStudio from "../intake-studio";
 import {providerCredentialPresence} from '../../../lib/provider-credentials.mjs';
 import ProviderStudio from "../provider-studio";
 import PaymentsManager from "../payments-manager";
@@ -17,11 +21,28 @@ const date = (value) =>
 export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if (['horeca','pmc'].includes(module)) {
+    const practice=module==='horeca'?'horeca':'hospitality';
+    const r=await Promise.all([client.from('ig_operations').select('*').eq('practice',practice).order('updated_at',{ascending:false}).limit(2000),client.rpc('ig_client_directory'),client.from('ig_engagements').select('*').eq('active',true).limit(1000),client.from('ig_content').select('id,title,public_data').eq('kind','product').limit(1000)]);
+    if(r.some(x=>x.error))return <p role="alert">Operational records could not be loaded. Check your assigned practice rights.</p>;
+    return <OperationsWorkspace mode={module} practice={practice} records={r[0].data} clients={r[1].data} engagements={r[2].data} products={r[3].data}/>;
+  }
+  if (module==='intake') return <IntakeStudio/>;
+  if (['cms','listings','catalogue','projects','content'].includes(module)) {
+    let query=client.from('ig_content').select('id,kind,practice,title,status,version,published_version,public_data,updated_at').order('updated_at',{ascending:false}).limit(1000);
+    if(module==='listings')query=query.eq('kind','opportunity');
+    else if(module==='catalogue')query=query.eq('kind','product');
+    else if(module==='projects')query=query.eq('kind','project');
+    else query=query.in('kind',['page','practice','article','person','faq']);
+    const {data,error}=await query;
+    return error?<p role="alert">Your permissions do not allow these records.</p>:<ContentRegister module={module==='content'?'cms':module} items={data||[]}/>;
+  }
   if(module==='creative') {
     const {data,error}=await client.from('ig_provider_jobs').select('*').order('created_at',{ascending:false}).limit(50);
     const smsAllowed=profile.roles.includes('owner');let template='';
     if(smsAllowed){const config=await client.rpc('ig_config_list');template=config.data?.find(c=>c.id==='fast2sms')?.settings?.template_text||'';}
-    return error?<p>Creative operations are temporarily unavailable.</p>:<ProviderStudio jobs={data||[]} smsAllowed={smsAllowed} template={template}/>;
+    const {data:media}=await client.from('ig_source_media').select('*').order('created_at',{ascending:false}).limit(100);
+    return error?<p>Creative operations are temporarily unavailable.</p>:<><MediaLibrary assets={media||[]}/><ProviderStudio jobs={data||[]} smsAllowed={smsAllowed} template={template} sourceMedia={media||[]}/></>;
   }
   if(module==='ai') {const {data,error}=await client.from('ig_ai_jobs').select('*').order('created_at',{ascending:false}).limit(50);return error?<p>AI drafting requires practice content permissions.</p>:<AIManager jobs={data||[]}/>;}
   if(module==='clients') {
@@ -34,6 +55,7 @@ export default async function Module({ params, searchParams }) {
   if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:<SettingsManager configs={data.map(c=>({...c,environment_fields:providerCredentialPresence(c.id,process.env)}))} release={release}/>;}
   if(module==='privacy') {if(!profile.roles.includes('owner'))return <p>Super-user access is required.</p>;const {data,error}=await client.from('ig_privacy_requests').select('*').order('created_at',{ascending:false}).limit(250);return error?<p>Register unavailable.</p>:<PrivacyRequests items={data||[]} admin/>;}
   if (module === "data-rooms") {
+    const roomSearch=await searchParams;
     if (!profile.roles.some((x) => ["owner", "administrator"].includes(x)))
       return <p>Data rooms require owner or administrator access.</p>;
     const tables = [
@@ -67,7 +89,7 @@ export default async function Module({ params, searchParams }) {
         requests={results[5].data}
         engagements={results[6].data}
         contacts={results[7].data}
-        initialRoom={(await searchParams)?.room}
+        initialRoom={roomSearch?.room || results[0].data.find(r=>r.engagement_id===roomSearch?.engagement)?.id}
         opportunities={opportunities || []}
       />
     );
@@ -92,64 +114,6 @@ export default async function Module({ params, searchParams }) {
         templates={templates || []}
         isOwner={profile.roles.includes("owner")}
       />
-    );
-  }
-  if (module === "content") {
-    const { data, error } = await client
-      .from("ig_content")
-      .select("id,kind,title,status,version,published_version,updated_at")
-      .order("updated_at", { ascending: false })
-      .limit(250);
-    if (error)
-      return <p role="alert">Content is not available to this account.</p>;
-    return (
-      <section className="workspace-card">
-        <div className="workspace-actions">
-          <Link className="primary" href="/admin/content/new">
-            Create content
-          </Link>
-        </div>
-        <h2>Content & listings</h2>
-        <p>
-          Up to 250 latest records. Saving a new draft leaves the last published
-          revision visible until you publish or archive it.
-        </p>
-        <div className="table-scroll">
-          <table className="workspace-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>State</th>
-                <th>Revision</th>
-                <th>Updated · IST</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(data || []).map((x) => (
-                <tr key={x.id}>
-                  <td>
-                    <Link href={"/admin/content/" + x.id}>{x.title}</Link>
-                  </td>
-                  <td>{x.kind}</td>
-                  <td>{x.status}</td>
-                  <td>
-                    {x.version}{" "}
-                    {x.published_version &&
-                      "(published " + x.published_version + ")"}
-                  </td>
-                  <td>{date(x.updated_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {!data?.length && (
-          <p className="workspace-empty">
-            No content available. Create your first draft.
-          </p>
-        )}
-      </section>
     );
   }
   if (module === "taxonomy") {
@@ -268,13 +232,13 @@ export default async function Module({ params, searchParams }) {
                 "Resend is verified in preview: enquiry acknowledgements and internal notifications delivered; signed delivery events and recovery schedule active",
               ],
               ["Google Workspace user mail", "Awaiting per-user OAuth integration"],
-              ["HORECA procurement engine", "Service pages and database product publishing available; RFQ/BOQ, vendor comparison, stock and fulfilment engine not complete."],
-              ["PMC delivery engine", "Service pages, engagement records and private reports available; programme, budget, variations, RFI and site-progress registers not complete."],
+              ["HORECA procurement engine", "Dedicated SKU catalogue, CSV imports, RFQ schedules, vendor comparison, purchase-order awards, receipts, dispatches, returns and delivery acknowledgement."],
+              ["PMC delivery engine", "Dedicated projects, dependency programmes, approved budgets, variations, measured progress, RFIs, risks and client engagement links."],
               [
                 "OpenAI / creative generation",
-                "OpenAI editorial, SEO and advertising drafts; Runway image/video jobs, private storage and review controls implemented. Provider API keys and live workflow acceptance remain pending.",
+                "OpenAI source-assisted drafts and SEO; Runway image/video jobs and approved reference-image adaptation. Private media preparation, evidence review and publication controls. Check provider job results for live acceptance.",
               ],
-              ["SMS / Fast2SMS", "DLT service-message queue, recipient permission reference and daily limits implemented. API key, approved DLT details and handset-delivery acceptance remain pending."],
+              ["SMS / Fast2SMS", "Deferred by owner. Email OTP remains the default. SMS is disabled until DLT approval and delivery acceptance."],
               [
                 "NDA signing & data rooms",
                 "Project NDA requests, versioned acceptance, private rooms, watermarked previews and file permissions; legal template approval pending",
@@ -285,7 +249,7 @@ export default async function Module({ params, searchParams }) {
               ],
               [
                 "Payments, inventory & Vyapar",
-                "Razorpay sandbox checkout verified; payment/refund reconciliation and capture audit available. Live activation, Vyapar sync and full inventory/store remain pending.",
+                "Razorpay sandbox checkout verified; payment/refund reconciliation and capture audit available. Live activation and Vyapar sync remain pending; operational procurement inventory is available.",
               ],
             ].map(([a, b]) => (
               <tr key={a}>

@@ -3,6 +3,7 @@ export default {
   poweredByHeader: false,
   serverExternalPackages: ["pdfjs-dist", "@napi-rs/canvas"],
   outputFileTracingIncludes: {
+    "/api/admin/intake": ["./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
     "/api/data-room/file": [
       "./node_modules/pdfjs-dist/legacy/build/**",
       "./node_modules/pdfjs-dist/standard_fonts/**",

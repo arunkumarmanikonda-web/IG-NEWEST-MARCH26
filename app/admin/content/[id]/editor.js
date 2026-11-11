@@ -1,4 +1,6 @@
 "use client";
+import MediaLibrary from "../../media-library";
+import {coordinatesFromText} from '../../../../lib/coordinates.mjs';
 import {practiceOptions} from "../../../../lib/business.mjs";
 import { useState } from "react";
 import Link from "next/link";
@@ -14,12 +16,16 @@ const kinds = [
   "person",
   "faq",
 ];
-export default function Editor({ item, terms, selectedTerms, revisions }) {
+export default function Editor({ item, terms, selectedTerms, revisions, initialKind, seed, mediaAssets=[] }) {
   const router = useRouter(),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [dirty, setDirty] = useState(false);
-  const data = item?.public_data || {};
+  const initial=item||seed||{};
+  const [kind,setKind]=useState(initial.kind||(kinds.includes(initialKind)?initialKind:"page"));
+  const data = initial.public_data || {};
+  const [image,setImage]=useState(data.image||""),[imageAlt,setImageAlt]=useState(data.image_alt||"");
+  const section=kind==="opportunity"?"listings":kind==="product"?"catalogue":kind==="project"?"projects":"cms";
   async function run(task) {
     setBusy(true);
     setMessage("");
@@ -49,9 +55,11 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
         "job_title",
         "expertise",
         "sort_order",
+        "sku","brand","category","uom","hsn","gst_pct","moq","pack_size","lead_days","latitude","longitude","location_source","area","area_unit","keys","tenure","availability",
       ].forEach((k) => {
         if (f.get(k)) public_data[k] = f.get(k);
       });
+      public_data.location_reviewed=f.get("location_reviewed")==="on";
       public_data.confidential = f.get("confidential") === "on";
       public_data.image_identity_reviewed =
         f.get("image_identity_reviewed") === "on";
@@ -90,14 +98,14 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
       setMessage(
         a === "publish" ? "Published this revision." : "Content updated.",
       );
-      if (a === "delete") router.replace("/admin/content");
+      if (a === "delete") router.replace("/admin/"+section);
       router.refresh();
     });
   }
   return (
     <section className="workspace-card">
-      <Link href="/admin/content">← Content & listings</Link>
-      <h2>{item ? "Edit content" : "Create content"}</h2>
+      <Link href={"/admin/"+section}>← Back to {section}</Link>
+      <h2>{item ? "Edit "+(kind==="opportunity"?"listing":kind==="product"?"product":"content") : "Create "+(kind==="opportunity"?"listing":kind==="product"?"product":"content")}</h2>
       {item && (
         <p>
           Revision {item.version} · {item.status}{" "}
@@ -105,17 +113,20 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
             "· Last published revision " + item.published_version}
         </p>
       )}
+      {!item&&<p className="workspace-note">Create from files, text and images in the <Link href={"/admin/intake?kind="+kind}>AI creation studio</Link>, or complete this form manually.</p>}
+      {seed?.review_questions?.length>0&&<div className="review-questions"><h3>Source review</h3><ul>{seed.review_questions.map((q,i)=><li key={i}>{q}</li>)}</ul></div>}
       <form
         className="workspace-form"
         onSubmit={save}
         onChange={() => setDirty(true)}
       >
-        <label>Responsible practice<select name="practice" defaultValue={item?.practice||'corporate'}>{practiceOptions.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
+        <label>Responsible practice<select name="practice" defaultValue={initial.practice||(kind==='product'?'horeca':kind==='opportunity'?'real-estate':kind==='project'?'hospitality':'corporate')}>{practiceOptions.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
         <label>
           Content type
           <select
             name="kind"
-            defaultValue={item?.kind || "opportunity"}
+            value={kind}
+            onChange={e=>setKind(e.target.value)}
             disabled={!!item}
           >
             {kinds.map((x) => (
@@ -127,7 +138,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           URL slug
           <input
             name="slug"
-            defaultValue={item?.slug || ""}
+            defaultValue={initial.slug || (seed?.title?seed.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,100):"")}
             required
             maxLength={120}
             pattern="[a-z0-9]+(-[a-z0-9]+)*"
@@ -138,7 +149,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           Public title
           <input
             name="title"
-            defaultValue={item?.title || ""}
+            defaultValue={initial.title || ""}
             required
             maxLength={180}
           />
@@ -147,7 +158,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           Summary
           <textarea
             name="summary"
-            defaultValue={item?.summary || ""}
+            defaultValue={initial.summary || ""}
             maxLength={500}
           />
         </label>
@@ -156,7 +167,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           <textarea
             name="body"
             className="body-editor"
-            defaultValue={item?.body || ""}
+            defaultValue={initial.body || ""}
             maxLength={100000}
             placeholder="Plain text. Separate paragraphs with blank lines. Lines beginning with ## become headings."
           />
@@ -167,15 +178,20 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           listings must use an opaque reference, non-identifying title and
           approved imagery.
         </p>
-        {[
+        {[...(kind==="person"?[
           ["job_title", "Leadership role / job title"],
           ["expertise", "Expertise (separate with semicolons)"],
           ["sort_order", "Display order (number)"],
+        ]:[]), ...(kind==="product"?[
+          ["sku","Unique SKU"],["brand","Brand"],["category","Category"],["uom","Unit of measure"],["hsn","HSN"],["gst_pct","GST %"],["moq","Minimum order quantity"],["pack_size","Pack size"],["lead_days","Lead time · days"]
+        ]:[]), ...( ["opportunity","project"].includes(kind)?[
           ["city", "City"],
           ["region", "State / region"],
           ["sector", "Sector"],
           ["asset_class", "Asset class"],
           ["transaction_type", "Transaction type"],
+          ["area","Area / size"],["area_unit","Area unit"],["keys","Hotel keys"],["tenure","Tenure"],["availability","Availability"],["latitude","Verified latitude"],["longitude","Verified longitude"],["location_source","Location source / map reference"]
+        ]:[]),
           ["price_label", "Approved price label"],
           ["reference", "Public reference"],
           ["image", "Approved image path"],
@@ -185,13 +201,17 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
             {label}
             <input
               name={k}
-              defaultValue={data[k] || ""}
+              defaultValue={["image","image_alt"].includes(k)?undefined:data[k] || ""}
+              value={k==="image"?image:k==="image_alt"?imageAlt:undefined}
+              onChange={e=>{if(k==="image")setImage(e.target.value);if(k==="image_alt")setImageAlt(e.target.value);}}
               maxLength={k === "image_alt" ? 250 : 180}
               placeholder={k === "image" ? "/images/city.jpg" : undefined}
             />
           </label>
         ))}
+        {["opportunity","project"].includes(kind)&&<div className="wide workspace-actions"><button type="button" onClick={e=>{const form=e.currentTarget.form,source=form.elements.namedItem('location_source').value,coordinates=coordinatesFromText(source);if(!coordinates){setMessage('Paste a full Google Maps link containing @latitude,longitude or query=latitude,longitude in Location source. Short links and city names do not contain coordinates.');return;}for(const[k,v]of Object.entries(coordinates))form.elements.namedItem(k).value=v;setDirty(true);setMessage('Coordinates extracted from the supplied map link. Verify the location before public disclosure.');}}>Extract coordinates from location link</button></div>}
         <div>
+          {["opportunity","project"].includes(kind)&&<label className="check"><input name="location_reviewed" type="checkbox" defaultChecked={data.location_reviewed===true}/>Coordinates verified against the source; approved for public disclosure.</label>}
           <label className="check">
             <input
               type="checkbox"
@@ -230,7 +250,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           SEO title
           <input
             name="seo_title"
-            defaultValue={item?.seo_title || ""}
+            defaultValue={initial.seo_title || ""}
             maxLength={90}
           />
         </label>
@@ -238,7 +258,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           Search description
           <textarea
             name="seo_description"
-            defaultValue={item?.seo_description || ""}
+            defaultValue={initial.seo_description || ""}
             maxLength={200}
           />
         </label>
@@ -248,6 +268,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           </button>
         </div>
       </form>
+      <details className="editor-media"><summary>Choose or upload a source image</summary><MediaLibrary assets={mediaAssets} defaultPractice={initial.practice||(kind==="product"?"horeca":"real-estate")} onChoose={(path,alt)=>{setImage(path);setImageAlt(alt);setDirty(true);setMessage("Image selected. Save the draft to retain it.");}}/></details>
       <p role="status" className="portal-message">
         {message}
       </p>

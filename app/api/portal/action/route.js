@@ -6,6 +6,10 @@ import {
   errorJson,
 } from "../../../../lib/http.mjs";
 const methods = {
+  catalogue_import: "ig_catalogue_import",
+  source_media: "ig_source_media_manage",
+  operations: "ig_ops_save",
+  operations_action: "ig_ops_action",
   account: "ig_account_update",
   invitation: "ig_accept_invitation",
   invitation_revoke: "ig_revoke_invitation",

@@ -1,3 +1,4 @@
+import AdminNavigation from "./navigation";
 import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -32,34 +33,12 @@ export default async function AdminLayout({ children }) {
       <div className="workspace-header">
         <div>
           <div className="eyebrow">INDIA GULLY / MANAGEMENT</div>
-          <h1>Operating workspace</h1>
+          <h1>Management suite</h1>
         </div>
         <Link href="/account">{profile.display_name || user.email}</Link>
       </div>
       <div className="workspace-shell">
-        <nav className="workspace-nav" aria-label="Staff workspace">
-          {[
-            ["", "Overview"],
-            ["content", "Content & listings"],
-            ["taxonomy", "Categories & tags"],
-            ["users", "Users & invitations"],
-            ["enquiries", "Enquiries"],
-            ["clients", "Clients & engagements"],
-            ["nda", "NDA & access requests"],
-            ["data-rooms", "Project data rooms"],
-            ["audit", "Audit trail"],
-            ["automation", "AI & automation"],
-            ["ai", "AI drafting studio"],
-            ["creative", "Creatives & service SMS"],
-            ["settings", "Integrations & legal settings"],
-            ["payments", "Invoices & payments"],
-            ["privacy", "Privacy & grievances"],
-          ].map(([p, label]) => (
-            <Link key={p} href={"/admin" + (p ? "/" + p : "")}>
-              {label}
-            </Link>
-          ))}
-        </nav>
+        <AdminNavigation />
         <div className="workspace-main">{children}</div>
       </div>
     </main>

@@ -27,6 +27,8 @@ export default function PublishedContent({ item }) {
         {!!item.tags?.length && (
           <p>{item.tags.map((t) => t.label).join(" · ")}</p>
         )}
+        {item.kind==="product"&&<dl className="product-specifications">{[["sku","SKU"],["brand","Brand"],["category","Category"],["uom","Unit"],["hsn","HSN"],["gst_pct","GST %"],["moq","Minimum order"],["pack_size","Pack size"],["lead_days","Lead time · days"]].filter(([k])=>d[k]).map(([k,label])=><div key={k}><dt>{label}</dt><dd>{d[k]}</dd></div>)}</dl>}
+        {!d.confidential&&d.location_reviewed===true&&d.latitude&&d.longitude&&<p><a className="text-link" href={"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(d.latitude+","+d.longitude)} target="_blank" rel="noreferrer">View approved project location ↗</a></p>}
         {item.body
           .split(/\n\s*\n/)
           .filter(Boolean)
