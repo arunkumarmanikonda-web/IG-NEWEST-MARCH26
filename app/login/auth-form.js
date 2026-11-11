@@ -122,6 +122,9 @@ export default function AuthForm({ register = false }) {
         {message}
       </p>
       {!register && (
+        <p><Link href="/auth/verify">Verify your email or request a new code</Link></p>
+      )}
+      {!register && (
         <button
           className="text-button"
           type="button"

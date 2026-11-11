@@ -1,4 +1,5 @@
 import { serverClient } from "../../../../lib/supabase/server";
+import { verifyEmailCode } from "../../../../lib/email-auth.mjs";
 import {
   readJson,
   requestOrigin,
@@ -18,6 +19,13 @@ export async function POST(request) {
       typeof p.email === "string" ? p.email.trim().toLowerCase() : "";
     if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email) || email.length > 254)
       throw new HttpError("Enter a valid email address");
+    if (p.action === "verify")
+      return privateJson(await verifyEmailCode(client.auth, p));
+    if (p.action === "resend") {
+      const { error } = await client.auth.resend({ type: "signup", email });
+      if (error) throw new HttpError("Please wait before requesting another code. Contact hello@indiagully.com if the problem continues.", 429);
+      return privateJson({ ok: true, message: "If an unverified account exists, a new verification code has been requested." });
+    }
     if (p.action === "recover") {
       const { error } = await client.auth.resetPasswordForEmail(email, {
         redirectTo: new URL("/auth/callback", requestOrigin(request)).href,
@@ -29,6 +37,7 @@ export async function POST(request) {
         );
       return privateJson({
         ok: true,
+        next: "/auth/verify?purpose=recovery",
         message:
           "If an eligible account exists, a recovery email has been requested.",
       });
@@ -55,12 +64,13 @@ export async function POST(request) {
       });
       if (error)
         throw new HttpError(
-          "Registration email could not be sent. Contact hello@indiagully.com while email delivery is being configured.",
+          "Registration could not be completed. Please try again or contact hello@indiagully.com.",
           503,
         );
       return privateJson({
         ok: true,
         confirmEmail: !data.session,
+        next: data.session ? "/account" : "/auth/verify",
         message:
           "Confirm your email, then sign in and record your policy acceptance.",
       });
