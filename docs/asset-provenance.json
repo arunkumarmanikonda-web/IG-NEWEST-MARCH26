@@ -1,0 +1,62 @@
+[
+  {
+    "path": "public/images/city.jpg",
+    "sourcePath": "public/static/mandates/hero/hero-dlf-gurgaon.jpg",
+    "sha": "a955090b6c4eb8797491025c7690d7f4269d6ac0",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/dining.jpg",
+    "sourcePath": "public/static/mandates/hero/hero-fine-dining.jpg",
+    "sha": "564119fbfed2ce1a884b75e4bbaf6a8ba494feaf",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/prism.jpg",
+    "sourcePath": "public/static/mandates/prism/prism-tower-hero.jpg",
+    "sha": "ed6272b436d4d2509cb77b58eaeca2d8c73b789b",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/jaipur.jpg",
+    "sourcePath": "public/static/mandates/jaipur/jaipur-exterior-front.jpg",
+    "sha": "cacd89058c88a4016d3c3d94e551ea6397992e56",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/courtyard.jpg",
+    "sourcePath": "public/static/mandates/jaipur/jaipur-interior-arches.jpg",
+    "sha": "cacd89058c88a4016d3c3d94e551ea6397992e56",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/rajshree.webp",
+    "sourcePath": "public/static/mandates/chandigarh/chandigarh-hero.webp",
+    "sha": "f271c0780375fd8bf359201bf73ce7f9075792e3",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/kasauli.jpg",
+    "sourcePath": "public/static/mandates/kasauli/kasauli-cover.jpg",
+    "sha": "4294dd2d456f3b9ffb5d450bc0a750f7a1ccb9d2",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/arun.jpg",
+    "sourcePath": "public/static/team/arun-manikonda.jpg",
+    "sha": "27046b6f67dd151e1cdc6fb83599c4b6bf4963bb",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/pavan.jpg",
+    "sourcePath": "public/static/team/pavan-manikonda.jpg",
+    "sha": "55fdb65d57e8e22e3d3ddff03192ea378f86816b",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  },
+  {
+    "path": "public/images/amit.png",
+    "sourcePath": "public/static/team/amit-jhingan.png",
+    "sha": "6592f514e6ab0c0220dd4d3d4ae1eb3a63463143",
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+  }
+]
