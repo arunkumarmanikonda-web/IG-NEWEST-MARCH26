@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { browserClient } from "../../../lib/supabase/browser";
+import { authenticatorFactors } from "../../../lib/auth-factors.mjs";
 export default function Security({ changeRequired = false }) {
   const [factors, setFactors] = useState([]),
     [qr, setQr] = useState(""),
@@ -16,7 +17,7 @@ export default function Security({ changeRequired = false }) {
       c.auth.mfa.getAuthenticatorAssuranceLevel(),
     ]);
     if (error) throw error;
-    setFactors(data.totp || []);
+    setFactors(authenticatorFactors(data));
     setAal(level?.currentLevel || "aal1");
   }
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function Security({ changeRequired = false }) {
       </p>
       {qr && (
         <>
-          <p>Scan this QR code in your authenticator app. Keep it private.</p>
+          <p>Scan this QR code in your authenticator app. Keep it private and finish verification below before leaving this page.</p>
           <img
             className="security-qr"
             src={qr}
@@ -85,20 +86,20 @@ export default function Security({ changeRequired = false }) {
           >
             Add authenticator
           </button>
-          {factors
-            .filter((f) => f.status === "verified")
-            .map((f) => (
+          {factors.map((f) => (
               <div className="workspace-actions" key={f.id}>
                 <button
                   disabled={busy}
                   onClick={() => {
                     setFactor(f.id);
                     setMessage(
-                      "Enter the current code from your authenticator.",
+                      f.status === 'unverified'
+                        ? "Complete the setup using the current code from the authenticator app where you scanned the QR code."
+                        : "Enter the current code from your authenticator.",
                     );
                   }}
                 >
-                  Verify {f.friendly_name || "authenticator"}
+                  {f.status === 'unverified' ? 'Complete setup for' : 'Verify'} {f.friendly_name || "authenticator"}
                 </button>
               </div>
             ))}
@@ -139,6 +140,7 @@ export default function Security({ changeRequired = false }) {
           <button className="button" disabled={busy}>
             Verify code
           </button>
+          {!qr && <button type="button" className="text-button" disabled={busy} onClick={() => { setFactor(''); setMessage(''); }}>Back to authenticators</button>}
         </form>
       )}
       <hr />
