@@ -1,0 +1,35 @@
+begin;
+do $$
+declare eid uuid;oid uuid;job jsonb;r jsonb;payload jsonb;test_secret text=repeat('a',64);
+begin
+ update ig_private.integration_root set secret_hash=encode(extensions.digest(convert_to(test_secret,'UTF8'),'sha256'),'hex');
+ update ig_private.integration_config set mode='enabled' where id='resend';
+ insert into public.ig_enquiries(name,email,practice,message) values('Rollback delivery test','rollback@example.org','corporate','Automated database verification, always rolled back.') returning id into eid;
+ insert into public.ig_outbox(enquiry_id,recipient,kind) values(eid,'rollback@example.org','acknowledgement') returning id into oid;
+ r=ig_private.delivery(test_secret,jsonb_build_object('action','claim','enquiry_id',eid));
+ assert jsonb_array_length(r)=1,'Expected one claimed job';job=r->0;
+ payload=jsonb_build_object('to',jsonb_build_array('rollback@example.org'),'text','original');
+ r=ig_private.delivery(test_secret,jsonb_build_object('action','prepare','id',oid,'lease_token',job->>'lease_token','payload',payload));
+ assert r=payload,'Original payload not stored';
+ r=ig_private.delivery(test_secret,jsonb_build_object('action','prepare','id',oid,'lease_token',job->>'lease_token','payload',payload||'{"text":"edited"}'::jsonb));
+ assert r=payload,'Retry body changed';
+ perform ig_private.delivery(test_secret,'{"action":"event","event_id":"rollback-early","event":"email.delivered","provider_id":"rollback-email"}');
+ assert exists(select 1 from ig_private.provider_events where event_id='rollback-early' and processed_at is null),'Early event not retained';
+ perform ig_private.delivery(test_secret,jsonb_build_object('action','finish','id',oid,'lease_token',job->>'lease_token','provider_id','rollback-email'));
+ assert exists(select 1 from public.ig_outbox where id=oid and status='delivered'),'Early delivery event lost';
+ r=ig_private.delivery(test_secret,'{"action":"event","event_id":"rollback-early","event":"email.delivered","provider_id":"rollback-email"}');
+ assert r->>'duplicate'='true','Duplicate event not rejected';
+ perform ig_private.delivery(test_secret,'{"action":"event","event_id":"rollback-bounce","event":"email.bounced","provider_id":"rollback-email"}');
+ perform ig_private.delivery(test_secret,'{"action":"event","event_id":"rollback-late-delivery","event":"email.delivered","provider_id":"rollback-email"}');
+ assert exists(select 1 from public.ig_outbox where id=oid and status='suppressed'),'Late delivery undid suppression';
+ assert exists(select 1 from ig_private.email_suppressions where email='rollback@example.org'),'Bounce suppression missing';
+ insert into public.ig_outbox(enquiry_id,recipient,kind) values(eid,'retry@example.org','acknowledgement') returning id into oid;
+ job=(ig_private.delivery(test_secret,jsonb_build_object('action','claim','enquiry_id',eid)))->0;
+ perform ig_private.delivery(test_secret,jsonb_build_object('action','finish','id',oid,'lease_token',job->>'lease_token','error','Test failure'));
+ assert (ig_private.delivery(test_secret,jsonb_build_object('action','claim','enquiry_id',eid)))='[]'::jsonb,'Retry ignored backoff';
+ assert not has_function_privilege('anon','public.ig_webhook_relay_config()','execute'),'Anonymous relay credentials exposed';
+ assert not has_function_privilege('authenticated','public.ig_webhook_relay_config()','execute'),'User relay credentials exposed';
+ assert has_function_privilege('service_role','public.ig_webhook_relay_config()','execute'),'Service relay access missing';
+end $$;
+rollback;
+select '12 delivery and permission assertions passed; all fixtures rolled back' as verification;

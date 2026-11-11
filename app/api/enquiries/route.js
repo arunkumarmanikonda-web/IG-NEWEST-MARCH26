@@ -1,4 +1,5 @@
 import {after} from "next/server";
+export const maxDuration = 120;
 import {dispatchEmailQueue} from "../../../lib/delivery";
 import { createHmac } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";

@@ -9,7 +9,7 @@
 - General service email: **hello@indiagully.com**.
 - Official telephone: **+918988988988**.
 - Enquiry recipients: **akm@indiagully.com**, **pavan@indiagully.com**, **amit.jhingan@indiagully.com**.
-- Full current registered office and appointed grievance officer name/designation: **awaiting owner confirmation**. A directory address has deliberately not been promoted to a confirmed statutory disclosure.
+- Registered office confirmed by owner: **QTR NO. 229, Four Storey, Tagore Garden Extn., New Delhi, Delhi, 110027, India**. Appointed grievance officer name/designation remain outstanding.
 
 ## Implemented
 
@@ -21,7 +21,7 @@ The owner can assign each staff member a practice-rights matrix. Roles impose a 
 
 Account privacy requests have references, statuses, responses and acknowledgement/resolution deadlines. Requests are private to their subject and the owner. Erasure is reviewed against contractual and statutory retention; the application does not silently delete signed evidence.
 
-Resend adapter: enquiry capture, configured internal routing, acknowledgement, database queue, leased processing, stable provider idempotency keys, bounded retries within 23 hours, signed timestamp-checked webhooks and bounce/complaint suppression. New enquiries trigger processing; the owner can process pending messages. There is not yet a periodic recovery scheduler. `accepted` means provider acceptance, not delivery. Authentication verification/recovery email still uses Supabase SMTP and must be configured separately.
+Resend adapter: enquiry capture, configured internal routing, acknowledgement, database queue, leased processing, stable provider idempotency keys, bounded retries within 23 hours, signed timestamp-checked webhooks and bounce/complaint suppression. New enquiries trigger processing; the owner can process pending messages. A Supabase Cron recovery job runs every two minutes when eligible email jobs exist. `accepted` means provider acceptance, not delivery. Authentication verification/recovery email still uses Supabase SMTP and must be configured separately.
 
 Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, practice access checks, customer-specific dashboard, server-fixed INR/paise totals, provider Orders API, checkout, signature verification, server fetch of captured payment, matching amount/currency/order and webhook reconciliation. An ambiguous order-creation failure remains `initializing` for reconciliation instead of blindly creating another payable order. Payment credentials are encrypted in a binding for the initiated transaction so later key changes do not rewrite its verification context. Refund handling is through the merchant dashboard; automated refunds, tax-invoice generation, inventory and third-party seller settlement are not implemented. This is invoice collection, not a complete retail cart or regulated escrow arrangement.
 
@@ -38,7 +38,7 @@ Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, 
 | Google Workspace | Per-user OAuth/mail grants not implemented. Do not use shared Google passwords. |
 | Shopify | Not required for the present advisory/procurement quote architecture. A future retail catalogue/cart/fulfilment decision is separate. |
 | Vyapar | No verified API/accounting connector connected. Payment receipts are not GST invoices. |
-| Legal operations | Confirm registered office and grievance appointment; counsel review policies/NDA and actual business model; implement operational retention, incident response and vendor agreements. |
+| Legal operations | Confirm grievance appointment; counsel review policies/NDA and actual business model; implement operational retention, incident response and vendor agreements. |
 | Security | Database access tests pass; independent penetration test, restore drill, full log-retention/India-residency assessment and upload malware scanning remain pending. Supabase leaked-password protection requires the applicable paid plan and remains disabled. |
 | Production | No live domain cutover or production database activation. PR remains draft. |
 
@@ -58,3 +58,15 @@ Additional prelaunch checks: relevant state RERA agent/project disclosures; CIRP
 ## Verification
 
 74 local tests passed and a production build completed after the governance/payment implementation. The previous data-room flow passed 32 real Auth/API/storage checks. The governance/payment flow passed 19 real Auth/database checks, including payment-disabled and queue-disabled behaviour. Four additional transactional scope checks confirmed assigned HORECA write/read access while denying debt access and ungranted publication. Provider HTTP adapters are tested with controlled responses, not claimed as real external transactions.
+
+## Resend activation, 11 November 2026
+
+The owner supplied `RESEND_API_KEY` directly as a Vercel Preview Secret. The application resolves Vercel Secrets on the server; a super-user CMS credential override takes precedence and is stored separately. Clearing a CMS override does not delete the Vercel Secret. No credentials are returned by settings pages.
+
+`indiagully.com` is verified in Resend (domain ID `df960985-c9fd-4231-9573-5dde223dae60`). A dedicated webhook (`828213fe-579f-4030-9bd2-54aa4fa24b0b`) subscribes to delivered, bounced, complained, suppressed and failed events. Its signing secret is a separate Preview Secret. Provider sending and auth SMTP still require end-to-end activation evidence; a stored key is not evidence of successful delivery.
+
+Providers call the public Supabase `ig-provider-webhook/resend` or `/razorpay` endpoint. It forwards bounded raw bytes and original signature headers to allowlisted application routes. Only a service-role RPC can read the routing credentials, which are encrypted in Vault. Provider signatures are verified in the application before any event is accepted. The Vercel bypass remains private to the relay. The receiver never relays application response bodies or credentials.
+
+Recovery uses four-job batches, five-minute leases, exponential retry delays and a 23-hour idempotency window. Complete email bodies are frozen before sending. Early delivery events are retained and reconciled when the email ID binds; duplicate events cannot undo bounce suppression. Permanent provider failures stop automatic retries. The cron HTTP queue carries only a five-minute HMAC for the empty worker action, not permanent credentials.
+
+Validation: 77 local tests and production build; 12 rollback-only database assertions cover early events, duplicate delivery, suppression, unchanged retry bodies, retry backoff and denied client access to relay credentials. Test fixtures are rolled back.
