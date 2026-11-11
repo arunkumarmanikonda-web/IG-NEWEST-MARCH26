@@ -1,4 +1,5 @@
 "use client";
+import {practiceOptions,scopeRights} from "../../lib/business.mjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../account/profile";
@@ -220,6 +221,7 @@ export function UserManager({ users, invitations, isOwner }) {
             company: f.get("company"),
             status: f.get("status"),
             roles: f.getAll("roles"),
+            practice_grants: Object.fromEntries(practiceOptions.map(([key])=>[key,f.getAll("scope_"+key)]).filter(([,rights])=>rights.length)),
           });
           if (ok) setSelected(null);
         }}
@@ -280,6 +282,7 @@ export function UserManager({ users, invitations, isOwner }) {
               </label>
             ))}
         </fieldset>
+        {isOwner&&<fieldset className="wide"><legend>Practice permissions</legend><p>Each practice requires View access. Roles still limit the actions below.</p><div className="table-scroll"><table className="workspace-table"><thead><tr><th>Practice</th>{scopeRights.map(([key,label])=><th key={key}>{label}</th>)}</tr></thead><tbody>{practiceOptions.map(([key,label])=><tr key={key}><th>{label}</th>{scopeRights.map(([right,rightLabel])=><td key={right}><input aria-label={label+': '+rightLabel} type="checkbox" name={'scope_'+key} value={right} defaultChecked={selected?.practice_grants?.[key]?.includes(right)||false}/></td>)}</tr>)}</tbody></table></div></fieldset>}
         <div className="workspace-actions wide">
           <button className="primary" disabled={state.busy}>
             {selected ? "Save and revoke sessions" : "Create invitation"}

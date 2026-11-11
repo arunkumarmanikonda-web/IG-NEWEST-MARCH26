@@ -1,3 +1,4 @@
+import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
@@ -9,6 +10,7 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function AccountPage() {
+  const {version: policyVersion}=await currentPolicies();
   const { client, user, profile } = await accountContext();
   if (!user || !profile) redirect("/login");
   if (profile.status !== "active")
@@ -21,13 +23,13 @@ export default async function AccountPage() {
       </main>
     );
   const { data: rooms } =
-    profile.policy_version === "2026-11-11" && !profile.must_change_password
+    profile.policy_version === policyVersion && !profile.must_change_password
       ? await client.rpc("ig_room_dashboard", { p: {} })
       : { data: [] };
   return (
     <main id="main" className="auth-page account-dashboard">
       <div>
-        <Account profile={profile} email={user.email} />
+        <Account profile={profile} email={user.email} policyVersion={policyVersion} />
         {rooms?.length > 0 && (
           <section className="shared-rooms">
             <div className="eyebrow">SHARED WITH YOU</div>

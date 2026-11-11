@@ -1,0 +1,32 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {createClient} from '@supabase/supabase-js';
+const fixturePath=process.env.IG_ROOM_QA;if(!fixturePath)throw new Error('Disposable fixture path required');const cfg=JSON.parse(fs.readFileSync(fixturePath,'utf8'));
+const make=()=>createClient(process.env.NEXT_PUBLIC_SUPABASE_URL,process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+const ok=r=>{if(r.error)throw new Error(r.error.message);return r.data;};let count=0;const pass=m=>{count++;console.log('PASS '+m);};const deny=(r,m)=>{assert.ok(r.error,m);pass(m);};
+function totp(secret){let bits='';for(const c of secret.toUpperCase().replace(/=+$/,''))bits+='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.indexOf(c).toString(2).padStart(5,'0');const b=Buffer.from(bits.match(/.{8}/g).map(x=>parseInt(x,2))),t=Buffer.alloc(8);t.writeBigUInt64BE(BigInt(Math.floor(Date.now()/30000)));const h=crypto.createHmac('sha1',b).update(t).digest(),i=h[19]&15;return ((h.readUInt32BE(i)&0x7fffffff)%1e6).toString().padStart(6,'0');}
+const anon=make(),release=ok(await anon.from('ig_policy_releases').select('*').eq('current',true).single()),clients={};
+for(const f of cfg.fixtures){const c=make();ok(await c.auth.signInWithPassword({email:f.email,password:f.password}));ok(await c.rpc('ig_account_update',{p:{action:'accept_policies',version:release.version,terms:true,privacy:true,dataUse:true,adult:true}}));if(['owner','administrator'].includes(f.role)){const factors=ok(await c.auth.mfa.listFactors());ok(await c.auth.mfa.challengeAndVerify({factorId:factors.all.find(x=>x.status==='verified').id,code:totp(f.mfaSecret)}));}clients[f.role]=c;}
+const {owner,administrator:admin,client,outsider}=clients;
+deny(await anon.rpc('ig_config_runtime',{secret:'wrong'}),'Runtime credentials reject an invalid server secret');
+deny(await admin.rpc('ig_config_list'),'Administrator cannot read integration settings');
+deny(await client.rpc('ig_config_list'),'Client cannot read integration settings');
+const configs=ok(await owner.rpc('ig_config_list'));assert.equal(configs.length,5);assert.ok(configs.every(x=>!Object.hasOwn(x,'sealed')));pass('Owner sees configuration status without credential envelopes');
+const consent=ok(await client.from('ig_consents').select('policy_hash').eq('purpose','registration').order('created_at',{ascending:false}).limit(1));assert.equal(consent[0].policy_hash,release.sha256);pass('Registration records the exact current policy hash');
+deny(await client.rpc('ig_account_update',{p:{action:'accept_policies',version:'2026-11-11',terms:true,privacy:true,dataUse:true,adult:true}}),'Old policy acceptance cannot bypass a new release');
+const request=ok(await client.rpc('ig_privacy_request',{p:{action:'create',kind:'access',detail:'Synthetic QA privacy request. No real personal data requested.'}}));cfg.progress.privacy=request.id;fs.writeFileSync(fixturePath,JSON.stringify(cfg));
+assert.deepEqual(ok(await outsider.from('ig_privacy_requests').select('*').eq('id',request.id)),[]);pass('Privacy requests are isolated between clients');
+deny(await admin.rpc('ig_privacy_request',{p:{action:'review',id:request.id,version:1,status:'resolved',response:'Synthetic response only.'}}),'Only the super user may decide a privacy request');
+ok(await owner.rpc('ig_privacy_request',{p:{action:'review',id:request.id,version:1,status:'resolved',response:'Synthetic test request resolved without disclosure.'}}));pass('Owner review records a response and status');
+assert.deepEqual(ok(await admin.from('ig_content').select('id')),[]);pass('A staff role without assigned practices cannot enumerate draft records');
+deny(await admin.rpc('ig_save_content',{p:{kind:'product',practice:'horeca',slug:'qa-denied',title:'Denied',body:'Synthetic',public_data:{}}}),'Staff cannot write an unassigned practice');
+deny(await admin.rpc('ig_room_manage',{p:{action:'room_update',id:cfg.progress.room,version:1,title:'Denied',active:true}}),'Practice boundary also protects privileged data-room RPCs');
+deny(await admin.rpc('ig_users_action',{p:{action:'invite',email:'ig-qa-denied@example.invalid',roles:['administrator'],practice_grants:{horeca:['read']}}}),'Administrators cannot grant themselves or others staff practice privileges');
+deny(await admin.rpc('ig_policy_publish',{p:{}}),'Administrators cannot publish legal policy releases');
+console.log('Completed '+count+' governance integration checks.');
+const payer=cfg.fixtures.find(x=>x.role==='client');
+const quote=ok(await owner.rpc('ig_payment_admin',{p:{action:'create',user_id:payer.id,practice:'horeca',invoice_ref:'QA-'+crypto.randomUUID().slice(0,8),description:'Synthetic QA invoice. No actual purchase or payment.',amount_paise:12345,expires_at:new Date(Date.now()+86400000).toISOString(),invoice_confirmed:true}}));cfg.progress.payment=quote.id;fs.writeFileSync(fixturePath,JSON.stringify(cfg));
+assert.equal(ok(await client.from('ig_payment_requests').select('amount_paise').eq('id',quote.id).single()).amount_paise,12345);pass('Customer sees the exact server-issued invoice total');
+assert.deepEqual(ok(await outsider.from('ig_payment_requests').select('*').eq('id',quote.id)),[]);pass('Payment requests are isolated between customers');
+deny(await client.rpc('ig_payment_start',{p:{id:quote.id,accepted:true,server_secret:'wrong'}}),'Browser cannot bypass the payment server boundary');
+deny(await client.rpc('ig_payment_start',{p:{id:quote.id,accepted:true,server_secret:process.env.INTEGRATION_MASTER_KEY}}),'Payments remain blocked while Razorpay is disabled');
+assert.deepEqual(ok(await anon.rpc('ig_delivery',{secret:process.env.INTEGRATION_MASTER_KEY,p:{action:'claim'}})),[]);pass('Disabled Resend sends and claims no queued messages');
+console.log('Total '+count+' governance and integration checks.');

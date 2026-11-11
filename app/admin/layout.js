@@ -1,3 +1,4 @@
+import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
@@ -8,9 +9,10 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function AdminLayout({ children }) {
+  const {version: policyVersion}=await currentPolicies();
   const { client, user, profile, aal } = await accountContext();
   if (!user || !profile) redirect("/login");
-  if (profile.status !== "active" || profile.policy_version !== "2026-11-11")
+  if (profile.status !== "active" || profile.policy_version !== policyVersion)
     redirect("/account");
   if (profile.must_change_password || aal !== "aal2")
     redirect("/account/security");
@@ -46,6 +48,9 @@ export default async function AdminLayout({ children }) {
             ["data-rooms", "Project data rooms"],
             ["audit", "Audit trail"],
             ["automation", "AI & automation"],
+            ["settings", "Integrations & legal settings"],
+            ["payments", "Invoices & payments"],
+            ["privacy", "Privacy & grievances"],
           ].map(([p, label]) => (
             <Link key={p} href={"/admin" + (p ? "/" + p : "")}>
               {label}

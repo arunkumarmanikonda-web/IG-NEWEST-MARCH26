@@ -12,10 +12,10 @@ export async function portalAction(module, payload) {
   if (!res.ok) throw new Error(result.error);
   return result.data;
 }
-export default function Account({ profile, email }) {
+export default function Account({ profile, email, policyVersion }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [accepted, setAccepted] = useState(profile.policy_version === "2026-11-11");
+    [accepted, setAccepted] = useState(profile.policy_version === policyVersion);
   async function run(task) {
     setBusy(true);
     setMessage("");
@@ -46,10 +46,11 @@ export default function Account({ profile, email }) {
             run(async () => {
               await portalAction("account", {
                 action: "accept_policies",
-                version: "2026-11-11",
+                version: policyVersion,
                 terms: true,
                 privacy: true,
                 dataUse: true,
+                adult: true,
               });
               setAccepted(true);
               setMessage("Your policy acceptance has been recorded.");
@@ -58,7 +59,7 @@ export default function Account({ profile, email }) {
         >
           <h2>Complete registration</h2>
           <p>
-            Record acceptance of the current policies, version 11 November 2026.
+            Record acceptance of the current policies, version {policyVersion}.
           </p>
           <label className="check">
             <input type="checkbox" required />I accept the{" "}
@@ -81,6 +82,7 @@ export default function Account({ profile, email }) {
             </Link>
             .
           </label>
+          <label className="check"><input type="checkbox" required />I am at least 18 and authorised to register.</label>
           <button className="button" disabled={busy}>
             Record acceptance
           </button>
@@ -124,7 +126,7 @@ export default function Account({ profile, email }) {
           </form>
           <div className="workspace-actions">
             <Link href="/account/security">Security & MFA</Link>
-            <Link href="/account/preferences">Communication preferences</Link>
+            <Link href="/account/preferences">Communication preferences</Link><Link href="/account/payments">Invoices & payments</Link><Link href="/account/privacy">Privacy requests & grievances</Link>
             <Link href="/account/nda">Confidentiality & NDA requests</Link>
             <Link href="/account/data-rooms">My project data rooms</Link>
             {profile.roles.some((x) => !["client", "vendor"].includes(x)) && (

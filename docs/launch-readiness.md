@@ -37,3 +37,7 @@ Official references checked: [Google favicon](https://developers.google.com/sear
 
 ## PR #3 merge gates
 Keep this PR in draft until: (1) the current commit passes CI and deployed preview checks; (2) SMTP and real verification/recovery delivery are configured, and the paid-plan leaked-password control is resolved; (3) AKM completes mailbox verification, mandatory password rotation, policy acceptance and TOTP; (4) production environment receives its own migrated database and secrets, or a separately approved staging-only release strategy is implemented. Full live-domain acceptance additionally requires the provider and operational rows above.
+
+
+## Governance and payments update · 11 November 2026
+See [governance-and-integrations.md](./governance-and-integrations.md) for the current implementation and complete activation blockers. Policies/settings, practice rights, privacy requests, Resend enquiry delivery and Razorpay invoice collection have been added. This does not clear the public-launch gates.

@@ -1,3 +1,7 @@
+import PaymentsManager from "../payments-manager";
+import SettingsManager from "../settings-manager";
+import PrivacyRequests from "../../account/privacy/requests";
+import {currentPolicies} from "../../../lib/policies";
 import Link from "next/link";
 import RoomsManager from "../rooms-manager";
 import NdaManager from "../nda-manager";
@@ -9,6 +13,9 @@ const date = (value) =>
 export default async function Module({ params }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if(module==='payments'){const [{data:users,error:ue},{data,error}]=await Promise.all([client.rpc('ig_admin_users'),client.from('ig_payment_requests').select('*').order('created_at',{ascending:false}).limit(250)]);return error||ue?<p>Payment administration requires administrator access.</p>:<PaymentsManager items={data||[]} users={users.users}/>;}
+  if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:<SettingsManager configs={data} release={release}/>;}
+  if(module==='privacy') {if(!profile.roles.includes('owner'))return <p>Super-user access is required.</p>;const {data,error}=await client.from('ig_privacy_requests').select('*').order('created_at',{ascending:false}).limit(250);return error?<p>Register unavailable.</p>:<PrivacyRequests items={data||[]} admin/>;}
   if (module === "data-rooms") {
     if (!profile.roles.some((x) => ["owner", "administrator"].includes(x)))
       return <p>Data rooms require owner or administrator access.</p>;
@@ -236,7 +243,7 @@ export default async function Module({ params }) {
               ["Consent preferences & audit", "Active"],
               [
                 "Resend transactional delivery",
-                "Awaiting verified sender and delivery test",
+                "Resend queue and signed delivery webhooks implemented; sender activation and delivery test pending",
               ],
               ["Google Workspace user mail", "Awaiting OAuth integration"],
               [
@@ -254,7 +261,7 @@ export default async function Module({ params }) {
               ],
               [
                 "Payments, inventory & Vyapar",
-                "Pending commerce implementation and connector verification",
+                "Razorpay invoice-request checkout implemented; credentials and sandbox transaction pending. Vyapar sync and full inventory/store remain pending.",
               ],
             ].map(([a, b]) => (
               <tr key={a}>

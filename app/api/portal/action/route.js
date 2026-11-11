@@ -17,6 +17,9 @@ const methods = {
   nda: "ig_nda_action",
   nda_admin: "ig_nda_admin",
   rooms: "ig_room_manage",
+  privacy: "ig_privacy_request",
+  policies: "ig_policy_publish",
+  payments: "ig_payment_admin",
 };
 export async function POST(request) {
   try {
@@ -27,13 +30,13 @@ export async function POST(request) {
     if (!user || !profile || profile.status !== "active")
       throw new HttpError("Active sign-in required", 401);
     if (
-      !["account", "invitation", "nda"].includes(body.module) &&
+      !["account", "invitation", "nda", "privacy"].includes(body.module) &&
       aal !== "aal2"
     )
       throw new HttpError("Complete multi-factor authentication", 403);
     if (
       profile.must_change_password &&
-      !["account", "nda"].includes(body.module)
+      !["account", "nda", "privacy"].includes(body.module)
     )
       throw new HttpError(
         "Change your initial password before using staff operations",

@@ -1,3 +1,5 @@
+import {after} from "next/server";
+import {dispatchEmailQueue} from "../../../lib/delivery";
 import { createHmac } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import {
@@ -62,6 +64,7 @@ export async function POST(request) {
             : "Unable to save your enquiry. Check the fields or email hello@indiagully.com.",
         error.code === "P0429" ? 429 : 400,
       );
+    after(async()=>{try{await dispatchEmailQueue(data.id);}catch{/* Queued record remains visible for controlled retry. */}});
     return privateJson({ ok: true, ...data });
   } catch (e) {
     return errorJson(e);

@@ -1,5 +1,4 @@
-import {pageMeta} from '../../lib/seo.mjs';
-import Seo from '../seo';
-import {PageHero} from '../components';
-export const metadata=pageMeta('/terms');
-export default function Terms(){return <main id="main"><Seo path="/terms"/><PageHero eyebrow="WEBSITE INFORMATION" title="Terms of use" description="The basis on which this website’s information and tools are provided."/><article className="prose-section"><h2>Information and engagements</h2><p>Website content introduces India Gully’s services and provides general information. An engagement, its responsibilities, fees and deliverables are established separately in agreed terms.</p><h2>Opportunity information</h2><p>Portfolio references are not current offers. Availability, mandate status, ownership particulars, specifications and commercial terms must be confirmed through the appropriate advisory and diligence process.</p><h2>Valuation scenarios</h2><p>The valuation studio calculates indicative scenarios from entered assumptions. Results are not certified valuations, lending commitments or investment recommendations. Asset-specific conclusions require appropriate market, financial, legal and technical review.</p><h2>Specialist advice</h2><p>Legal, tax, audit, engineering and statutory certification work is provided by appropriately appointed professionals. India Gully’s advisory and coordination role is defined by each engagement.</p><h2>Contact</h2><p>Questions about this website can be sent to <a href="mailto:hello@indiagully.com">hello@indiagully.com</a>.</p></article></main>}
+import LegalDocument from '../legal-document';
+export const dynamic='force-dynamic';
+export const metadata={title:'Terms of use'};
+export default function Page(){return <LegalDocument policy='terms'/>;}

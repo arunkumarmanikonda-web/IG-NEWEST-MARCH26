@@ -1,4 +1,5 @@
 "use client";
+import {practiceOptions} from "../../../../lib/business.mjs";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -58,6 +59,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
         id: item?.id,
         version: item?.version,
         kind: item?.kind || f.get("kind"),
+        practice:f.get("practice"),
         slug: f.get("slug"),
         title: f.get("title"),
         summary: f.get("summary"),
@@ -108,6 +110,7 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
         onSubmit={save}
         onChange={() => setDirty(true)}
       >
+        <label>Responsible practice<select name="practice" defaultValue={item?.practice||'corporate'}>{practiceOptions.map(([key,label])=><option key={key} value={key}>{label}</option>)}</select></label>
         <label>
           Content type
           <select

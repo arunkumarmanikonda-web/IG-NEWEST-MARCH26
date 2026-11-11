@@ -1,3 +1,4 @@
+import {businessDetails} from "../lib/runtime-config";
 import { siteConfig } from "../lib/seo.mjs";
 import "./globals.css";
 import "./editorial.css";
@@ -5,6 +6,7 @@ import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
 import { practices, contact } from "../lib/content.mjs";
+export const dynamic = "force-dynamic";
 export const metadata = {
   title: {
     default: "India Gully | Advisory. Transactions. Delivery.",
@@ -24,7 +26,8 @@ export const metadata = {
   },
   manifest: "/manifest.webmanifest",
 };
-export default function Layout({ children }) {
+export default async function Layout({ children }) {
+  const business=await businessDetails();
   return (
     <html lang="en">
       <body>
@@ -58,9 +61,7 @@ export default function Layout({ children }) {
                 Commercial purpose.
               </p>
               <small>
-                A brand of Vivacious Entertainment
-                <br />
-                and Hospitality Pvt. Ltd.
+                A brand of {business.legal_name}
               </small>
             </div>
             <div>
@@ -86,9 +87,9 @@ export default function Layout({ children }) {
               <Link href="/account">Account & staff login</Link>
             </div>
             <div>
-              <h2>Start a conversation</h2>
-              <a href={"mailto:" + contact.email}>{contact.email}</a>
-              <a href={"tel:" + contact.tel}>{contact.phone}</a>
+              <h2>Start a conversation</h2><p className="footer-legal">CIN {business.cin}<br/>GSTIN {business.gstin}{business.registered_office&&<><br/>{business.registered_office}</>}</p>
+              <a href={"mailto:" + business.email}>{business.email}</a>
+              <a href={"tel:" + business.phone}>{business.phone}</a>
             </div>
           </div>
           <div className="footer-bottom">
@@ -98,7 +99,7 @@ export default function Layout({ children }) {
             <span>
               <Link href="/privacy">Privacy</Link>
               <Link href="/terms">Terms of use</Link>
-              <Link href="/data-usage">Data usage</Link>
+              <Link href="/data-usage">Data usage</Link><Link href="/cookies">Cookies</Link><Link href="/commerce-terms">Procurement terms</Link><Link href="/refunds">Refunds</Link><Link href="/shipping">Delivery</Link><Link href="/grievances">Grievances</Link>
             </span>
           </div>
         </footer>
