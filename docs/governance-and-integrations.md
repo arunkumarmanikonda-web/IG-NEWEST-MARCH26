@@ -23,7 +23,7 @@ Account privacy requests have references, statuses, responses and acknowledgemen
 
 Resend adapter: enquiry capture, configured internal routing, acknowledgement, database queue, leased processing, stable provider idempotency keys, bounded retries within 23 hours, signed timestamp-checked webhooks and bounce/complaint suppression. New enquiries trigger processing; the owner can process pending messages. A Supabase Cron recovery job runs every two minutes when eligible email jobs exist. `accepted` means provider acceptance, not delivery. Authentication verification/recovery email still uses Supabase SMTP and must be configured separately.
 
-Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, practice access checks, customer-specific dashboard, server-fixed INR/paise totals, provider Orders API, checkout, signature verification, server fetch of captured payment, matching amount/currency/order and webhook reconciliation. An ambiguous order-creation failure remains `initializing` for reconciliation instead of blindly creating another payable order. Payment credentials are encrypted in a binding for the initiated transaction so later key changes do not rewrite its verification context. Refund handling is through the merchant dashboard; automated refunds, tax-invoice generation, inventory and third-party seller settlement are not implemented. This is invoice collection, not a complete retail cart or regulated escrow arrangement.
+Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, practice access checks, customer-specific dashboard, server-fixed INR/paise totals, provider Orders API, checkout, signature verification, server fetch of captured payment, matching amount/currency/order and webhook reconciliation. Customer and authorised staff controls can re-fetch the provider status without issuing a charge. Captured and refunded totals, reconciliation timestamps and durable webhook receipts are recorded. Duplicate events and older responses cannot undo a recorded captured payment or increase refunds beyond the captured amount. An ambiguous order-creation failure remains `initializing` for manual investigation instead of blindly creating another payable order. Payment credentials are encrypted in a binding for the initiated transaction so later key changes do not rewrite its verification context. Refund initiation remains in the merchant dashboard; the website reconciles provider-reported refund totals. Automated refunds, tax-invoice generation, inventory and third-party seller settlement are not implemented. This is invoice collection, not a complete retail cart or regulated escrow arrangement.
 
 ## Activation status and launch gates
 
@@ -32,7 +32,7 @@ Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, 
 | Supabase | Connected in preview, Mumbai. No Neon required. |
 | Resend | Enabled on preview. Verified domain, server-only Vercel Secrets, signed webhook relay and automatic recovery configured. All four authorised test messages delivered on 11 November 2026. |
 | Auth email | Supabase custom SMTP is enabled with a separate sending-only Resend key, sender `hello@indiagully.com`, host `smtp.resend.com`, port 465. Verification emails were delivered to Arun, Pavan and Amit. Arun completed email verification, policy acceptance, private password change and TOTP; protected CMS access was observed on the stable preview. Other staff onboarding and a full recovery journey remain pending. |
-| Razorpay | Test mode enabled, encrypted CMS credentials stored, INR 100 limit. The INR 1 owner test completed through checkout, passed server verification and was recorded paid; the capture webhook returned HTTP 200. Live credentials/activation, refund/failure scenarios and production acceptance remain pending. Live activation additionally requires confirmed statutory details, reviewed legal release and production environment. |
+| Razorpay | Test mode enabled, encrypted CMS credentials stored, INR 100 limit. INR 1 checkout/capture, customer/admin status checks and signed relay/duplicate checks passed. The dashboard and documented API rejected a simulated refund with HTTP 400 / `invalid request sent`; refund acceptance remains blocked. Live credentials/activation, failure/recovery scenarios and production acceptance remain pending. Live activation additionally requires confirmed statutory details, reviewed legal release and production environment. |
 | OpenAI / Runway | Editorial and creative workflows not connected. Reserved configuration fields do not activate generation. |
 | Fast2SMS | Optional; reserved configuration fields only. DLT principal entity, sender, template, credentials and consent-controlled delivery workflow remain required. No SMS sent. |
 | Google Workspace | Per-user OAuth/mail grants not implemented. Do not use shared Google passwords. |
@@ -57,7 +57,7 @@ Additional prelaunch checks: relevant state RERA agent/project disclosures; CIRP
 
 ## Verification
 
-82 local tests and the production build passed for implementation commit `554a7d5`; GitHub Actions run `43070915188` also passed. The previous data-room flow passed 32 real Auth/API/storage checks. The governance/payment flow passed 19 real Auth/database checks, including payment-disabled and queue-disabled behaviour. Four additional transactional scope checks confirmed assigned HORECA write/read access while denying debt access and ungranted publication. Twelve rollback-only database assertions cover email delivery and relay authorisation. Real Resend delivery and successful Razorpay checkout evidence are recorded below. Documentation updates do not change the tested implementation.
+87 local tests and the production build passed for implementation commit `4d444ae`; GitHub Actions run `43077098482` also passed. Twenty-one rollback-only database assertions additionally cover payment permissions, capture/refund bounds, duplicate receipts and non-regression. The previous data-room flow passed 32 real Auth/API/storage checks. The governance/payment flow passed 19 real Auth/database checks, including payment-disabled and queue-disabled behaviour. Four additional transactional scope checks confirmed assigned HORECA write/read access while denying debt access and ungranted publication. Twelve rollback-only database assertions cover email delivery and relay authorisation. Real Resend delivery and successful Razorpay checkout evidence are recorded below. Documentation updates do not change the tested implementation.
 
 ## Resend activation, 11 November 2026
 
@@ -85,7 +85,7 @@ An additional disposable-account end-to-end test did not produce a completed, re
 
 On 11 November 2026, the owner generated the test key and supplied its secret and webhook secret directly through the protected settings screens. CMS revision 2 is in `test` mode with encrypted `key_secret` and `webhook_secret`. No secret values are committed or displayed. The maximum permitted test request is 10,000 paise (INR 100). The existing merchant dashboard shows `indiagully.com` as Approved; this is not a substitute for production activation checks.
 
-Webhook `TyxWKdWTMf93zb` is Enabled and subscribed to `payment.captured`, targeting the public Supabase relay `/ig-provider-webhook/razorpay`. The owner-created INR 1 simulation was prepared through the staff UI under the reference `SYSTEM-TEST-RAZORPAY-20261111`, with an explicit description that it represents no supply, tax invoice, debt or real payment. The owner completed the checkout confirmation and simulated payment.
+Webhook `TyxWKdWTMf93zb` is Enabled and now subscribed to `payment.captured`, `payment.failed`, `refund.processed` and `refund.failed`, targeting the public Supabase relay `/ig-provider-webhook/razorpay`. The owner-created INR 1 simulation was prepared through the staff UI under the reference `SYSTEM-TEST-RAZORPAY-20261111`, with an explicit description that it represents no supply, tax invoice, debt or real payment. The owner completed the checkout confirmation and simulated payment.
 
 | Evidence | Observed result |
 |---|---|
@@ -96,4 +96,27 @@ Webhook `TyxWKdWTMf93zb` is Enabled and subscribed to `payment.captured`, target
 | Database | `paid`, recorded at `2026-11-11 18:06:10.004811+00` |
 | Public capture relay | Supabase function log: `POST | 200 | .../ig-provider-webhook/razorpay` at `2026-11-11T18:06:10.029000` |
 
-The checkout handler requires a valid payment signature and a server fetch confirming captured status, exact amount, INR currency and matching order before showing the verified result. The observed callback and relay response establish the successful sandbox path. A webhook-only recovery test with the browser callback deliberately absent, failed/cancelled payments, duplicate delivery, key rotation and refund reconciliation have not been demonstrated against the live provider sandbox. Controlled-response tests are not described as those provider tests. The labelled test row remains as audit evidence; no real money moved. Live mode and domain cutover remain disabled.
+The checkout handler requires a valid payment signature and a server fetch confirming captured status, exact amount, INR currency and matching order before showing the verified result. The observed callback and relay response establish the successful sandbox path. The labelled test row remains as audit evidence; no real money moved. Live mode and domain cutover remain disabled.
+
+### Recovery controls and event evidence
+
+Deployment `dpl_Er9vb5Ucy3iKgm8tLFYnPaSF4grZ` served implementation `4d444ae`. The customer **Check payment status** control returned `Payment verified and recorded.` after fetching the actual Razorpay payment. The owner then used **Reconcile with Razorpay** in the protected CMS; the register confirmed the provider check and persisted `last_reconciled_at = 2026-11-11 18:32:50.057129+00`. The verified payment remained captured, 100 paise, with zero refunded.
+
+Migration `20261111181658_payment_reconciliation_evidence.sql` adds private event receipts and payment evidence fields. Staff reconciliation requires current identity, MFA and commerce scope; customers may reconcile only their own request. A database timestamp limits refresh requests. Webhook receipts use provider event ID (or a raw-body hash fallback); reusing an ID with different bytes is rejected. Event storage and payment changes commit together. Webhook validation accepts the bound/current secret and explicit previous secret only within the same payment mode, allowing controlled rotation without rewriting transaction credentials. Live provider rotation remains untested.
+
+Four bounded HTTP tests exercised the public relay on the exact sandbox request:
+
+| Test | Result |
+|---|---|
+| Missing signature | HTTP 401 |
+| Altered body with the original signature | HTTP 401 |
+| Correctly signed synthetic capture event | HTTP 200; server fetched the actual captured payment |
+| Exact repeated synthetic event | HTTP 200; only one private receipt stored |
+
+The receipt is explicitly named `IG-SYNTHETIC-REPLAY-20261111-A`, timestamp `2026-11-11 18:33:40.140738+00`. It is synthetic test evidence, not a Razorpay-generated event. The original successful capture event predates the new receipt table and is supported by the earlier relay log; it was not backfilled as a fabricated receipt.
+
+### Refund acceptance blocker
+
+Razorpay showed the INR 1 test payment as captured and its refund list was empty. A full refund attempted through the merchant dashboard returned `invalid request sent`. One request through the documented normal-refund API, with explicit `speed: normal`, 100-paise amount and fixed `X-Refund-Idempotency`, independently returned HTTP 400, `BAD_REQUEST_ERROR`, `invalid request sent`. No retry loop or live-mode fallback was used. No successful refund or bank credit is claimed.
+
+This provider-side request failure must be resolved before real refund acceptance can pass. The implementation's partial/full-refund and stale-response protections passed controlled-response and rollback-only database tests; these do not prove provider completion. Failed/cancelled checkout, callback-absent recovery, real provider redelivery, automatic refunds of uncaptured payments and secret rotation remain additional provider acceptance cases. Review pending/failed-refund semantics against actual provider responses before live use. Refund API reference checked: https://razorpay.com/docs/api/refunds/normal-refunds-idempotent . Refund event reference: https://razorpay.com/docs/webhooks/refunds .
