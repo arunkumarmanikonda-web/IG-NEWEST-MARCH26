@@ -31,7 +31,7 @@ Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, 
 |---|---|
 | Supabase | Connected in preview, Mumbai. No Neon required. |
 | Resend | Enabled on preview. Verified domain, server-only Vercel Secrets, signed webhook relay and automatic recovery configured. All four authorised test messages delivered on 11 November 2026. |
-| Auth email | Supabase custom SMTP remains unconfigured. Real staff emails remain unverified; no claim of usable staff login yet. |
+| Auth email | Supabase custom SMTP is enabled with a separate sending-only Resend key, sender `hello@indiagully.com`, host `smtp.resend.com`, port 465. Arun's verification email has real delivered evidence; verification was also requested for Pavan and Amit. Staff must verify their own email, replace the initial password and enrol MFA where required. |
 | Razorpay | Invoice payment integration implemented; test/live merchant keys, webhook secret, merchant activation and sandbox checkout/refund reconciliation tests missing. Disabled. Live activation additionally requires confirmed statutory details, reviewed legal release and production environment. |
 | OpenAI / Runway | Editorial and creative workflows not connected. Reserved configuration fields do not activate generation. |
 | Fast2SMS | Optional; reserved configuration fields only. DLT principal entity, sender, template, credentials and consent-controlled delivery workflow remain required. No SMS sent. |
@@ -63,7 +63,7 @@ Additional prelaunch checks: relevant state RERA agent/project disclosures; CIRP
 
 The owner supplied `RESEND_API_KEY` directly as a Vercel Preview Secret. The application resolves Vercel Secrets on the server; a super-user CMS credential override takes precedence and is stored separately. Clearing a CMS override does not delete the Vercel Secret. No credentials are returned by settings pages.
 
-`indiagully.com` is verified in Resend (domain ID `df960985-c9fd-4231-9573-5dde223dae60`). A dedicated webhook (`828213fe-579f-4030-9bd2-54aa4fa24b0b`) subscribes to delivered, bounced, complained, suppressed and failed events. Its signing secret is a separate Preview Secret. Existing Google Workspace MX records were not changed. Authentication SMTP remains a separate pending configuration.
+`indiagully.com` is verified in Resend (domain ID `df960985-c9fd-4231-9573-5dde223dae60`). A dedicated webhook (`828213fe-579f-4030-9bd2-54aa4fa24b0b`) subscribes to delivered, bounced, complained, suppressed and failed events. Its signing secret is a separate Preview Secret. Existing Google Workspace MX records were not changed. Authentication SMTP was subsequently configured separately with a dedicated key entered directly by the owner.
 
 An authorised, clearly labelled system-test enquiry (`38ec9965-269c-4f8d-9422-49def449069c`) was submitted through the deployed preview API. Resend reported all four messages delivered through the real signature-verified webhook path: acknowledgement to `akm@indiagully.com`, and internal enquiry notifications separately to Arun, Pavan and Amit. Each completed on its first attempt with no recorded error. The test enquiry is closed; delivery records remain as evidence. The two-minute recovery cron is active and its latest scheduled executions succeeded; this observation is scheduler evidence, not a separate forced-retry delivery test.
 
@@ -72,3 +72,11 @@ Providers call the public Supabase `ig-provider-webhook/resend` or `/razorpay` e
 Recovery uses four-job batches, five-minute leases, exponential retry delays and a 23-hour idempotency window. Complete email bodies are frozen before sending. Early delivery events are retained and reconciled when the email ID binds; duplicate events cannot undo bounce suppression. Permanent provider failures stop automatic retries. The cron HTTP queue carries only a five-minute HMAC for the empty worker action, not permanent credentials.
 
 Validation: 77 local tests and production build; 12 rollback-only database assertions cover early events, duplicate delivery, suppression, unchanged retry bodies, retry backoff and denied client access to relay credentials. Test fixtures are rolled back.
+
+## Authentication email activation
+
+The dedicated Supabase Auth SMTP key is separate from the existing Vercel transactional-email key. Neither secret is committed. Branded confirmation and recovery templates are versioned under `supabase/templates/` and saved in the Supabase dashboard. These use single-use email codes, avoiding dependence on the browser that initiated a PKCE request and avoiding consumption of verification links by email scanners. Codes are submitted only in same-origin POST bodies, never in URLs. Verification permits only email confirmation and recovery, establishes server-side session cookies and uses fixed internal destinations. Existing role, policy, password-change and MFA restrictions still apply.
+
+The deployed `/auth/verify` screen was inspected in the browser. All 80 local tests and the production build passed, and GitHub Actions passed for `a1ee903`. Arun's `Verify your India Gully account` email was confirmed delivered in Resend (email ID `01a1cb98-3ae7-7d5d-83e8-ac8853cd8912`). Confirmation requests were also accepted for Pavan and Amit. No staff verification codes were read or used by the agent.
+
+An additional disposable-account end-to-end test did not produce a completed, retained report: automatic approval review stopped further access because repeated requests could continue modifying QA accounts. It is not reported as a passing suite. The temporary account and sessions were removed, temporary local credentials deleted, and the one-time provisioning endpoint returned to a JWT-protected 410 response (version 9). Staff completion of verification, password change and MFA and a full recovery journey remain launch checks.
