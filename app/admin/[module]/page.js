@@ -1,4 +1,6 @@
 import Link from "next/link";
+import RoomsManager from "../rooms-manager";
+import NdaManager from "../nda-manager";
 import { notFound } from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
 import { TaxonomyManager, UserManager, EnquiryManager } from "../managers";
@@ -7,6 +9,62 @@ const date = (value) =>
 export default async function Module({ params }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if (module === "data-rooms") {
+    if (!profile.roles.some((x) => ["owner", "administrator"].includes(x)))
+      return <p>Data rooms require owner or administrator access.</p>;
+    const tables = [
+      "ig_data_rooms",
+      "ig_room_files",
+      "ig_room_folders",
+      "ig_room_grants",
+      "ig_room_file_rules",
+      "ig_nda_requests",
+    ];
+    const results = await Promise.all(
+      tables.map((t) => client.from(t).select("*").limit(2000)),
+    );
+    const { data: opportunities, error } = await client
+      .from("ig_content")
+      .select("id,title")
+      .eq("kind", "opportunity");
+    if (error || results.some((r) => r.error))
+      return (
+        <p role="alert">Data room administration is temporarily unavailable.</p>
+      );
+    return (
+      <RoomsManager
+        rooms={results[0].data}
+        files={results[1].data}
+        folders={results[2].data}
+        grants={results[3].data}
+        rules={results[4].data}
+        requests={results[5].data}
+        opportunities={opportunities || []}
+      />
+    );
+  }
+  if (module === "nda") {
+    const [{ data: requests, error }, { data: templates, error: te }] =
+      await Promise.all([
+        client
+          .from("ig_nda_requests")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(250),
+        client
+          .from("ig_nda_templates")
+          .select("*")
+          .order("created_at", { ascending: false }),
+      ]);
+    if (error || te) return <p role="alert">NDA records unavailable.</p>;
+    return (
+      <NdaManager
+        requests={requests || []}
+        templates={templates || []}
+        isOwner={profile.roles.includes("owner")}
+      />
+    );
+  }
   if (module === "content") {
     const { data, error } = await client
       .from("ig_content")
@@ -188,7 +246,7 @@ export default async function Module({ params }) {
               ["SMS / Fast2SMS", "Awaiting provider and approved templates"],
               [
                 "NDA signing & data rooms",
-                "Awaiting signature workflow and access tests",
+                "Project NDA requests, versioned acceptance, private rooms, watermarked previews and file permissions; legal template approval pending",
               ],
               [
                 "Marketing & remarketing",

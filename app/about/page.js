@@ -1,7 +1,159 @@
-import {pageMeta} from '../../lib/seo.mjs';
-import Seo from '../seo';
-import Image from 'next/image';
-import {PageHero,Eyebrow,ContactBand} from '../components';
-export const metadata=pageMeta('/about');
-const team=[['Arun Manikonda','Managing Director','/images/arun.jpg'],['Pavan Manikonda','Executive Director','/images/pavan.jpg'],['Amit Jhingan','President, Real Estate','/images/amit.png']];
-export default function About(){return <main id="main"><Seo path="/about"/><PageHero eyebrow="ABOUT INDIA GULLY" title={<>Indian perspective.<br/><em>Commercial purpose.</em></>} description="India Gully brings together advisory, transaction support and delivery capabilities across real estate, hospitality, retail and entertainment."/><section className="intro-section section-pad"><div><Eyebrow>CELEBRATING DESINESS</Eyebrow><h2>Understand the context.<br/>Focus on the outcome.</h2></div><div className="intro-copy"><p className="lead">A connected view of the business behind the asset.</p><p>Our work spans development strategy, acquisitions and divestments, debt advisory, special situations, hospitality projects and HORECA procurement. The starting point is the client’s commercial objective and the information needed to make a considered decision.</p><p className="fine-note">India Gully is a brand of Vivacious Entertainment and Hospitality Pvt. Ltd.</p></div></section><section className="scope-section"><div><Eyebrow>HOW WE WORK</Eyebrow><h2>Clarity throughout<br/>the engagement.</h2></div><ul className="output-list"><li><span>01</span>A defined objective and scope</li><li><span>02</span>Evidence and assumptions kept distinct</li><li><span>03</span>Clear responsibilities and decision points</li><li><span>04</span>Commercial and operating context together</li></ul></section><section className="section-pad"><div className="section-heading"><div><Eyebrow>LEADERSHIP</Eyebrow><h2>The people behind the perspective.</h2></div></div><div className="team-grid">{team.map(([name,role,img])=><article key={name}><div className="team-photo"><Image src={img} alt={name} fill sizes="(max-width:760px) 100vw, 33vw"/></div><h3>{name}</h3><p>{role}</p></article>)}</div></section><ContactBand/></main>}
+import Image from "next/image";
+import Link from "next/link";
+import { pageMeta } from "../../lib/seo.mjs";
+import { companyContent } from "../../lib/editorial";
+import { milestones, principles } from "../../lib/company.mjs";
+import { Eyebrow, ContactBand, Arrow } from "../components";
+import {
+  TrustStrip,
+  TextBody,
+  LeadershipCards,
+  ConfidentialityBand,
+} from "../editorial-components";
+export const dynamic = "force-dynamic";
+export const metadata = pageMeta("/about");
+export default async function About() {
+  const { people, pages } = await companyContent();
+  const story = pages.get("company-story");
+  return (
+    <main id="main">
+      <section className="editorial-hero">
+        <Image
+          src="/images/city.jpg"
+          alt="India’s evolving commercial landscape"
+          fill
+          sizes="100vw"
+          preload
+        />
+        <div className="editorial-shade" />
+        <div className="editorial-hero-copy">
+          <Eyebrow>OUR STORY / ESTABLISHED 2017</Eyebrow>
+          <h1>
+            Rooted in India.
+            <br />
+            <em>Built around possibility.</em>
+          </h1>
+          <p>
+            Advisory, transactions and delivery.
+            <br />
+            Connected by people who understand the business.
+          </p>
+          <a href="#our-story" className="text-link">
+            Discover India Gully <Arrow />
+          </a>
+        </div>
+        <span className="hero-caption">INDIA GULLY / CELEBRATING DESINESS</span>
+      </section>
+      <TrustStrip />
+      {story && (
+        <section className="story-grid section-pad" id="our-story">
+          <div>
+            <Eyebrow>WHO WE ARE</Eyebrow>
+            <h2>{story.title}</h2>
+          </div>
+          <TextBody text={story.body} />
+        </section>
+      )}
+      <section className="vision-section section-pad">
+        {["company-vision", "company-mission"].map((slug) => {
+          const p = pages.get(slug);
+          return (
+            p && (
+              <article key={slug}>
+                <Eyebrow>{p.title}</Eyebrow>
+                <h2>{p.summary}</h2>
+                <p>{p.body}</p>
+              </article>
+            )
+          );
+        })}
+      </section>
+      <section className="section-pad">
+        <div className="section-heading">
+          <div>
+            <Eyebrow>HOW WE WORK</Eyebrow>
+            <h2>
+              Principles that guide
+              <br />
+              the engagement.
+            </h2>
+          </div>
+          <p>
+            Professional standards matter in the everyday decisions: what we
+            disclose, how we assess a brief and who remains accountable.
+          </p>
+        </div>
+        <div className="principle-grid">
+          {principles.map(([title, text], i) => (
+            <article key={title}>
+              <span>0{i + 1}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="history-section section-pad">
+        <div>
+          <Eyebrow>OUR EVOLUTION</Eyebrow>
+          <h2>
+            A practice built
+            <br />
+            <em>one capability at a time.</em>
+          </h2>
+        </div>
+        <ol className="timeline">
+          {milestones.map(([year, title, text]) => (
+            <li key={year}>
+              <span>{year}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+      <section className="section-pad">
+        <div className="section-heading">
+          <div>
+            <Eyebrow>OUR LEADERSHIP</Eyebrow>
+            <h2>
+              Experience with
+              <br />
+              personal accountability.
+            </h2>
+          </div>
+          <Link className="text-link" href="/leadership">
+            Meet the team <Arrow />
+          </Link>
+        </div>
+        <LeadershipCards people={people} />
+      </section>
+      <ConfidentialityBand />
+      <section className="company-identity section-pad">
+        <Eyebrow>THE COMPANY BEHIND THE BRAND</Eyebrow>
+        <h2>
+          Vivacious Entertainment and
+          <br />
+          Hospitality Private Limited
+        </h2>
+        <dl>
+          <div>
+            <dt>Established</dt>
+            <dd>2017 · New Delhi, India</dd>
+          </div>
+          <div>
+            <dt>Corporate identity number</dt>
+            <dd>U74999DL2017PTC323237</dd>
+          </div>
+          <div>
+            <dt>GST registration</dt>
+            <dd>07AAGCV0867P1ZN</dd>
+          </div>
+        </dl>
+      </section>
+      <ContactBand title="A commercial question deserves a considered conversation." />
+    </main>
+  );
+}

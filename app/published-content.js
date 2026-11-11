@@ -1,4 +1,4 @@
-import { PageHero, ContactBand } from "./components";
+import { PageHero, ContactBand, LinkButton } from "./components";
 export default function PublishedContent({ item }) {
   const d = item.public_data;
   return (
@@ -11,7 +11,15 @@ export default function PublishedContent({ item }) {
         description={item.summary}
         image={d.image || undefined}
         alt={d.image_alt || item.title}
-      />
+      >
+        {item.kind === "opportunity" && (
+          <LinkButton
+            href={"/account/nda?opportunity=" + encodeURIComponent(item.slug)}
+          >
+            Request confidential information
+          </LinkButton>
+        )}
+      </PageHero>
       <article className="prose-section">
         {!!item.tags?.length && (
           <p>{item.tags.map((t) => t.label).join(" · ")}</p>

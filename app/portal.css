@@ -287,3 +287,329 @@
 .preserve-lines {
   white-space: pre-wrap;
 }
+
+.nda-account {
+  width: min(100%, 1000px);
+  margin: auto;
+}
+.nda-account > h1 {
+  font-size: 48px;
+  margin: 25px 0;
+}
+.nda-account > .workspace-card {
+  margin-top: 30px;
+}
+.agreement-text {
+  white-space: pre-wrap;
+  padding: 25px;
+  background: #f1f2ea;
+  border: 1px solid #c8d1bf;
+  margin: 20px 0;
+  max-height: 600px;
+  overflow: auto;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.receipt {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 10px;
+}
+.receipt dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.receipt dt {
+  font-weight: 600;
+}
+.nda-account form:not(.workspace-form) > label {
+  display: block;
+  margin: 16px 0;
+}
+.nda-account form:not(.workspace-form) > label input:not([type="checkbox"]) {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #a3b49a;
+}
+.nda-account details {
+  margin: 25px 0;
+}
+.nda-account .workspace-card h2 {
+  margin: 15px 0;
+  font-size: 32px;
+}
+.nda-account .workspace-card p {
+  margin: 15px 0;
+}
+@media (max-width: 600px) {
+  .receipt {
+    grid-template-columns: 1fr;
+  }
+  .receipt dd {
+    margin-bottom: 15px;
+  }
+  .nda-account > h1 {
+    font-size: 38px;
+  }
+}
+
+.data-room {
+  width: min(1400px, 100%);
+  margin: auto;
+}
+.data-room > h1 {
+  font-size: 48px;
+  margin: 22px 0;
+}
+.data-room > .eyebrow {
+  margin-top: 30px;
+}
+.room-browser {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 35px;
+  margin-top: 40px;
+}
+.room-folder-nav {
+  background: #edf0e8;
+  padding: 15px 0;
+  align-self: start;
+}
+.room-folder-nav button {
+  display: block;
+  text-align: left;
+  padding: 12px;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.room-folder-nav button[aria-current="page"] {
+  background: #dce3d1;
+  font-weight: 700;
+  border-left: 3px solid #a48b24;
+}
+.room-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 22px;
+}
+.room-search input,
+.room-select select {
+  padding: 12px;
+  border: 1px solid #aebba5;
+  background: #fff;
+  width: 100%;
+}
+.room-select {
+  display: block;
+  margin: 35px 0;
+  font-size: 14px;
+}
+.room-select select {
+  margin-top: 10px;
+}
+.room-file-list article {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding: 24px 0;
+}
+.room-file-list h2 {
+  font-size: 23px;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
+}
+.room-file-list p {
+  font-size: 11px;
+  margin-top: 10px;
+}
+.room-file-list button {
+  padding: 10px 14px;
+  border: 1px solid #9fab93;
+  background: #fff;
+}
+.room-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-top: 35px;
+}
+.room-card-grid h2 {
+  font-size: 30px;
+  margin: 20px 0;
+}
+.room-card-grid .workspace-card {
+  display: block;
+}
+.room-viewer {
+  width: min(1100px, 96vw);
+  max-height: 94dvh;
+  border: 1px solid #8b9e88;
+  background: #ecefe9;
+  padding: 25px;
+  color: var(--ink);
+}
+.room-viewer::backdrop {
+  background: #0f211cd9;
+}
+.viewer-toolbar,
+.viewer-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 15px;
+}
+.viewer-toolbar {
+  position: sticky;
+  top: -25px;
+  padding: 15px 0;
+  background: #ecefe9;
+  z-index: 1;
+}
+.viewer-toolbar strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.room-viewer button {
+  padding: 8px 16px;
+  border: 1px solid #a5b29b;
+  background: #fff;
+}
+.viewer-identity {
+  font-size: 11px;
+  margin: 12px 0 22px;
+}
+.protected-page {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 3px 15px #14251e22;
+}
+.viewer-pagination span {
+  font-size: 12px;
+}
+.file-rule {
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.file-rule select {
+  width: 100%;
+  padding: 8px;
+}
+.preview-upload {
+  display: block;
+  font-size: 10px;
+  margin-top: 10px;
+}
+.preview-upload input {
+  display: block;
+  max-width: 180px;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.workspace-table td small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 5px;
+}
+.folder-inventory {
+  padding: 20px 0;
+}
+.folder-inventory > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  padding: 8px 0;
+}
+.room-upload > p {
+  font-size: 12px;
+  margin: 15px 0;
+}
+.room-upload input[type="file"] {
+  max-width: 100%;
+  font-size: 11px;
+}
+.account-dashboard > div {
+  display: grid;
+  grid-template-columns: minmax(0, 640px) minmax(0, 400px);
+  gap: 40px;
+  justify-content: center;
+  width: 100%;
+}
+.account-dashboard .portal-form {
+  width: 100%;
+  max-width: none;
+}
+.shared-rooms h2 {
+  font-size: 33px;
+  margin: 15px 0 25px;
+}
+.shared-rooms > a {
+  display: block;
+  margin: 20px 0;
+}
+.shared-rooms h3 {
+  font-size: 26px;
+}
+.shared-rooms p {
+  font-size: 12px;
+  margin-top: 15px;
+}
+@media (max-width: 800px) {
+  .account-dashboard > div,
+  .room-browser,
+  .room-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .data-room > h1 {
+    font-size: 38px;
+  }
+  .room-folder-nav {
+    max-height: 250px;
+    overflow: auto;
+  }
+  .room-file-list article {
+    display: block;
+  }
+  .room-file-list .workspace-actions {
+    margin-top: 18px;
+  }
+  .file-rule {
+    grid-template-columns: 1fr;
+  }
+  .room-viewer {
+    padding: 16px;
+  }
+  .viewer-toolbar {
+    top: -16px;
+  }
+  .folder-inventory > div {
+    display: block;
+  }
+}
+@media print {
+  .room-viewer,
+  .protected-page,
+  .room-browser {
+    display: none !important;
+  }
+  .data-room:after {
+    content: "Private data room. Printing is not available.";
+  }
+}

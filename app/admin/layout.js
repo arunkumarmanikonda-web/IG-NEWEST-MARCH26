@@ -12,7 +12,8 @@ export default async function AdminLayout({ children }) {
   if (!user || !profile) redirect("/login");
   if (profile.status !== "active" || profile.policy_version !== "2026-11-11")
     redirect("/account");
-  if (aal !== "aal2") redirect("/account/security");
+  if (profile.must_change_password || aal !== "aal2")
+    redirect("/account/security");
   const { error } = await client.rpc("ig_admin_overview");
   if (error)
     return (
@@ -41,6 +42,8 @@ export default async function AdminLayout({ children }) {
             ["taxonomy", "Categories & tags"],
             ["users", "Users & invitations"],
             ["enquiries", "Enquiries"],
+            ["nda", "NDA & access requests"],
+            ["data-rooms", "Project data rooms"],
             ["audit", "Audit trail"],
             ["automation", "AI & automation"],
           ].map(([p, label]) => (

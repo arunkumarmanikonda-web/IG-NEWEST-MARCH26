@@ -13,13 +13,16 @@ Vercel project `india-gully` is connected to this repository. Backend work is on
 The database is `india-gully-preview`, reference `wktdgczjdocsnfgvcsat`. Its credentials are scoped to Vercel Preview and Development only. Production database/auth configuration is deliberately not shared with this test environment. Do not merge PR #3 or connect the live domain until the merge gates in [launch readiness](docs/launch-readiness.md) are resolved.
 
 ## Not yet activated
-Verification/recovery email delivery and auth redirects need dashboard configuration and end-to-end testing. Resend, Google Workspace mailbox OAuth, OpenAI/Runway generation, SMS, NDA signing/private downloads, commerce/checkout, Vyapar synchronisation and marketing delivery are not active. Recorded consents and delivery jobs do not imply a campaign or email was sent. Compromised-password protection must be enabled in Supabase Auth before launch.
+Preview redirects and strong password settings are saved. Verification/recovery email delivery still needs SMTP configuration and end-to-end testing. Resend, Google Workspace mailbox OAuth, OpenAI/Runway generation, SMS, commerce/checkout, Vyapar synchronisation and marketing delivery are not active. Recorded consents and delivery jobs do not imply a campaign or email was sent. Compromised-password protection must be enabled in Supabase Auth before launch.
 
 ## Development and verification
-Node 22+. `npm ci`, `npm test`, `npm run build`. See `env.example` for variable names; keep values in ignored `.env.local` or Vercel environment settings. No service-role credential is used by the application.
+Node 22+. `npm ci`, `npm test`, `npm run build`. See `env.example` for variable names; keep values in ignored `.env.local` or Vercel environment settings. No service-role credential is exposed to the website. The private Supabase storage broker uses only its platform-managed server-side credential after user-scoped checks.
 
 SQL schema changes live under `supabase/migrations` and are applied through the Supabase connector. Migration filenames are created with the Supabase CLI; the hosted migration ledger may use its own timestamp when applied through MCP. Do not blindly replay them onto this provisioned project. Apply the ordered files only to a new empty project, or reconcile the migration ledger before introducing CLI deployment automation.
 
 Live integration scripts under `scripts/verify-*.mjs` use disposable fixtures in an isolated preview. `verify-supabase.mjs` tests Auth/MFA, RLS and CRUD; `verify-enquiries.mjs` tests ingestion and deduplication; `verify-web.mjs` starts the production server and tests the HTTP/session boundary. Fixture files and passwords are never committed. Pre-verified test identities do not prove registration email delivery. Always remove fixtures after testing.
 
 Detailed scope: [platform expansion](docs/platform-expansion.md), [backend handover](docs/backend-handover.md), [launch readiness](docs/launch-readiness.md), [commerce architecture](docs/commerce-architecture.md).
+
+## Expanded public experience and private rooms
+Full About and leadership pages, selected work, CMS editorial content, NDA requests/acceptance, project data rooms, nested folders, bulk/local-folder upload, per-client and per-file download rules, and server-rendered watermarked previews. See [data-room guide](docs/data-rooms.md) and [customer experience audit](docs/customer-experience-audit.md). The agreement draft and real account email verification still require activation before operational use.

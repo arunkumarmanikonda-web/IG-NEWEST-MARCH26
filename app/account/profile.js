@@ -32,6 +32,13 @@ export default function Account({ profile, email }) {
       <div className="eyebrow">INDIA GULLY PORTAL</div>
       <h1>Your account.</h1>
       <p>{email}</p>
+      {profile.must_change_password && (
+        <p role="alert">
+          Change your initial password in{" "}
+          <Link href="/account/security">Security & MFA</Link> before activating
+          staff access.
+        </p>
+      )}
       {!accepted ? (
         <form
           onSubmit={(e) => {
@@ -118,6 +125,8 @@ export default function Account({ profile, email }) {
           <div className="workspace-actions">
             <Link href="/account/security">Security & MFA</Link>
             <Link href="/account/preferences">Communication preferences</Link>
+            <Link href="/account/nda">Confidentiality & NDA requests</Link>
+            <Link href="/account/data-rooms">My project data rooms</Link>
             {profile.roles.some((x) => !["client", "vendor"].includes(x)) && (
               <Link href="/admin">Staff workspace</Link>
             )}

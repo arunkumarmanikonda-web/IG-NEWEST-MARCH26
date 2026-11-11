@@ -14,6 +14,9 @@ const methods = {
   taxonomy: "ig_taxonomy_action",
   users: "ig_users_action",
   enquiry: "ig_enquiry_update",
+  nda: "ig_nda_action",
+  nda_admin: "ig_nda_admin",
+  rooms: "ig_room_manage",
 };
 export async function POST(request) {
   try {
@@ -23,8 +26,19 @@ export async function POST(request) {
     const { client, user, profile, aal } = await accountContext();
     if (!user || !profile || profile.status !== "active")
       throw new HttpError("Active sign-in required", 401);
-    if (!["account", "invitation"].includes(body.module) && aal !== "aal2")
+    if (
+      !["account", "invitation", "nda"].includes(body.module) &&
+      aal !== "aal2"
+    )
       throw new HttpError("Complete multi-factor authentication", 403);
+    if (
+      profile.must_change_password &&
+      !["account", "nda"].includes(body.module)
+    )
+      throw new HttpError(
+        "Change your initial password before using staff operations",
+        403,
+      );
     const { data, error } = await client.rpc(
       rpc,
       body.module === "invitation" ? {} : { p: body.payload },

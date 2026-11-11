@@ -12,7 +12,7 @@ export default async function Page() {
   if (!user || !profile || profile.status !== "active") redirect("/login");
   return (
     <main id="main" className="auth-page">
-      <Security />
+      <Security changeRequired={profile.must_change_password} />
     </main>
   );
 }

@@ -15,7 +15,7 @@ Updated 11 November 2026. The live domain must remain on its existing host until
 ## Blocking provider state
 | Capability | Current state | Required evidence before launch |
 |---|---|---|
-| Database / identity | Dedicated Supabase preview in Mumbai; real password/MFA and session tests pass | Production isolation/configuration, SMTP, correct auth redirect allowlist, real email verification and recovery, compromised-password protection |
+| Database / identity | Dedicated Supabase preview in Mumbai; real password/MFA and session tests pass | Production isolation/configuration, SMTP, real email verification and recovery, compromised-password protection (paid plan); preview redirects and strong password policy configured |
 | CMS / CRUD | Database-backed content/user/category operations with audit; opportunities and articles read published snapshots | Owner onboarding, authenticated browser acceptance, complete static-section field mapping, media uploads and revision rollback UI |
 | Resend | No installation or website credential | Verified sending domain, actual acknowledgement plus three recipient deliveries, webhook verification, retries and suppression |
 | Google Workspace | No website OAuth client or mailbox grants | Per-user authorisation, encrypted tokens, scoped access, disconnect and thread tests |
@@ -23,7 +23,7 @@ Updated 11 November 2026. The live domain must remain on its existing host until
 | Runway | ChatGPT connector is not a website API credential | Provider account, credential, queue/retry/cancellation and output rights/provenance |
 | HORECA commerce | No connected store | Authoritative catalogue, pricing, stock, cart, payment sandbox, order, refund and reconciliation tests |
 | Vyapar | Public API not verified | Official supported interface for the actual licence/version; otherwise approved file exchange with reconciliation |
-| NDA | No signing provider or approved template | Reviewed template, authenticated signer, verified provider event, signed evidence, restricted download/revocation tests |
+| NDA / data rooms | Typed-name, versioned acceptance; project review/grants; private folders, bulk upload, watermarked previews and download rules | Owner-approved legal wording, real client acceptance, production storage/retention/restore and optional certified signature provider |
 | SMS | Fast2SMS not configured | Account, sender/template configuration, consent rules and delivery test |
 | Marketing / SEM | Consent preferences persist; campaigns remain paused drafts | Suppression processing, unsubscribe delivery links, approved caps, provider access and independently verified conversions |
 | Operations | Production acceptance outstanding | Backups and restore drill, monitoring, incident owner, retention, security review, mobile and accessibility QA |
@@ -36,4 +36,4 @@ Confirm every canonical resolves, redirects preserve valuable old URLs, private 
 Official references checked: [Google favicon](https://developers.google.com/search/docs/appearance/favicon-in-search), [Google robots](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag), [Google supported meta tags](https://developers.google.com/search/docs/crawling-indexing/special-tags), [Google Ads responsive search ads](https://developers.google.com/google-ads/api/docs/responsive-search-ads/create-responsive-search-ads).
 
 ## PR #3 merge gates
-Keep this PR in draft until: (1) the current commit passes CI and deployed preview checks; (2) Supabase Auth Site URL, preview callback allowlist, password strength/leaked-password checks and SMTP are configured; (3) AKM completes verified registration, TOTP and owner invitation activation; (4) production environment receives its own migrated database and secrets, or a separately approved staging-only release strategy is implemented. Full live-domain acceptance additionally requires the provider and operational rows above.
+Keep this PR in draft until: (1) the current commit passes CI and deployed preview checks; (2) SMTP and real verification/recovery delivery are configured, and the paid-plan leaked-password control is resolved; (3) AKM completes mailbox verification, mandatory password rotation, policy acceptance and TOTP; (4) production environment receives its own migrated database and secrets, or a separately approved staging-only release strategy is implemented. Full live-domain acceptance additionally requires the provider and operational rows above.

@@ -45,6 +45,9 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
         "image_alt",
         "price_label",
         "reference",
+        "job_title",
+        "expertise",
+        "sort_order",
       ].forEach((k) => {
         if (f.get(k)) public_data[k] = f.get(k);
       });
@@ -162,13 +165,22 @@ export default function Editor({ item, terms, selectedTerms, revisions }) {
           approved imagery.
         </p>
         {[
+          ["job_title", "Leadership role / job title"],
+          ["expertise", "Expertise (separate with semicolons)"],
+          ["sort_order", "Display order (number)"],
           ["city", "City"],
           ["region", "State / region"],
           ["sector", "Sector"],
           ["asset_class", "Asset class"],
           ["transaction_type", "Transaction type"],
           ["price_label", "Approved price label"],
-          ["reference", "Public reference"],
+          [
+            "reference",
+            "job_title",
+            "expertise",
+            "sort_order",
+            "Public reference",
+          ],
           ["image", "Approved image path"],
           ["image_alt", "Image description"],
         ].map(([k, label]) => (

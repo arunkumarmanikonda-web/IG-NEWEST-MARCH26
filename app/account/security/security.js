@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { browserClient } from "../../../lib/supabase/browser";
-export default function Security() {
+export default function Security({ changeRequired = false }) {
   const [factors, setFactors] = useState([]),
     [qr, setQr] = useState(""),
     [factor, setFactor] = useState(""),
@@ -37,6 +37,12 @@ export default function Security() {
     <div className="portal-form">
       <div className="eyebrow">ACCOUNT SECURITY</div>
       <h1>Protect your access.</h1>
+      {changeRequired && (
+        <p role="alert" className="workspace-note">
+          Your initial password must be replaced with a private password before
+          staff access can be activated.
+        </p>
+      )}
       <p>
         Staff operations require an authenticator code in addition to your
         password.
@@ -139,13 +145,21 @@ export default function Security() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const password = new FormData(e.currentTarget).get("password");
+          const form = e.currentTarget,
+            fields = new FormData(form),
+            password = fields.get("password");
+          if (password !== fields.get("confirm")) {
+            setMessage("The passwords do not match.");
+            return;
+          }
           run(async () => {
             const { error } = await browserClient().auth.updateUser({
               password,
+              ...(fields.get("nonce") ? { nonce: fields.get("nonce") } : {}),
             });
             if (error) throw error;
-            setMessage("Password updated.");
+            form.reset();
+            location.assign("/account/security?changed=1");
           });
         }}
       >
@@ -157,9 +171,45 @@ export default function Security() {
             autoComplete="new-password"
             minLength={12}
             maxLength={128}
+            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{12,128}"
             required
           />
         </label>
+        <p>
+          Use at least 12 characters, including uppercase, lowercase, a number
+          and a symbol.
+        </p>
+        <label>
+          Confirm new password
+          <input
+            name="confirm"
+            type="password"
+            autoComplete="new-password"
+            minLength={12}
+            maxLength={128}
+            required
+          />
+        </label>
+        <label>
+          Reauthentication code, if requested
+          <input name="nonce" autoComplete="one-time-code" maxLength={128} />
+        </label>
+        <button
+          type="button"
+          className="text-button"
+          disabled={busy}
+          onClick={() =>
+            run(async () => {
+              const { error } = await browserClient().auth.reauthenticate();
+              if (error) throw error;
+              setMessage(
+                "Reauthentication code requested. Enter the emailed code, or sign out and sign in again if delivery is unavailable.",
+              );
+            })
+          }
+        >
+          Request a reauthentication code
+        </button>
         <button className="button" disabled={busy}>
           Update password
         </button>

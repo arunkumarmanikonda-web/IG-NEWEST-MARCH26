@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
 import Account from "./profile";
@@ -8,7 +9,7 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function AccountPage() {
-  const { user, profile } = await accountContext();
+  const { client, user, profile } = await accountContext();
   if (!user || !profile) redirect("/login");
   if (profile.status !== "active")
     return (
@@ -19,9 +20,31 @@ export default async function AccountPage() {
         </div>
       </main>
     );
+  const { data: rooms } =
+    profile.policy_version === "2026-11-11" && !profile.must_change_password
+      ? await client.rpc("ig_room_dashboard", { p: {} })
+      : { data: [] };
   return (
-    <main id="main" className="auth-page">
-      <Account profile={profile} email={user.email} />
+    <main id="main" className="auth-page account-dashboard">
+      <div>
+        <Account profile={profile} email={user.email} />
+        {rooms?.length > 0 && (
+          <section className="shared-rooms">
+            <div className="eyebrow">SHARED WITH YOU</div>
+            <h2>Your project data rooms</h2>
+            {rooms.map((r) => (
+              <Link
+                className="workspace-card"
+                key={r.id}
+                href={"/account/data-rooms/" + r.id}
+              >
+                <h3>{r.title}</h3>
+                <p>{r.files.length} files · Open room ↗</p>
+              </Link>
+            ))}
+          </section>
+        )}
+      </div>
     </main>
   );
 }
