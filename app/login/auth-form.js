@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function AuthForm({ register = false }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [emailCode, setEmailCode] = useState(false),
+    [emailCode, setEmailCode] = useState(!register),
     [recovery, setRecovery] = useState(false);
   async function submit(event) {
     event.preventDefault();
@@ -48,7 +48,7 @@ export default function AuthForm({ register = false }) {
       <p>
         {register
           ? "Register to manage your interests and request controlled information."
-          : "Sign in to your account or authorised staff workspace."}
+          : "Receive a one-time sign-in code by email. Authorised staff also complete their security verification."}
       </p>
       {register && (
         <label>
