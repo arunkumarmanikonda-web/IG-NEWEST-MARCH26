@@ -15,3 +15,6 @@ The expanded public-site production build passed locally, and the homepage and d
 
 ## Development
 Node 22+. Run `npm ci`, `npm test`, `npm run build`. Provision actual provider resources before integrating private workflows. No customer data, private dossier, API key or token belongs in this repository.
+
+## Extended operating platform
+See [platform-expansion.md](docs/platform-expansion.md) for the AI CMS, editable taxonomy, registration and consent, NDA signing, user CRUD, per-user mail, enquiry routing, personalised marketing, SEO/SEM and security acceptance requirements. Pure domain modules under `lib/domain` implement permission and eligibility checks without pretending that providers are connected. Tests include negative cases for cross-user NDA access, revoked consent, mailbox grants and spend limits.
