@@ -61,6 +61,19 @@ begin
  perform public.ig_content_action(jsonb_build_object('action','archive','id',content.id,'version',content.version));
  perform pg_temp.check_it(not exists(select 1 from public.ig_public_content where id=content.id),'Archiving a database listing immediately removes its public record');
  perform pg_temp.check_it(exists(select 1 from public.ig_content where id=content.id and status='archived'),'Archived listing remains in CMS for restoration');
+
+ update ig_private.integration_config set mode='enabled',settings=settings||'{"dlt_approved":true,"message_id":"12345","template_text":"Your report {#var#} is ready.","daily_request_limit":1}' where id='fast2sms';
+ select version into cfg from ig_private.integration_config where id='fast2sms';
+ p=jsonb_build_object('provider','fast2sms','kind','sms','practice','horeca','request_id',gen_random_uuid(),'config_version',cfg,'input',jsonb_build_object('phone','8988988988','variables',jsonb_build_array('SYSTEM TEST'),'service_confirmed',true,'consent_reference','Rollback-only service permission fixture'));
+ update public.ig_profiles set roles=array['editor'],practice_grants='{"horeca":["read","write"]}' where id=uid;
+ begin perform public.ig_provider_prepare(p);raise exception 'Staff SMS bypass';exception when insufficient_privilege then null;end;
+ perform pg_temp.check_it(true,'Service SMS queue is owner-only');
+ update public.ig_profiles set roles=array['owner'],practice_grants='{}' where id=uid;
+ j=public.ig_provider_prepare(p);lease=public.ig_provider_worker(root,'{"action":"claim"}');
+ perform public.ig_provider_worker(root,jsonb_build_object('action','finish','id',j->>'id','lease_token',lease->>'lease_token','status','accepted','provider_id','controlled-response-only'));
+ perform pg_temp.check_it(exists(select 1 from public.ig_provider_jobs where id=(j->>'id')::uuid and status='accepted'),'SMS acknowledgement records acceptance, not delivery');
+ begin perform public.ig_provider_prepare(p||jsonb_build_object('request_id',gen_random_uuid()));raise exception 'SMS daily cap bypass';exception when raise_exception then if sqlerrm<>'Daily provider request limit reached' then raise;end if;end;
+ perform pg_temp.check_it(true,'Daily SMS request cap enforced');
 end$$;
 select * from ig_checks;
 rollback;
