@@ -30,7 +30,7 @@ Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, 
 | Item | Status / requirement |
 |---|---|
 | Supabase | Connected in preview, Mumbai. No Neon required. |
-| Resend | Code complete for enquiry delivery; API key, webhook secret, verified sender/DNS and real delivery test missing. Disabled. |
+| Resend | Enabled on preview. Verified domain, server-only Vercel Secrets, signed webhook relay and automatic recovery configured. All four authorised test messages delivered on 11 November 2026. |
 | Auth email | Supabase custom SMTP remains unconfigured. Real staff emails remain unverified; no claim of usable staff login yet. |
 | Razorpay | Invoice payment integration implemented; test/live merchant keys, webhook secret, merchant activation and sandbox checkout/refund reconciliation tests missing. Disabled. Live activation additionally requires confirmed statutory details, reviewed legal release and production environment. |
 | OpenAI / Runway | Editorial and creative workflows not connected. Reserved configuration fields do not activate generation. |
@@ -57,13 +57,15 @@ Additional prelaunch checks: relevant state RERA agent/project disclosures; CIRP
 
 ## Verification
 
-74 local tests passed and a production build completed after the governance/payment implementation. The previous data-room flow passed 32 real Auth/API/storage checks. The governance/payment flow passed 19 real Auth/database checks, including payment-disabled and queue-disabled behaviour. Four additional transactional scope checks confirmed assigned HORECA write/read access while denying debt access and ungranted publication. Provider HTTP adapters are tested with controlled responses, not claimed as real external transactions.
+77 local tests passed and a production build completed after the Resend activation implementation. GitHub Actions also passed for commit `4425d3f`. The previous data-room flow passed 32 real Auth/API/storage checks. The governance/payment flow passed 19 real Auth/database checks, including payment-disabled and queue-disabled behaviour. Four additional transactional scope checks confirmed assigned HORECA write/read access while denying debt access and ungranted publication. Twelve rollback-only database assertions cover email delivery and relay authorisation. Resend has real delivery evidence below; Razorpay adapters have controlled-response tests only, not real provider checkout evidence.
 
 ## Resend activation, 11 November 2026
 
 The owner supplied `RESEND_API_KEY` directly as a Vercel Preview Secret. The application resolves Vercel Secrets on the server; a super-user CMS credential override takes precedence and is stored separately. Clearing a CMS override does not delete the Vercel Secret. No credentials are returned by settings pages.
 
-`indiagully.com` is verified in Resend (domain ID `df960985-c9fd-4231-9573-5dde223dae60`). A dedicated webhook (`828213fe-579f-4030-9bd2-54aa4fa24b0b`) subscribes to delivered, bounced, complained, suppressed and failed events. Its signing secret is a separate Preview Secret. Provider sending and auth SMTP still require end-to-end activation evidence; a stored key is not evidence of successful delivery.
+`indiagully.com` is verified in Resend (domain ID `df960985-c9fd-4231-9573-5dde223dae60`). A dedicated webhook (`828213fe-579f-4030-9bd2-54aa4fa24b0b`) subscribes to delivered, bounced, complained, suppressed and failed events. Its signing secret is a separate Preview Secret. Existing Google Workspace MX records were not changed. Authentication SMTP remains a separate pending configuration.
+
+An authorised, clearly labelled system-test enquiry (`38ec9965-269c-4f8d-9422-49def449069c`) was submitted through the deployed preview API. Resend reported all four messages delivered through the real signature-verified webhook path: acknowledgement to `akm@indiagully.com`, and internal enquiry notifications separately to Arun, Pavan and Amit. Each completed on its first attempt with no recorded error. The test enquiry is closed; delivery records remain as evidence. The two-minute recovery cron is active and its latest scheduled executions succeeded; this observation is scheduler evidence, not a separate forced-retry delivery test.
 
 Providers call the public Supabase `ig-provider-webhook/resend` or `/razorpay` endpoint. It forwards bounded raw bytes and original signature headers to allowlisted application routes. Only a service-role RPC can read the routing credentials, which are encrypted in Vault. Provider signatures are verified in the application before any event is accepted. The Vercel bypass remains private to the relay. The receiver never relays application response bodies or credentials.
 
