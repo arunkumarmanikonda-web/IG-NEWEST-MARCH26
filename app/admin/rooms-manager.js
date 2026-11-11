@@ -547,10 +547,10 @@ export default function RoomsManager({
               });
             }}
           >
-            {engagement?<fieldset className="wide"><legend>Share once with multiple client contacts</legend>
+            {engagement?<fieldset className="wide contact-picker"><legend>Share once with multiple client contacts</legend>
               <button type="button" className="text-button" onClick={()=>setSelectedContacts(eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=>c.id))}>Select all available contacts</button>
               <button type="button" className="text-button" onClick={()=>setSelectedContacts([])}>Clear selection</button>
-              {eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=><label className="check" key={c.id}><input type="checkbox" name="contact_id" value={c.id} checked={selectedContacts.includes(c.id)} onChange={event=>setSelectedContacts(ids=>event.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id))}/>{c.name} · {c.email}</label>)}
+              <div className="contact-picker-list">{eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=><label className="check" key={c.id}><input type="checkbox" name="contact_id" value={c.id} checked={selectedContacts.includes(c.id)} onChange={event=>setSelectedContacts(ids=>event.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id))}/><span><strong>{c.name}</strong><span>{c.email}</span></span></label>)}</div>
               <p>One action activates this room separately for every selected email. Existing grants and individual file overrides are preserved.</p>
             </fieldset>:<label>
               Client and project-specific NDA

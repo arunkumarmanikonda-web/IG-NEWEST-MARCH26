@@ -32,4 +32,5 @@ These are assignment service notices, not marketing subscriptions. Marketing con
 - 95 Node tests and Next.js production build passed for this implementation. Email-code type mapping and individual notice privacy are covered.
 - The branded Supabase Magic Link or OTP template was changed to display the one-time code and the `/auth/verify?purpose=login` destination; saved template preview verified.
 - No new Auth test accounts were created. Database fixtures and temporary role changes rolled back. No client reports were disclosed or circulation messages sent during these tests.
-- Browser acceptance and individual client onboarding must still be completed on the deployed preview; successful database assertions are not evidence of 10 real users signing in.
+- Browser acceptance on deployment `dpl_DMgpJR3ceXq8FUW51iwvpAFLk5UP` (commit `b1d8aab`) verified manual client creation, contact saving, engagement/private-room creation, selecting all ten contacts and rejection of sharing before confidentiality authority was confirmed. The labelled empty-room/client/contact fixtures were removed afterward; no Auth accounts, files or grants were created by that browser test.
+- GitHub Actions run `43084782734` passed. Individual client onboarding and an actual client email-code round trip remain to be observed; these checks are not evidence of ten real users signing in.

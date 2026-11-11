@@ -11,3 +11,5 @@ Access requires a valid staff session, MFA and content rights for the practice. 
 Saving requires explicit review and creates an unpublished CMS draft. Existing publication controls apply afterward. The studio does not activate ads, send campaigns, publish automatically, generate documentary property imagery or deploy code. Creative output is a brief; Runway/image generation remains a separate unconnected capability.
 
 Current preview state: OpenAI is disabled and no API credential is configured. Twelve rollback-only database assertions and controlled-response API tests passed for roles, MFA, caps, source references, malformed/incomplete/refused output, review and unpublished saves. A funded account/key and a live generation acceptance test remain necessary. No real OpenAI request or charge was made by these tests.
+
+Browser verification on the deployed preview confirmed the studio renders and rejects generation with “Connect OpenAI in super-user settings before generating drafts.” No job was created and no provider call was made.
