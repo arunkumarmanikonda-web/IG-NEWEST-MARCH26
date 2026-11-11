@@ -1,0 +1,1 @@
+export default function manifest(){return {name:'India Gully',short_name:'India Gully',description:'Advisory. Transactions. Delivery.',start_url:'/',scope:'/',display:'browser',background_color:'#f7f7f0',theme_color:'#17291f',icons:[{src:'/favicon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]};}

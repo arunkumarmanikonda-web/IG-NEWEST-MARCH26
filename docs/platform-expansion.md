@@ -4,8 +4,8 @@ Updated 11 November 2026. This extends the original master plan with the owner's
 ## Actual delivery status
 Public website: implemented in the rebuild branch. Valuation API: implemented. Automated quality workflow: enabled.
 Domain policy functions: implemented with unit tests, but not connected to live provider APIs.
-CMS, database, identity, private document storage, signatures, mail, SMS, AI generation, advertising and remarketing: not provisioned or activated.
-Vercel creation is blocked by HTTP 402 resource_creation_blocked (account suspension). The editing workspace subsequently became unavailable; GitHub preserved the source.
+Private document storage: provisioned, with authenticated delivery still pending. CMS, database, identity, signatures, mail, SMS, AI generation, advertising and remarketing: not provisioned or activated.
+Vercel is active and linked to GitHub; the merged public website is deployed. Private Blob storage is provisioned. Database provisioning through the connected Supabase organisation is blocked by overdue invoices. See launch-readiness.md for the current provider state.
 A passing domain-policy test is not evidence that authentication, a signature service, delivery, consent persistence or access isolation is operational.
 
 ## Fixed owner requirements

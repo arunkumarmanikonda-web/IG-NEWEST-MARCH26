@@ -1,8 +1,11 @@
+import {pageMeta} from '../lib/seo.mjs';
+import Seo from './seo';
 import Link from 'next/link';
 import Image from 'next/image';
 import {practices,insights} from '../lib/content.mjs';
 import {Arrow,LinkButton,Eyebrow,ContactBand,InsightCards} from './components';
-export default function Home(){return <main id="main">
+export const metadata=pageMeta('/');
+export default function Home(){return <main id="main"><Seo path="/"/>
 <section className="home-hero"><Image src="/images/city.jpg" alt="Commercial architecture in Gurugram" fill sizes="100vw" preload/><div className="hero-shade"/><div className="home-hero-content"><Eyebrow>PERSPECTIVE. PURPOSE. PROGRESS.</Eyebrow><h1>See the possibility.<br/><em>Shape what’s next.</em></h1><p>Real estate, capital and hospitality.<br/>Connected thinking. Considered execution.</p><LinkButton href="/practices" light>Explore our practices</LinkButton></div><div className="hero-bottom"><span>ADVISORY THAT CONNECTS THE WHOLE PICTURE</span><a href="#our-approach">Discover India Gully <span aria-hidden="true">↓</span></a></div></section>
 <section className="intro-section section-pad" id="our-approach"><div><Eyebrow>THE INDIA GULLY PERSPECTIVE</Eyebrow><h2>Good decisions begin<br/>with the <em>whole picture.</em></h2></div><div className="intro-copy"><p className="lead">An asset is more than a location.<br/>A transaction is more than a number.</p><p>Behind every opportunity are questions of use, capital, operations and execution. India Gully brings these disciplines together to help owners, promoters and investors make considered commercial decisions.</p><Link className="text-link" href="/about">Get to know India Gully <Arrow/></Link></div></section>
 <section className="practice-section section-pad"><div className="section-heading"><div><Eyebrow>OUR PRACTICES</Eyebrow><h2>Specialist thinking.<br/>Connected expertise.</h2></div><p>From development strategy and transaction preparation to hospitality delivery, each practice addresses a distinct commercial need.</p></div><div className="practice-list">{practices.map(p=><Link href={'/practices/'+p.slug} key={p.slug} className="practice-row"><span className="index">{p.number}</span><h3>{p.title}</h3><p>{p.line}</p><Arrow/></Link>)}</div></section>
