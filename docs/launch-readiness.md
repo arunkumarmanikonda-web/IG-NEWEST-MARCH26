@@ -1,5 +1,8 @@
 # India Gully launch acceptance
-Updated 12 November 2026 (India Standard Time). The live domain must remain on its existing host until the full acceptance suite passes.
+Updated 12 November 2026 (India Standard Time).
+
+**Current continuation record:** [Admin operations acceptance](admin-upgrade.md). This supersedes older statements below that HORECA/PMC registers are absent or provider keys are missing. Separate workspaces, RFQs/quotes/orders/movements and PMC programme/cost/change/progress registers are implemented in preview. OpenAI and Runway credentials are present and enabled; a real OpenAI intake draft has succeeded. Provider connection checks alone are not full workflow acceptance. Production launch gates remain open.
+ The live domain must remain on its existing host until the full acceptance suite passes.
 
 ## Implemented and tested
 - GitHub repository is linked to Vercel project `india-gully`; the merged public site is deployed.

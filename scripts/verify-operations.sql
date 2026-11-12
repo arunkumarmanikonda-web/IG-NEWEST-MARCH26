@@ -9,6 +9,7 @@ do $$declare uid uuid;sid uuid;claims jsonb;v jsonb;r jsonb;q jsonb;o jsonb;p js
  v=public.ig_ops_save(pg_temp.payload('vendor','horeca','SYSTEM TEST vendor','active','{"company":"Test supplier"}'));
  payload=pg_temp.payload('rfq','horeca','SYSTEM TEST RFQ','open',jsonb_build_object('reference','SYSTEM-TEST-RFQ','destination','Test destination','lines',line));r=public.ig_ops_save(payload);
  perform pg_temp.ok(public.ig_ops_save(payload)->>'id'=r->>'id','Repeated RFQ create is idempotent');
+ perform pg_temp.fails(payload||'{"status":"draft"}',false,'Idempotency reference cannot change lifecycle state');
  perform pg_temp.fails(payload||jsonb_build_object('title','Changed payload'),false,'Idempotency reference cannot change title');
  perform pg_temp.fails(pg_temp.payload('rfq','hospitality','Wrong practice','open',payload->'data'),false,'HORECA cannot be written to another practice');
  payload=pg_temp.payload('quote','horeca','SYSTEM TEST quote','submitted',jsonb_build_object('vendor_id',v->>'id','reference','TEST-Q','valid_until','2099-01-01','freight',100,'discount',0,'lines',line),(r->>'id')::uuid);q=public.ig_ops_save(payload);
@@ -20,12 +21,16 @@ do $$declare uid uuid;sid uuid;claims jsonb;v jsonb;r jsonb;q jsonb;o jsonb;p js
  perform pg_temp.fails(payload||jsonb_build_object('id',q->>'id','version',1),false,'Awarded quotation cannot be edited');
  perform pg_temp.fails(jsonb_build_object('id',o->>'id','version',1,'action','delivered','reference','Test acknowledgement'),true,'Order cannot be delivered before dispatch');
  payload=pg_temp.payload('movement','horeca','SYSTEM TEST receipt','posted',jsonb_build_object('direction','receipt','reference','TEST-GRN','date',(now() at time zone 'Asia/Kolkata')::date,'lines','[{"line_id":"L1","quantity":10}]'::jsonb),(o->>'id')::uuid);perform public.ig_ops_save(payload);
+ perform pg_temp.ok((select status='received' from public.ig_operations where id=(o->>'id')::uuid),'Fully received order reports received status');
  perform pg_temp.fails(payload||jsonb_build_object('request_id',gen_random_uuid()),false,'Over receipt rejected');
  perform pg_temp.fails(jsonb_set(jsonb_set(payload,'{data,direction}','"dispatch"'),'{data,lines,0,quantity}','11')||jsonb_build_object('request_id',gen_random_uuid()),false,'Dispatch cannot exceed stock');
  perform public.ig_ops_save(jsonb_set(payload,'{data,direction}','"dispatch"')||jsonb_build_object('request_id',gen_random_uuid()));
  select to_jsonb(x) into o from public.ig_operations x where id=(o->>'id')::uuid;
  perform public.ig_ops_action(jsonb_build_object('id',o->>'id','version',o->>'version','action','delivered','reference','TEST-POD'));
  perform pg_temp.ok(exists(select 1 from public.ig_operations where id=(o->>'id')::uuid and status='delivered'),'Complete receipt-dispatch-delivery workflow');
+ payload=pg_temp.payload('movement','horeca','SYSTEM TEST return','posted',jsonb_build_object('direction','customer-return','reference','TEST-RETURN','date',(now() at time zone 'Asia/Kolkata')::date,'lines','[{"line_id":"L1","quantity":2}]'::jsonb),(o->>'id')::uuid);
+ perform public.ig_ops_save(payload);
+ perform pg_temp.ok((select status='received' and not data ? 'delivery_reference' from public.ig_operations where id=(o->>'id')::uuid),'Return reopens delivery and clears old acknowledgement');
  p=public.ig_ops_save(pg_temp.payload('pmc_project','hospitality','SYSTEM TEST PMC','active','{"reference":"SYSTEM-TEST-PMC","scope":"Test project scope","start_date":"2026-11-01","end_date":"2027-01-01"}'));
  payload=pg_temp.payload('pmc_budget','hospitality','SYSTEM TEST budget','approved','{"code":"C01","baseline":100000,"committed":20000,"actual":10000,"forecast":105000}',(p->>'id')::uuid);b=public.ig_ops_save(payload);
  perform pg_temp.fails(jsonb_set(payload,'{data,baseline}','200000')||jsonb_build_object('id',b->>'id','version',1),false,'Approved baseline is immutable');
@@ -40,9 +45,13 @@ do $$declare uid uuid;sid uuid;claims jsonb;v jsonb;r jsonb;q jsonb;o jsonb;p js
  perform public.ig_ops_save(pg_temp.payload('pmc_progress','hospitality','SYSTEM TEST progress','recorded',jsonb_build_object('task_id',task->>'id','report_date','2026-11-11','percent',100,'evidence','Test inspection record'),(p->>'id')::uuid));
  task=public.ig_ops_save(payload||jsonb_build_object('id',task->>'id','version',1,'status','complete'));
  perform pg_temp.ok(task->>'status'='complete','Measured progress supports completion');
+ perform pg_temp.fails(pg_temp.payload('pmc_project','hospitality','SYSTEM TEST premature completion','completed','{"reference":"SYSTEM-TEST-EMPTY","scope":"Test"}'),false,'Project cannot be closed without a programme');
  perform pg_temp.fails(pg_temp.payload('pmc_rfi','hospitality','SYSTEM TEST RFI','closed','{"reference":"RFI1","owner":"Test","question":"What is approved?"}',(p->>'id')::uuid),false,'RFI closure requires an answer');
  perform pg_temp.fails(payload||jsonb_build_object('id',task->>'id','version',1),false,'Stale writes rejected');
  perform pg_temp.ok(exists(select 1 from public.ig_operation_revisions where record_id=(task->>'id')::uuid and version=2),'Operational revisions preserve prior and current snapshots');
+ perform public.ig_ops_save(pg_temp.payload('pmc_progress','hospitality','SYSTEM TEST corrected progress','recorded',jsonb_build_object('task_id',task->>'id','report_date','2026-11-12','percent',90,'evidence','Corrected test measurement'),(p->>'id')::uuid));
+ perform pg_temp.ok((select status='active' from public.ig_operations where id=(task->>'id')::uuid),'Corrected measurement reopens completed task');
+ perform pg_temp.fails(pg_temp.payload('pmc_project','hospitality','SYSTEM TEST PMC','completed',p->'data')||jsonb_build_object('id',p->>'id','version',1),false,'Incomplete programme blocks project closure');
  perform pg_temp.fails(jsonb_set(payload,'{data,freight}','0.001')||jsonb_build_object('kind','quote','practice','horeca','request_id',gen_random_uuid()),false,'Invalid quotation input remains blocked');
  perform pg_temp.ok((public.ig_catalogue_import('{"rows":[{"sku":"SYSTEM-TEST-SKU","title":"System test product","uom":"nos"}]}')->>'created')::int=1,'Catalogue CSV-equivalent import creates SKU draft');
  begin
