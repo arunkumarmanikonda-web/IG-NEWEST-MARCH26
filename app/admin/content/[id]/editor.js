@@ -2,6 +2,7 @@
 import ProductImages from "../../product-images";
 import MediaLibrary from "../../media-library";
 import {coordinatesFromText} from '../../../../lib/coordinates.mjs';
+import {contentPath,slugFromTitle} from '../../../../lib/content-routes.mjs';
 import {practiceOptions} from "../../../../lib/business.mjs";
 import { useState,useRef } from "react";
 import Link from "next/link";
@@ -17,7 +18,7 @@ const kinds = [
   "person",
   "faq",
 ];
-export default function Editor({ item, terms, selectedTerms, revisions, initialKind, seed, mediaAssets=[],creativeJobs=[] }) {
+export default function Editor({ item, terms, selectedTerms, revisions, initialKind, seed, mediaAssets=[],creativeJobs=[],catalogueSource=null }) {
   const editorForm=useRef(null);
   const router = useRouter(),
     [message, setMessage] = useState(""),
@@ -26,6 +27,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
   const initial=item||seed||{};
   const [kind,setKind]=useState(initial.kind||(kinds.includes(initialKind)?initialKind:"page"));
   const data = initial.public_data || {};
+  const [slug,setSlug]=useState(initial.slug||slugFromTitle(initial.title)),[customSlug,setCustomSlug]=useState(!!item),[editSku,setEditSku]=useState(false);
   const [image,setImage]=useState(data.image||""),[imageAlt,setImageAlt]=useState(data.image_alt||"");
   const section=kind==="opportunity"?"listings":kind==="product"?"catalogue":kind==="project"?"projects":"cms";
   async function run(task) {
@@ -117,6 +119,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
       )}
       {!item&&<p className="workspace-note">Create from files, text and images in the <Link href={"/admin/intake?kind="+kind}>AI creation studio</Link>, or complete this form manually.</p>}
       {kind==='product'&&<p><a href="#product-images">Upload, enhance or generate product images ↓</a></p>}
+      {catalogueSource&&<aside className="catalogue-source-panel"><span className="eyebrow">IMPORTED FROM BRAND CATALOGUE</span><h3>{catalogueSource.brand} · page {catalogueSource.page}</h3>{catalogueSource.media_id&&<img src={'/api/admin/source-media/'+catalogueSource.media_id} alt="Product image extracted from the catalogue"/>}<p>{catalogueSource.evidence}</p>{catalogueSource.review_notes&&<p className="workspace-note">{catalogueSource.review_notes}</p>}<p>Specifications and an automatic SKU have been saved. Review this image against the source before using it publicly.</p>{catalogueSource.media_id&&<form onSubmit={e=>{e.preventDefault();run(async()=>{await portalAction('source_media',{action:'publish',id:catalogueSource.media_id,reviewed:true});setImage('/images/library/'+catalogueSource.media_id+'.jpg');setImageAlt(item.title+' · brand catalogue image');setDirty(true);setMessage('Catalogue image approved and selected. Save the product draft to retain it.');router.refresh();});}}><label className="check"><input type="checkbox" required/>This image matches the product and its usage rights are confirmed.</label><button disabled={busy}>Approve & use catalogue image</button></form>}</aside>}
       {seed?.review_questions?.length>0&&<div className="review-questions"><h3>Source review</h3><ul>{seed.review_questions.map((q,i)=><li key={i}>{q}</li>)}</ul></div>}
       <form
         ref={editorForm}
@@ -139,21 +142,24 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           </select>
         </label>
         <label>
-          URL slug
+          Public address
           <input
             name="slug"
-            defaultValue={initial.slug || (seed?.title?seed.title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,100):"")}
+            value={slug}
+            onChange={e=>{setSlug(e.target.value);setCustomSlug(true);}}
             required
             maxLength={120}
             pattern="[a-z0-9]+(-[a-z0-9]+)*"
             placeholder="ig-opp-reference for confidential assets"
           />
         </label>
+        <p className="public-address">indiagully.com{contentPath({kind,slug:slug||'product-name'})}</p>
         <label className="wide">
           Public title
           <input
             name="title"
             defaultValue={initial.title || ""}
+            onChange={e=>{if(!customSlug)setSlug(slugFromTitle(e.target.value));}}
             required
             maxLength={180}
           />
@@ -182,12 +188,13 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           listings must use an opaque reference, non-identifying title and
           approved imagery.
         </p>
+        {kind==='product'&&<div className="sku-control wide"><label className="check"><input type="checkbox" checked={editSku} onChange={e=>setEditSku(e.target.checked)}/>Set or edit SKU manually</label><label>India Gully SKU<input name="sku" defaultValue={item?data.sku||'':''} readOnly={!editSku} maxLength={80} pattern="[A-Za-z0-9][A-Za-z0-9._-]{1,79}" placeholder="Generated automatically when this product is saved"/></label><p className="workspace-small">{data.sku?'The existing SKU is retained unless you change it.':'An unused SKU is assigned automatically using the brand and a sequential reference.'} Manufacturer model / article codes belong in Public reference.</p></div>}
         {[...(kind==="person"?[
           ["job_title", "Leadership role / job title"],
           ["expertise", "Expertise (separate with semicolons)"],
           ["sort_order", "Display order (number)"],
         ]:[]), ...(kind==="product"?[
-          ["sku","Unique SKU"],["brand","Brand"],["category","Category"],["uom","Unit of measure"],["hsn","HSN"],["gst_pct","GST %"],["moq","Minimum order quantity"],["pack_size","Pack size"],["lead_days","Lead time · days"]
+          ["brand","Brand"],["category","Category"],["uom","Unit of measure"],["hsn","HSN"],["gst_pct","GST %"],["moq","Minimum order quantity"],["pack_size","Pack size"],["lead_days","Lead time · days"]
         ]:[]), ...( ["opportunity","project"].includes(kind)?[
           ["city", "City"],
           ["region", "State / region"],
@@ -221,6 +228,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
               type="checkbox"
               name="confidential"
               defaultChecked={data.confidential === true}
+              onChange={e=>{if(e.target.checked&&!item){setSlug('ig-opp-'+crypto.randomUUID().replaceAll('-','').slice(0,16));setCustomSlug(true);}}}
             />
             Confidential teaser
           </label>
@@ -344,7 +352,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           </form>
           <p>
             <Link
-              href={"/published/" + item.kind + "/" + item.slug}
+              href={contentPath(item)}
               target="_blank"
             >
               Open published view

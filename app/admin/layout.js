@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
 import "../portal.css";
+import "../brand-workspace.css";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Staff workspace",
@@ -29,17 +30,18 @@ export default async function AdminLayout({ children }) {
       </main>
     );
   return (
-    <main id="main" className="workspace">
-      <div className="workspace-header">
-        <div>
-          <div className="eyebrow">INDIA GULLY / MANAGEMENT</div>
-          <h1>Management suite</h1>
-        </div>
-        <Link href="/account">{profile.display_name || user.email}</Link>
-      </div>
+    <main id="main" className="workspace staff-workspace">
       <div className="workspace-shell">
         <AdminNavigation />
-        <div className="workspace-main">{children}</div>
+        <div className="workspace-main">
+      <div className="workspace-header">
+        <div>
+          <div className="eyebrow">PRIVATE WORKSPACE</div>
+          <h1>Management suite</h1>
+        </div>
+        <Link href="/account" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true">↗</span></Link>
+      </div>
+        {children}</div>
       </div>
     </main>
   );

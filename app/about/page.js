@@ -42,7 +42,7 @@ export default async function About() {
             Discover India Gully <Arrow />
           </a>
         </div>
-        <span className="hero-caption">INDIA GULLY / CELEBRATING DESINESS</span>
+        <span className="hero-caption">CELEBRATING DESINESS</span>
       </section>
       <TrustStrip />
       {story && (

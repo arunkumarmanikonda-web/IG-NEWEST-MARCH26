@@ -37,7 +37,7 @@ export default function AuthForm({ register = false }) {
   }
   return (
     <form className="portal-form" onSubmit={submit}>
-      <div className="eyebrow">INDIA GULLY ACCOUNT</div>
+      <div className="eyebrow">YOUR ACCOUNT</div>
       <h1>
         {recovery
           ? "Recover access"

@@ -66,7 +66,7 @@ export default function Navigation() {
         onClick={close}
       >
         <img
-          src="/logo-dark.png"
+          src="/brand/logo-dark.svg"
           alt="India Gully. Celebrating Desiness."
           width="224"
           height="52"

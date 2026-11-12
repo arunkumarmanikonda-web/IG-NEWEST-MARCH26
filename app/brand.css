@@ -1,0 +1,102 @@
+/* Owner direction: white, charcoal and the original logo gold. No green or gold frames. */
+:root{--gold:#d4b012;--gold-dark:#756112;--ink:#2b2a29;--dark:#202020;--muted:#686866;--line:#e3e3df;--paper:#fff;--surface:#f6f6f4;--serif:Georgia,'Times New Roman',serif;--sans:Arial,Helvetica,sans-serif}
+body{background:#fff;color:var(--ink);font-size:15px;line-height:1.75}
+::selection{background:#ece3b6;color:#202020}
+h1,h2,h3{letter-spacing:-.035em}
+h1 em,h2 em{color:inherit;font-style:normal}
+.brand-artwork{display:block;object-fit:contain;width:100%;height:auto}
+.utility-bar{height:32px;background:#252524;color:#e8e8e4;font-size:9px;letter-spacing:1.5px}
+.utility-bar a{color:#fff}
+.site-header{height:112px;padding:0 6%;background:#fff;border-bottom:1px solid #e8e8e4;gap:35px}
+.site-header .brand{width:250px;flex-shrink:0}
+.site-header .brand img{width:100%;height:auto}
+.site-nav{gap:28px;font-size:12px;font-weight:500;letter-spacing:.12px}
+.site-nav .nav-contact{background:#2b2a29;color:#fff;border-color:#2b2a29;padding:12px 20px;gap:24px}
+.site-nav .nav-contact:hover{background:#454442;border-color:#454442}
+.site-nav>a[aria-current=page]:after,.site-nav>a:hover:after{background:#2b2a29;height:1px}
+.nav-dropdown{background:#fff;border-top:1px solid #2b2a29;box-shadow:0 18px 40px #00000014;padding:16px 24px}
+.nav-dropdown a{font-size:12px;line-height:1.5;padding:15px 0}
+.nav-dropdown a:hover{color:#2b2a29;background:#f7f7f5}
+.eyebrow{color:#686866;font-size:10px;letter-spacing:2px;font-weight:600}
+.button{font-size:12px;line-height:1.45;min-height:52px;padding:16px 24px;border-color:#b5b5b0;transition:background .18s,color .18s}
+.button:hover{background:#2b2a29;color:white;border-color:#2b2a29}
+.button-light{background:white;border-color:white;color:#242423}
+.button-light:hover{background:#ecece7;color:#242423;border-color:#ecece7}
+.text-link{font-size:12px;border-color:#bdbdb7;padding-bottom:12px}
+.text-link:hover{color:#2b2a29;border-color:#2b2a29}
+.editorial-hero{background:#252524}
+.editorial-shade{background:linear-gradient(90deg,#171717ed 0%,#171717b8 43%,#17171722 100%),linear-gradient(0deg,#17171770,transparent 60%)}
+.home-editorial{min-height:650px}
+.home-editorial .editorial-hero-copy{padding:78px 6% 108px;max-width:1110px}
+.home-editorial h1{font-size:clamp(46px,5.1vw,78px);font-weight:400;line-height:1.1;letter-spacing:-2.4px}
+.editorial-hero h1 em{color:#fff;font-style:normal}
+.editorial-hero .eyebrow{color:#e1e1dc;margin-bottom:25px}
+.editorial-hero p{color:#e2e2dd;font-size:16px;line-height:1.8}
+.hero-side-note{border-color:#ffffff50}
+.hero-side-note span{color:#fff}
+.editorial-hero-foot{border-top-color:#ffffff40;color:#e8e8e3;padding:21px 0;font-size:9px;letter-spacing:1.5px}
+.section-pad{padding-top:88px;padding-bottom:88px}
+.trust-strip{padding:30px 6%;background:#fff;border-bottom:1px solid var(--line)}
+.trust-strip>div{border-color:#e3e3df}
+.trust-strip strong{font:28px var(--serif);color:#2b2a29}
+.trust-strip span{font-size:11px;line-height:1.65;letter-spacing:.1px}
+.story-grid h2{line-height:1.2}
+.editorial-body .large-copy{font-size:26px;line-height:1.5}
+.editorial-body p{line-height:1.9}
+.practice-section,.history-section,.company-identity,.profile-hero{background:#f6f6f4}
+.practice-row{border-color:#dcdcd7;padding:28px 0;gap:25px}
+.practice-row:last-child{border-color:#dcdcd7}
+.practice-row:hover{background:#ededeb;padding-left:12px}
+.practice-row h3{font-size:28px}
+.practice-row .index{color:#747470}
+.feature-split,.vision-section{background:#292928}
+.feature-copy .eyebrow,.vision-section .eyebrow{color:#e2e2dd}
+.feature-copy h2 em,.vision-section h2 em{color:#fff}
+.vision-section p,.feature-copy p{color:#d9d9d4}
+.confidentiality-band{background:#f5f5f2;border-color:#dfdfd9}
+.work-card{background:#fff;padding:32px;border:1px solid #deded9}
+.work-card:hover{background:#f6f6f3;border-color:#9b9b96}
+.work-number{color:#878781;font-size:32px}
+.work-card h3{font-size:29px;line-height:1.2}
+.listing-placeholder{background:#2b2a29;color:#fff}
+.listing-placeholder .placeholder-logo{width:150px;max-width:75%;margin-bottom:30px}
+.listing-sector{background:#2b2a29eb}
+.featured-listings,.leadership-grid{gap:36px}
+.featured-listings h3{font-size:29px;line-height:1.25}
+.leadership-photo{background:#f3f3f0}
+.role-label{color:#666660;font-weight:600;line-height:1.7}
+.page-hero{background:#f5f5f2;border-bottom:1px solid #e4e4df}
+.page-hero-copy{padding-top:65px;padding-bottom:65px}
+.page-hero h1{max-width:1000px;line-height:1.14}
+.page-hero .eyebrow{color:#666660}
+.scope-section,.opportunity-banner,.two-paths{background:#fafaf8}
+.service-item{border-color:#deded8}
+.nda-steps article{border-top:1px solid #b8b8b1}
+.profile-photo{background:#eaeae6}
+.company-identity dl{border-top:1px solid #dcdcd6;padding-top:24px}
+.contact-band{background:#2b2a29;border-color:#4d4d47;padding-top:70px;padding-bottom:70px}
+.contact-band .eyebrow{color:#d8d8d2}
+.contact-band h2{line-height:1.2}
+.site-footer{background:#202020;color:#fff;padding-top:66px}
+.footer-brand img{width:260px;height:auto}
+.footer-brand p{color:#d9d9d3;font-size:25px;line-height:1.4}
+.footer-brand small,.footer-top a,.footer-top p{color:#bdbdb7}
+.footer-top h2{color:#f0f0ed;font-family:var(--sans);font-size:11px;letter-spacing:1.2px}
+.footer-top a:hover{color:#fff}
+.footer-bottom{border-color:#ffffff26;color:#bdbdb7;padding-top:25px;padding-bottom:25px}
+.footer-bottom a{color:#bdbdb7}
+.catalogue-grid>article{background:#fff;border:1px solid #dfdfd9;box-shadow:none}
+.catalogue-links button{background:#2b2a29;color:#fff;border:1px solid #2b2a29}
+.filter-bar input,.filter-bar select,.form-grid input,.form-grid select,.form-grid textarea{border-color:#cfcfc9;background:#fff;min-height:46px}
+.form-grid textarea{min-height:140px}
+.enquiry-form{border-color:#dcdcd6;box-shadow:none}
+.statutory-panel{background:#f7f7f4;border-color:#dfdfd9}
+.statutory-panel dl{line-height:1.8}
+.prose-section{max-width:1100px}
+.auth-page .portal-form{border-top:1px solid #d5d5cf;border-radius:2px}
+body:has(.staff-workspace)>.utility-bar,body:has(.staff-workspace)>.site-header,body:has(.staff-workspace)>.site-footer{display:none}
+@media(min-width:1600px){.site-header,.utility-bar{padding-left:max(6%,calc((100vw - 1480px)/2));padding-right:max(6%,calc((100vw - 1480px)/2))}}
+@media(max-width:1150px){.site-header{gap:20px;padding:0 4%;height:98px}.site-header .brand{width:212px}.site-nav{gap:18px;font-size:11px}.site-nav .nav-contact{padding:11px 14px;gap:14px}.hero-side-note{display:none}}
+@media(max-width:900px){.site-header{height:94px;padding:0 6%}.site-header .brand{width:226px}.site-header .menu-toggle{border-color:#b8b8b2;padding:10px 15px}.site-nav{top:94px;background:#fff;padding:20px 6% 32px;box-shadow:0 18px 28px #00000010}.site-nav>a{font-size:14px;padding:14px 0}.nav-group summary{padding:15px 0}.nav-dropdown{box-shadow:none;border-top:0}.home-editorial{min-height:610px}.home-editorial .editorial-hero-copy{padding-top:68px}.editorial-hero-foot{font-size:9px}.section-pad{padding-top:64px;padding-bottom:64px}}
+@media(max-width:760px){.site-header{height:84px}.site-header .brand{width:195px}.site-nav{top:84px}.utility-bar{height:29px}.home-editorial{min-height:600px}.home-editorial .editorial-hero-copy{padding:66px 6% 104px}.home-editorial h1{font-size:clamp(39px,7.2vw,53px);line-height:1.13;letter-spacing:-1.5px}.editorial-shade{background:linear-gradient(90deg,#171717e8,#17171770),linear-gradient(0deg,#17171780,transparent 70%)}.editorial-hero p{font-size:14px;margin:25px 0 30px}.hero-actions{gap:14px 23px}.hero-actions .button{padding:14px 18px;gap:20px}.hero-secondary{font-size:11px;gap:12px}.editorial-hero-foot{left:6%;right:6%;padding:18px 0;gap:20px;align-items:center;line-height:1.5}.trust-strip{grid-template-columns:1fr 1fr;gap:26px 18px;padding:28px 6%}.trust-strip>div{padding:0 15px}.trust-strip>div:nth-child(odd){border-left:0;padding-left:0}.trust-strip strong{font-size:26px}.trust-strip span{font-size:10px}.section-pad{padding-top:52px;padding-bottom:52px}.practice-row h3{font-size:25px}.featured-listings,.leadership-grid{gap:36px}.contact-band{padding-top:50px;padding-bottom:50px}.footer-brand img{width:225px}.footer-brand p{font-size:24px}.page-hero-copy{padding-top:44px;padding-bottom:44px}.page-hero h1{font-size:43px}.work-card{padding:27px}.footer-top{gap:35px 25px}}
+@media print{.site-header,.site-footer,.utility-bar{display:none}body{color:#111;background:white}.editorial-shade{background:none}}

@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { published, cmsMetadata, contentPath } from "../../../../lib/cms";
 import PublishedContent from "../../../published-content";
 export const dynamic = "force-dynamic";
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
 export default async function PublishedPage({ params }) {
   const item = await lookup(params);
   if (!item) notFound();
-  if (["opportunity", "article"].includes(item.kind))
-    redirect(contentPath(item));
+  if (["opportunity", "article", "product", "person", "project"].includes(item.kind))
+    permanentRedirect(contentPath(item));
   return <PublishedContent item={item} />;
 }

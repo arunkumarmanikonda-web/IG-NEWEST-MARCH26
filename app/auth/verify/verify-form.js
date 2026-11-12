@@ -21,7 +21,7 @@ export default function VerifyForm({ purpose }) {
     finally { setBusy(false); }
   }
   return <form className="portal-form" onSubmit={event => { event.preventDefault(); submit('verify'); }}>
-    <div className="eyebrow">INDIA GULLY ACCOUNT</div>
+    <div className="eyebrow">YOUR ACCOUNT</div>
     <h1>{purpose === 'recovery' ? 'Recover your account.' : purpose === 'login' ? 'Sign in with your email code.' : 'Verify your email.'}</h1>
     <p>{purpose === 'recovery' ? 'Enter the recovery code sent to your account email. You can then choose a new password.' : 'Enter your account email and the verification code in your India Gully email.'}</p>
     <p>Codes are single-use. You can enter the code here even if you opened the email on another device.</p>

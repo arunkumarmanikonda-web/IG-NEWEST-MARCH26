@@ -1,4 +1,5 @@
 import Image from "next/image";
+import BrandLogo from "./brand-logo";
 import Link from "next/link";
 import { pageMeta } from "../lib/seo.mjs";
 import { practices, insights, opportunities } from "../lib/content.mjs";
@@ -52,7 +53,7 @@ export default async function Home() {
         />
         <div className="editorial-shade" />
         <div className="editorial-hero-copy">
-          <Eyebrow>INDIA GULLY / ADVISORY · TRANSACTIONS · DELIVERY</Eyebrow>
+          <Eyebrow>ADVISORY · TRANSACTIONS · DELIVERY</Eyebrow>
           <h1>
             Perspective that sees
             <br />
@@ -89,7 +90,7 @@ export default async function Home() {
       <TrustStrip />
       <section className="story-grid section-pad" id="the-practice">
         <div>
-          <Eyebrow>THE INDIA GULLY PERSPECTIVE</Eyebrow>
+          <Eyebrow>OUR PERSPECTIVE</Eyebrow>
           <h2>
             Assets, capital and
             <br />
@@ -175,7 +176,7 @@ export default async function Home() {
                   />
                 ) : (
                   <>
-                    <span>INDIA GULLY</span>
+                    <BrandLogo light className="placeholder-logo"/>
                     <strong>
                       Private
                       <br />

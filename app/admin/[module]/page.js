@@ -254,8 +254,8 @@ export default async function Module({ params, searchParams }) {
                 "Consent capture active; campaign delivery not activated",
               ],
               [
-                "Payments, inventory & Vyapar",
-                "Razorpay sandbox checkout verified; payment/refund reconciliation and capture audit available. Live activation and Vyapar sync remain pending; operational procurement inventory is available.",
+                "Payments & inventory",
+                "Razorpay sandbox checkout verified; payment/refund reconciliation and capture audit available. Live activation requires production credentials and merchant verification. Operational procurement inventory is available.",
               ],
             ].map(([a, b]) => (
               <tr key={a}>

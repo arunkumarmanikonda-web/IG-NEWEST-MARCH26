@@ -2,6 +2,7 @@ import {businessDetails} from "../lib/runtime-config";
 import { siteConfig } from "../lib/seo.mjs";
 import "./globals.css";
 import "./editorial.css";
+import "./brand.css";
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
@@ -19,10 +20,11 @@ export const metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/mark.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
     shortcut: "/favicon.svg",
-    other: [{ rel: "mask-icon", url: "/mask-icon.svg", color: "#cfaf00" }],
+    apple: [{url:"/apple-touch-icon.png",sizes:"180x180",type:"image/png"}],
+    other: [{ rel: "mask-icon", url: "/mask-icon.svg", color: "#d4b012" }],
   },
   manifest: "/manifest.webmanifest",
 };
@@ -36,7 +38,7 @@ export default async function Layout({ children }) {
         </a>
         <div className="utility-bar">
           <span>
-            INDIA GULLY <i /> ADVISORY · TRANSACTIONS · DELIVERY
+            ADVISORY · TRANSACTIONS · DELIVERY
           </span>
           <Link href="/valuation">
             Explore the valuation studio <Arrow />
@@ -49,7 +51,7 @@ export default async function Layout({ children }) {
             <div className="footer-brand">
               <Link href="/">
                 <img
-                  src="/logo-white.png"
+                  src="/brand/logo-white.svg"
                   alt="India Gully"
                   width="260"
                   height="61"

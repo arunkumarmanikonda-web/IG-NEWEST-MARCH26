@@ -28,6 +28,12 @@ export default async function EditPage({ params, searchParams }) {
   const {data:mediaAssets}=await client.from("ig_source_media").select("id,alt,source_name,path,preset,state,published,practice").order("created_at",{ascending:false}).limit(100);
   const {data:creativeJobs}=await client.from("ig_provider_jobs").select("id,practice,kind,input,status,asset_key,published,note,created_at").eq("provider","runway").eq("kind","image").eq("practice","horeca").order("created_at",{ascending:false}).limit(30);
   const q=await searchParams;
+  let catalogueSource=null;
+  if(item?.kind==='product'){
+    const {data:links}=await client.from('ig_catalogue_items').select('page_id,item_no,media_id').eq('content_id',item.id).limit(1);
+    if(links?.[0]){const link=links[0],{data:page}=await client.from('ig_catalogue_pages').select('catalogue_id,page_number,result').eq('id',link.page_id).maybeSingle();if(page){const{data:catalogue}=await client.from('ig_brand_catalogues').select('brand').eq('id',page.catalogue_id).maybeSingle();const product=page.result?.products?.[link.item_no];catalogueSource={brand:catalogue?.brand,page:page.page_number,media_id:link.media_id,evidence:product?.evidence,review_notes:product?.review_notes};}}
+  }
+  if(catalogueSource?.media_id&&!mediaAssets?.some(m=>m.id===catalogueSource.media_id)){const {data:source}=await client.from('ig_source_media').select('id,alt,source_name,path,preset,state,published,practice').eq('id',catalogueSource.media_id).maybeSingle();if(source)mediaAssets?.unshift(source);}
   let seed=null;
   if(id==="new" && q?.ai){const {data:job}=await client.from("ig_ai_jobs").select("context,draft,practice").eq("id",q.ai).eq("status","ready").maybeSingle();if(job?.context?.kind==="intake" && job.context.record_kind!=="operation"){const draft=prepareIntakeDraft(job.draft);seed={...draft,kind:job.context.record_kind,practice:job.practice,public_data:draft.fields};}}
   if(id==="new" && q?.media){const {data:media}=await client.from("ig_source_media").select("id,alt,published").eq("id",q.media).maybeSingle();if(media?.published)seed={...seed,public_data:{...seed?.public_data,image:"/images/library/"+media.id+".jpg",image_alt:media.alt,image_identity_reviewed:true}};}
@@ -37,6 +43,7 @@ export default async function EditPage({ params, searchParams }) {
       item={item}
       initialKind={q?.kind}
       seed={seed}
+      catalogueSource={catalogueSource}
       mediaAssets={mediaAssets||[]}
       creativeJobs={creativeJobs||[]}
       terms={terms || []}
