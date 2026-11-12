@@ -70,3 +70,7 @@ The owner explicitly approved the production relay. Its dedicated Vercel bypass 
 ## Webhook setup, 13 November 2026 IST
 
 The owner created live webhook TzPZipJrb9jdqU, enabled with payment.captured/payment.failed/refund.processed/refund.failed and the approved production receiver. Razorpay confirms a signing secret was supplied. India Gully then saved that secret privately and reports disabled configuration revision 3. The receiver now rejects unauthenticated unsupported events, acknowledges authenticated unrelated merchant events, and preserves retries for operational failures. An owner-only non-payment diagnostic exercises valid and altered signatures through the relay. All 147 Node tests and the Next.js build pass. Provider-originated delivery and live transaction acceptance remain open.
+
+## Live payment configuration, 13 November 2026 IST
+
+Commit 22ebe8d is READY in production as dpl_2296UHjs56udzrJaqJPyPmBUHdQa. The owner UI successfully checked valid and altered webhook signatures through the production relay. Razorpay live mode and merchant verification are saved at revision 4, fulfilling the owner's request to move from test to live. The database independently confirms live mode and zero payment requests. No charge, refund or provider-originated live event was produced. Marketing remains disabled and all delivery queues are empty. Runtime error/fatal logs returned no entries during acceptance. PR #3 and domain cutover remain pending; the current protected deployment is https://india-gully.vercel.app.
