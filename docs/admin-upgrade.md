@@ -31,3 +31,11 @@ Validation: 116 Node tests and the Next.js production build passed. A rollback-o
 Live provider acceptance: OpenAI source intake generated an unpublished SYSTEM TEST product draft through the signed-in admin interface. Runway completed the private 5-credit image test, imported a PNG into a private bucket, cleared the temporary source URL and reached `ready`; the admin register displays the private image. The browser RFQ form saved its line schedule and audit revision; the fictional RFQ was then archived. No test content was published. Email OTP remains default and Fast2SMS remains disabled.
 
 Still outstanding: full role-by-role browser acceptance and real source-file intake; real failed/refunded Razorpay transactions; separate production database/secrets and recovery drill; remaining staff onboarding; legal/grievance sign-off; Google Workspace mailbox OAuth; supported Vyapar interface; campaign sending/SEM activation; optional geocoding. The catalogue/procurement workspace is not a self-service retail cart/checkout or a vendor self-service portal. These capabilities need their own acceptance before being described as a complete marketplace.
+
+## Customer and supplier procurement continuation
+
+The customer quotation basket now supports published catalogue products and custom requirement lines. Submission rechecks product availability, MOQ and pack size, creates a private customer request and an internal RFQ, and retains an idempotency reference. Customers can view only their own requirement, released quotation, acceptance, payment link and fulfilment status.
+
+Supplier contacts are explicitly enabled by procurement staff. Deadline-bound RFQ assignments expose only that requirement and the supplier's own quotation. Quotation submissions feed the existing comparison register; revocation removes portal access. Customer sales quotations remain separate from supplier costs. Totals are recomputed in Postgres, acceptance binds the exact revision, and payment requests use the accepted amount.
+
+Acceptance: 23 rollback-only hosted checks cover customer/supplier isolation, retry identity, role boundaries, supplier revocation, hidden internal rates, exact quote acceptance, locked commitments and duplicate invoice prevention. Node coverage is 118 tests. Browser acceptance of the added pages is in progress.

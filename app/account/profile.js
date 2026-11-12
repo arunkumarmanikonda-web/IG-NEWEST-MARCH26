@@ -128,7 +128,7 @@ export default function Account({ profile, email, policyVersion }) {
             <Link href="/account/security">Security & MFA</Link>
             <Link href="/account/preferences">Communication preferences</Link><Link href="/account/payments">Invoices & payments</Link><Link href="/account/privacy">Privacy requests & grievances</Link>
             <Link href="/account/nda">Confidentiality & NDA requests</Link>
-            <Link href="/account/data-rooms">My project data rooms</Link>
+            <Link href="/account/data-rooms">My project data rooms</Link><Link href="/account/procurement">My procurement requests</Link><Link href="/account/supplier">Supplier quotations</Link>
             {profile.roles.some((x) => !["client", "vendor"].includes(x)) && (
               <Link href="/admin">Staff workspace</Link>
             )}

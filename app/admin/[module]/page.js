@@ -1,3 +1,4 @@
+import ProcurementManager from '../procurement-manager';
 import MediaLibrary from "../media-library";
 import OperationsWorkspace from "../operations/workspace";
 import ContentRegister from "../content-register";
@@ -21,6 +22,11 @@ const date = (value) =>
 export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if(module==='procurement'){
+    const r=await Promise.all([client.from('ig_procurement_requests').select('*').order('created_at',{ascending:false}).limit(500),client.from('ig_operations').select('*').in('kind',['vendor','rfq']).eq('archived',false).limit(2000),client.from('ig_vendor_contacts').select('*').limit(1000),client.from('ig_vendor_assignments').select('*').order('created_at',{ascending:false}).limit(1000)]);
+    if(r.some(x=>x.error))return <p role="alert">Procurement portal records could not be loaded.</p>;
+    return <ProcurementManager requests={r[0].data} vendors={r[1].data.filter(x=>x.kind==='vendor'&&x.status==='active')} rfqs={r[1].data.filter(x=>x.kind==='rfq'&&x.status==='open')} contacts={r[2].data} assignments={r[3].data}/>;
+  }
   if (['horeca','pmc'].includes(module)) {
     const practice=module==='horeca'?'horeca':'hospitality';
     const r=await Promise.all([client.from('ig_operations').select('*').eq('practice',practice).order('updated_at',{ascending:false}).limit(2000),client.rpc('ig_client_directory'),client.from('ig_engagements').select('*').eq('active',true).limit(1000),client.from('ig_content').select('id,title,public_data').eq('kind','product').limit(1000)]);

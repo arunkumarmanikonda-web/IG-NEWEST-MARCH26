@@ -1,0 +1,3 @@
+import {redirect} from 'next/navigation';import {accountContext} from '../../../lib/supabase/server';import Supplier from './supplier';import '../../portal.css';
+export const dynamic='force-dynamic';export const metadata={title:'Supplier quotations',robots:{index:false,follow:false}};
+export default async function Page(){const{client,user}=await accountContext();if(!user)redirect('/login');const{data,error}=await client.rpc('ig_vendor_portal',{p:{action:'dashboard'}});return <main id="main" className="auth-page account-dashboard">{error?<section className="portal-form"><h1>Supplier portal</h1><p>Complete verified account registration to view assigned RFQs.</p><a href="/account">Open account</a></section>:<Supplier assignments={data||[]}/>}</main>;}

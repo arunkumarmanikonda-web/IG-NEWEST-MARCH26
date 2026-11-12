@@ -6,6 +6,8 @@ import {
   errorJson,
 } from "../../../../lib/http.mjs";
 const methods = {
+  procurement: "ig_procurement",
+  vendor_portal: "ig_vendor_portal",
   catalogue_import: "ig_catalogue_import",
   source_media: "ig_source_media_manage",
   operations: "ig_ops_save",
@@ -37,7 +39,7 @@ export async function POST(request) {
     if (!user || !profile || profile.status !== "active")
       throw new HttpError("Active sign-in required", 401);
     if (
-      !["account", "invitation", "nda", "privacy"].includes(body.module) &&
+      !["account", "invitation", "nda", "privacy", "procurement", "vendor_portal"].includes(body.module) &&
       aal !== "aal2"
     )
       throw new HttpError("Complete multi-factor authentication", 403);
