@@ -11,7 +11,7 @@ Updated 12 November 2026 (India Standard Time). This is the current status recor
 | HORECA customer and supplier portal | Quotation basket, private request tracking, deadline-bound supplier assignments, supplier submissions, separate customer selling quotes, exact revision acceptance, payment request and fulfilment projection | 23 hosted rollback-only checks; browser request WEB-BA81231E10AB persisted and visible in customer portal, then cancelled and its RFQ closed |
 | PMC and other practices | Programme dependencies, baseline/costs, variations, measured progress, RFI/risk registers and closure guards; independent advisory practice workspaces | Hosted operational checks; production build |
 | AI content and media | Source text/PDF/Office/CSV/images, evidence, missing-data questions, product/project forms and SEO; source image preparation; Runway queue and private output | Real OpenAI text and CSV intake; CSV preserved SKU QA-FILE-PLATE-002, MOQ 24, pack 12, lead 14; real Runway private image import |
-| HORECA product images | Dedicated upload, AI enhancement and description-based generation; private sources, leased reference URLs, side-by-side comparison and review before catalogue use | 17 hosted rollback-only privacy/disclosure checks and 3 unit checks; browser acceptance pending |
+| HORECA product images | Dedicated upload, AI enhancement and description-based generation; private sources, leased reference URLs, side-by-side comparison and review before catalogue use | 17 hosted rollback-only privacy/disclosure checks and 3 unit checks; real upload, enhancement and description generation reached ready privately in the browser |
 | Personal business mailbox | Own-address Google OAuth, inbox search, plain-text threads, encrypted drafts, reviewed sending, disconnect | 15 hosted rollback-only checks and unit coverage; Google activation still awaits credentials |
 | Email marketing | Scoped consented audiences, owner release, immutable approved copy, pause/resume, capped queue, unsubscribe, suppression and delivery reporting | 18 hosted rollback-only checks; no campaign sent |
 | Transactional email and sign-in | Email OTP; enquiry acknowledgement and three senior notifications; signed delivery reports and recovery worker | Prior real four-message delivered test; owner onboarding/MFA |
@@ -39,6 +39,7 @@ The HORECA storefront uses business quotation and acceptance, not unverified fix
 ## Evidence and handover
 
 - `admin-upgrade.md`: operational fixes and previous provider/browser acceptance.
+- `product-images.md`: product image workflow and live provider acceptance.
 - `mailbox-campaigns.md`: new correspondence/marketing implementation and exact configuration.
 - `governance-and-integrations.md`: preserved Resend/Razorpay evidence and provider refund error.
 - `scripts/verify-procurement.sql`, `scripts/verify-mailbox.sql`, `scripts/verify-campaigns.sql`, `scripts/verify-product-images.sql`: rollback-only hosted acceptance.

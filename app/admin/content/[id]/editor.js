@@ -116,6 +116,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
         </p>
       )}
       {!item&&<p className="workspace-note">Create from files, text and images in the <Link href={"/admin/intake?kind="+kind}>AI creation studio</Link>, or complete this form manually.</p>}
+      {kind==='product'&&<p><a href="#product-images">Upload, enhance or generate product images ↓</a></p>}
       {seed?.review_questions?.length>0&&<div className="review-questions"><h3>Source review</h3><ul>{seed.review_questions.map((q,i)=><li key={i}>{q}</li>)}</ul></div>}
       <form
         ref={editorForm}
@@ -200,7 +201,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           ["image", "Approved image path"],
           ["image_alt", "Image description"],
         ].map(([k, label]) => (
-          <label key={k} hidden={kind==="product"&&k==="image"}>
+          kind==='product'&&k==='image'?<input key={k} type="hidden" name="image" value={image}/>:<label key={k}>
             {label}
             <input
               name={k}

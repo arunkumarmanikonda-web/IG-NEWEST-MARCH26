@@ -8,6 +8,7 @@ begin
  select u.id,s.id into uid,sid from auth.users u join auth.sessions s on s.user_id=u.id where lower(u.email)='akm@indiagully.com' order by s.created_at desc limit 1;
  if sid is null then raise exception 'Existing owner session required';end if;
  claims=jsonb_build_object('sub',uid,'session_id',sid,'aal','aal2','role','authenticated');perform set_config('request.jwt.claims',claims::text,true);
+ update ig_private.integration_config set mode='disabled' where id='runway';
  select version into cfg from ig_private.integration_config where id='runway';
  p=jsonb_build_object('provider','runway','kind','image','practice','real-estate','request_id',gen_random_uuid(),'config_version',cfg,'input',jsonb_build_object('kind','image','prompt','SYSTEM TEST abstract illustrative editorial creative','ratio','1280:720','duration',0,'public_approved',true,'estimated_credits',5));
  begin perform public.ig_provider_prepare(p);raise exception 'Disabled accepted';exception when raise_exception then if sqlerrm<>'Provider is disabled' then raise;end if;end;
