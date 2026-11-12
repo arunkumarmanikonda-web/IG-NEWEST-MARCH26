@@ -1,3 +1,4 @@
+import PolicyUnavailable from '../policy-unavailable';
 import AdminNavigation from "./navigation";
 import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
@@ -11,9 +12,11 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function AdminLayout({ children }) {
-  const {version: policyVersion}=await currentPolicies();
   const { client, user, profile, aal } = await accountContext();
   if (!user || !profile) redirect("/login");
+  const release=await currentPolicies();
+  if (!release) return <PolicyUnavailable/>;
+  const policyVersion=release.version;
   if (profile.status !== "active" || profile.policy_version !== policyVersion)
     redirect("/account");
   if (profile.must_change_password || aal !== "aal2")

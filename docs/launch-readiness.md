@@ -23,7 +23,7 @@ Latest local validation: 137 Node tests and the Next.js production build passed.
 
 ## Concrete activation dependencies
 
-1. **Production database and recovery:** healthy Mumbai project `szmsvxbqtakzbfpvgeth` is installed in India Gully Pro. Forty migrations and three Edge Functions are deployed, Vercel Production is wired with distinct server credentials, and both projects are associated with GitHub. Automatic database deployment is off. SMTP, owner authentication/recovery, content release and a restore drill remain required. Two campaign migrations are withheld following automatic review. See `deployment-connections.md` for the exact fresh-install and migration-history differences.
+1. **Production database and recovery:** healthy Mumbai project `szmsvxbqtakzbfpvgeth` is installed in India Gully Pro. Forty migrations and three Edge Functions are deployed, Vercel Production is wired with distinct server credentials, and both projects are associated with GitHub. Automatic database deployment is off. A protected Vercel Production build is READY against this database. SMTP, owner authentication/recovery, content release and a restore drill remain required. Two campaign migrations are withheld following automatic review. See `deployment-connections.md` for the exact fresh-install and migration-history differences.
 2. **Company sign-off:** Pavan Manikonda is appointed Grievance Officer (pavan@indiagully.com, +918988988988). Review the existing legal/commercial policy revision. The `statutory_details_confirmed` control remains false. This cannot be inferred from the owner's role.
 3. **Staff access:** Arun completed verification, password change and MFA in preview. Production has zero Auth users and one owner invitation. Automatic review rejected seeding named administrator invitations and all-practice grants; Pavan/Amit roles require explicit approval before provisioning. Production owner onboarding, recovery and Auth security settings remain outstanding.
 4. **Google Workspace:** supply the website's OAuth client ID/secret and approved callback, enable Gmail API and obtain each user's consent. The implementation remains disabled. ChatGPT's connected Gmail account cannot supply website OAuth credentials. See `mailbox-campaigns.md`.
@@ -40,6 +40,7 @@ The HORECA storefront uses business quotation and acceptance, not unverified fix
 
 ## Evidence and handover
 
+- `production-approval.md`: exact unpublished policy draft and specific access/module decisions.
 - `admin-upgrade.md`: operational fixes and previous provider/browser acceptance.
 - `product-images.md`: product image workflow and live provider acceptance.
 - `mailbox-campaigns.md`: new correspondence/marketing implementation and exact configuration.

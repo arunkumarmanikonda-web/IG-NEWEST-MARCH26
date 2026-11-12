@@ -1,3 +1,4 @@
+import PolicyUnavailable from '../policy-unavailable';
 import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -10,9 +11,11 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function AccountPage() {
-  const {version: policyVersion}=await currentPolicies();
   const { client, user, profile } = await accountContext();
   if (!user || !profile) redirect("/login");
+  const release=await currentPolicies();
+  if (!release) return <PolicyUnavailable/>;
+  const policyVersion=release.version;
   if (profile.status !== "active")
     return (
       <main id="main" className="auth-page">

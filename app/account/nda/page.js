@@ -11,9 +11,11 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function Page({ searchParams }) {
-  const {version: policyVersion}=await currentPolicies();
   const { client, user, profile } = await accountContext();
   if (!user || !profile) redirect("/login");
+  const release=await currentPolicies();
+  if (!release) redirect("/account");
+  const policyVersion=release.version;
   if (profile.status !== "active" || profile.policy_version !== policyVersion)
     redirect("/account");
   const query = await searchParams;

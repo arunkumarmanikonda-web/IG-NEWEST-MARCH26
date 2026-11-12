@@ -14,7 +14,7 @@ import {currentPolicies} from "../../../lib/policies";
 import Link from "next/link";
 import RoomsManager from "../rooms-manager";
 import NdaManager from "../nda-manager";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
 import { TaxonomyManager, UserManager, EnquiryManager } from "../managers";
 const date = (value) =>
@@ -22,6 +22,7 @@ const date = (value) =>
 export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
+  if (!profile) redirect("/login");
   if(module==='procurement'){
     const r=await Promise.all([client.from('ig_procurement_requests').select('*').order('created_at',{ascending:false}).limit(500),client.from('ig_operations').select('*').in('kind',['vendor','rfq']).eq('archived',false).limit(2000),client.from('ig_vendor_contacts').select('*').limit(1000),client.from('ig_vendor_assignments').select('*').order('created_at',{ascending:false}).limit(1000)]);
     if(r.some(x=>x.error))return <p role="alert">Procurement portal records could not be loaded.</p>;
@@ -58,7 +59,7 @@ export default async function Module({ params, searchParams }) {
     return <ClientsManager clients={r[0].data} contacts={r[1].data} engagements={r[2].data} rooms={r[3].data} roomAdmin={profile.roles.some(x=>['owner','administrator'].includes(x))}/>;
   }
   if(module==='payments'){const [{data:users,error:ue},{data,error}]=await Promise.all([client.rpc('ig_admin_users'),client.from('ig_payment_requests').select('*').order('created_at',{ascending:false}).limit(250)]);return error||ue?<p>Payment administration requires administrator access.</p>:<PaymentsManager items={data||[]} users={users.users}/>;}
-  if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:<SettingsManager configs={data.map(c=>({...c,environment_fields:providerCredentialPresence(c.id,process.env)}))} release={release} production={process.env.VERCEL_ENV==='production'}/>;}
+  if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:!release?<p>The initial policy release awaits owner review.</p>:<SettingsManager configs={data.map(c=>({...c,environment_fields:providerCredentialPresence(c.id,process.env)}))} release={release} production={process.env.VERCEL_ENV==='production'}/>;}
   if(module==='privacy') {if(!profile.roles.includes('owner'))return <p>Super-user access is required.</p>;const {data,error}=await client.from('ig_privacy_requests').select('*').order('created_at',{ascending:false}).limit(250);return error?<p>Register unavailable.</p>:<PrivacyRequests items={data||[]} admin/>;}
   if (module === "data-rooms") {
     const roomSearch=await searchParams;

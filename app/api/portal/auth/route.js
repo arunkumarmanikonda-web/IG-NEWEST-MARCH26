@@ -1,3 +1,4 @@
+import {currentPolicies} from '../../../../lib/policies';
 import { serverClient } from "../../../../lib/supabase/server";
 import { verifyEmailCode } from "../../../../lib/email-auth.mjs";
 import { anonymousServerClient } from "../../../../lib/runtime-config";
@@ -22,6 +23,8 @@ export async function POST(request) {
       throw new HttpError("Enter a valid email address");
     if (p.action === "verify")
       return privateJson(await verifyEmailCode(client.auth, p));
+    if (["signup","email_code"].includes(p.action) && !await currentPolicies())
+      throw new HttpError("Account registration is not open yet. Please contact hello@indiagully.com.", 503);
     if (p.action === "email_code") {
       if (p.terms !== true || p.privacy !== true || p.dataUse !== true)
         throw new HttpError("Accept the terms, privacy notice and data usage policy");
