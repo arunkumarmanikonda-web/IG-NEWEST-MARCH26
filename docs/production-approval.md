@@ -1,8 +1,8 @@
 # India Gully production release review
 
-Status: pending owner review. This document does not approve or publish a policy, grant access or enable marketing.
+Status: owner explicitly approved all three decisions on 12 November 2026 in this conversation, after reviewing commit f409ebc24c67a2084a0c1580d9682d080f06c33b. Production policy release and company confirmation are applied. The two administrator invitations are provisioned for verified sign-up. The campaign module is installed; sending remains disabled. Approval is an owner release decision, not a claim of external legal-counsel review.
 
-## Decisions needed
+## Approved decisions
 
 | Item | Prepared value or scope | Current state |
 |---|---|---|
@@ -11,14 +11,14 @@ Status: pending owner review. This document does not approve or publish a policy
 | GSTIN | 07AAGCV0867P1ZN | Previously supplied by the owner on 11 November 2026 |
 | Registered office | QTR NO. 229, Four Storey, Tagore Garden Extn., New Delhi, Delhi, 110027, India | Owner confirmed on 11 November 2026; carried into production |
 | Grievance officer | Pavan Manikonda; pavan@indiagully.com; +918988988988 | Saved as instructed |
-| Pavan access | Administrator; read, write, publish, enquiries, data rooms and commerce across all practices | Not granted; approve or specify narrower rights |
-| Amit Jhingan access | Administrator at amit.jhingan@indiagully.com; the same all-practice capabilities | Not granted; confirm address and scope or specify narrower rights |
-| Email marketing module | Install the consent-only campaign module with delivery disabled; each actual campaign still requires a reviewed message and audience | Two production migrations withheld |
-| Policy release | Review all eight policies below, then confirm approval or edits | Draft, not current and not legally reviewed |
+| Pavan access | Administrator; read, write, publish, enquiries, data rooms and commerce across all practices | Approved; invitation provisioned with password-change and MFA gates |
+| Amit Jhingan access | Administrator at amit.jhingan@indiagully.com; the same all-practice capabilities | Approved; invitation provisioned with password-change and MFA gates |
+| Email marketing module | Install the consent-only campaign module with delivery disabled; each actual campaign still requires a reviewed message and audience | Installed; Vercel and database sending switches remain false |
+| Policy release | All eight policies approved as drafted | Released as current with recorded owner review |
 
-Production payments, marketing delivery and live-domain cutover remain disabled. Owner sign-in and recovery, SMTP delivery verification, provider/webhook acceptance and a restore drill also remain open. SMTP credentials are saved and the enabled configuration persists after reload; successful delivery is not yet claimed. The statutory-release confirmation flag remains false pending release approval. Automatic approval review rejected the unapproved staff grants, campaign installation and legal publication, so these cannot be inferred from a general deployment instruction.
+Production payments, marketing delivery and live-domain cutover remain disabled. Owner sign-in and recovery, SMTP delivery verification, provider/webhook acceptance and a restore drill also remain open. SMTP credentials are saved and the enabled configuration persists after reload; successful delivery is not yet claimed. The statutory-release confirmation flag is true. The earlier approval blocks were resolved by the owner’s explicit “approve all three” instruction. No staff invitation email or marketing message has been sent.
 
-## Policy draft 2026-11-11.2
+## Approved policy release 2026-11-11.2
 
 # Privacy notice
 

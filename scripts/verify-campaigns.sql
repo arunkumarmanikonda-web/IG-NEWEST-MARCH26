@@ -6,6 +6,9 @@ do $$declare uid uuid;sid uuid;claims jsonb;original_roles text[];c jsonb;j json
  select u.id,s.id into uid,sid from auth.users u join auth.sessions s on s.user_id=u.id where u.email='akm@indiagully.com' order by s.created_at desc limit 1;if sid is null then raise exception 'Owner session required';end if;
  select roles into original_roles from public.ig_profiles where id=uid;
  claims=jsonb_build_object('sub',uid,'session_id',sid,'aal','aal2','role','authenticated');perform set_config('request.jwt.claims',claims::text,true);
+ -- Rollback-only simulation of a future explicitly approved delivery release.
+ update ig_private.webhook_relay set enabled=true,campaign_delivery_enabled=true;
+ update ig_private.integration_config set mode='enabled' where id='resend';
  update ig_private.integration_root set secret_hash=encode(extensions.digest(convert_to(k,'UTF8'),'sha256'),'hex');
  c=public.ig_campaign_manage('{"action":"save","practice":"horeca","title":"SYSTEM TEST campaign","subject":"SYSTEM TEST only","body":"Internal software verification only. No email will be sent."}');
  perform pg_temp.ok(c->>'status'='draft','Campaign starts as an unsent draft');
