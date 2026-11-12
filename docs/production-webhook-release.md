@@ -13,7 +13,7 @@ Enabled after the owner's explicit “approve relay” authorization on 13 Novem
 | Relay credential | Dedicated Vercel automation bypass, stored only in production Supabase Vault; never in provider URLs |
 | Provider authentication | A separate live Razorpay webhook secret; the destination checks the original payload signature and payment binding |
 | Other fixed relay paths | Signed Resend delivery events and HMAC-authenticated transactional/provider worker requests |
-| Current activation | Razorpay live mode, revision 4; other external providers and marketing delivery remain disabled |
+| Current activation | Razorpay live mode, revision 4; Resend transactional email enabled, revision 5; AI/SMS and marketing delivery remain disabled |
 
 The relay exposes only fixed provider/worker paths. It does not expose the admin dashboard, arbitrary URLs, database credentials or the Vercel bypass to callers. The Vercel bypass is a persistent credential with access to protected project deployments; compromise of the relay or its Vault credential is therefore a security risk. App authentication, MFA, database permissions and webhook signature checks remain enforced. Disable the relay and revoke its dedicated bypass to roll it back.
 
@@ -28,3 +28,7 @@ The receiver now authenticates unsupported event types and acknowledges unrelate
 ## Production acceptance and activation
 
 Production deployment `dpl_2296UHjs56udzrJaqJPyPmBUHdQa`, commit `22ebe8dc0eacd802ed95a4dc61a7ce10d3c0dc9f`, is READY. The real owner UI receiver diagnostic passed: a valid saved signature returned 200 and an altered signature returned 401. Following the owner's request to move payments to live, the verified merchant flag and live mode were saved at revision 4. A database read independently confirms live mode. There are zero payment requests and no charge or refund was created. No Razorpay-originated live event or transaction has yet been verified; the diagnostic does not establish that the secret stored in Razorpay matches the application secret. Campaign delivery remains disabled and all delivery queues remain empty. Production runtime error/fatal logs returned no entries during acceptance.
+
+## Resend provider-originated acceptance
+
+Production Resend webhook 6abf8bc5-3619-4261-a737-a7f58c69466f is enabled for five delivery/failure events. Its real signed email.delivered event reached this relay, returned HTTP 200 Accepted and updated the application delivery record on the first attempt. The single message was a labelled verification addressed only to the owner. See `production-email-release.md`. This proves the Resend production secret matches the provider; Razorpay-originated acceptance remains a separate outstanding check.

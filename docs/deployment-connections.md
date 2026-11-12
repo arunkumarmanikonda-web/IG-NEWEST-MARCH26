@@ -74,3 +74,7 @@ The owner created live webhook TzPZipJrb9jdqU, enabled with payment.captured/pay
 ## Live payment configuration, 13 November 2026 IST
 
 Commit 22ebe8d is READY in production as dpl_2296UHjs56udzrJaqJPyPmBUHdQa. The owner UI successfully checked valid and altered webhook signatures through the production relay. Razorpay live mode and merchant verification are saved at revision 4, fulfilling the owner's request to move from test to live. The database independently confirms live mode and zero payment requests. No charge, refund or provider-originated live event was produced. Marketing remains disabled and all delivery queues are empty. Runtime error/fatal logs returned no entries during acceptance. PR #3 and domain cutover remain pending; the current protected deployment is https://india-gully.vercel.app.
+
+## Production email acceptance, 13 November 2026 IST
+
+The owner privately supplied the Resend API key and new production webhook secret. Sender-domain verification was checked in Resend. Configuration revision 5 is enabled. Webhook 6abf8bc5-3619-4261-a737-a7f58c69466f targets the production relay for five delivery/failure events. A labelled owner-only test email was delivered, and the actual Resend-originated signed event returned HTTP 200 Accepted and updated the database to delivered on its first attempt. The test enquiry is closed and retained privately; no other staff received the test. Marketing remains disabled and no queued transactional jobs remain. See `production-email-release.md`.
