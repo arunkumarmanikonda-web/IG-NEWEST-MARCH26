@@ -16,7 +16,7 @@ Status: owner explicitly approved all three decisions on 12 November 2026 in thi
 | Email marketing module | Install the consent-only campaign module with delivery disabled; each actual campaign still requires a reviewed message and audience | Installed; Vercel and database sending switches remain false |
 | Policy release | All eight policies approved as drafted | Released as current with recorded owner review |
 
-Production payments, marketing delivery and live-domain cutover remain disabled. Owner sign-in and recovery, SMTP delivery verification, provider/webhook acceptance and a restore drill also remain open. SMTP credentials are saved and the enabled configuration persists after reload; successful delivery is not yet claimed. The statutory-release confirmation flag is true. The earlier approval blocks were resolved by the owner’s explicit “approve all three” instruction. No staff invitation email or marketing message has been sent.
+Production payments, marketing delivery and live-domain cutover remain disabled. Owner email verification, password change, MFA and owner-role activation are complete. Registration email delivery worked; password recovery, provider/webhook acceptance and a restore drill remain open. The statutory-release confirmation flag is true. The earlier approval blocks were resolved by the owner’s explicit “approve all three” instruction. No staff invitation email or marketing message has been sent.
 
 ## Approved policy release 2026-11-11.2
 
