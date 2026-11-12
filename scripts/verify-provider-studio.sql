@@ -49,7 +49,7 @@ begin
  perform pg_temp.check_it(true,'Public creative release requires explicit review');
  perform public.ig_provider_manage(jsonb_build_object('action','publish','id',j->>'id','reviewed',true));
  perform pg_temp.check_it(public.ig_provider_worker(root,jsonb_build_object('action','asset','id',j->>'id','public',true))->>'id'=j->>'id','Reviewed image can be served publicly');
- begin perform public.ig_save_content(jsonb_build_object('kind','article','practice','real-estate','title','SYSTEM TEST creative','slug','system-test-creative','public_data',jsonb_build_object('image','/images/generated/'||(j->>'id')||'.png','image_alt','Actual property photograph')));raise exception 'Unlabelled image accepted';exception when raise_exception then if sqlerrm<>'Label generated imagery as an illustrative AI-generated concept' then raise;end if;end;
+ begin perform public.ig_save_content(jsonb_build_object('kind','article','practice','real-estate','title','SYSTEM TEST creative','slug','system-test-creative','public_data',jsonb_build_object('image','/images/generated/'||(j->>'id')||'.png','image_alt','Actual property photograph')));raise exception 'Unlabelled image accepted';exception when raise_exception then if sqlerrm<>'Use the generated or enhanced image disclosure' then raise;end if;end;
  perform pg_temp.check_it(true,'Generated content must be labelled illustrative');
  perform public.ig_provider_manage(jsonb_build_object('action','withdraw','id',j->>'id'));
  perform pg_temp.check_it(public.ig_provider_worker(root,jsonb_build_object('action','asset','id',j->>'id','public',true)) is null,'Withdrawal removes public media access');

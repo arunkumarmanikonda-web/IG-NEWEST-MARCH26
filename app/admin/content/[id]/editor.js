@@ -1,8 +1,9 @@
 "use client";
+import ProductImages from "../../product-images";
 import MediaLibrary from "../../media-library";
 import {coordinatesFromText} from '../../../../lib/coordinates.mjs';
 import {practiceOptions} from "../../../../lib/business.mjs";
-import { useState } from "react";
+import { useState,useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../../../account/profile";
@@ -16,7 +17,8 @@ const kinds = [
   "person",
   "faq",
 ];
-export default function Editor({ item, terms, selectedTerms, revisions, initialKind, seed, mediaAssets=[] }) {
+export default function Editor({ item, terms, selectedTerms, revisions, initialKind, seed, mediaAssets=[],creativeJobs=[] }) {
+  const editorForm=useRef(null);
   const router = useRouter(),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
@@ -116,6 +118,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
       {!item&&<p className="workspace-note">Create from files, text and images in the <Link href={"/admin/intake?kind="+kind}>AI creation studio</Link>, or complete this form manually.</p>}
       {seed?.review_questions?.length>0&&<div className="review-questions"><h3>Source review</h3><ul>{seed.review_questions.map((q,i)=><li key={i}>{q}</li>)}</ul></div>}
       <form
+        ref={editorForm}
         className="workspace-form"
         onSubmit={save}
         onChange={() => setDirty(true)}
@@ -197,7 +200,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           ["image", "Approved image path"],
           ["image_alt", "Image description"],
         ].map(([k, label]) => (
-          <label key={k}>
+          <label key={k} hidden={kind==="product"&&k==="image"}>
             {label}
             <input
               name={k}
@@ -268,7 +271,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           </button>
         </div>
       </form>
-      <details className="editor-media"><summary>Choose or upload a source image</summary><MediaLibrary assets={mediaAssets} defaultPractice={initial.practice||(kind==="product"?"horeca":"real-estate")} onChoose={(path,alt)=>{setImage(path);setImageAlt(alt);setDirty(true);setMessage("Image selected. Save the draft to retain it.");}}/></details>
+      {kind==="product"?<ProductImages assets={mediaAssets} jobs={creativeJobs} image={image} productId={item?.id} getProduct={()=>{const f=new FormData(editorForm.current);return {title:f.get("title"),summary:f.get("summary"),body:f.get("body"),sku:f.get("sku")};}} onChoose={(path,alt)=>{setImage(path);setImageAlt(alt);setDirty(true);setMessage("Image selected. Save the product draft to retain it.");}}/>:<details className="editor-media"><summary>Choose or upload a source image</summary><MediaLibrary assets={mediaAssets} defaultPractice={initial.practice||(kind==="product"?"horeca":"real-estate")} onChoose={(path,alt)=>{setImage(path);setImageAlt(alt);setDirty(true);setMessage("Image selected. Save the draft to retain it.");}}/></details>}
       <p role="status" className="portal-message">
         {message}
       </p>

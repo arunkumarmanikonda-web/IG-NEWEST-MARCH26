@@ -8,11 +8,19 @@ Deno.serve(async(req)=>{
   const secret=req.headers.get('x-integration-key')||'';
   if(!/^[a-f0-9]{64}$/i.test(secret))return new Response('Unauthorised',{status:401,headers});
   const inputReader=req.body?.getReader();if(!inputReader)throw new Error('Invalid body');let text='';const decoder=new TextDecoder();while(true){const{value,done}=await inputReader.read();if(done)break;text+=decoder.decode(value,{stream:true});if(text.length>1500){await inputReader.cancel();return new Response('Too large',{status:413,headers});}}text+=decoder.decode();
-  const p=JSON.parse(text);if(!/^[0-9a-f-]{36}$/i.test(p.id||'')||!['import','read'].includes(p.action))throw new Error('Invalid request');
+  const p=JSON.parse(text);if(!/^[0-9a-f-]{36}$/i.test(p.id||'')||!['import','read','reference'].includes(p.action))throw new Error('Invalid request');
   const url=Deno.env.get('SUPABASE_URL')!;
   const key=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}').default||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const admin=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
   async function rpc(payload:unknown){const{data,error}=await admin.rpc('ig_provider_worker',{secret,p:payload});if(error)throw new Error('Authorisation or job state unavailable');return data;}
+  if(p.action==='reference'){
+   stage='reference_access';
+   const {data:reference,error}=await admin.rpc('ig_provider_reference',{secret,p:{id:p.id,lease_token:p.lease_token}});
+   if(error||!reference?.path)throw new Error('Reference unavailable');
+   const signed=await admin.storage.from('ig-source-media').createSignedUrl(reference.path,600);
+   if(signed.error||!signed.data?.signedUrl)throw new Error('Reference unavailable');
+   return Response.json({url:signed.data.signedUrl},{headers});
+  }
   stage='job_access';
   const job=await rpc({action:'asset',id:p.id});if(!job)throw new Error('Media unavailable');
   const bucket='ig-creative-drafts';

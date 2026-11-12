@@ -8,15 +8,16 @@ Updated 12 November 2026 (India Standard Time). This is the current status recor
 | Website and CMS | About, leadership, practices, opportunities, insights, legal pages, SEO, valuation; separated CMS and listings; revisions, publication, archive and taxonomy | Preview deployment, build and automated coverage |
 | Global clients and data rooms | Shared client directory, independent practice engagements, folders/bulk upload, multiple verified contacts, NDA and per-file/per-contact access, watermarked read-only previews | Earlier Auth/storage checks and rollback-only permission suites |
 | HORECA operations | Catalogue/SKU import; RFQs, supplier quotes, landed comparison, awards, receipts, dispatch/returns, delivery and stock reconciliation | 38 operational/catalogue/media checks; browser RFQ save |
-| HORECA customer and supplier portal | Quotation basket, private request tracking, deadline-bound supplier assignments, supplier submissions, separate customer selling quotes, exact revision acceptance, payment request and fulfilment projection | 23 hosted rollback-only checks; browser request WEB-BA81231E10AB persisted and visible in customer portal |
+| HORECA customer and supplier portal | Quotation basket, private request tracking, deadline-bound supplier assignments, supplier submissions, separate customer selling quotes, exact revision acceptance, payment request and fulfilment projection | 23 hosted rollback-only checks; browser request WEB-BA81231E10AB persisted and visible in customer portal, then cancelled and its RFQ closed |
 | PMC and other practices | Programme dependencies, baseline/costs, variations, measured progress, RFI/risk registers and closure guards; independent advisory practice workspaces | Hosted operational checks; production build |
 | AI content and media | Source text/PDF/Office/CSV/images, evidence, missing-data questions, product/project forms and SEO; source image preparation; Runway queue and private output | Real OpenAI text and CSV intake; CSV preserved SKU QA-FILE-PLATE-002, MOQ 24, pack 12, lead 14; real Runway private image import |
+| HORECA product images | Dedicated upload, AI enhancement and description-based generation; private sources, leased reference URLs, side-by-side comparison and review before catalogue use | 17 hosted rollback-only privacy/disclosure checks and 3 unit checks; browser acceptance pending |
 | Personal business mailbox | Own-address Google OAuth, inbox search, plain-text threads, encrypted drafts, reviewed sending, disconnect | 15 hosted rollback-only checks and unit coverage; Google activation still awaits credentials |
 | Email marketing | Scoped consented audiences, owner release, immutable approved copy, pause/resume, capped queue, unsubscribe, suppression and delivery reporting | 18 hosted rollback-only checks; no campaign sent |
 | Transactional email and sign-in | Email OTP; enquiry acknowledgement and three senior notifications; signed delivery reports and recovery worker | Prior real four-message delivered test; owner onboarding/MFA |
 | Payment collection | Razorpay test-mode invoice/quote collection, signature verification, provider reconciliation and replay handling | INR 1 sandbox capture and reconciliation; refund remains a provider issue |
 
-Latest local validation: 123 Node tests and the Next.js production build passed. Added hosted checks are rollback-only and send no mail, place no orders and retain no fixtures. Labelled browser/provider test records remain private unless explicitly archived. Successful code tests are not a substitute for production/provider acceptance.
+Latest local validation: 126 Node tests and the Next.js production build passed. Added hosted checks are rollback-only and send no mail, place no orders and retain no fixtures. Labelled browser/provider test records remain private unless explicitly archived. Successful code tests are not a substitute for production/provider acceptance.
 
 ## Concrete activation dependencies
 
@@ -40,5 +41,5 @@ The HORECA storefront uses business quotation and acceptance, not unverified fix
 - `admin-upgrade.md`: operational fixes and previous provider/browser acceptance.
 - `mailbox-campaigns.md`: new correspondence/marketing implementation and exact configuration.
 - `governance-and-integrations.md`: preserved Resend/Razorpay evidence and provider refund error.
-- `scripts/verify-procurement.sql`, `scripts/verify-mailbox.sql`, `scripts/verify-campaigns.sql`: rollback-only hosted acceptance.
+- `scripts/verify-procurement.sql`, `scripts/verify-mailbox.sql`, `scripts/verify-campaigns.sql`, `scripts/verify-product-images.sql`: rollback-only hosted acceptance.
 - `data-rooms.md`, `client-engagements.md`, `provider-studio.md`: module handover records. Older statements about missing keys/registers are historical and superseded by this page.

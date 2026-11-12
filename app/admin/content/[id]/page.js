@@ -26,6 +26,7 @@ export default async function EditPage({ params, searchParams }) {
     ]);
   if (id !== "new" && !item) notFound();
   const {data:mediaAssets}=await client.from("ig_source_media").select("id,alt,source_name,path,preset,state,published,practice").order("created_at",{ascending:false}).limit(100);
+  const {data:creativeJobs}=await client.from("ig_provider_jobs").select("id,practice,kind,input,status,asset_key,published,note,created_at").eq("provider","runway").eq("kind","image").eq("practice","horeca").order("created_at",{ascending:false}).limit(30);
   const q=await searchParams;
   let seed=null;
   if(id==="new" && q?.ai){const {data:job}=await client.from("ig_ai_jobs").select("context,draft,practice").eq("id",q.ai).eq("status","ready").maybeSingle();if(job?.context?.kind==="intake" && job.context.record_kind!=="operation"){const draft=prepareIntakeDraft(job.draft);seed={...draft,kind:job.context.record_kind,practice:job.practice,public_data:draft.fields};}}
@@ -37,6 +38,7 @@ export default async function EditPage({ params, searchParams }) {
       initialKind={q?.kind}
       seed={seed}
       mediaAssets={mediaAssets||[]}
+      creativeJobs={creativeJobs||[]}
       terms={terms || []}
       selectedTerms={(tags || []).map((x) => x.term_id)}
       revisions={revisions || []}
