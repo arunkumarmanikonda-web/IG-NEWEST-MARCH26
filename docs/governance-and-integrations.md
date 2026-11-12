@@ -37,7 +37,7 @@ Razorpay adapter: administrator-issued invoice/accepted-quote payment requests, 
 | Fast2SMS | Optional; reserved configuration fields only. DLT principal entity, sender, template, credentials and consent-controlled delivery workflow remain required. No SMS sent. |
 | Google Workspace | Per-user OAuth/mail grants not implemented. Do not use shared Google passwords. |
 | Shopify | Not required for the present advisory/procurement quote architecture. A future retail catalogue/cart/fulfilment decision is separate. |
-| Vyapar | No verified API/accounting connector connected. Payment receipts are not GST invoices. |
+| Vyapar | Excluded at the owner’s direction. Payment receipts are not GST invoices. |
 | Legal operations | Confirm grievance appointment; counsel review policies/NDA and actual business model; implement operational retention, incident response and vendor agreements. |
 | Security | Database access tests pass; independent penetration test, restore drill, full log-retention/India-residency assessment and upload malware scanning remain pending. Supabase leaked-password protection requires the applicable paid plan and remains disabled. |
 | Production | No live domain cutover or production database activation. PR remains draft. |

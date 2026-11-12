@@ -28,7 +28,7 @@ The saved runtime recipient list is exactly `akm@indiagully.com`, `pavan@indiagu
 2. Supplier quotes, substitutions/deviations, brand/model references and comparable landed-cost tables. AI can suggest description matches; humans approve substitutions and prices.
 3. Versioned client quotation, tax/freight/installation terms, margins and approval thresholds. Acceptance locks the payable version.
 4. Purchase orders, supplier acknowledgements, dispatch/GRN, shortages, returns, credit notes and payment reconciliation.
-5. Inventory reservations only for goods actually stocked. Project procurement can remain quote-based. Vyapar should remain the accounting record until a documented, supported import/API route and reconciliation rules are confirmed.
+5. Inventory reservations only for goods actually stocked. Project procurement can remain quote-based. Update 12 November: Vyapar is excluded at the owner’s direction; no connector is planned.
 
 ## Recommended PMC implementation order
 
