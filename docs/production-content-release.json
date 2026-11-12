@@ -1,0 +1,536 @@
+{
+  "items": [
+    {
+      "body": "## Define the guest and the occasion\n\nA hotel serving business travel, a leisure resort and a banquet-led property have different operating requirements. Set out the intended guest, stay pattern and role of rooms, food and beverage, events and other facilities.\n\n## Bring operations into design\n\nThe design brief should address guest movement, service circulation, storage, kitchens, housekeeping and maintenance alongside the visible experience. Review these interfaces with the relevant design and operating professionals.\n\n## Connect the budget to the programme\n\nSeparate building works, interiors, equipment, operating supplies and pre-opening requirements. Track responsibilities, dependencies and decision dates so that a late specification or approval does not become a surprise at handover.\n\n## Treat opening as a workstream\n\nOpening readiness includes staffing, training, operating procedures, supplies, systems and testing. Define acceptance criteria and the handover evidence required from each appointed party.",
+      "kind": "article",
+      "slug": "hospitality-project-brief",
+      "tags": [],
+      "title": "A hospitality project starts with a better brief.",
+      "summary": "Connect the guest proposition, operating requirements and project budget before design decisions harden.",
+      "practice": "corporate",
+      "seo_title": "A hospitality project starts with a better brief.",
+      "source_id": "a297f480-a107-4717-a5cc-ce6b58802eaf",
+      "public_data": {
+        "image": "/images/dining.jpg",
+        "sector": "HOSPITALITY & PROJECTS",
+        "image_alt": "A hospitality project starts with a better brief."
+      },
+      "source_version": 1,
+      "seo_description": "Connect the guest proposition, operating requirements and project budget before design decisions harden."
+    },
+    {
+      "body": "## Keep the requirement identifiable\n\nAssign each requirement a stable line reference. Record the intended use, specification, unit of measure and quantity. Preserve that reference through vendor responses, substitutions, approvals and orders.\n\n## Distinguish a match from a substitution\n\nA similar description does not necessarily represent the same product. Compare material, dimensions, capacity, finish, accessories, warranty and service scope. Identify deviations explicitly and obtain approval before treating alternatives as equivalent.\n\n## Compare the complete commercial basis\n\nKeep base price, taxes, freight, installation and other charges separately visible. Compare minimum quantities, lead times, payment terms and delivery locations alongside price. Mark unquoted lines rather than assigning assumed rates.\n\n## Close the loop with an approval record\n\nRecord the selected specification, sample approval, commercial terms and delivery requirement. A change after selection should create a new version so the project team can identify what was ordered and why.",
+      "kind": "article",
+      "slug": "procurement-comparison",
+      "tags": [],
+      "title": "Compare specifications before comparing prices.",
+      "summary": "A useful procurement comparison makes inclusions, quantities and commercial terms visible.",
+      "practice": "corporate",
+      "seo_title": "Compare specifications before comparing prices.",
+      "source_id": "6a4805b1-2d70-4b1c-a116-1f23a3539fda",
+      "public_data": {
+        "image": "/images/dining.jpg",
+        "sector": "HORECA PROCUREMENT",
+        "image_alt": "Compare specifications before comparing prices."
+      },
+      "source_version": 2,
+      "seo_description": "A useful procurement comparison makes inclusions, quantities and commercial terms visible."
+    },
+    {
+      "body": "## Start with the decision\n\nAn owner considering a sale, a development partnership or refinancing is asking three different questions. Define the intended outcome, the time available and the constraints before preparing a presentation or beginning counterparty outreach.\n\n## Build one consistent fact base\n\nBring the asset description, area measurements, ownership information, approvals, leases and financial records into a controlled information set. Separate a documented fact from a management estimate and an adviser’s assumption. Record the date and source of each important figure.\n\n## Make the commercial case inspectable\n\nShow how revenue, costs, capital expenditure and timing support the proposed transaction. Explain sensitivities and information gaps. A polished memorandum is most useful when the underlying assumptions can be followed.\n\n## Sequence disclosure\n\nAn introductory teaser and a detailed diligence room serve different purposes. Agree what can be disclosed at each stage, who can receive it and how questions will be tracked. Specialist advisers should review matters within their respective scopes.",
+      "kind": "article",
+      "slug": "transaction-ready",
+      "tags": [],
+      "title": "What makes an asset ready for a serious conversation?",
+      "summary": "A clear brief and a consistent fact base give the transaction process a stronger starting point.",
+      "practice": "corporate",
+      "seo_title": "What makes an asset ready for a serious conversation?",
+      "source_id": "dcd51505-2cc0-4e47-ab95-da2b9155aae5",
+      "public_data": {
+        "image": "/images/prism.jpg",
+        "sector": "TRANSACTION ADVISORY",
+        "image_alt": "What makes an asset ready for a serious conversation?"
+      },
+      "source_version": 1,
+      "seo_description": "A clear brief and a consistent fact base give the transaction process a stronger starting point."
+    },
+    {
+      "body": "A hospitality structure featured in India Gully’s existing portfolio, with development and fit-out considerations to review.\n\nThis reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+      "kind": "opportunity",
+      "slug": "heritage-hotel-jaipur",
+      "tags": [],
+      "title": "Heritage Hotel Structure",
+      "summary": "A hospitality structure featured in India Gully’s existing portfolio, with development and fit-out considerations to review.",
+      "practice": "real-estate",
+      "seo_title": "Heritage Hotel Structure",
+      "source_id": "0fe29ef8-865e-4694-bfea-aa97d67c5e98",
+      "public_data": {
+        "city": "Jaipur",
+        "sector": "Hospitality",
+        "image_alt": "Heritage Hotel Structure",
+        "reference": "Portfolio reference",
+        "asset_class": "Hospitality development"
+      },
+      "source_version": 2,
+      "seo_description": "A hospitality structure featured in India Gully’s existing portfolio, with development and fit-out considerations to review."
+    },
+    {
+      "body": "A hotel and spa opportunity featured in India Gully’s existing hospitality portfolio.\n\nThis reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+      "kind": "opportunity",
+      "slug": "hotel-rajshree-chandigarh",
+      "tags": [],
+      "title": "Hotel Rajshree & Spa",
+      "summary": "A hotel and spa opportunity featured in India Gully’s existing hospitality portfolio.",
+      "practice": "real-estate",
+      "seo_title": "Hotel Rajshree & Spa",
+      "source_id": "df7eab84-93ff-4102-9187-ffa3dbde1aa7",
+      "public_data": {
+        "city": "Chandigarh",
+        "image": "/images/rajshree.webp",
+        "sector": "Hospitality",
+        "image_alt": "Hotel Rajshree & Spa",
+        "reference": "Portfolio reference",
+        "asset_class": "Hotel & wellness"
+      },
+      "source_version": 1,
+      "seo_description": "A hotel and spa opportunity featured in India Gully’s existing hospitality portfolio."
+    },
+    {
+      "body": "A commercial and hospitality asset featured in India Gully’s existing opportunity portfolio.\n\nThis reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+      "kind": "opportunity",
+      "slug": "prism-tower-gurgaon",
+      "tags": [],
+      "title": "Prism Tower",
+      "summary": "A commercial and hospitality asset featured in India Gully’s existing opportunity portfolio.",
+      "practice": "real-estate",
+      "seo_title": "Prism Tower",
+      "source_id": "3a7bcf57-2df3-45bc-a2aa-345efbe86c6c",
+      "public_data": {
+        "city": "Gurugram",
+        "image": "/images/prism.jpg",
+        "sector": "Commercial",
+        "image_alt": "Prism Tower",
+        "reference": "Portfolio reference",
+        "asset_class": "Mixed-use commercial & hospitality"
+      },
+      "source_version": 1,
+      "seo_description": "A commercial and hospitality asset featured in India Gully’s existing opportunity portfolio."
+    },
+    {
+      "body": "A resort asset featured in India Gully’s existing hospitality opportunity portfolio.\n\nThis reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+      "kind": "opportunity",
+      "slug": "welcomheritage-santa-roza-kasauli",
+      "tags": [],
+      "title": "Santa Roza, Kasauli",
+      "summary": "A resort asset featured in India Gully’s existing hospitality opportunity portfolio.",
+      "practice": "real-estate",
+      "seo_title": "Santa Roza, Kasauli",
+      "source_id": "46ddc493-4a4a-4f3b-8016-8070819c2081",
+      "public_data": {
+        "city": "Kasauli",
+        "image": "/images/kasauli.jpg",
+        "sector": "Hospitality",
+        "image_alt": "Santa Roza, Kasauli",
+        "reference": "Portfolio reference",
+        "asset_class": "Hill resort"
+      },
+      "source_version": 1,
+      "seo_description": "A resort asset featured in India Gully’s existing hospitality opportunity portfolio."
+    },
+    {
+      "body": "Bring the right expertise, market intelligence and counterparties to each assignment. Prepare information carefully, protect confidentiality and remain accountable for the work entrusted to us.",
+      "kind": "page",
+      "slug": "company-mission",
+      "tags": [],
+      "title": "Our mission",
+      "summary": "Turn a clear commercial brief into coordinated action.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "a760b65a-f03d-4d8c-b64f-b7b7c58b53d7",
+      "public_data": {},
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "India Gully is a brand of Vivacious Entertainment and Hospitality Private Limited, incorporated in 2017. We work with owners, promoters, investors and operators at the intersection of real estate, hospitality and business.\n\nOur work begins with the commercial question: what should an asset become, who is the right partner, how should a transaction be prepared, and what will it take to deliver? We bring together advisory, market engagement and execution support to answer those questions in context.\n\n“Celebrating Desiness” reflects our Indian roots and the entrepreneurial spirit of the businesses we serve. It sits alongside a disciplined approach to information, accountability and delivery.",
+      "kind": "page",
+      "slug": "company-story",
+      "tags": [],
+      "title": "An Indian perspective. A broader commercial view.",
+      "summary": "Independent thinking across real estate, hospitality, capital and execution.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "be31f047-ff1e-4e12-83ad-e0f997c78308",
+      "public_data": {},
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "We seek to connect local understanding with professional execution, helping clients make better decisions about assets, capital and the businesses they build.",
+      "kind": "page",
+      "slug": "company-vision",
+      "tags": [],
+      "title": "Our vision",
+      "summary": "To be a trusted Indian partner for considered investment, distinctive destinations and commercially sound growth.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "67c12b10-0f8a-4f65-a798-b00cb5ff801d",
+      "public_data": {},
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Amit leads India Gully’s real estate practice, combining transaction experience with a detailed understanding of retail destinations, leasing economics and asset positioning.\n\n## Market experience\n\nWith more than 15 years of experience, his work spans acquisitions, investments, leasing and asset management. His professional experience includes engagements associated with Gardens Galleria, Hyatt Andaz, AIPL Joy Street and Entertainment City Limited.\n\n## At India Gully\n\nAmit works with property owners, developers, investors and occupiers to define the commercial brief, identify suitable counterparties and coordinate negotiations. He brings particular focus to retail and commercial assets, tenant mix, income potential and the practical requirements of execution.\n\nHis role connects market intelligence with active mandate delivery, from initial opportunity assessment through commercial discussions and transaction coordination.",
+      "kind": "person",
+      "slug": "amit-jhingan",
+      "tags": [],
+      "title": "Amit Jhingan",
+      "summary": "President, Real Estate, with more than 15 years of experience in real estate transactions, retail leasing, investments and asset management across India.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "a656de08-e339-4fb0-bb99-5ec9d14fac1b",
+      "public_data": {
+        "image": "/images/amit.png",
+        "expertise": "Real estate transactions;Retail leasing;Investment advisory;Asset management",
+        "image_alt": "Amit Jhingan",
+        "job_title": "President · Real Estate",
+        "sort_order": "3"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Arun founded India Gully to bring commercial advisory and hands-on execution into one practice. His work spans asset strategy, transactions, hospitality development and the operating decisions that determine long-term value.\n\n## Experience and perspective\n\nWith more than 20 years of experience across real estate, hospitality and entertainment, Arun brings a promoter’s understanding of business priorities alongside an adviser’s discipline in preparing and executing transactions. His leadership experience includes Entertainment City Limited, Noida, home to The Great India Place, Gardens Galleria and Worlds of Wonder.\n\n## At India Gully\n\nArun leads the firm’s strategy, senior client relationships and complex mandates. He works with promoters, asset owners, investors and operating partners to assess opportunities, structure the commercial approach and coordinate the work required to move from an initial brief to a considered decision.\n\nHis focus includes real estate transactions, hospitality feasibility and operator strategy, development partnerships, debt advisory and special situations.",
+      "kind": "person",
+      "slug": "arun-manikonda",
+      "tags": [],
+      "title": "Arun Manikonda",
+      "summary": "Founder and Managing Director, bringing over two decades of experience across real estate, hospitality, entertainment and complex commercial transactions.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "f251bd6e-7852-4611-ab72-566a553c0615",
+      "public_data": {
+        "image": "/images/arun.jpg",
+        "expertise": "Corporate strategy;Transaction advisory;Hospitality;Special situations",
+        "image_alt": "Arun Manikonda",
+        "job_title": "Founder & Managing Director",
+        "sort_order": "1"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Pavan connects hospitality operations with project delivery and procurement. He brings more than 18 years of sector experience to the practical questions of operating standards, brand requirements, equipment selection and opening readiness.\n\n## Hospitality experience\n\nHis experience includes work across hospitality environments associated with Mahindra Holidays, Accor, CGH Earth and WelcomHeritage. This operating perspective informs the way India Gully approaches hotel briefs, vendor coordination and the detail of guest-facing delivery.\n\n## At India Gully\n\nPavan leads hospitality operations and HORECA engagement, working with owners, operators and suppliers to align specifications, budgets and delivery requirements. His remit includes brand onboarding support, furniture, fixtures and equipment, operating supplies and project procurement.\n\nHe helps clients translate a hospitality concept into an actionable sourcing and delivery programme, with attention to quality, suitability and coordination.",
+      "kind": "person",
+      "slug": "pavan-manikonda",
+      "tags": [],
+      "title": "Pavan Manikonda",
+      "summary": "Executive Director with more than 18 years of experience in hotel operations, brand engagement and the procurement requirements behind a successful hospitality project.",
+      "practice": "corporate",
+      "seo_title": "",
+      "source_id": "2431700d-853b-4799-a16c-aa90343341e1",
+      "public_data": {
+        "image": "/images/pavan.jpg",
+        "expertise": "Hotel operations;Brand engagement;HORECA procurement;Project delivery",
+        "image_alt": "Pavan Manikonda",
+        "job_title": "Executive Director",
+        "sort_order": "2"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "The engagement connected acquisition assessment with a subsequent strata-sale strategy and commercial execution support.\n\n## Scope of involvement\n\nAcquisition advisory. Strata-sale strategy.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "anand-lok",
+      "tags": [],
+      "title": "Anand Lok",
+      "summary": "Acquisition and strata-sale advisory for a commercial real estate assignment.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "2f65b9c5-591c-450f-ae83-dfaa6ca21a73",
+      "public_data": {
+        "city": "Delhi NCR",
+        "sector": "Real estate",
+        "expertise": "Acquisition advisory;Strata-sale strategy",
+        "sort_order": "2"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Hospitality sourcing work connected product requirements with the operating context of the property.\n\n## Scope of involvement\n\nHospitality sourcing. Operating supplies.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "cgh-earth",
+      "tags": [],
+      "title": "CGH Earth",
+      "summary": "Procurement engagement for experience-led hospitality.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "05328ab7-df85-41bd-85c5-1a979349af11",
+      "public_data": {
+        "city": "India",
+        "sector": "HORECA",
+        "expertise": "Hospitality sourcing;Operating supplies",
+        "sort_order": "10"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "The assignment brought hospitality operating considerations into project coordination and delivery planning.\n\n## Scope of involvement\n\nHospitality planning. PMC.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "cygnett-inn-corbett",
+      "tags": [],
+      "title": "Cygnett Inn",
+      "summary": "Project coordination in a resort and leisure hospitality setting.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "af3ef563-be38-4ff4-854b-8247093a8119",
+      "public_data": {
+        "city": "Corbett",
+        "sector": "Hospitality / PMC",
+        "expertise": "Hospitality planning;PMC",
+        "sort_order": "7"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "The assignment brought together commercial preparation, stakeholder coordination and transaction engagement for a complex destination asset.\n\n## Scope of involvement\n\nTransaction preparation. Stakeholder coordination.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "entertainment-city",
+      "tags": [],
+      "title": "Entertainment City, Noida",
+      "summary": "Joint transaction advisory engagement alongside EY across a significant retail and entertainment destination.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "a5ecb67b-bc4d-4f2e-a6ca-601364cb8d84",
+      "public_data": {
+        "city": "Noida",
+        "sector": "Transaction advisory",
+        "expertise": "Transaction preparation;Stakeholder coordination",
+        "sort_order": "1"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "An owner-focused project coordination assignment, connecting project priorities, consultant interfaces and delivery requirements.\n\n## Scope of involvement\n\nProject coordination. PMC.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "fern-residency",
+      "tags": [],
+      "title": "The Fern Residency",
+      "summary": "Project management consultancy for a hotel development.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "c503b00c-679d-4944-9590-302f08c791f0",
+      "public_data": {
+        "city": "Noida",
+        "sector": "Hospitality / PMC",
+        "expertise": "Project coordination;PMC",
+        "sort_order": "5"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Engagements included concepts such as Dearie, Impulse and Maricham, connecting brand requirements with the destination’s leasing opportunity.\n\n## Scope of involvement\n\nBrand engagement. Destination leasing.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "gardens-galleria",
+      "tags": [],
+      "title": "Gardens Galleria",
+      "summary": "F&B leasing work across a destination-led retail environment.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "a291e60b-1720-441c-b5ee-53b419dbd6da",
+      "public_data": {
+        "city": "Noida",
+        "sector": "Retail & F&B",
+        "expertise": "Brand engagement;Destination leasing",
+        "sort_order": "4"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "A specialist procurement assignment requiring attention to specification, presentation and project interfaces.\n\n## Scope of involvement\n\nSignage. Procurement coordination.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "grand-hyatt",
+      "tags": [],
+      "title": "Grand Hyatt",
+      "summary": "Signage-related procurement and coordination for a hospitality environment.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "43c5db8a-0a1d-4090-9bd4-d5fa80d4dcac",
+      "public_data": {
+        "city": "Gurugram",
+        "sector": "Hospitality procurement",
+        "expertise": "Signage;Procurement coordination",
+        "sort_order": "8"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "India Gully’s involvement connected the occupier requirement with the commercial leasing process within the Andaz hospitality environment.\n\n## Scope of involvement\n\nF&B leasing. Commercial coordination.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "khubani-andaz",
+      "tags": [],
+      "title": "Khubani at Andaz",
+      "summary": "Leasing engagement for a hospitality-led dining and entertainment concept.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "e4e95ea5-144b-4d6c-8eb8-0bbe2d26a87c",
+      "public_data": {
+        "city": "New Delhi",
+        "sector": "Retail & F&B",
+        "expertise": "F&B leasing;Commercial coordination",
+        "sort_order": "3"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "A HORECA engagement focused on the supplies and specifications required in operating hospitality properties.\n\n## Scope of involvement\n\nOperating supplies. HORECA.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "mahindra-holidays",
+      "tags": [],
+      "title": "Mahindra Holidays",
+      "summary": "Hospitality supplies and procurement engagement.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "bdac8fce-895d-486f-b2c4-55aa4a4f0e2a",
+      "public_data": {
+        "city": "India",
+        "sector": "HORECA",
+        "expertise": "Operating supplies;HORECA",
+        "sort_order": "9"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "A procurement engagement supporting the practical product requirements of a hotel operating environment.\n\n## Scope of involvement\n\nHORECA. Procurement.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "novotel-bengaluru",
+      "tags": [],
+      "title": "Novotel",
+      "summary": "Hospitality procurement and operating supplies.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "0d969c31-f30b-4d95-8afc-d5d4c6ad4655",
+      "public_data": {
+        "city": "Bengaluru",
+        "sector": "HORECA",
+        "expertise": "HORECA;Procurement",
+        "sort_order": "11"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "The engagement linked leasing discussions with the practical coordination required to prepare commercial space for occupation.\n\n## Scope of involvement\n\nLeasing. Fit-out coordination.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "peach-tree",
+      "tags": [],
+      "title": "Peach Tree",
+      "summary": "Leasing and fit-out coordination for a commercial property.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "07afb15d-f347-4568-a81e-ff825808fc93",
+      "public_data": {
+        "city": "Faridabad",
+        "sector": "Retail & fit-out",
+        "expertise": "Leasing;Fit-out coordination",
+        "sort_order": "12"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    },
+    {
+      "body": "Project management consultancy supported the coordination needed to progress a hotel brief through its delivery stages.\n\n## Scope of involvement\n\nPMC. Delivery coordination.\n\nThis is a selected historical engagement. It is not an offer of the asset or a representation of a current exclusive mandate.",
+      "kind": "project",
+      "slug": "regenta-central",
+      "tags": [],
+      "title": "Regenta Central",
+      "summary": "Hospitality project management and delivery coordination.",
+      "practice": "hospitality",
+      "seo_title": "",
+      "source_id": "86f083f4-fbf9-4684-b5f6-190e5cf1929d",
+      "public_data": {
+        "city": "Noida",
+        "sector": "Hospitality / PMC",
+        "expertise": "PMC;Delivery coordination",
+        "sort_order": "6"
+      },
+      "source_version": 1,
+      "seo_description": ""
+    }
+  ],
+  "source_project": "wktdgczjdocsnfgvcsat",
+  "target_project": "szmsvxbqtakzbfpvgeth",
+  "release": "2026-11-13-core-content",
+  "taxonomy": [
+    {
+      "dimension": "opportunity-context",
+      "slug": "cirp",
+      "label": "CIRP",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "development",
+      "label": "Development opportunity",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "distressed",
+      "label": "Distressed asset",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "growth-capital",
+      "label": "Growth capital",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "income-producing",
+      "label": "Income-producing asset",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "joint-venture",
+      "label": "Joint venture / JDA",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "refinancing",
+      "label": "Refinancing",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "special-situation",
+      "label": "Special situation",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "strategic-investment",
+      "label": "Strategic investment",
+      "description": ""
+    },
+    {
+      "dimension": "opportunity-context",
+      "slug": "turnaround",
+      "label": "Turnaround / repositioning",
+      "description": ""
+    }
+  ]
+}

@@ -44,3 +44,7 @@ The opportunity page exposed its one-page brief; the hotel brief rendered its lo
 ### Authentication channel decision
 
 Owner instruction, 11 November 2026: use email OTP for current authentication and defer Fast2SMS/DLT. The login screen defaults to email code; existing password fallback and staff MFA remain available. Fast2SMS stays disabled, and its activation is optional rather than a release dependency. No WhatsApp OTP provider is connected. Official WhatsApp authentication messages normally incur platform charges; free Business-app chats/click-to-chat are not an automated website OTP service. OpenAI and Runway keys are still entered only through encrypted CMS settings.
+
+### Production acceptance, 13 November 2026 IST
+
+This supersedes earlier missing-key status. Production OpenAI and Runway are enabled at revision 3 after owner-private key entry. Read-only model/organization checks succeeded. A real OpenAI HORECA draft and a real Runway image/import completed privately. The generated image was visually reviewed as a generic concept, not evidence of an actual product specification. Video and Fast2SMS remain disabled. Production leaked-password protection and stronger password rules are now enabled. Exact evidence and limits: `production-ai-release.md`.

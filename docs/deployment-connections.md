@@ -78,3 +78,11 @@ Commit 22ebe8d is READY in production as dpl_2296UHjs56udzrJaqJPyPmBUHdQa. The o
 ## Production email acceptance, 13 November 2026 IST
 
 The owner privately supplied the Resend API key and new production webhook secret. Sender-domain verification was checked in Resend. Configuration revision 5 is enabled. Webhook 6abf8bc5-3619-4261-a737-a7f58c69466f targets the production relay for five delivery/failure events. A labelled owner-only test email was delivered, and the actual Resend-originated signed event returned HTTP 200 Accepted and updated the database to delivered on its first attempt. The test enquiry is closed and retained privately; no other staff received the test. Marketing remains disabled and no queued transactional jobs remain. See `production-email-release.md`.
+
+## Production AI, security and content checkpoint, 13 November 2026 IST
+
+OpenAI and Runway revision 3 are enabled after successful provider checks and real private generation acceptance. See `production-ai-release.md`. Auth password safeguards are saved: secure password change, leaked-password protection, minimum 12 characters with lowercase, uppercase, digit and symbol requirements. The post-change security advisor reports no warnings/errors. The backup dashboard shows a completed physical backup at 12 November 2026 19:23:22 UTC; no restore was performed and Storage object bytes are not included.
+
+The previously empty production CMS now contains 21 published core records (3 company pages, 3 leadership profiles, 3 articles, 12 historical projects), 4 unpublished opportunity drafts and 10 taxonomy terms. Only published preview content was transferred; no private data or test products were copied. New production IDs, revision snapshots and explicit deployment audit entries preserve the source project/ID/version without impersonating a user. The transaction refuses to overwrite nonempty CMS/taxonomy tables. All referenced local media exist. The production About page visibly renders the transferred content.
+
+Recovery acceptance, a restore exercise, live payment/refund acceptance and domain cutover remain outstanding. The four opportunity drafts require current mandate/availability confirmation. Cloudflare remains authoritative; Vercel domain configuration is not ready and no DNS was changed. PR #3 remains draft and unmerged.

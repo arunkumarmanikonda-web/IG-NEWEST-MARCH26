@@ -13,7 +13,7 @@ Enabled after the owner's explicit “approve relay” authorization on 13 Novem
 | Relay credential | Dedicated Vercel automation bypass, stored only in production Supabase Vault; never in provider URLs |
 | Provider authentication | A separate live Razorpay webhook secret; the destination checks the original payload signature and payment binding |
 | Other fixed relay paths | Signed Resend delivery events and HMAC-authenticated transactional/provider worker requests |
-| Current activation | Razorpay live mode, revision 4; Resend transactional email enabled, revision 5; AI/SMS and marketing delivery remain disabled |
+| Current activation | Razorpay live mode, revision 4; Resend transactional email enabled, revision 5; OpenAI and Runway enabled at revision 3; SMS and marketing delivery remain disabled |
 
 The relay exposes only fixed provider/worker paths. It does not expose the admin dashboard, arbitrary URLs, database credentials or the Vercel bypass to callers. The Vercel bypass is a persistent credential with access to protected project deployments; compromise of the relay or its Vault credential is therefore a security risk. App authentication, MFA, database permissions and webhook signature checks remain enforced. Disable the relay and revoke its dedicated bypass to roll it back.
 
