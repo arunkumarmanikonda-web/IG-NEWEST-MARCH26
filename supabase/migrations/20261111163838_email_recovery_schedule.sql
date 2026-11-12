@@ -10,10 +10,15 @@ begin
  if c.origin is null or bypass is null or worker is null then raise exception 'Relay is unavailable';end if;
  return jsonb_build_object('origin',c.origin,'bypass',bypass,'worker',worker);
 end $$;
+-- No environment can dispatch until its own worker origin is configured.
+alter table ig_private.webhook_relay add column if not exists supabase_origin text
+ check (supabase_origin ~ '^https://[a-z0-9]{20}\.supabase\.co$');
 create function ig_private.run_email_worker() returns bigint language plpgsql security definer set search_path='' as $$
-declare worker text;stamp text;signature text;request_id bigint;
+declare worker text;stamp text;signature text;request_id bigint;worker_origin text;
 begin
  if not exists(select 1 from ig_private.integration_config where id='resend' and mode='enabled') then return null;end if;
+ select supabase_origin into worker_origin from ig_private.webhook_relay where id and enabled;
+ if worker_origin is null then return null;end if;
  if not exists(select 1 from public.ig_outbox where status in ('awaiting_provider','queued','failed') and attempts<5 and (first_attempt_at is null or first_attempt_at>now()-interval '23 hours') and (next_attempt_at is null or next_attempt_at<=now()) and (lease_until is null or lease_until<now())) then return null;end if;
  select decrypted_secret into worker from vault.decrypted_secrets where name='ig_email_worker';
  if worker is null then raise exception 'Worker is not configured';end if;
@@ -21,7 +26,7 @@ begin
  signature=encode(extensions.hmac(convert_to('ig-email-worker-v1.'||stamp||'.{}','UTF8'),convert_to(worker,'UTF8'),'sha256'),'hex');
  -- pg_net's queue contains only a short-lived action signature, never permanent credentials.
  select net.http_post(
-  url:='https://wktdgczjdocsnfgvcsat.supabase.co/functions/v1/ig-provider-webhook/worker',
+  url:=worker_origin||'/functions/v1/ig-provider-webhook/worker',
   headers:=jsonb_build_object('Content-Type','application/json','x-ig-timestamp',stamp,'x-ig-signature',signature),
   body:='{}'::jsonb,timeout_milliseconds:=120000
  ) into request_id;

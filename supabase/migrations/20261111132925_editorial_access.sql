@@ -9,12 +9,11 @@ end $migration$;
 
 alter table public.ig_profiles add column must_change_password boolean not null default false;
 alter table ig_private.staff_invites add column require_password_change boolean not null default false;
-insert into ig_private.staff_invites(email,roles,require_password_change) values
- ('akm@indiagully.com',array['owner'],true),
- ('pavan@indiagully.com',array['administrator'],true),
- ('amit.jhingan@indiagully.com',array['administrator'],true)
-on conflict(email) do update set roles=excluded.roles,require_password_change=true
-where staff_invites.accepted_by is null and not staff_invites.revoked;
+-- Fresh installations must not grant named staff roles as a schema side effect.
+-- Preserve the roles of existing invitations and strengthen their sign-in gate.
+-- Additional staff invitations are provisioned separately with owner approval.
+update ig_private.staff_invites set require_password_change=true
+where accepted_by is null and not revoked;
 
 create or replace function ig_private.new_profile() returns trigger language plpgsql security definer set search_path='' as $$
 begin

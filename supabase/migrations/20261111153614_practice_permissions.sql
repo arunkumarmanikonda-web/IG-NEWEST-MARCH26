@@ -17,11 +17,8 @@ alter table ig_private.staff_invites add column practice_grants jsonb not null d
 alter table public.ig_content add column practice text not null default 'corporate' check(practice in ('real-estate','transaction-advisory','debt-special-situations','hospitality','retail-leasing','entertainment','horeca','corporate'));
 update public.ig_content set practice=case when kind='opportunity' then 'real-estate' when kind='product' then 'horeca' when kind='project' then 'hospitality' else 'corporate' end;
 create index ig_content_practice on public.ig_content(practice);
-do $$declare g jsonb;begin
- select jsonb_object_agg(k,'["read","write","publish","enquiries","data_rooms","commerce"]'::jsonb) into g from unnest(array['real-estate','transaction-advisory','debt-special-situations','hospitality','retail-leasing','entertainment','horeca','corporate'])k;
- update public.ig_profiles p set practice_grants=g from auth.users u where p.id=u.id and lower(u.email) in ('akm@indiagully.com','pavan@indiagully.com','amit.jhingan@indiagully.com');
- update ig_private.staff_invites set practice_grants=g where email in ('akm@indiagully.com','pavan@indiagully.com','amit.jhingan@indiagully.com');
-end $$;
+-- Practice rights start empty and are assigned explicitly by the owner.
+-- Schema installation must not automatically expand named staff access.
 create function ig_private.scope_allowed(practice text,capability text) returns boolean language sql stable security definer set search_path='' as $$
  select ig_private.allowed('admin.read') and exists(select 1 from public.ig_profiles p where p.id=auth.uid() and ('owner'=any(p.roles) or coalesce(p.practice_grants->practice,'[]') ? capability))
 $$;

@@ -5,10 +5,11 @@
 - Source: `arunkumarmanikonda-web/IG-NEWEST-MARCH26` on GitHub.
 - Change branch: `backend/2026-11`; PR #3 targets `main`.
 - Vercel: `india-gully` in `akms-projects-1230b0a9`.
-- Existing Supabase: `india-gully-preview`, project `wktdgczjdocsnfgvcsat`, Mumbai.
+- Preview Supabase: `india-gully-preview`, project `wktdgczjdocsnfgvcsat`, Mumbai.
+- Production Supabase: `india-gully-production`, `szmsvxbqtakzbfpvgeth`, Mumbai (`ap-south-1`), in India Gully Pro (`phcobqderzqawddtptqi`).
 - The other Supabase project `xjqehwvxscoktfecbwse` is not the India Gully backend.
 
-GitHub pushes already trigger Vercel preview builds. Commit `f74b926` reached READY and GitHub's Rebuild quality check passed. Preview/Development have the Supabase public URL/key and server-side integration configuration. Production currently has the separately saved live Razorpay pair but no configured production database. PR #3 remains unmerged.
+GitHub pushes already trigger Vercel preview builds. Commit `f74b926` reached READY and GitHub's Rebuild quality check passed. Preview/Development have the Supabase public URL/key and server-side integration configuration. Production now has the Mumbai database URL/publishable key and distinct sensitive master, room broker, enquiry ingest and email-worker secrets, alongside the separately saved live Razorpay pair. No provider has been activated in the production database. PR #3 remains unmerged.
 
 ## Supabase Git deployment preparation
 
@@ -22,12 +23,24 @@ Association alone is not proof of an applied deployment. Verify an actual deploy
 
 For the existing test database, any enabled branch must be `backend/2026-11` while production is being prepared. The dedicated production project's branch must be `main`. Leave automatic PR database branching off unless its separate hourly cost is explicitly approved. GitHub integration itself works on the Free plan.
 
+## Production installation: 12 November 2026 UTC
+
+The owner explicitly approved deleting the empty Oregon project and replacing it with a Mumbai Micro project. Oregon `ngnvkdwejdurasrxxfks` was deleted and the healthy replacement `szmsvxbqtakzbfpvgeth` was created in the existing India Gully Pro organisation. No new organisation or second active Micro project was added.
+
+Forty migrations are installed. `consent_campaign_delivery` and `campaign_scheduler_guard` are deliberately NOT applied in production: automatic approval review rejected installing the bulk campaign capability. They remain in the repository and preview history, so do not run an unrestricted `db push` or enable automatic database deployment until this is resolved. No ledger entries were fabricated for the two omitted migrations. Production campaign UI and RPC dispatch fail closed unless `CAMPAIGNS_INSTALLED=true`; `MARKETING_ENABLED=false` is set independently.
+
+Four historical files now use safer fresh-install defaults: editorial migration no longer creates named administrator invitations; practice permissions no longer grant named staff all-practice rights; governance stores the initial policy as an unpublished, unreviewed draft and hides it from public reads; the initial scheduler uses a configured environment origin instead of the preview hostname. These changes were required after automatic approval review rejected the original side effects. Existing preview roles and policy records were not changed. Do not describe those four historical SQL files as byte-identical across environments.
+
+The new `environment_worker_origin` migration is applied to both projects. Each relay has its own Supabase origin. The production relay remains disabled. Recovery covers transactional email and explicitly requested provider jobs; marketing scheduling requires a separately approved release. All 40 production migration SQL digests matched repository files before their tool-generated version timestamps were reconciled to canonical source timestamps in a guarded transaction. No application records were removed.
+
+All three Edge Functions are deployed: `ig-room-broker`, `ig-creative-media`, `ig-provider-webhook`. They retain per-handler authentication. Existing private source/catalogue buckets are private; room and creative buckets are created privately on first authorised use. Vercel Production received its own public URL/key and four sensitive server secrets; Preview/Development values were not copied or changed. Only hashes of master/broker/ingest credentials are stored in application configuration. Production has no Auth users, no customer/test enquiries or outbox entries, no enabled providers and no current legal release. Pavan's requested grievance contact is saved; statutory confirmation remains false.
+
+The production project's native GitHub integration is connected to the same repository, working directory `.`. Automatic production database deployment and paid PR branching are OFF. GitHub-to-Vercel preview builds remain active. A saved GitHub association is not automatic schema deployment.
+
+Validation: 137 Node tests and the Next.js build passed. The new rollback-only scheduler suite verified missing/disabled origin, disabled provider, destination selection, signed requests and restricted execution; queued HTTP was rolled back before dispatch. The existing 12 delivery/permission assertions passed in production. The final check found zero test enquiries, outbox rows or HTTP queue entries, all public application tables protected by RLS, and three latest cron runs successful. Supabase security advisories reported only informational notices for deliberately inaccessible private tables, no warnings/errors.
+
 ## Remaining release steps
 
-The owner completed the CAPTCHA and billing flow on 13 November 2026 (India time). The dashboard confirms the new `India Gully` Pro organisation, `phcobqderzqawddtptqi`. A project was also created during that handoff: `ngnvkdwejdurasrxxfks`, currently named `arunkumarmanikonda-web's Project`, Micro compute, West US (Oregon), `us-west-2`. The dashboard showed provisioning in progress, no GitHub connection and no migrations. This session has not deployed application schema, functions or production secrets to it.
+Complete production SMTP, Auth URL/security settings, owner onboarding and recovery; confirm the current legal/statutory release; decide explicitly on Pavan/Amit staff roles and the optional campaign module; finish production provider credentials/webhooks and acceptance, content release and a restore drill. The owner invitation for akm@indiagully.com is installed, but no sign-in or mail was triggered. Pavan/Amit administrator invitations were not created in production.
 
-The existing ChatGPT Supabase connection still lists only the old organisation; querying the new organisation returns a permission error. Reauthorise the Supabase connection for `India Gully` before deploying through it. Do not recreate the organisation or assume the newly created project is in Mumbai. Resolve its Oregon location before application deployment; Supabase changes regions by migrating to another project, not an in-place region switch. Do not create another billable project or delete the current one without the applicable owner approval.
-
-Once access and the production location are resolved, deploy the checked schema/functions and configure private storage, email authentication, owner access and distinct server secrets. Stage a production Vercel deployment against that project, validate the complete application flow, then merge/release the checked commit and connect the live domain. Production secrets must never be copied into Preview or Development.
-
-Razorpay collection stays disabled until production credential import, webhook setup and the existing merchant/company/legal checks pass. Saving the live keys does not activate payments.
+Stage and test the application against this database before merge/domain cutover. Keep the existing live domain on its current host while these checks remain open. Razorpay collection stays disabled until credential import, webhook setup and merchant/company/legal checks pass. Saving live keys does not activate payments. Google mailbox OAuth remains a separate disabled integration.
