@@ -657,3 +657,5 @@
 .media-card{border:1px solid #dbe2d3;border-radius:6px;padding:12px;min-width:0}.media-card p{font-size:12px;line-height:1.6;margin:12px 0}.media-card small,.media-card code{font-size:10px;overflow-wrap:anywhere}.media-card label{font-size:11px}.editor-media{border-top:1px solid #dbe2d3;margin:30px 0;padding:20px 0}
 
 .procurement-portal{width:100%;max-width:1200px;margin:auto}.preserve-lines{white-space:pre-wrap}.quote-basket .workspace-form{max-width:1200px}.quote-basket input,.quote-basket textarea{width:100%}.quote-basket td:first-child{min-width:250px}.procurement-portal .workspace-card{margin-bottom:24px}
+
+.mail-threads{list-style:none;padding:0}.mail-threads button{text-align:left;width:100%}.mail-message{padding:20px 0;border-bottom:1px solid var(--line,#deded7);overflow-wrap:anywhere}.mail-message p{white-space:pre-wrap}

@@ -1,62 +1,44 @@
 # India Gully launch acceptance
-Updated 12 November 2026 (India Standard Time).
+Updated 12 November 2026 (India Standard Time). This is the current status record and supersedes dated status paragraphs in earlier architecture documents.
 
-**Current continuation record:** [Admin operations acceptance](admin-upgrade.md). This supersedes older statements below that HORECA/PMC registers are absent or provider keys are missing. Separate workspaces, RFQs/quotes/orders/movements and PMC programme/cost/change/progress registers are implemented in preview. OpenAI and Runway credentials are present and enabled; a real OpenAI intake draft has succeeded. Provider connection checks alone are not full workflow acceptance. Production launch gates remain open.
- The live domain must remain on its existing host until the full acceptance suite passes.
+## Working implementation
 
-## Implemented and tested
-- GitHub repository is linked to Vercel project `india-gully`; the merged public site is deployed.
-- Public pages and server valuation calculation verified on the deployment.
-- Private Vercel Blob was provisioned during initial setup. The implemented data-room backend uses private Supabase Storage with project/NDA grants, previews and per-file download controls; see the data-room handover for the tested access boundaries.
-- SVG favicon and pinned-tab mask trace the supplied India Gully monogram. The original raster assets remain unchanged.
-- Unique canonical, Open Graph and Twitter metadata; organisation, website, service, article and breadcrumb structured data; manifest; sitemap and robots routes.
-- Indexing defaults to OFF. Enable only after domain acceptance using `SEARCH_INDEXING_ENABLED=true`, `VERCEL_ENV=production` and `NEXT_PUBLIC_SITE_URL=https://www.indiagully.com` (or the selected apex canonical). A preview hostname cannot pass this gate.
-- Public opportunity projection is an allowlist. Exact address, coordinates, owner contacts and document fields are not emitted. Current portfolio references expose only city/region. Confidential identities need separate reviewed teaser copy, an opaque slug and reviewed imagery. This does not grant private access or make already-public named portfolio entries anonymous.
-- Seven paused search campaign drafts with exact/phrase keyword mappings and length-validated ad text. Drafts are not keyword-volume research, Google policy approval, live ads or conversion tracking.
-- Unit coverage includes indexing gates, public-field exclusion and confidential identity checks. CI now covers main and backend branches. Dependency update proposals are scheduled; automatic merging is not enabled.
-
-## Blocking provider state
-| Capability | Current state | Required evidence before launch |
+| Workspace / journey | Implemented behaviour | Evidence |
 |---|---|---|
-| Database / identity | Dedicated Supabase preview in Mumbai; SMTP enabled; staff verification emails delivered; owner verification, password change and MFA completed | Production isolation/configuration, remaining staff onboarding, full recovery journey, compromised-password protection (paid plan); preview redirects and strong password policy configured |
-| CMS / CRUD | Database-backed content/user/category operations with audit; published snapshots; real owner login and protected CMS access observed | Remaining role-by-role browser acceptance, complete static-section field mapping, media uploads and revision rollback UI |
-| Resend | Verified sender, acknowledgement plus three recipient notifications delivered; signed webhooks and recovery cron active | Production credential isolation and acceptance; forced-retry/bounce operational drills and production monitoring |
-| Google Workspace | No website OAuth client or mailbox grants | Per-user authorisation, encrypted tokens, scoped access, disconnect and thread tests |
-| AI | Source-based OpenAI drafting studio implemented with practice/MFA checks, request/token caps and unpublished-save review; disabled with no credential | API key and funded account, live generation acceptance; creative-provider connection remains pending |
-| Runway | ChatGPT connector is not a website API credential | Provider account, credential, queue/retry/cancellation and output rights/provenance |
-| HORECA commerce | Razorpay invoice collection enabled in preview test mode; INR 1 checkout captured; customer/admin reconciliation verified; signed relay and duplicate receipt checks passed | Provider refund attempt rejected with HTTP 400; resolve and complete refund/failure/webhook-only recovery acceptance. Full catalogue/pricing/stock/cart, reviewed commercial policies and production/live credentials remain pending |
-| Vyapar | Public API not verified | Official supported interface for the actual licence/version; otherwise approved file exchange with reconciliation |
-| NDA / data rooms | Typed-name, versioned acceptance; project review/grants; private folders, bulk upload, watermarked previews and download rules; private client engagements with one-action multi-email sharing | Owner-approved legal wording, real client acceptance, production storage/retention/restore and optional certified signature provider |
-| SMS | Fast2SMS not configured | Account, sender/template configuration, consent rules and delivery test |
-| Marketing / SEM | Consent preferences persist; campaigns remain paused drafts | Suppression processing, unsubscribe delivery links, approved caps, provider access and independently verified conversions |
-| Operations | Production acceptance outstanding | Backups and restore drill, monitoring, incident owner, retention, security review, mobile and accessibility QA |
+| Website and CMS | About, leadership, practices, opportunities, insights, legal pages, SEO, valuation; separated CMS and listings; revisions, publication, archive and taxonomy | Preview deployment, build and automated coverage |
+| Global clients and data rooms | Shared client directory, independent practice engagements, folders/bulk upload, multiple verified contacts, NDA and per-file/per-contact access, watermarked read-only previews | Earlier Auth/storage checks and rollback-only permission suites |
+| HORECA operations | Catalogue/SKU import; RFQs, supplier quotes, landed comparison, awards, receipts, dispatch/returns, delivery and stock reconciliation | 38 operational/catalogue/media checks; browser RFQ save |
+| HORECA customer and supplier portal | Quotation basket, private request tracking, deadline-bound supplier assignments, supplier submissions, separate customer selling quotes, exact revision acceptance, payment request and fulfilment projection | 23 hosted rollback-only checks; browser request WEB-BA81231E10AB persisted and visible in customer portal |
+| PMC and other practices | Programme dependencies, baseline/costs, variations, measured progress, RFI/risk registers and closure guards; independent advisory practice workspaces | Hosted operational checks; production build |
+| AI content and media | Source text/PDF/Office/CSV/images, evidence, missing-data questions, product/project forms and SEO; source image preparation; Runway queue and private output | Real OpenAI text and CSV intake; CSV preserved SKU QA-FILE-PLATE-002, MOQ 24, pack 12, lead 14; real Runway private image import |
+| Personal business mailbox | Own-address Google OAuth, inbox search, plain-text threads, encrypted drafts, reviewed sending, disconnect | 15 hosted rollback-only checks and unit coverage; Google activation still awaits credentials |
+| Email marketing | Scoped consented audiences, owner release, immutable approved copy, pause/resume, capped queue, unsubscribe, suppression and delivery reporting | 18 hosted rollback-only checks; no campaign sent |
+| Transactional email and sign-in | Email OTP; enquiry acknowledgement and three senior notifications; signed delivery reports and recovery worker | Prior real four-message delivered test; owner onboarding/MFA |
+| Payment collection | Razorpay test-mode invoice/quote collection, signature verification, provider reconciliation and replay handling | INR 1 sandbox capture and reconciliation; refund remains a provider issue |
 
-GitHub is connected to Vercel and the stable branch preview runs the real Supabase backend. Verification email delivery and owner onboarding are complete. Production configuration, remaining staff onboarding and the outstanding acceptance rows above still block full launch.
+Latest local validation: 123 Node tests and the Next.js production build passed. Added hosted checks are rollback-only and send no mail, place no orders and retain no fixtures. Labelled browser/provider test records remain private unless explicitly archived. Successful code tests are not a substitute for production/provider acceptance.
 
-## Search and conversion acceptance
-Confirm every canonical resolves, redirects preserve valuable old URLs, private paths stay excluded, structured data matches visible facts, and sitemap includes only approved public content. Do not advertise old portfolio references as current sale mandates. Do not set `lead_submitted` on button clicks or a mailto opening: count it only after a server-persisted enquiry. Record payment conversions only from verified provider events. Enable analytics/remarketing according to the selected consent policy. Review debt/financial-services ad eligibility for the intended market before enabling that campaign.
+## Concrete activation dependencies
 
-Official references checked: [Google favicon](https://developers.google.com/search/docs/appearance/favicon-in-search), [Google robots](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag), [Google supported meta tags](https://developers.google.com/search/docs/crawling-indexing/special-tags), [Google Ads responsive search ads](https://developers.google.com/google-ads/api/docs/responsive-search-ads/create-responsive-search-ads).
+1. **Production database and recovery:** the India Gully database is the Mumbai preview project. Its organisation is on Free and two active projects were observed. A separate production project/plan, its own credentials, SMTP/storage configuration and a restore drill remain required. Existing unrelated projects were not repurposed. No production backend secrets are configured in Vercel.
+2. **Company sign-off:** appoint and confirm the grievance officer's name/designation and review the existing legal/commercial policy revision. The `statutory_details_confirmed` control remains false. This cannot be inferred from the owner's role.
+3. **Staff access:** Arun completed verification, password change and MFA. Pavan/Amit and other authorised roles must complete their own onboarding; a full account recovery journey remains unobserved. Compromised-password checking is disabled on the present Free plan.
+4. **Google Workspace:** supply the website's OAuth client ID/secret and approved callback, enable Gmail API and obtain each user's consent. The implementation remains disabled. ChatGPT's connected Gmail account cannot supply website OAuth credentials. See `mailbox-campaigns.md`.
+5. **Payments:** the merchant's sandbox refund returned HTTP 400 from both dashboard and documented API. Resolve with Razorpay, then complete real provider refund/failure/recovery cases and configure isolated live credentials. No refund success is claimed.
+6. **Marketing and SEM:** email campaign code is complete but production delivery is disabled. A real campaign requires owner-approved content and audience. Google Ads requires account access, an explicit budget and verified conversion configuration; current search campaigns are paused drafts. No ads, pixels or marketing messages were activated.
+7. **Vyapar:** obtain the actual licence/version and supported API or sample import/export specification. No unverified live accounting connector is claimed.
+8. **Location enrichment:** coordinates can be extracted from supplied full map links and reviewed. No external geocoder account has been selected. Missing geographic facts remain unanswered.
 
-## PR #3 merge gates
-Keep this PR in draft. Implementation commit `4d444ae` passed 87 tests, production build and GitHub Actions run `43077098482`. Twenty-one rollback-only database assertions cover payment permissions, capture/refund bounds, duplicate receipts and non-regression. AKM completed mailbox verification, mandatory password rotation, policy acceptance and TOTP with protected CMS access. SMTP and real confirmation delivery are verified. Remaining merge gates are a full recovery journey, resolution of the compromised-password control, and a production environment with its own migrated database and secrets (or a separately approved staging-only release strategy). Full live-domain acceptance additionally requires the provider and operational rows above. A successful test-mode payment does not clear live-payment or legal approval gates.
+## Release boundary
 
-## Payment recovery acceptance · 11 November 2026
+Keep PR #3 in draft until authentication/recovery, production isolation and the applicable activation dependencies pass. Keep the current live domain on its existing host. Preview indexing remains off. The deployment must not be described as a fully live marketplace while payment, legal and production acceptance remain open.
 
-The customer dashboard now offers **Check payment status**; the CMS offers **Reconcile with Razorpay** with verified payment/refund totals and timestamps. Both controls were exercised against the captured INR 1 sandbox payment on the deployed branch preview. Neither control charges the customer or initiates a refund. Checkout remains busy until completion or dismissal to reduce accidental repeated submissions.
+The HORECA storefront uses business quotation and acceptance, not unverified fixed-price retail checkout. Prices, tax, freight, availability and delivery are confirmed in a released quotation. Supplier costs are never part of the customer projection.
 
-The merchant webhook now subscribes to `payment.captured`, `payment.failed`, `refund.processed` and `refund.failed`. A clearly labelled synthetic event tested the actual public relay: missing signature HTTP 401, altered signed body HTTP 401, valid signature HTTP 200, repeated event HTTP 200 with one durable receipt. This is a synthetic relay test against a real provider-fetched payment, not evidence that Razorpay itself retried an event or that a lost checkout callback was recovered.
+## Evidence and handover
 
-**Unresolved provider issue:** the merchant dashboard and one idempotent documented API request both rejected the test refund with `BAD_REQUEST_ERROR: invalid request sent` (API HTTP 400). The original payment remains captured, with INR 0 refunded. No refund success is claimed and no real money moved. Resolve this merchant/test-mode issue with Razorpay before live activation. Refund state handling has controlled-response and database coverage; real partial/full/failed-refund acceptance remains outstanding.
-
-
-## Governance and payments update · 11 November 2026
-See [governance-and-integrations.md](./governance-and-integrations.md) for the current implementation and complete activation blockers. Policies/settings, practice rights, privacy requests, Resend enquiry delivery and Razorpay invoice collection have been added. This does not clear the public-launch gates.
-
-## Client engagement and AI drafting update · 12 November 2026
-
-See [client-engagements.md](./client-engagements.md) and [ai-editorial.md](./ai-editorial.md). Added private client/contact/engagement administration, one-action sharing to multiple independently authenticated contacts, per-contact download rights, individual secure-link circulation and email-code sign-in. Feasibility, valuation, forensic audit and operational audit are included under Transaction Advisory. Validation: 95 Node tests, production build, 25 rollback-only client-room assertions and 12 rollback-only AI assertions passed. The hosted schema and sign-in-code email template are updated; provider credentials and production acceptance gates remain as listed above.
-
-## 11 November 2026 provider and engine audit
-
-See [provider-studio.md](provider-studio.md) and [platform-audit-2026-11-11.md](platform-audit-2026-11-11.md). Runway creative jobs/private storage/review controls and Fast2SMS DLT service-message jobs are now implemented, but no website keys or live acceptance are present. HORECA now reads published product records into a searchable catalogue; the full procurement/inventory engine and PMC operational registers remain incomplete. Published opportunities have a database-derived one-page print brief. These changes do not remove any production launch gate.
+- `admin-upgrade.md`: operational fixes and previous provider/browser acceptance.
+- `mailbox-campaigns.md`: new correspondence/marketing implementation and exact configuration.
+- `governance-and-integrations.md`: preserved Resend/Razorpay evidence and provider refund error.
+- `scripts/verify-procurement.sql`, `scripts/verify-mailbox.sql`, `scripts/verify-campaigns.sql`: rollback-only hosted acceptance.
+- `data-rooms.md`, `client-engagements.md`, `provider-studio.md`: module handover records. Older statements about missing keys/registers are historical and superseded by this page.
