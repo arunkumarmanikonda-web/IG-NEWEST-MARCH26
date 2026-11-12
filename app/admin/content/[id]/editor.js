@@ -29,6 +29,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
   const data = initial.public_data || {};
   const [slug,setSlug]=useState(initial.slug||slugFromTitle(initial.title)),[customSlug,setCustomSlug]=useState(!!item),[editSku,setEditSku]=useState(false);
   const [image,setImage]=useState(data.image||""),[imageAlt,setImageAlt]=useState(data.image_alt||"");
+  const applicableTerms=terms.filter(t=>selectedTerms.includes(t.id)||(kind==='product'?['product-category','practice'].includes(t.dimension):kind==='opportunity'?t.dimension!=='product-category':t.dimension==='practice'));
   const section=kind==="opportunity"?"listings":kind==="product"?"catalogue":kind==="project"?"projects":"cms";
   async function run(task) {
     setBusy(true);
@@ -183,10 +184,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
           />
         </label>
         <p className="wide workspace-note">
-          These fields are public when published. Do not enter exact addresses,
-          personal contacts or restricted financial documents. Confidential
-          listings must use an opaque reference, non-identifying title and
-          approved imagery.
+          {kind==='product'?'Product details become public only after publication. Verify the brand, manufacturer code, specifications and image match against your source.': 'These fields are public when published. Do not enter exact addresses, personal contacts or restricted financial documents. Confidential listings need an opaque reference, a non-identifying title and approved imagery.'}
         </p>
         {kind==='product'&&<div className="sku-control wide"><label className="check"><input type="checkbox" checked={editSku} onChange={e=>setEditSku(e.target.checked)}/>Set or edit SKU manually</label><label>India Gully SKU<input name="sku" defaultValue={item?data.sku||'':''} readOnly={!editSku} maxLength={80} pattern="[A-Za-z0-9][A-Za-z0-9._-]{1,79}" placeholder="Generated automatically when this product is saved"/></label><p className="workspace-small">{data.sku?'The existing SKU is retained unless you change it.':'An unused SKU is assigned automatically using the brand and a sequential reference.'} Manufacturer model / article codes belong in Public reference.</p></div>}
         {[...(kind==="person"?[
@@ -223,7 +221,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
         {["opportunity","project"].includes(kind)&&<div className="wide workspace-actions"><button type="button" onClick={e=>{const form=e.currentTarget.form,source=form.elements.namedItem('location_source').value,coordinates=coordinatesFromText(source);if(!coordinates){setMessage('Paste a full Google Maps link containing @latitude,longitude or query=latitude,longitude in Location source. Short links and city names do not contain coordinates.');return;}for(const[k,v]of Object.entries(coordinates))form.elements.namedItem(k).value=v;setDirty(true);setMessage('Coordinates extracted from the supplied map link. Verify the location before public disclosure.');}}>Extract coordinates from location link</button></div>}
         <div>
           {["opportunity","project"].includes(kind)&&<label className="check"><input name="location_reviewed" type="checkbox" defaultChecked={data.location_reviewed===true}/>Coordinates verified against the source; approved for public disclosure.</label>}
-          <label className="check">
+          {["opportunity","project"].includes(kind)&&<label className="check">
             <input
               type="checkbox"
               name="confidential"
@@ -231,19 +229,19 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
               onChange={e=>{if(e.target.checked&&!item){setSlug('ig-opp-'+crypto.randomUUID().replaceAll('-','').slice(0,16));setCustomSlug(true);}}}
             />
             Confidential teaser
-          </label>
+          </label>}
           <label className="check">
             <input
               type="checkbox"
               name="image_identity_reviewed"
               defaultChecked={data.image_identity_reviewed === true}
             />
-            Image reviewed for identifying details
+            {kind==='product'?'Image accurately represents the product':'Image reviewed for identifying details'}
           </label>
         </div>
-        <fieldset className="wide role-grid">
+        {!!applicableTerms.length&&<fieldset className="wide role-grid">
           <legend>Classification tags</legend>
-          {terms
+          {applicableTerms
             .filter((t) => t.active || selectedTerms.includes(t.id))
             .map((t) => (
               <label className="check" key={t.id}>
@@ -257,7 +255,7 @@ export default function Editor({ item, terms, selectedTerms, revisions, initialK
                 {!t.active ? " (retired: remove before saving)" : ""}
               </label>
             ))}
-        </fieldset>
+        </fieldset>}
         <label>
           SEO title
           <input

@@ -22,8 +22,8 @@ export async function POST(request){let page,aiJob;try{
   const extraction=await extractCataloguePage(config,{brand:catalogue.brand,name:catalogue.name,page:p.page,...rendered});
   await integrationRpc('ig_ai_finish',{id:aiJob.id,status:'ready',draft:extraction.result,provider_id:extraction.provider_id,usage:extraction.usage});aiJob=null;
   for(let i=0;i<extraction.result.products.length;i++){
-   const product=extraction.result.products[i];if(!product.image_box.length)continue;
-   try{const bytes=await cropCatalogueImage(rendered.image,product.image_box);if(!bytes){product.review_notes+=' Image crop was too small; upload an original image.';continue;}
+   const product=extraction.result.products[i];if(!product.image_id)continue;
+   try{const bytes=await cropCatalogueImage(rendered.candidates.find(c=>c.id===product.image_id).image,[0,0,1000,1000]);if(!bytes){product.review_notes+=' Image crop was too small; upload an original image.';continue;}
     const media=await rpc({action:'asset',id:p.id,page:p.page,lease_token:page.lease_token,item_no:i,alt:(product.title+' · catalogue image').slice(0,250)});
     if(media.state!=='ready'){const upload=await client.storage.from('ig-source-media').upload(media.path,bytes,{contentType:'image/jpeg',upsert:false,cacheControl:'0'});if(upload.error&&String(upload.error.statusCode)!=='409')throw new Error('Image upload failed');const done=await client.rpc('ig_source_media_manage',{p:{action:'complete',id:media.id}});if(done.error)throw new Error(done.error.message);}
    }catch{product.review_notes+=' The source image needs a manual upload or replacement.';}

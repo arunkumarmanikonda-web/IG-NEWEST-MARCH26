@@ -39,7 +39,7 @@ export default async function AdminLayout({ children }) {
           <div className="eyebrow">PRIVATE WORKSPACE</div>
           <h1>Management suite</h1>
         </div>
-        <Link href="/account" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true">↗</span></Link>
+        <Link href="/account" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link>
       </div>
         {children}</div>
       </div>

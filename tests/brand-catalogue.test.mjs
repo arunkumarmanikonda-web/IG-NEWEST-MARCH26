@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {validateCatalogueResult,extractCataloguePage} from '../lib/brand-catalogue.mjs';
 import {slugFromTitle,contentPath} from '../lib/content-routes.mjs';
-const product={title:'Dinner plate',reference:'P-27',category:'Crockery',uom:'',summary:'27 cm plate',specifications:'Diameter: 27 cm. Material: porcelain.',evidence:'P-27. Porcelain. 27 cm.',image_box:[100,100,500,500],review_notes:''};
+const product={image_id:'',title:'Dinner plate',reference:'P-27',category:'Crockery',uom:'',summary:'27 cm plate',specifications:'Diameter: 27 cm. Material: porcelain.',evidence:'P-27. Porcelain. 27 cm.',image_box:[100,100,500,500],review_notes:''};
 test('catalogue rejects invented image bounds and unsupported or oversized product output',()=>{
  assert.equal(validateCatalogueResult({products:[product],complete:true,notes:''}).products.length,1);
  for(const image_box of [[-1,0,500,500],[100,100,99,200],[0,0,1001,200],[0,1],[0,0,NaN,10]])assert.throws(()=>validateCatalogueResult({products:[{...product,image_box}],complete:true,notes:''}));
