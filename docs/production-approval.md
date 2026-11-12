@@ -6,17 +6,17 @@ Status: pending owner review. This document does not approve or publish a policy
 
 | Item | Prepared value or scope | Current state |
 |---|---|---|
-| Legal entity | Vivacious Entertainment and Hospitality Private Limited | Confirm |
-| CIN | U74999DL2017PTC323237 | Confirm |
-| GSTIN | 07AAGCV0867P1ZN | Confirm |
-| Registered office | Not supplied | Required before statutory confirmation |
+| Legal entity | Vivacious Entertainment and Hospitality Private Limited | Previously supplied by the owner |
+| CIN | U74999DL2017PTC323237 | Previously supplied by the owner on 6 September 2026 |
+| GSTIN | 07AAGCV0867P1ZN | Previously supplied by the owner on 11 November 2026 |
+| Registered office | QTR NO. 229, Four Storey, Tagore Garden Extn., New Delhi, Delhi, 110027, India | Owner confirmed on 11 November 2026; carried into production |
 | Grievance officer | Pavan Manikonda; pavan@indiagully.com; +918988988988 | Saved as instructed |
 | Pavan access | Administrator; read, write, publish, enquiries, data rooms and commerce across all practices | Not granted; approve or specify narrower rights |
 | Amit Jhingan access | Administrator at amit.jhingan@indiagully.com; the same all-practice capabilities | Not granted; confirm address and scope or specify narrower rights |
 | Email marketing module | Install the consent-only campaign module with delivery disabled; each actual campaign still requires a reviewed message and audience | Two production migrations withheld |
 | Policy release | Review all eight policies below, then confirm approval or edits | Draft, not current and not legally reviewed |
 
-Production payments, marketing delivery and live-domain cutover remain disabled. Owner sign-in and recovery, SMTP, provider/webhook acceptance and a restore drill also remain open. Automatic approval review rejected the unapproved staff grants, campaign installation and legal publication, so these cannot be inferred from a general deployment instruction.
+Production payments, marketing delivery and live-domain cutover remain disabled. Owner sign-in and recovery, SMTP delivery verification, provider/webhook acceptance and a restore drill also remain open. SMTP credentials are saved and the enabled configuration persists after reload; successful delivery is not yet claimed. The statutory-release confirmation flag remains false pending release approval. Automatic approval review rejected the unapproved staff grants, campaign installation and legal publication, so these cannot be inferred from a general deployment instruction.
 
 ## Policy draft 2026-11-11.2
 
