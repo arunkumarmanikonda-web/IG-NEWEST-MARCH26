@@ -2,6 +2,7 @@ import {createClient} from 'npm:@supabase/supabase-js@2.119.0';
 import {safeCreativeUrl} from './creative-sms.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'};
 Deno.serve(async(req)=>{
+ let stage='request';
  try{
   if(req.method!=='POST')return new Response('Method not allowed',{status:405,headers});
   const secret=req.headers.get('x-integration-key')||'';
@@ -12,6 +13,7 @@ Deno.serve(async(req)=>{
   const key=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}').default||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   const admin=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
   async function rpc(payload:unknown){const{data,error}=await admin.rpc('ig_provider_worker',{secret,p:payload});if(error)throw new Error('Authorisation or job state unavailable');return data;}
+  stage='job_access';
   const job=await rpc({action:'asset',id:p.id});if(!job)throw new Error('Media unavailable');
   const bucket='ig-creative-drafts';
   if(p.action==='read'){
@@ -20,10 +22,12 @@ Deno.serve(async(req)=>{
    return new Response(data,{headers:{...headers,'Content-Type':job.mime}});
   }
   if(job.status==='ready')return Response.json({ok:true},{headers});
+  stage='source_validation';
   if(job.status!=='pending'||!safeCreativeUrl(job.source_url))throw new Error('Import is not authorised');
+  stage='provider_download';
   const response=await fetch(job.source_url,{redirect:'error',signal:AbortSignal.timeout(35000)});
   if(!response.ok||!response.body)throw new Error('Media unavailable at provider');
-  const max=job.kind==='video'?64*1024*1024:15*1024*1024;
+  const max=job.kind==='video'?50_000_000:15*1024*1024;
   if(Number(response.headers.get('content-length'))>max)throw new Error('Media too large');
   const reader=response.body.getReader(),chunks:Uint8Array[]=[];let length=0;
   while(true){const{value,done}=await reader.read();if(done)break;length+=value.length;if(length>max){await reader.cancel();throw new Error('Media too large');}chunks.push(value);}
@@ -35,13 +39,17 @@ Deno.serve(async(req)=>{
    else if(bytes[0]===255&&bytes[1]===216&&bytes[2]===255){ext='jpg';mime='image/jpeg';}
    else if(ascii(0,4)==='RIFF'&&ascii(8,12)==='WEBP'){ext='webp';mime='image/webp';}
   }else if(ascii(4,8)==='ftyp'){ext='mp4';mime='video/mp4';}
+  stage='media_format';
   if(!mime)throw new Error('Unexpected media format');
+  stage='bucket';
   const{data:existing}=await admin.storage.getBucket(bucket);
   if(existing?.public)throw new Error('Private bucket required');
-  if(!existing){const{error}=await admin.storage.createBucket(bucket,{public:false,fileSizeLimit:64*1024*1024,allowedMimeTypes:['image/png','image/jpeg','image/webp','video/mp4']});if(error){const{data}=await admin.storage.getBucket(bucket);if(!data||data.public)throw new Error('Private storage unavailable');}}
+  if(!existing){const{error}=await admin.storage.createBucket(bucket,{public:false,fileSizeLimit:50_000_000,allowedMimeTypes:['image/png','image/jpeg','image/webp','video/mp4']});if(error){const{data}=await admin.storage.getBucket(bucket);if(!data||data.public)throw new Error('Private storage unavailable');}}
   const path=job.id+'.'+ext;
+  stage='upload';
   const{error}=await admin.storage.from(bucket).upload(path,bytes,{contentType:mime,upsert:true});if(error)throw new Error('Media storage failed');
+  stage='finalize';
   await rpc({action:'stored',id:job.id,asset_key:path,mime});
   return Response.json({ok:true},{headers});
- }catch{return Response.json({error:'Creative media operation unavailable'},{status:400,headers});}
+ }catch(error){console.error('Creative media unavailable',{stage,error:error instanceof Error?error.name:'Error'});return Response.json({error:'Creative media operation unavailable'},{status:400,headers});}
 });
