@@ -24,6 +24,10 @@ For the existing test database, any enabled branch must be `backend/2026-11` whi
 
 ## Remaining release steps
 
-Complete the approved dedicated Pro organisation's CAPTCHA and billing activation, create the production project in Mumbai, deploy the checked schema/functions, and configure private storage, email authentication, owner access and distinct server secrets. Stage a production Vercel deployment against that project, validate the complete application flow, then merge/release the checked commit and connect the live domain. Production secrets must never be copied into Preview or Development.
+The owner completed the CAPTCHA and billing flow on 13 November 2026 (India time). The dashboard confirms the new `India Gully` Pro organisation, `phcobqderzqawddtptqi`. A project was also created during that handoff: `ngnvkdwejdurasrxxfks`, currently named `arunkumarmanikonda-web's Project`, Micro compute, West US (Oregon), `us-west-2`. The dashboard showed provisioning in progress, no GitHub connection and no migrations. This session has not deployed application schema, functions or production secrets to it.
+
+The existing ChatGPT Supabase connection still lists only the old organisation; querying the new organisation returns a permission error. Reauthorise the Supabase connection for `India Gully` before deploying through it. Do not recreate the organisation or assume the newly created project is in Mumbai. Resolve its Oregon location before application deployment; Supabase changes regions by migrating to another project, not an in-place region switch. Do not create another billable project or delete the current one without the applicable owner approval.
+
+Once access and the production location are resolved, deploy the checked schema/functions and configure private storage, email authentication, owner access and distinct server secrets. Stage a production Vercel deployment against that project, validate the complete application flow, then merge/release the checked commit and connect the live domain. Production secrets must never be copied into Preview or Development.
 
 Razorpay collection stays disabled until production credential import, webhook setup and the existing merchant/company/legal checks pass. Saving the live keys does not activate payments.
