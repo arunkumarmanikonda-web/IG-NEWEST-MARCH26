@@ -24,7 +24,7 @@ export default function PublishedContent({ item }) {
       </PageHero>
       <article className="prose-section">
         {d.image?.startsWith("/images/generated/")&&<p className="fine-note">{item.kind==="product"&&d.image_alt?.startsWith("AI-enhanced product image")?"AI-enhanced product image. Confirm the final specification in your quotation.":"Illustrative AI-generated concept. This is not a photograph of the listed property, product or completed project."}</p>}
-        {item.kind==="opportunity"&&<p><Link className="text-link" href={"/opportunities/"+item.slug+"/teaser"} target="_blank">Open one-page opportunity brief →</Link></p>}
+        {item.kind==="opportunity"&&<p><Link className="text-link" href={"/opportunities/"+item.slug+"/brief.pdf"} prefetch={false} target="_blank">Download property brief →</Link></p>}
         {!!item.tags?.length && (
           <p>{item.tags.map((t) => t.label).join(" · ")}</p>
         )}

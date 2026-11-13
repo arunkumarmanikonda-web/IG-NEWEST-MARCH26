@@ -197,7 +197,7 @@ export default function Editor({
             className="module-link"
             href={"/admin/content/" + item.id + "/teaser"}
           >
-            Generate India Gully one-page teaser ↗
+            Generate branded PDF brief ↗
           </Link>
         </p>
       )}

@@ -392,6 +392,13 @@ export default function IntakeStudio() {
                 editor →
               </Link>
             </div>
+            {["opportunity", "product"].includes(result.kind) && (
+              <p className="workspace-small">
+                After saving, open Branded PDF brief in the editor. Your content
+                and chosen image are automatically presented in India Gully’s
+                approved three-page design.
+              </p>
+            )}
           </section>
           {!!result.candidates.length && (
             <section className="workspace-card">

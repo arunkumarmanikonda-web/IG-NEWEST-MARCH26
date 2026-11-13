@@ -363,7 +363,7 @@ export default function ContentRegister({ module, items }) {
                     <Link href={"/admin/content/" + r.id}>Manage →</Link>
                     <br />
                     <Link href={"/admin/content/" + r.id + "/teaser"}>
-                      One-page teaser ↗
+                      Branded PDF brief ↗
                     </Link>
                   </td>
                 </tr>

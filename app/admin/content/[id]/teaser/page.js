@@ -37,7 +37,7 @@ export default async function Teaser({ params, searchParams }) {
         <a className="button" href={"/admin/content/" + id + "/brief.pdf?version=" + (isLive ? "live" : "draft")}>Download PDF brief</a>
       </div>
       <p className="teaser-help">
-        Download a three-page presentation with a full-bleed cover, property or product details, and a dedicated enquiry page.{" "}
+        India Gully’s approved three-page design is applied automatically to every saved revision: a photographic cover, property or product details, and an adviser enquiry page.{" "}
         {isLive
           ? "Using the published revision."
           : "Draft watermark remains until you choose a published revision."}
