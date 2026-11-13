@@ -1,40 +1,59 @@
-# Production release and domain cutover
+# India Gully public launch
 
-Verified 13 November 2026. This record distinguishes the completed Git deployment from the pending public-domain switch.
+Verified 13 November 2026 (India Standard Time). The website is publicly available at https://indiagully.com/ on Vercel. The www domain redirects to the apex. This public website launch is distinct from the outstanding transaction and recovery acceptance listed below.
 
-## Completed release
+## Git and production deployment
 
-- PR #3 merged at 05:25:55 UTC (10:55:55 IST): `325b27e77748d05b4ef149d11b9ef6be7101684b`.
-- The merged tree is `efe2a37aee973e99931cb33ca907bdafe5c76612`, matching tested branch head `07d7a23faf6cab4163a301faf03705c90319c381`.
-- GitHub Rebuild quality run 43319555613 succeeded; the branch Vercel preview was READY. Existing local evidence is 147 passing Node tests and a successful Next.js build.
-- GitHub automatically triggered Production deployment `dpl_4P8KkUnW9fGCU28ZyGLWjgex33QP` from `main`. Vercel reports READY, source git and target production, without an alias error.
-- Protected production alias: https://india-gully.vercel.app. Vercel Authentication remains enabled for non-custom domains.
-- Deployed `/about`, `/horeca` and `/privacy` returned HTTP 200 with expected content. Anonymous `/admin` reached sign-in. No error/fatal runtime logs were returned during the post-merge check.
-- Production remains isolated on Mumbai Supabase `szmsvxbqtakzbfpvgeth`, with 43 migrations and three runtime Edge Functions. Both Supabase projects have the saved repository association; automatic database deployment and paid PR branching remain off.
+PR #3 merged at 05:25:55 UTC (10:55:55 IST), merge commit `325b27e77748d05b4ef149d11b9ef6be7101684b`. Its tree matched the tested branch head. GitHub automatically triggered a READY Production deployment from `main`; the successful branch quality run was 43319555613.
 
-## Domain state
+After the DNS change, production configuration was redeployed from documentation commit `394f23b19cb24fafe640310dfbc08b51ac5edab4` as READY deployment `dpl_CaA6WKWbvER8H7LsJDqGqU6U2Enf`. All expected aliases were assigned with no alias error. Subsequent main-branch pushes use the same automatic Git deployment connection.
 
-`indiagully.com` and `www.indiagully.com` are attached to Vercel project `india-gully`, with ownership verified. The www domain is configured to redirect to https://indiagully.com using HTTP 308. This does not establish working DNS or public launch.
+Production uses isolated Mumbai Supabase project `szmsvxbqtakzbfpvgeth`, with 43 migrations and three runtime Edge Functions. Both Supabase projects have the saved GitHub association. Automatic database deployment and paid PR branching remain off. The protected Vercel alias and the approved private webhook relay remain available; public-domain activation did not remove staff authentication or MFA.
 
-Cloudflare is authoritative: `penny.ns.cloudflare.com` and `jimmy.ns.cloudflare.com`. Current public IPv4 responses are Cloudflare proxy addresses `172.67.198.210` and `104.21.13.80`; these do not reveal the existing origin. Vercel reports both domains as misconfigured, service type external and no conflicting domain association.
+## DNS cutover and rollback reference
 
-Vercel's returned DNS recommendations, captured before any change:
+The owner supplied the Cloudflare export dated 13 November 2026 06:02:16 UTC. Both existing website records were CNAMEs to `india-gully.pages.dev`, with Cloudflare proxying enabled. The owner edited those two records in their working browser after this cloud browser's sign-in failed. No account credential was shared with the agent.
 
-| Record option | Rank | Recommended value |
-|---|---|---|
-| IPv4 | 1 | 216.150.1.1, 216.150.16.1 |
-| IPv4 | 2 | 76.76.21.21 |
-| CNAME | 1 | 2d8d37c55eee69b4.vercel-dns-016.com. |
-| CNAME | 2 | cname.vercel-dns.com. |
+| Type | Name | Current target | Proxy | TTL |
+|---|---|---|---|---|
+| CNAME | @ / indiagully.com | 2d8d37c55eee69b4.vercel-dns-016.com. | DNS only | Auto |
+| CNAME | www | 2d8d37c55eee69b4.vercel-dns-016.com. | DNS only | Auto |
 
-These are provider recommendations, not applied records. Inspect the actual Cloudflare zone and record the existing website origin before choosing the final apex/www records. Preserve MX, SPF, DKIM, DMARC and unrelated service records; do not change nameservers or transfer the domain. Inspect existing proxy/Workers/redirect rules if they affect these hosts.
+Vercel reports `misconfigured=false` and no conflicts for both domains. Cloudflare flattens the apex CNAME; the observed IPv4 answers are `216.150.1.193` and `216.150.16.193`. The www CNAME resolves to the exact Vercel project target. Vercel's saved www redirect is HTTP 308 to https://indiagully.com.
 
-Cloudflare requires sign-in. The secure method selector returned Google as the chosen option, but automatic approval review rejected access to the Google authentication origin because it did not accept that selector result as sufficient user-authored authorization. The sign-in attempt stopped. No Cloudflare DNS mutation, nameserver change or email-record change occurred.
+Nameservers remain `jimmy.ns.cloudflare.com` and `penny.ns.cloudflare.com`. A fresh Google Public DNS lookup confirmed these nameservers and all five Google Workspace MX records at their original priorities. The instructions changed no MX, TXT, DKIM, DMARC, sender-domain or unrelated service record. The original Cloudflare Pages website was not deleted; if rollback is required, the two original CNAME targets and proxy states above are the reference, subject to checking the old site's availability first.
 
-At cutover, update the production canonical site URL and Supabase Site URL to https://indiagully.com, add the exact approved authentication callback, and retain the necessary protected-alias callback. Enable production search indexing only after the public site is ready. Then verify DNS, TLS, apex/www redirect, public pages and authentication on the final domain. Do not describe the custom domain as live before these checks.
+## Public URLs and authentication
 
-## Recovery and remaining acceptance
+Vercel Production now sets `NEXT_PUBLIC_SITE_URL=https://indiagully.com` and `SEARCH_INDEXING_ENABLED=true`. These settings apply only to Production. The application additionally requires the production environment and an approved India Gully hostname before allowing indexing. Marketing delivery remains independently disabled.
 
-Resend showed the owner's recovery message delivered at 05:11:49 UTC. Auth recorded a successful owner login at 05:23:37 UTC, and the browser reached `/account/security`. No password update from that recovery session was observed; the user must privately complete new-password entry and submission. Existing verified MFA remains in place.
+Supabase Auth Site URL is https://indiagully.com. The exact allowed redirect URLs are:
 
-Razorpay is configured in live mode and signed receiver diagnostics pass. No real charge/refund or Razorpay-originated live event has been exercised. A completed physical database backup is available, but restoration has not been exercised and Storage object bytes require separate recovery coverage. Four opportunity drafts remain unpublished pending current availability/mandate confirmation. These are outstanding acceptance items, not failed build checks.
+- https://indiagully.com/auth/callback
+- https://india-gully.vercel.app/auth/callback
+
+The saved settings were reloaded and verified in the production dashboard. No wildcard redirect, preview database connection, account-role change or MFA change was introduced.
+
+## Live acceptance
+
+- The homepage rendered over HTTPS at https://indiagully.com/ without a certificate warning or Vercel sign-in wall. Its original logo and corporate white/charcoal layout were visually checked; no broken images were reported by the DOM check.
+- Opening https://www.indiagully.com reached the apex homepage.
+- An anonymous visit to `/admin` reached `/login`; the email-code and password options were visible. A new authenticated staff session on the custom domain has not yet been exercised.
+- The HORECA storefront and quotation basket rendered, and adding a custom requirement created the expected row. No quotation or order was submitted.
+- Homepage canonical is https://indiagully.com and robots metadata is `index, follow`.
+- `/robots.txt` allows public pages while disallowing admin, account, API, data-room and auth paths. `/sitemap.xml` lists the live domain and published records.
+- Browser evidence: `assets/live-website-2026-11-13.jpg`.
+
+The executor's direct HTTP transport returned an upstream connection error, and the web lookup service still returned an older cached homepage. Those results are not treated as current application responses. Fresh browser rendering and Vercel's DNS/deployment state are the launch evidence. Search-index refresh is not claimed.
+
+## Malformed URL handling
+
+The post-launch runtime log check found server errors only on malformed paths ending in encoded backslashes, such as `/insights%5C`. The targeted Proxy matcher now intercepts encoded-backslash paths and returns a non-cacheable 404 before the page launcher or authentication client runs. Normal public paths still bypass the authentication proxy; existing private-route matchers are unchanged. No valid page URL is rewritten.
+
+Validation: 150 Node tests and the production-configured Next.js build pass, including matcher and response tests for malformed URLs, public-route exclusion and retained private-route matching. The Git-triggered deployment is checked separately after publication. Do not describe the earlier runtime log window as error-free.
+
+## Remaining acceptance
+
+The owner's recovery email was delivered at 05:11:49 UTC and its code accepted at 05:23:37 UTC, reaching `/account/security`. New-password submission during that recovery session remains unverified. Existing verified MFA is intact. Pavan and Amit's administrator invitations await their verified onboarding.
+
+Razorpay is configured in live mode and signed receiver diagnostics pass. No real charge/refund or Razorpay-originated live event has been exercised. A completed physical database backup is available, but restoration has not been exercised and Storage object bytes require separate recovery coverage. Four opportunity drafts remain unpublished pending current availability/mandate confirmation. The HORECA production catalogue has no published product records yet; a real brand catalogue can be imported through the implemented admin workflow. Google mailbox OAuth remains disabled pending its own credentials. These limits are not represented as completed acceptance.

@@ -1,6 +1,6 @@
 # India Gully deployment connections
 
-Current status: PR #3 is merged, and GitHub-to-Vercel Production deployment from `main` is verified. Both production domains are attached but DNS cutover is pending. Dated sections below preserve earlier installation checkpoints; `production-domain-release.md` and `launch-readiness.md` are the current release record.
+Current status: PR #3 is merged, and GitHub-to-Vercel Production deployment from `main` is verified. DNS cutover is complete; https://indiagully.com/ is publicly available and www redirects to the apex. Dated sections below preserve earlier installation checkpoints; `production-domain-release.md` and `launch-readiness.md` are the current release record.
 
 ## Verified targets
 
@@ -87,4 +87,4 @@ OpenAI and Runway revision 3 are enabled after successful provider checks and re
 
 The previously empty production CMS now contains 21 published core records (3 company pages, 3 leadership profiles, 3 articles, 12 historical projects), 4 unpublished opportunity drafts and 10 taxonomy terms. Only published preview content was transferred; no private data or test products were copied. New production IDs, revision snapshots and explicit deployment audit entries preserve the source project/ID/version without impersonating a user. The transaction refuses to overwrite nonempty CMS/taxonomy tables. All referenced local media exist. The production About page visibly renders the transferred content.
 
-Recovery email delivery and code acceptance are verified; the new-password submission for that recovery session, a restore exercise, live payment/refund acceptance and domain cutover remain outstanding. The four opportunity drafts require current mandate/availability confirmation. Cloudflare remains authoritative. Both domains are attached and ownership-verified in Vercel, but DNS still targets the existing host. PR #3 is merged and its automatic Production deployment is READY. No DNS record was changed. See `production-domain-release.md`.
+Recovery email delivery and code acceptance are verified; the new-password submission for that recovery session, a restore exercise, live payment/refund acceptance remain outstanding. Domain cutover is complete. The four opportunity drafts require current mandate/availability confirmation. Cloudflare remains authoritative. Both domains are ownership-verified and correctly configured for Vercel. The owner changed the two website CNAME records in Cloudflare; Google Workspace MX and nameservers remain intact. PR #3 is merged and the production deployment with the live canonical URL is READY. Supabase Site URL is https://indiagully.com, with exact callbacks for the live domain and protected alias. See `production-domain-release.md`.

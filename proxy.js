@@ -1,6 +1,17 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server.js";
 export async function proxy(request) {
+  // Malformed crawled links can contain an encoded backslash. Reject them
+  // before Vercel's page launcher attempts to resolve a nonexistent module.
+  if (/%5c/i.test(request.nextUrl.pathname)) {
+    return new NextResponse("Not found", {
+      status: 404,
+      headers: {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
+  }
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
     key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -33,6 +44,7 @@ export async function proxy(request) {
 }
 export const config = {
   matcher: [
+    "/:path(.*%5[Cc].*)",
     "/admin/:path*",
     "/account/:path*",
     "/login",
