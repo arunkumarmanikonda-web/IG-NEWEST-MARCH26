@@ -1,16 +1,16 @@
-import ProcurementManager from '../procurement-manager';
+import ProcurementManager from "../procurement-manager";
 import MediaLibrary from "../media-library";
 import OperationsWorkspace from "../operations/workspace";
 import ContentRegister from "../content-register";
 import IntakeStudio from "../intake-studio";
-import {providerCredentialPresence} from '../../../lib/provider-credentials.mjs';
+import { providerCredentialPresence } from "../../../lib/provider-credentials.mjs";
 import ProviderStudio from "../provider-studio";
 import PaymentsManager from "../payments-manager";
 import ClientsManager from "../clients-manager";
 import AIManager from "../ai-manager";
 import SettingsManager from "../settings-manager";
 import PrivacyRequests from "../../account/privacy/requests";
-import {currentPolicies} from "../../../lib/policies";
+import { currentPolicies } from "../../../lib/policies";
 import Link from "next/link";
 import RoomsManager from "../rooms-manager";
 import NdaManager from "../nda-manager";
@@ -23,46 +23,247 @@ export default async function Module({ params, searchParams }) {
   const { module } = await params,
     { client, profile } = await accountContext();
   if (!profile) redirect("/login");
-  if(module==='procurement'){
-    const r=await Promise.all([client.from('ig_procurement_requests').select('*').order('created_at',{ascending:false}).limit(500),client.from('ig_operations').select('*').in('kind',['vendor','rfq']).eq('archived',false).limit(2000),client.from('ig_vendor_contacts').select('*').limit(1000),client.from('ig_vendor_assignments').select('*').order('created_at',{ascending:false}).limit(1000)]);
-    if(r.some(x=>x.error))return <p role="alert">Procurement portal records could not be loaded.</p>;
-    return <ProcurementManager requests={r[0].data} vendors={r[1].data.filter(x=>x.kind==='vendor'&&x.status==='active')} rfqs={r[1].data.filter(x=>x.kind==='rfq'&&x.status==='open')} contacts={r[2].data} assignments={r[3].data}/>;
+  if (module === "procurement") {
+    const r = await Promise.all([
+      client
+        .from("ig_procurement_requests")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(500),
+      client
+        .from("ig_operations")
+        .select("*")
+        .in("kind", ["vendor", "rfq"])
+        .eq("archived", false)
+        .limit(2000),
+      client.from("ig_vendor_contacts").select("*").limit(1000),
+      client
+        .from("ig_vendor_assignments")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1000),
+    ]);
+    if (r.some((x) => x.error))
+      return (
+        <p role="alert">Procurement portal records could not be loaded.</p>
+      );
+    return (
+      <ProcurementManager
+        requests={r[0].data}
+        vendors={r[1].data.filter(
+          (x) => x.kind === "vendor" && x.status === "active",
+        )}
+        rfqs={r[1].data.filter((x) => x.kind === "rfq" && x.status === "open")}
+        contacts={r[2].data}
+        assignments={r[3].data}
+      />
+    );
   }
-  if (['horeca','pmc'].includes(module)) {
-    const practice=module==='horeca'?'horeca':'hospitality';
-    const r=await Promise.all([client.from('ig_operations').select('*').eq('practice',practice).order('updated_at',{ascending:false}).limit(2000),client.rpc('ig_client_directory'),client.from('ig_engagements').select('*').eq('active',true).limit(1000),client.from('ig_content').select('id,title,public_data').eq('kind','product').limit(1000)]);
-    if(r.some(x=>x.error))return <p role="alert">Operational records could not be loaded. Check your assigned practice rights.</p>;
-    return <OperationsWorkspace mode={module} practice={practice} records={r[0].data} clients={r[1].data} engagements={r[2].data} products={r[3].data}/>;
+  if (["horeca", "pmc"].includes(module)) {
+    const practice = module === "horeca" ? "horeca" : "hospitality";
+    const r = await Promise.all([
+      client
+        .from("ig_operations")
+        .select("*")
+        .eq("practice", practice)
+        .order("updated_at", { ascending: false })
+        .limit(2000),
+      client.rpc("ig_client_directory"),
+      client.from("ig_engagements").select("*").eq("active", true).limit(1000),
+      client
+        .from("ig_content")
+        .select("id,title,public_data")
+        .eq("kind", "product")
+        .limit(1000),
+    ]);
+    if (r.some((x) => x.error))
+      return (
+        <p role="alert">
+          Operational records could not be loaded. Check your assigned practice
+          rights.
+        </p>
+      );
+    return (
+      <OperationsWorkspace
+        mode={module}
+        practice={practice}
+        records={r[0].data}
+        clients={r[1].data}
+        engagements={r[2].data}
+        products={r[3].data}
+      />
+    );
   }
-  if (module==='intake') return <IntakeStudio/>;
-  if (['cms','listings','catalogue','projects','content'].includes(module)) {
-    let query=client.from('ig_content').select('id,kind,practice,title,status,version,published_version,public_data,updated_at').order('updated_at',{ascending:false}).limit(1000);
-    if(module==='listings')query=query.eq('kind','opportunity');
-    else if(module==='catalogue')query=query.eq('kind','product');
-    else if(module==='projects')query=query.eq('kind','project');
-    else query=query.in('kind',['page','practice','article','person','faq']);
-    const {data,error}=await query;
-    return error?<p role="alert">Your permissions do not allow these records.</p>:<ContentRegister module={module==='content'?'cms':module} items={data||[]}/>;
+  if (module === "intake") return <IntakeStudio />;
+  if (
+    ["cms", "listings", "catalogue", "projects", "content"].includes(module)
+  ) {
+    let query = client
+      .from("ig_content")
+      .select(
+        "id,kind,practice,title,status,version,published_version,public_data,updated_at",
+      )
+      .order("updated_at", { ascending: false })
+      .limit(1000);
+    if (module === "listings") query = query.eq("kind", "opportunity");
+    else if (module === "catalogue") query = query.eq("kind", "product");
+    else if (module === "projects") query = query.eq("kind", "project");
+    else
+      query = query.in("kind", [
+        "page",
+        "practice",
+        "article",
+        "person",
+        "faq",
+      ]);
+    const [{ data, error }, { data: live, error: liveError }] =
+      await Promise.all([
+        query,
+        client.from("ig_public_content").select("id,version").limit(10000),
+      ]);
+    const versions = new Map((live || []).map((r) => [r.id, r.version]));
+    return error || liveError ? (
+      <p role="alert">Your permissions do not allow these records.</p>
+    ) : (
+      <ContentRegister
+        module={module === "content" ? "cms" : module}
+        items={(data || []).map((r) => ({
+          ...r,
+          live_version: versions.get(r.id) || null,
+        }))}
+      />
+    );
   }
-  if(module==='creative') {
-    const {data,error}=await client.from('ig_provider_jobs').select('*').order('created_at',{ascending:false}).limit(50);
-    const smsAllowed=profile.roles.includes('owner');let template='';
-    if(smsAllowed){const config=await client.rpc('ig_config_list');template=config.data?.find(c=>c.id==='fast2sms')?.settings?.template_text||'';}
-    const {data:media}=await client.from('ig_source_media').select('*').order('created_at',{ascending:false}).limit(100);
-    return error?<p>Creative operations are temporarily unavailable.</p>:<><MediaLibrary assets={media||[]}/><ProviderStudio jobs={data||[]} smsAllowed={smsAllowed} template={template} sourceMedia={media||[]}/></>;
+  if (module === "creative") {
+    const { data, error } = await client
+      .from("ig_provider_jobs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    const smsAllowed = profile.roles.includes("owner");
+    let template = "";
+    if (smsAllowed) {
+      const config = await client.rpc("ig_config_list");
+      template =
+        config.data?.find((c) => c.id === "fast2sms")?.settings
+          ?.template_text || "";
+    }
+    const { data: media } = await client
+      .from("ig_source_media")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    return error ? (
+      <p>Creative operations are temporarily unavailable.</p>
+    ) : (
+      <>
+        <MediaLibrary assets={media || []} />
+        <ProviderStudio
+          jobs={data || []}
+          smsAllowed={smsAllowed}
+          template={template}
+          sourceMedia={media || []}
+        />
+      </>
+    );
   }
-  if(module==='ai') {const {data,error}=await client.from('ig_ai_jobs').select('*').order('created_at',{ascending:false}).limit(50);return error?<p>AI drafting requires practice content permissions.</p>:<AIManager jobs={data||[]}/>;}
-  if(module==='clients') {
-    const tables=['ig_clients','ig_client_contacts','ig_engagements','ig_data_rooms'];
-    const r=await Promise.all(tables.map(t=>client.from(t).select('*').order('created_at',{ascending:false}).limit(1000)));
-    if(r.some(x=>x.error))return <p role="alert">Client records are unavailable. Check your practice permissions.</p>;
-    return <ClientsManager clients={r[0].data} contacts={r[1].data} engagements={r[2].data} rooms={r[3].data} roomAdmin={profile.roles.some(x=>['owner','administrator'].includes(x))}/>;
+  if (module === "ai") {
+    const { data, error } = await client
+      .from("ig_ai_jobs")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    return error ? (
+      <p>AI drafting requires practice content permissions.</p>
+    ) : (
+      <AIManager jobs={data || []} />
+    );
   }
-  if(module==='payments'){const [{data:users,error:ue},{data,error}]=await Promise.all([client.rpc('ig_admin_users'),client.from('ig_payment_requests').select('*').order('created_at',{ascending:false}).limit(250)]);return error||ue?<p>Payment administration requires administrator access.</p>:<PaymentsManager items={data||[]} users={users.users}/>;}
-  if(module==='settings') {const [{data,error},release]=await Promise.all([client.rpc('ig_config_list'),currentPolicies()]);return error?<p>Super-user access is required.</p>:!release?<p>The initial policy release awaits owner review.</p>:<SettingsManager configs={data.map(c=>({...c,environment_fields:providerCredentialPresence(c.id,process.env)}))} release={release} production={process.env.VERCEL_ENV==='production'}/>;}
-  if(module==='privacy') {if(!profile.roles.includes('owner'))return <p>Super-user access is required.</p>;const {data,error}=await client.from('ig_privacy_requests').select('*').order('created_at',{ascending:false}).limit(250);return error?<p>Register unavailable.</p>:<PrivacyRequests items={data||[]} admin/>;}
+  if (module === "clients") {
+    const tables = [
+      "ig_clients",
+      "ig_client_contacts",
+      "ig_engagements",
+      "ig_data_rooms",
+    ];
+    const r = await Promise.all(
+      tables.map((t) =>
+        client
+          .from(t)
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(1000),
+      ),
+    );
+    if (r.some((x) => x.error))
+      return (
+        <p role="alert">
+          Client records are unavailable. Check your practice permissions.
+        </p>
+      );
+    return (
+      <ClientsManager
+        clients={r[0].data}
+        contacts={r[1].data}
+        engagements={r[2].data}
+        rooms={r[3].data}
+        roomAdmin={profile.roles.some((x) =>
+          ["owner", "administrator"].includes(x),
+        )}
+      />
+    );
+  }
+  if (module === "payments") {
+    const [{ data: users, error: ue }, { data, error }] = await Promise.all([
+      client.rpc("ig_admin_users"),
+      client
+        .from("ig_payment_requests")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(250),
+    ]);
+    return error || ue ? (
+      <p>Payment administration requires administrator access.</p>
+    ) : (
+      <PaymentsManager items={data || []} users={users.users} />
+    );
+  }
+  if (module === "settings") {
+    const [{ data, error }, release] = await Promise.all([
+      client.rpc("ig_config_list"),
+      currentPolicies(),
+    ]);
+    return error ? (
+      <p>Super-user access is required.</p>
+    ) : !release ? (
+      <p>The initial policy release awaits owner review.</p>
+    ) : (
+      <SettingsManager
+        configs={data.map((c) => ({
+          ...c,
+          environment_fields: providerCredentialPresence(c.id, process.env),
+        }))}
+        release={release}
+        production={process.env.VERCEL_ENV === "production"}
+      />
+    );
+  }
+  if (module === "privacy") {
+    if (!profile.roles.includes("owner"))
+      return <p>Super-user access is required.</p>;
+    const { data, error } = await client
+      .from("ig_privacy_requests")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(250);
+    return error ? (
+      <p>Register unavailable.</p>
+    ) : (
+      <PrivacyRequests items={data || []} admin />
+    );
+  }
   if (module === "data-rooms") {
-    const roomSearch=await searchParams;
+    const roomSearch = await searchParams;
     if (!profile.roles.some((x) => ["owner", "administrator"].includes(x)))
       return <p>Data rooms require owner or administrator access.</p>;
     const tables = [
@@ -96,7 +297,12 @@ export default async function Module({ params, searchParams }) {
         requests={results[5].data}
         engagements={results[6].data}
         contacts={results[7].data}
-        initialRoom={roomSearch?.room || results[0].data.find(r=>r.engagement_id===roomSearch?.engagement)?.id}
+        initialRoom={
+          roomSearch?.room ||
+          results[0].data.find(
+            (r) => r.engagement_id === roomSearch?.engagement,
+          )?.id
+        }
         opportunities={opportunities || []}
       />
     );
@@ -238,14 +444,26 @@ export default async function Module({ params, searchParams }) {
                 "Resend transactional delivery",
                 "Resend is verified in preview: enquiry acknowledgements and internal notifications delivered; signed delivery events and recovery schedule active",
               ],
-              ["Google Workspace user mail", "Awaiting per-user OAuth integration"],
-              ["HORECA procurement engine", "Dedicated SKU catalogue, CSV imports, RFQ schedules, vendor comparison, purchase-order awards, receipts, dispatches, returns and delivery acknowledgement."],
-              ["PMC delivery engine", "Dedicated projects, dependency programmes, approved budgets, variations, measured progress, RFIs, risks and client engagement links."],
+              [
+                "Google Workspace user mail",
+                "Awaiting per-user OAuth integration",
+              ],
+              [
+                "HORECA procurement engine",
+                "Dedicated SKU catalogue, CSV imports, RFQ schedules, vendor comparison, purchase-order awards, receipts, dispatches, returns and delivery acknowledgement.",
+              ],
+              [
+                "PMC delivery engine",
+                "Dedicated projects, dependency programmes, approved budgets, variations, measured progress, RFIs, risks and client engagement links.",
+              ],
               [
                 "OpenAI / creative generation",
                 "OpenAI source-assisted drafts and SEO; Runway image/video jobs and approved reference-image adaptation. Private media preparation, evidence review and publication controls. Check provider job results for live acceptance.",
               ],
-              ["SMS / Fast2SMS", "Deferred by owner. Email OTP remains the default. SMS is disabled until DLT approval and delivery acceptance."],
+              [
+                "SMS / Fast2SMS",
+                "Deferred by owner. Email OTP remains the default. SMS is disabled until DLT approval and delivery acceptance.",
+              ],
               [
                 "NDA signing & data rooms",
                 "Project NDA requests, versioned acceptance, private rooms, watermarked previews and file permissions; legal template approval pending",

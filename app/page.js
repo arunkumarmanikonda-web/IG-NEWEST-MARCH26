@@ -1,3 +1,4 @@
+import PracticeExplorer from "./practice-explorer";
 import Image from "next/image";
 import BrandLogo from "./brand-logo";
 import Link from "next/link";
@@ -30,13 +31,11 @@ export default async function Home() {
   const posts =
     articles === null
       ? insights
-      : articles
-          .slice(0, 3)
-          .map((x) => ({
-            ...x,
-            image: x.public_data.image || "/images/city.jpg",
-            category: x.public_data.sector || "INDIA GULLY PERSPECTIVES",
-          }));
+      : articles.slice(0, 3).map((x) => ({
+          ...x,
+          image: x.public_data.image || "/images/city.jpg",
+          category: x.public_data.sector || "INDIA GULLY PERSPECTIVES",
+        }));
   const listings = (
     assets === null ? opportunities : assets.map(opportunityCard)
   ).slice(0, 3);
@@ -87,7 +86,48 @@ export default async function Home() {
           <a href="#the-practice">Discover the practice ↓</a>
         </div>
       </section>
+      <div className="home-discovery">
+        <form action="/search" role="search">
+          <label htmlFor="home-search">
+            Find a practice, property or product
+          </label>
+          <div>
+            <input
+              id="home-search"
+              name="q"
+              type="search"
+              placeholder="Location, asset type, service or SKU"
+              maxLength={200}
+            />
+            <button type="submit">
+              Search <Arrow />
+            </button>
+          </div>
+        </form>
+        <nav aria-label="Explore India Gully">
+          <a href="#core-practices">Our practices ↓</a>
+          <a href="#real-estate-listings">Real estate listings ↓</a>
+          <Link href="/horeca">HORECA catalogue ↗</Link>
+        </nav>
+      </div>
       <TrustStrip />
+      <section className="practice-section section-pad" id="core-practices">
+        <div className="section-heading">
+          <div>
+            <Eyebrow>THE PRACTICES</Eyebrow>
+            <h2>
+              Specialist depth.
+              <br />A shared commercial view.
+            </h2>
+          </div>
+          <p>
+            Choose the discipline that fits your brief. We bring the connected
+            expertise that the assignment requires.
+          </p>
+        </div>
+        <PracticeExplorer />
+      </section>
+
       <section className="story-grid section-pad" id="the-practice">
         <div>
           <Eyebrow>OUR PERSPECTIVE</Eyebrow>
@@ -116,47 +156,20 @@ export default async function Home() {
           </Link>
         </div>
       </section>
-      <section className="practice-section section-pad">
-        <div className="section-heading">
-          <div>
-            <Eyebrow>THE PRACTICES</Eyebrow>
-            <h2>
-              Specialist depth.
-              <br />A shared commercial view.
-            </h2>
-          </div>
-          <p>
-            Choose the discipline that fits your brief. We bring the connected
-            expertise that the assignment requires.
-          </p>
-        </div>
-        <div className="practice-list">
-          {practices.map((p) => (
-            <Link
-              href={"/practices/" + p.slug}
-              key={p.slug}
-              className="practice-row"
-            >
-              <span className="index">{p.number}</span>
-              <h3>{p.title}</h3>
-              <p>{p.line}</p>
-              <Arrow />
-            </Link>
-          ))}
-        </div>
-      </section>
-      <section className="section-pad featured-opportunities">
+      <section
+        className="section-pad featured-opportunities"
+        id="real-estate-listings"
+      >
         <div className="section-heading">
           <div>
             <Eyebrow>REAL ESTATE & HOSPITALITY</Eyebrow>
             <h2>
-              Opportunity begins
-              <br />
-              with the right brief.
+              Real estate listings.
+              <br />A considered starting point.
             </h2>
           </div>
           <Link className="text-link" href="/opportunities">
-            Explore the portfolio <Arrow />
+            Search all listings <Arrow />
           </Link>
         </div>
         <div className="featured-listings">
@@ -170,21 +183,27 @@ export default async function Home() {
                 {x.image ? (
                   <Image
                     src={x.image}
+                    unoptimized={x.image.startsWith("/images/generated/")}
                     alt={x.title}
                     fill
                     sizes="(max-width:760px) 90vw, 30vw"
                   />
                 ) : (
                   <>
-                    <BrandLogo light className="placeholder-logo"/>
+                    <BrandLogo light className="placeholder-logo" />
                     <strong>
-                      Private
+                      Portfolio
                       <br />
-                      opportunity.
+                      reference.
                     </strong>
                   </>
                 )}
                 <span className="listing-sector">{x.sector}</span>
+                {x.image?.startsWith("/images/generated/") && (
+                  <span className="generated-badge">
+                    Illustrative AI-generated concept
+                  </span>
+                )}
               </div>
               <div className="card-meta">{x.location}</div>
               <h3>{x.title}</h3>
@@ -195,6 +214,26 @@ export default async function Home() {
             </Link>
           ))}
         </div>
+        {!listings.length && (
+          <div className="listing-enquiry">
+            <h3>Tell us what you are looking for.</h3>
+            <p>
+              Explore acquisitions, development partnerships, hospitality
+              investments and commercial leasing with a focused brief. Our team
+              will confirm which opportunities fit your objectives and are
+              available for discussion.
+            </p>
+            <Link
+              className="button"
+              href="/contact?interest=Real%20Estate%20Advisory"
+            >
+              Share an investment brief <Arrow />
+            </Link>
+            <Link className="text-link" href="/our-work">
+              Explore our selected work <Arrow />
+            </Link>
+          </div>
+        )}
         <p className="fine-note">
           Availability and mandate status are confirmed on enquiry. Public
           briefs contain only information approved for disclosure.

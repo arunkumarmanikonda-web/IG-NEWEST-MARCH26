@@ -14,7 +14,7 @@ const groups = [
     ],
   },
   {
-    title: "Expertise",
+    title: "Our practices",
     links: [
       ["/practices", "All practices"],
       ["/practices/real-estate", "Real estate advisory"],
@@ -121,7 +121,7 @@ export default function Navigation() {
           aria-current={path.startsWith("/opportunities") ? "page" : undefined}
           onClick={close}
         >
-          Opportunities
+          Real estate listings
         </Link>
         <Link
           href="/horeca"
@@ -143,6 +143,13 @@ export default function Navigation() {
             ))}
           </div>
         </details>
+        <Link
+          href="/search"
+          onClick={close}
+          aria-current={path === "/search" ? "page" : undefined}
+        >
+          Search
+        </Link>
         <Link href="/contact" className="nav-contact" onClick={close}>
           Let’s talk <Arrow />
         </Link>
