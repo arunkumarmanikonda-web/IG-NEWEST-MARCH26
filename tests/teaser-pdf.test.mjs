@@ -37,3 +37,29 @@ test('Detailed briefs stop at three pages and drafts remain clearly marked',asyn
  for(let i=1;i<=3;i++){const page=await doc.getPage(i),text=(await page.getTextContent()).items.map(x=>x.str).join(' ');assert.match(text,/DRAFT - FOR INTERNAL REVIEW/);if(i===3){assert.match(text,/Arun Manikonda/);assert.match(text,/Amit Jhingan/);}}
  await loading.destroy();
 });
+test('Long titles and six facts stay inside the frame without crowding the draft label',async()=>{
+ const record={...item,title:'A distinctive hospitality and commercial investment opportunity with a long property name',public_data:{...item.public_data,sector:'Hospitality',transaction_type:'Sale by private treaty',area:'123,456',area_unit:'square feet',keys:100,reference:'EXAMPLE-REFERENCE'}};
+ const result=await createTeaserPDF(record,businessDefaults,{draft:true}),loading=getDocument({data:result.bytes.slice()}),doc=await loading.promise;
+ for(let i=1;i<=3;i++){
+  const page=await doc.getPage(i),content=await page.getTextContent();
+  for(const part of content.items.filter(x=>x.str.trim())){
+   assert.ok(part.transform[4]>=39&&part.transform[4]+part.width<=556,`page ${i}: horizontal overflow for ${part.str}`);
+   assert.ok(part.transform[5]>=25,`page ${i}: text below frame for ${part.str}`);
+  }
+  if(i===2){
+   const label=content.items.find(x=>x.str==='DRAFT - FOR INTERNAL REVIEW'),heading=content.items.find(x=>x.str==='THE PROPERTY PERSPECTIVE');
+   assert.ok(label.transform[5]-heading.transform[5]>10);
+   assert.ok(content.items.some(x=>x.str==='EXAMPLE-REFERENCE'));
+  }
+ }
+ await loading.destroy();
+});
+test('A short product section starts in the left column and keeps the HORECA adviser',async()=>{
+ const result=await createTeaserPDF({kind:'product',title:'Porcelain dining collection',summary:'Hospitality tableware.',body:'## Plan your requirement\n\nShare your quantities and specifications.',public_data:{}},businessDefaults);
+ const loading=getDocument({data:result.bytes.slice()}),doc=await loading.promise;
+ const content=await(await doc.getPage(2)).getTextContent();
+ assert.equal(content.items.find(x=>x.str==='Plan your requirement').transform[4],40);
+ const closing=(await(await doc.getPage(3)).getTextContent()).items.map(x=>x.str).join(' ');
+ assert.match(closing,/Pavan Manikonda/);assert.doesNotMatch(closing,/Arun Manikonda/);
+ await loading.destroy();
+});
