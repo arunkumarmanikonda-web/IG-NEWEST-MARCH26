@@ -16,7 +16,7 @@ Provider operations use database leases and a stable request UUID. Uncertain cre
 
 ## Communications
 
-A shared white/charcoal HTML and plain-text design uses the original India Gully logo and Celebrating Desiness. Payment messages name the issuer, greet the client, state the amount and purpose, identify the legal payee, include expiry/reference/checkout, and attach a QR. Replies route to the issuer's verified India Gully-domain address, otherwise the configured team mailbox. Enquiry acknowledgements, internal enquiry alerts and secure-room updates use the same design. Marketing templates preserve opt-out links and one-click unsubscribe. Business-mailbox messages preserve authored text and add a branded HTML alternative; Google OAuth remains inactive.
+A shared white/charcoal HTML and plain-text design uses the original India Gully logo and Celebrating Desiness. Payment messages name the issuer, greet the client, state the amount and purpose, identify the legal payee, include expiry/reference/checkout, and display an inline CID QR inside a fine gold-bordered payment card. The downloadable PNG card also has a gold border. Replies route to the issuer's verified India Gully-domain address, otherwise the configured team mailbox. Enquiry acknowledgements, internal enquiry alerts and secure-room updates use the same design. Marketing templates preserve opt-out links and one-click unsubscribe. Business-mailbox messages preserve authored text and add a branded HTML alternative; Google OAuth remains inactive.
 
 Repository sign-in/recovery/confirmation templates have revised copy, but publishing those templates in the Supabase Auth dashboard remains pending. Application deployment does not update provider-managed Auth templates.
 
@@ -28,6 +28,7 @@ Queued, accepted and delivered email states remain distinct. Delivery uses the e
 - 31 transaction-only database checks passed in preview and production; all fixtures and test settings rolled back. No real provider link, payment, refund or external email was created by the checks.
 - Next.js production build passed.
 - Desktop browser: issuer filter, original attribution, selected request, client email review, creation form and exact amount/recipient review checked with fictional fixtures. Primary-action contrast fixed.
+- Revised payment-card browser preview confirms the gold frame and visible QR. Email uses a CID inline attachment; the hosted preview substitutes the same PNG bytes for browser display.
 - Actual QR bytes decoded back to the exact checkout URL; card uses a bundled licensed DejaVu font subset for reproducible rupee rendering.
 - Narrow-screen styles implemented. Mobile-device browser acceptance remains unverified in this environment.
 - A signed-in production link creation, client inbox receipt, real payment, refresh and cancellation acceptance check remains outstanding. Do not describe mocked provider responses as completed live payments.
