@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { generateIntake, checkIntakeResult, withholdUnsupportedIntakeFields } from "../lib/intake.mjs";
+import { generateIntake, checkIntakeResult, withholdUnsupportedIntakeFields, separateIntakeEditorialCopy } from "../lib/intake.mjs";
 const context = { kind: "opportunity", practice: "real-estate", text: "City: QA Test City. Accommodation: 110 keys.", brief: "Prepare a private verification draft", files: [] };
 const draft = {
   title: "Internal QA", summary: "Verification draft", body: "Technical verification only.",
@@ -39,4 +39,18 @@ test("overlong advertising suggestions cannot block or truncate supported proper
   assert.match(result.review_questions.join(" "), /suggestions exceeding.*omitted/);
   assert.doesNotThrow(() => checkIntakeResult(result, context));
   assert.equal(input.ad_headlines.length, 2);
+});
+
+test("repeated metadata is excluded from public copy without removing subsequent asset content", () => {
+  const input = { ...draft, body: "## Overview\nA hospitality asset with 110 keys.\n\nKeywords:\nhospitality, hotel\n\nSEO Title:\nA hotel\n\nAdvertising Headlines:\n- View the hotel\n\nNote to Administrator:\nCheck the original source.\n\n## Enquire\nSpeak with India Gully." };
+  const result = separateIntakeEditorialCopy(input);
+  assert.equal(result.body, "## Overview\nA hospitality asset with 110 keys.\n\n## Enquire\nSpeak with India Gully.");
+  assert.match(result.review_questions.join(" "), /removed from the public body/);
+  assert.equal(result.seo_title, input.seo_title);
+  assert.match(input.body, /Note to Administrator/);
+  assert.doesNotThrow(() => checkIntakeResult(withholdUnsupportedIntakeFields(result), context));
+});
+test("ordinary public prose about search is preserved", () => {
+  const body = "## Search strategy\nKeywords should reflect the actual property.\n\nProperty notes:\n110 keys.";
+  assert.equal(separateIntakeEditorialCopy({ ...draft, body }).body, body);
 });
