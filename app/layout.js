@@ -3,6 +3,7 @@ import { siteConfig } from "../lib/seo.mjs";
 import "./globals.css";
 import "./editorial.css";
 import "./brand.css";
+import "./property-collection.css";
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
@@ -10,7 +11,7 @@ import { practices, contact } from "../lib/content.mjs";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: {
-    default: "India Gully | Advisory. Transactions. Delivery.",
+    default: "India Gully | Property. Advisory. Transactions.",
     template: "%s | India Gully",
   },
   description:
@@ -77,7 +78,7 @@ export default async function Layout({ children }) {
             </div>
             <div>
               <h2>Explore</h2>
-              <Link href="/opportunities">Opportunities</Link>
+              <Link href="/opportunities">Property Collection</Link>
               <Link href="/projects">Hospitality projects</Link>
               <Link href="/valuation">Valuation studio</Link>
               <Link href="/insights">Perspectives</Link>

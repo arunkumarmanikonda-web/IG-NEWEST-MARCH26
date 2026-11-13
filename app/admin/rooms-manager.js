@@ -3,11 +3,11 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { portalAction } from "../account/profile";
-import { browserClient } from "../../lib/supabase/browser";
+import { resumableSourceUpload } from "../../lib/intake-upload.mjs";
 import {
   FILE_ACCEPT,
   roomFileType,
-  MAX_ROOM_BYTES,
+  MAX_PREVIEW_BYTES,
   nativeRoomPreview,
 } from "../../lib/data-room-formats.mjs";
 const expiry = (x) => new Date(x).toISOString().slice(0, 10);
@@ -25,7 +25,11 @@ export default function RoomsManager({
   initialRoom,
 }) {
   const router = useRouter(),
-    [selected, setSelected] = useState(rooms.some(r=>r.id===initialRoom)?initialRoom:rooms[0]?.id || ""),
+    [selected, setSelected] = useState(
+      rooms.some((r) => r.id === initialRoom)
+        ? initialRoom
+        : rooms[0]?.id || "",
+    ),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [destination, setDestination] = useState(""),
@@ -39,20 +43,45 @@ export default function RoomsManager({
     roomFiles = files.filter((x) => x.room_id === selected && !x.preview_for),
     roomGrants = grants.filter((x) => x.room_id === selected),
     roomFolders = folders.filter((x) => x.room_id === selected);
-  const engagement=engagements.find(e=>e.id===room?.engagement_id);
-  const eligibleContacts=contacts.filter(c=>c.client_id===engagement?.client_id && c.active && c.portal_enabled);
-  async function notifyContacts(){setBusy(true);setMessage('');try{
-    if(!circulationKey.current||circulationKey.current.room!==room.id)circulationKey.current={room:room.id,id:crypto.randomUUID()};
-    const result=await portalAction('room_notify',{room_id:room.id,batch_id:circulationKey.current.id});
-    setMessage(result.queued+' separate secure-portal notices queued. Delivery is processed automatically.');
-    circulationKey.current=null;
-  }catch(e){setMessage(e.message);}finally{setBusy(false);}}
+  const engagement = engagements.find((e) => e.id === room?.engagement_id);
+  const eligibleContacts = contacts.filter(
+    (c) =>
+      c.client_id === engagement?.client_id && c.active && c.portal_enabled,
+  );
+  async function notifyContacts() {
+    setBusy(true);
+    setMessage("");
+    try {
+      if (!circulationKey.current || circulationKey.current.room !== room.id)
+        circulationKey.current = { room: room.id, id: crypto.randomUUID() };
+      const result = await portalAction("room_notify", {
+        room_id: room.id,
+        batch_id: circulationKey.current.id,
+      });
+      setMessage(
+        result.queued +
+          " separate secure-portal notices queued. Delivery is processed automatically.",
+      );
+      circulationKey.current = null;
+    } catch (e) {
+      setMessage(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   async function run(p) {
     setBusy(true);
     setMessage("");
     try {
       const result = await portalAction("rooms", p);
-      setMessage(p.action==='contact_grant_bulk'?result.added+' contacts given access in one action. '+result.existing_unchanged+' existing grants left unchanged.':'Saved.');
+      setMessage(
+        p.action === "contact_grant_bulk"
+          ? result.added +
+              " contacts given access in one action. " +
+              result.existing_unchanged +
+              " existing grants left unchanged."
+          : "Saved.",
+      );
       router.refresh();
       return result;
     } catch (e) {
@@ -66,10 +95,6 @@ export default function RoomsManager({
     const list = [...input];
     if (list.length > 100) {
       setMessage("Choose up to 100 files per batch.");
-      return;
-    }
-    if (list.reduce((n, f) => n + f.size, 0) > 250 * 1024 * 1024) {
-      setMessage("Keep each batch within 250 MB.");
       return;
     }
     const next = list.map((file) => ({
@@ -114,8 +139,8 @@ export default function RoomsManager({
         try {
           const type = roomFileType(job.file.name);
           if (!type) throw new Error("Unsupported file extension");
-          if (job.file.size > MAX_ROOM_BYTES || job.file.size === 0)
-            throw new Error("File must be between 1 byte and 20 MB");
+          if (!Number.isSafeInteger(job.file.size) || job.file.size < 1)
+            throw new Error("Select a nonempty file.");
           if (job.preview_for && type.mime !== "application/pdf")
             throw new Error("Companion preview must be a PDF");
           set("uploading", "Preparing private upload");
@@ -135,13 +160,22 @@ export default function RoomsManager({
           }
           if (!ready.uploaded) {
             set("uploading", "Uploading " + size(job.file.size));
-            const { error } = await browserClient()
-              .storage.from("ig-data-rooms")
-              .uploadToSignedUrl(ready.path, ready.token, job.file, {
-                contentType: type.mime,
-                cacheControl: "0",
-              });
-            if (error) throw error;
+            await resumableSourceUpload({
+              file: job.file,
+              upload: { path: ready.path, token: ready.token },
+              source: {
+                id: ready.id,
+                sha256: String(job.file.size) + ":" + job.file.lastModified,
+              },
+              projectUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+              bucket: "ig-data-rooms",
+              contentType: type.mime,
+              onProgress: (percent) =>
+                set(
+                  "uploading",
+                  "Uploading " + percent + "% · " + size(job.file.size),
+                ),
+            });
             ready.uploaded = true;
           }
           set("uploading", "Validating file");
@@ -169,9 +203,14 @@ export default function RoomsManager({
       <p>
         Opportunity rooms require a signed and approved project NDA. Client
         engagement rooms use the administrator-confirmed engagement and
-        confidentiality terms. Originals are private; view-only previews are watermarked.
+        confidentiality terms. Originals are private; view-only previews are
+        watermarked.
       </p>
-      <p><Link href="/admin/clients">Create clients, contacts and engagement report rooms →</Link></p>
+      <p>
+        <Link href="/admin/clients">
+          Create clients, contacts and engagement report rooms →
+        </Link>
+      </p>
       <p role="status" className="portal-message">
         {message}
       </p>
@@ -379,14 +418,18 @@ export default function RoomsManager({
               </label>
             </div>
             <p>
-              Up to 100 files / 250 MB per batch, 20 MB per file. Folder uploads
-              preserve subfolders. PDF, Word, Excel, PowerPoint, CSV, text, RTF,
-              OpenDocument, common images and ZIP are supported.
+              Select up to 100 files per batch, without a website-imposed file
+              or batch size cap. Resumable uploads preserve progress and
+              subfolders. Storage-account capacity and provider allowances still
+              apply. PDF, Word, Excel, PowerPoint, CSV, text, RTF, OpenDocument,
+              common images and ZIP are supported.
             </p>
             <p>
-              View-only Office, text and TIFF/GIF/BMP files need a linked PDF
-              preview. ZIP files are download-only. Upload individual files when
-              their access rules differ.
+              View-only Office, text, TIFF/GIF/BMP and large originals need a
+              linked, optimised PDF preview (up to 20 MB for secure rendering).
+              Originals can still be downloaded where authorised. ZIP files are
+              download-only. Upload individual files when their access rules
+              differ.
             </p>
             {!!jobs.length && (
               <>
@@ -462,7 +505,7 @@ export default function RoomsManager({
                     </td>
                     <td>{f.status}</td>
                     <td>
-                      {nativeRoomPreview(f.mime)
+                      {nativeRoomPreview(f.mime) && f.bytes <= MAX_PREVIEW_BYTES
                         ? "Built-in"
                         : files.some(
                               (p) =>
@@ -471,7 +514,8 @@ export default function RoomsManager({
                           ? "PDF linked"
                           : "PDF needed"}
                       {f.mime !== "application/zip" &&
-                        !nativeRoomPreview(f.mime) &&
+                        (!nativeRoomPreview(f.mime) ||
+                          f.bytes > MAX_PREVIEW_BYTES) &&
                         f.status === "ready" && (
                           <label className="preview-upload">
                             Upload PDF preview
@@ -529,8 +573,20 @@ export default function RoomsManager({
               </tbody>
             </table>
           </div>
-          <h3>{engagement?'Share with authorised client contacts':'Share access after NDA approval'}</h3>
-          {engagement&&<p>Engagement: {engagement.reference}. {engagement.confidentiality_confirmed?'Confidentiality authority recorded.':'Confirm the executed confidentiality terms in Clients & engagements before granting access.'} Each contact signs in with its own verified email.</p>}
+          <h3>
+            {engagement
+              ? "Share with authorised client contacts"
+              : "Share access after NDA approval"}
+          </h3>
+          {engagement && (
+            <p>
+              Engagement: {engagement.reference}.{" "}
+              {engagement.confidentiality_confirmed
+                ? "Confidentiality authority recorded."
+                : "Confirm the executed confidentiality terms in Clients & engagements before granting access."}{" "}
+              Each contact signs in with its own verified email.
+            </p>
+          )}
           <form
             className="workspace-form"
             onSubmit={(e) => {
@@ -539,7 +595,9 @@ export default function RoomsManager({
               run({
                 action: engagement ? "contact_grant_bulk" : "grant",
                 room_id: room.id,
-                ...(engagement ? {contact_ids:f.getAll("contact_id")} : {nda_request_id: f.get("nda")}),
+                ...(engagement
+                  ? { contact_ids: f.getAll("contact_id") }
+                  : { nda_request_id: f.get("nda") }),
                 download_mode: f.get("mode"),
                 expires_at: new Date(
                   f.get("expiry") + "T23:59:59+05:30",
@@ -547,29 +605,85 @@ export default function RoomsManager({
               });
             }}
           >
-            {engagement?<fieldset className="wide contact-picker"><legend>Share once with multiple client contacts</legend>
-              <button type="button" className="text-button" onClick={()=>setSelectedContacts(eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=>c.id))}>Select all available contacts</button>
-              <button type="button" className="text-button" onClick={()=>setSelectedContacts([])}>Clear selection</button>
-              <div className="contact-picker-list">{eligibleContacts.filter(c=>!roomGrants.some(g=>g.contact_id===c.id)).map(c=><label className="check" key={c.id}><input type="checkbox" name="contact_id" value={c.id} checked={selectedContacts.includes(c.id)} onChange={event=>setSelectedContacts(ids=>event.target.checked?[...ids,c.id]:ids.filter(id=>id!==c.id))}/><span><strong>{c.name}</strong><span>{c.email}</span></span></label>)}</div>
-              <p>One action activates this room separately for every selected email. Existing grants and individual file overrides are preserved.</p>
-            </fieldset>:<label>
-              Client and project-specific NDA
-              <select name="nda" required>
-                <option value="">Select an approved request</option>
-                {requests
-                  .filter(
-                    (n) =>
-                      n.content_id === room.content_id &&
-                      n.status === "approved" &&
-                      !roomGrants.some((g) => g.user_id === n.user_id),
-                  )
-                  .map((n) => (
-                    <option key={n.id} value={n.id}>
-                      {n.signed_name} · {n.agreement_snapshot?.recipient_email}
-                    </option>
-                  ))}
-              </select>
-            </label>}
+            {engagement ? (
+              <fieldset className="wide contact-picker">
+                <legend>Share once with multiple client contacts</legend>
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() =>
+                    setSelectedContacts(
+                      eligibleContacts
+                        .filter(
+                          (c) => !roomGrants.some((g) => g.contact_id === c.id),
+                        )
+                        .map((c) => c.id),
+                    )
+                  }
+                >
+                  Select all available contacts
+                </button>
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() => setSelectedContacts([])}
+                >
+                  Clear selection
+                </button>
+                <div className="contact-picker-list">
+                  {eligibleContacts
+                    .filter(
+                      (c) => !roomGrants.some((g) => g.contact_id === c.id),
+                    )
+                    .map((c) => (
+                      <label className="check" key={c.id}>
+                        <input
+                          type="checkbox"
+                          name="contact_id"
+                          value={c.id}
+                          checked={selectedContacts.includes(c.id)}
+                          onChange={(event) =>
+                            setSelectedContacts((ids) =>
+                              event.target.checked
+                                ? [...ids, c.id]
+                                : ids.filter((id) => id !== c.id),
+                            )
+                          }
+                        />
+                        <span>
+                          <strong>{c.name}</strong>
+                          <span>{c.email}</span>
+                        </span>
+                      </label>
+                    ))}
+                </div>
+                <p>
+                  One action activates this room separately for every selected
+                  email. Existing grants and individual file overrides are
+                  preserved.
+                </p>
+              </fieldset>
+            ) : (
+              <label>
+                Client and project-specific NDA
+                <select name="nda" required>
+                  <option value="">Select an approved request</option>
+                  {requests
+                    .filter(
+                      (n) =>
+                        n.content_id === room.content_id &&
+                        n.status === "approved" &&
+                        !roomGrants.some((g) => g.user_id === n.user_id),
+                    )
+                    .map((n) => (
+                      <option key={n.id} value={n.id}>
+                        {n.signed_name} ·{" "}
+                        {n.agreement_snapshot?.recipient_email}
+                      </option>
+                    ))}
+                </select>
+              </label>
+            )}
             <label>
               Download mode
               <select name="mode">
@@ -593,16 +707,35 @@ export default function RoomsManager({
               Activate in client dashboard
             </button>
           </form>
-          {engagement&&<div className="workspace-note"><p>Circulation sends separate notices only to active contacts with circulation enabled and unexpired room access. Reports remain inside the portal. Changing a circulation preference never changes download rights.</p><button type="button" disabled={busy||!room.active} onClick={notifyContacts}>Notify authorised circulation contacts</button></div>}
+          {engagement && (
+            <div className="workspace-note">
+              <p>
+                Circulation sends separate notices only to active contacts with
+                circulation enabled and unexpired room access. Reports remain
+                inside the portal. Changing a circulation preference never
+                changes download rights.
+              </p>
+              <button
+                type="button"
+                disabled={busy || !room.active}
+                onClick={notifyContacts}
+              >
+                Notify authorised circulation contacts
+              </button>
+            </div>
+          )}
           {roomGrants.map((g) => {
             const n = requests.find((x) => x.id === g.nda_request_id);
-            const contact=contacts.find(c=>c.id===g.contact_id);
+            const contact = contacts.find((c) => c.id === g.contact_id);
             return (
               <article className="workspace-card" key={g.id + "-" + g.version}>
                 <h3>{contact?.name || n?.signed_name || g.user_id}</h3>
                 <p>
                   {contact?.email || n?.agreement_snapshot?.recipient_email} ·{" "}
-                  {g.active ? "Active" : "Revoked"} · {contact?'Engagement access':'NDA '+n?.agreement_snapshot?.version}
+                  {g.active ? "Active" : "Revoked"} ·{" "}
+                  {contact
+                    ? "Engagement access"
+                    : "NDA " + n?.agreement_snapshot?.version}
                 </p>
                 <form
                   className="workspace-form"

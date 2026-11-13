@@ -87,7 +87,7 @@ export function WorkGrid({ items }) {
     <div className="work-grid">
       {items.map((x, i) => (
         <Link href={"/our-work/" + x.slug} className="work-card" key={x.slug}>
-          <span className="work-number">{String(i + 1).padStart(2, "0")}</span>
+
           <div className="eyebrow">
             {x.public_data.sector} / {x.public_data.city}
           </div>

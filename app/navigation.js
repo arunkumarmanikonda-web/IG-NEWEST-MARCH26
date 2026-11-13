@@ -17,7 +17,7 @@ const groups = [
     title: "Our practices",
     links: [
       ["/practices", "All practices"],
-      ["/practices/real-estate", "Real estate advisory"],
+      ["/practices/real-estate", "Real estate listings & advisory"],
       ["/practices/transaction-advisory", "Transaction advisory"],
       ["/practices/debt-special-situations", "Debt & special situations"],
       ["/projects", "Hospitality, design & PMC"],
@@ -121,7 +121,7 @@ export default function Navigation() {
           aria-current={path.startsWith("/opportunities") ? "page" : undefined}
           onClick={close}
         >
-          Real estate listings
+          Property Collection
         </Link>
         <Link
           href="/horeca"

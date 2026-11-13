@@ -1,3 +1,4 @@
+import { expandIntakeMap } from "../../../../lib/map-links.mjs";
 import { createHash } from "node:crypto";
 import { accountContext } from "../../../../lib/supabase/server";
 import { runtimeConfigs, integrationRpc } from "../../../../lib/runtime-config";
@@ -196,7 +197,9 @@ export async function POST(request) {
         prepared.error.code === "42501" ? 403 : 429,
       );
     job = prepared.data;
-    const result = await generateIntake(config, context);
+    const expanded = await expandIntakeMap(context);
+    media.notes.push(...expanded.notes);
+    const result = await generateIntake(config, expanded.context);
     if (mergeGroups)
       result.draft = reconcileMergedFacts(result.draft, mergeGroups);
     await integrationRpc("ig_ai_finish", {
@@ -204,7 +207,10 @@ export async function POST(request) {
       status: "ready",
       ...result,
     });
-    if (!staged) media = await gatherImages(context.files);
+    if (!staged) {
+      const extracted = await gatherImages(context.files);
+      media = { ...extracted, notes: [...media.notes, ...extracted.notes] };
+    }
     return privateJson({ id: job.id, draft: result.draft, ...media });
   } catch (e) {
     if (job)

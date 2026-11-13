@@ -55,7 +55,6 @@ export default function PracticeExplorer() {
             aria-controls="practice-detail"
             onClick={() => setActive(x.slug)}
           >
-            <span>{x.number}</span>
             <strong>{x.title}</strong>
             <Arrow />
           </button>
@@ -78,6 +77,14 @@ export default function PracticeExplorer() {
           <p>{p.outputs.slice(0, 3).join(" · ")}</p>
         </div>
         <div className="workspace-actions">
+          {p.slug === "real-estate" && (
+            <Link
+              className="button practice-collection-cta"
+              href="/opportunities"
+            >
+              Explore the Property Collection <Arrow />
+            </Link>
+          )}
           <Link href={p.href || "/practices/" + p.slug} className="text-link">
             Full practice & deliverables <Arrow />
           </Link>

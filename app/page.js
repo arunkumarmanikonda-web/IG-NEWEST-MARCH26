@@ -1,6 +1,7 @@
 import PracticeExplorer from "./practice-explorer";
 import Image from "next/image";
-import BrandLogo from "./brand-logo";
+import PropertyCard from "./property-card";
+import { collectionItems } from "../lib/property-collection.mjs";
 import Link from "next/link";
 import { pageMeta } from "../lib/seo.mjs";
 import { practices, insights, opportunities } from "../lib/content.mjs";
@@ -36,8 +37,8 @@ export default async function Home() {
           image: x.public_data.image || "/images/city.jpg",
           category: x.public_data.sector || "INDIA GULLY PERSPECTIVES",
         }));
-  const listings = (
-    assets === null ? opportunities : assets.map(opportunityCard)
+  const listings = collectionItems(
+    assets === null ? opportunities : assets.map(opportunityCard),
   ).slice(0, 3);
   return (
     <main id="main">
@@ -52,25 +53,25 @@ export default async function Home() {
         />
         <div className="editorial-shade" />
         <div className="editorial-hero-copy">
-          <Eyebrow>ADVISORY · TRANSACTIONS · DELIVERY</Eyebrow>
+          <Eyebrow>PROPERTY · ADVISORY · TRANSACTIONS</Eyebrow>
           <h1>
-            Perspective that sees
+            Distinctive properties.
             <br />
-            the whole opportunity.
+            Considered decisions.
             <br />
-            <em>Expertise that moves it.</em>
+            <em>Connected expertise.</em>
           </h1>
           <p>
-            Real estate. Capital. Hospitality.
+            Discover real estate and hospitality assets across India.
             <br />
-            From the commercial question to the work of execution.
+            Find the right property. Shape the next chapter.
           </p>
           <div className="hero-actions">
-            <LinkButton href="/practices" light>
-              Explore our practices
+            <LinkButton href="/opportunities" light>
+              Explore the Property Collection
             </LinkButton>
-            <Link href="/opportunities" className="hero-secondary">
-              View opportunities <Arrow />
+            <Link href="/practices" className="hero-secondary">
+              Our practices <Arrow />
             </Link>
           </div>
         </div>
@@ -83,7 +84,7 @@ export default async function Home() {
         </div>
         <div className="editorial-hero-foot">
           <span>CELEBRATING DESINESS</span>
-          <a href="#the-practice">Discover the practice ↓</a>
+          <a href="#real-estate-listings">Discover the collection ↓</a>
         </div>
       </section>
       <div className="home-discovery">
@@ -106,10 +107,64 @@ export default async function Home() {
         </form>
         <nav aria-label="Explore India Gully">
           <a href="#core-practices">Our practices ↓</a>
-          <a href="#real-estate-listings">Real estate listings ↓</a>
+          <a href="#real-estate-listings">Property Collection ↓</a>
           <Link href="/horeca">HORECA catalogue ↗</Link>
         </nav>
       </div>
+      <section
+        className="section-pad home-property-collection"
+        id="real-estate-listings"
+      >
+        <div className="section-heading">
+          <div>
+            <Eyebrow>REAL ESTATE IS AT OUR CORE</Eyebrow>
+            <h2>The Property Collection.</h2>
+          </div>
+          <div className="collection-heading-copy">
+            <p>
+              Places with possibility. Explore commercial properties,
+              hospitality assets and development opportunities, with a team that
+              understands the business behind them.
+            </p>
+            <Link className="text-link" href="/opportunities">
+              Explore the full collection <Arrow />
+            </Link>
+          </div>
+        </div>
+        <div className="home-property-grid">
+          {listings.map((x, i) => (
+            <PropertyCard key={x.slug} item={x} featured={i === 0} />
+          ))}
+        </div>
+        {!listings.length && (
+          <div className="listing-enquiry">
+            <h3>Your next property starts with a brief.</h3>
+            <p>
+              Tell us your location, asset class and transaction objectives. Our
+              team will confirm suitable properties and their current
+              availability.
+            </p>
+            <Link
+              className="button"
+              href="/contact?interest=Real%20Estate%20Listings%20%26%20Advisory"
+            >
+              Share your requirement <Arrow />
+            </Link>
+          </div>
+        )}
+        <div className="collection-closing">
+          <p>
+            Portfolio references are clearly identified. Current availability
+            and mandate status are confirmed by our team.
+          </p>
+          <Link
+            className="text-link"
+            href="/contact?interest=List%20a%20property"
+          >
+            Bring your property to market <Arrow />
+          </Link>
+        </div>
+      </section>
       <TrustStrip />
       <section className="practice-section section-pad" id="core-practices">
         <div className="section-heading">
@@ -154,96 +209,6 @@ export default async function Home() {
           <Link className="text-link" href="/about">
             Our story and approach <Arrow />
           </Link>
-        </div>
-      </section>
-      <section
-        className="section-pad featured-opportunities"
-        id="real-estate-listings"
-      >
-        <div className="section-heading">
-          <div>
-            <Eyebrow>REAL ESTATE & HOSPITALITY</Eyebrow>
-            <h2>
-              Real estate listings.
-              <br />A considered starting point.
-            </h2>
-          </div>
-          <Link className="text-link" href="/opportunities">
-            Search all listings <Arrow />
-          </Link>
-        </div>
-        <div className="featured-listings">
-          {listings.map((x) => (
-            <Link href={"/opportunities/" + x.slug} key={x.slug}>
-              <div
-                className={
-                  "listing-image " + (!x.image ? "listing-placeholder" : "")
-                }
-              >
-                {x.image ? (
-                  <Image
-                    src={x.image}
-                    unoptimized={x.image.startsWith("/images/generated/")}
-                    alt={x.title}
-                    fill
-                    sizes="(max-width:760px) 90vw, 30vw"
-                  />
-                ) : (
-                  <>
-                    <BrandLogo light className="placeholder-logo" />
-                    <strong>
-                      Portfolio
-                      <br />
-                      reference.
-                    </strong>
-                  </>
-                )}
-                <span className="listing-sector">{x.sector}</span>
-                {x.image?.startsWith("/images/generated/") && (
-                  <span className="generated-badge">
-                    Illustrative AI-generated concept
-                  </span>
-                )}
-              </div>
-              <div className="card-meta">{x.location}</div>
-              <h3>{x.title}</h3>
-              <p>{x.description}</p>
-              <span className="read-link">
-                View public brief <Arrow />
-              </span>
-            </Link>
-          ))}
-        </div>
-        {!listings.length && (
-          <div className="listing-enquiry">
-            <h3>Tell us what you are looking for.</h3>
-            <p>
-              Explore acquisitions, development partnerships, hospitality
-              investments and commercial leasing with a focused brief. Our team
-              will confirm which opportunities fit your objectives and are
-              available for discussion.
-            </p>
-            <Link
-              className="button"
-              href="/contact?interest=Real%20Estate%20Advisory"
-            >
-              Share an investment brief <Arrow />
-            </Link>
-            <Link className="text-link" href="/our-work">
-              Explore our selected work <Arrow />
-            </Link>
-          </div>
-        )}
-        <p className="fine-note">
-          Availability and mandate status are confirmed on enquiry. Public
-          briefs contain only information approved for disclosure.
-        </p>
-        <div className="opportunity-types">
-          <span>Acquisitions & divestments</span>
-          <span>Strategic investment</span>
-          <span>Joint ventures & development</span>
-          <span>CIRP & special situations</span>
-          <span>Leasing</span>
         </div>
       </section>
       <section className="feature-split">

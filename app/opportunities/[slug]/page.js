@@ -1,12 +1,62 @@
-import {pageMeta} from '../../../lib/seo.mjs';
-import Seo from '../../seo';
-import {published,cmsMetadata} from '../../../lib/cms';
-import PublishedContent from '../../published-content';
-export const dynamic='force-dynamic';
-import Link from 'next/link';
-import {notFound} from 'next/navigation';
-import {opportunities} from '../../../lib/content.mjs';
-import {PageHero,Eyebrow,LinkButton,ContactBand} from '../../components';
-export function generateStaticParams(){return opportunities.map(x=>({slug:x.slug}))}
-export async function generateMetadata({params}){const {slug}=await params;const records=await published('opportunity');return records===null?pageMeta('/opportunities/'+slug):cmsMetadata(records.find(x=>x.slug===slug))}
-export default async function Opportunity({params}){const {slug}=await params;const records=await published('opportunity');if(records!==null){const item=records.find(x=>x.slug===slug);if(!item)notFound();return <PublishedContent item={item}/>;}const x=opportunities.find(x=>x.slug===slug);if(!x)notFound();return <main id="main"><Seo path={'/opportunities/'+slug}/><PageHero eyebrow={x.sector+' / '+x.location} title={x.title} description={x.type} image={x.image} alt={x.title}><LinkButton href={'/contact?interest='+encodeURIComponent(x.title)}>Enquire about this asset</LinkButton></PageHero><section className="intro-section section-pad"><div><div className="breadcrumb"><Link href="/opportunities">Opportunities</Link><span>/ Asset overview</span></div><Eyebrow>PORTFOLIO REFERENCE</Eyebrow><h2>A starting point<br/>for a closer look.</h2></div><div className="intro-copy"><p className="lead">{x.description}</p><p>This overview carries forward the public asset identity from India Gully’s existing website. Current availability, mandate status, pricing and detailed specifications need confirmation with the advisory team.</p><p className="fine-note">Public location information is limited to city or region. Exact addresses and controlled documents are disclosed through an authorised process.</p><p className="fine-note">This is not an offer, valuation or statement of current transaction terms.</p></div></section><section className="scope-section"><div><Eyebrow>THE ADVISORY CONVERSATION</Eyebrow><h2>What would you like<br/>to understand?</h2><p>Share your objective and information requirements so the team can establish the relevant next step.</p></div><ul className="output-list">{x.focus.map((s,i)=><li key={s}><span>0{i+1}</span>{s}</li>)}</ul></section><ContactBand interest={x.title} title="Discuss the asset with our team."/></main>}
+import { pageMeta } from "../../../lib/seo.mjs";
+import Seo from "../../seo";
+import { published, cmsMetadata } from "../../../lib/cms";
+import PropertyDetail from "../../property-detail";
+export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { opportunities } from "../../../lib/content.mjs";
+import { PageHero, Eyebrow, LinkButton, ContactBand } from "../../components";
+export function generateStaticParams() {
+  return opportunities.map((x) => ({ slug: x.slug }));
+}
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const records = await published("opportunity");
+  return records === null
+    ? pageMeta("/opportunities/" + slug)
+    : cmsMetadata(records.find((x) => x.slug === slug));
+}
+export default async function Opportunity({ params }) {
+  const { slug } = await params;
+  const records = await published("opportunity");
+  if (records !== null) {
+    const item = records.find((x) => x.slug === slug);
+    if (!item) notFound();
+    return (
+      <PropertyDetail
+        item={item}
+        related={records
+          .filter((x) => x.slug !== slug && x.public_data.image)
+          .slice(0, 2)}
+      />
+    );
+  }
+  const fallback = opportunities.map((x) => ({
+    slug: x.slug,
+    title: x.title,
+    summary: x.description,
+    body: "This reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+    kind: "opportunity",
+    tags: [],
+    public_data: {
+      city: x.city,
+      region: x.region,
+      sector: x.sector,
+      image: x.image,
+      image_alt: x.title,
+      asset_class: x.type,
+      reference: "Portfolio reference",
+    },
+  }));
+  const item = fallback.find((x) => x.slug === slug);
+  if (!item) notFound();
+  return (
+    <PropertyDetail
+      item={item}
+      related={fallback
+        .filter((x) => x.slug !== slug && x.public_data.image)
+        .slice(0, 2)}
+    />
+  );
+}

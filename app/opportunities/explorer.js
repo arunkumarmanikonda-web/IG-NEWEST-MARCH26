@@ -1,141 +1,190 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Arrow } from "../components";
 import { opportunityContexts } from "../../lib/taxonomy.mjs";
-export default function Explorer({ items, contexts = opportunityContexts }) {
-  const [query, setQuery] = useState(""),
-    [sector, setSector] = useState("All sectors"),
-    [context, setContext] = useState(""),
-    [city, setCity] = useState(""),
-    [type, setType] = useState("");
-  const filtered = items.filter(
-    (x) =>
-      (!city || x.location === city) &&
-      (!type || x.type === type) &&
-      (sector === "All sectors" || x.sector === sector) &&
-      (!context || x.contexts?.includes(context)) &&
-      [x.title, x.location, x.type, x.description]
-        .join(" ")
-        .toLowerCase()
-        .includes(query.trim().toLowerCase()),
-  );
+import { collectionItems } from "../../lib/property-collection.mjs";
+import PropertyCard from "../property-card";
+import { Arrow } from "../components";
+const empty = {
+  q: "",
+  sector: "",
+  city: "",
+  type: "",
+  context: "",
+  sort: "featured",
+};
+export default function Explorer({
+  items,
+  contexts = opportunityContexts,
+  initialFilters = {},
+}) {
+  const [filters, setFilters] = useState({ ...empty, ...initialFilters });
+  const [copied, setCopied] = useState("");
+  function update(patch) {
+    const next = { ...filters, ...patch };
+    setFilters(next);
+    setCopied("");
+    const params = new URLSearchParams();
+    Object.entries(next).forEach(([k, v]) => {
+      if (v && v !== "featured") params.set(k, v);
+    });
+    window.history.replaceState(
+      null,
+      "",
+      "/opportunities" + (params.size ? "?" + params.toString() : ""),
+    );
+  }
+  const filtered = collectionItems(items, { ...filters, query: filters.q });
+  const active = Object.entries(filters).filter(([k, v]) => k !== "sort" && v);
   return (
     <>
-      <div className="filter-bar">
-        <label>
-          Search the portfolio
+      <form
+        className="collection-filters"
+        role="search"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <label className="collection-search">
+          Find your property
           <input
             type="search"
-            placeholder="Asset name, city or property type"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Property, city or keyword"
+            value={filters.q}
+            onChange={(e) => update({ q: e.target.value })}
+            maxLength={200}
           />
         </label>
-        <label>
-          Sector
-          <select value={sector} onChange={(e) => setSector(e.target.value)}>
-            <option>All sectors</option>
-            {[...new Set(items.map((x) => x.sector))].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Location
-          <select value={city} onChange={(e) => setCity(e.target.value)}>
-            <option value="">All locations</option>
-            {[...new Set(items.map((x) => x.location))].sort().map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Asset / transaction
-          <select value={type} onChange={(e) => setType(e.target.value)}>
-            <option value="">All types</option>
-            {[...new Set(items.map((x) => x.type))].sort().map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Opportunity context
-          <select value={context} onChange={(e) => setContext(e.target.value)}>
-            <option value="">All contexts</option>
-            {contexts.map((x) => (
-              <option key={x.id} value={x.id}>
-                {x.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <p role="status">
-          {filtered.length} {filtered.length === 1 ? "asset" : "assets"}
-        </p>
-      </div>
-      <div className="opportunity-grid">
-        {filtered.map((x) => (
-          <Link
-            className="opportunity-card"
-            href={"/opportunities/" + x.slug}
-            key={x.slug}
-          >
-            <div className="image-frame">
-              {x.image ? (
-                <Image
-                  unoptimized={x.image.startsWith("/images/generated/")}
-                  src={x.image}
-                  alt={x.title}
-                  fill
-                  sizes="(max-width:760px) 100vw, 50vw"
-                />
-              ) : (
-                <span className="confidential-visual">
-                  Confidential opportunity
-                </span>
-              )}
-              {x.image?.startsWith("/images/generated/") && (
-                <span className="generated-badge">
-                  Illustrative AI-generated concept
-                </span>
-              )}
-            </div>
-            <div className="card-meta">
-              <span>
-                {x.sector} / {x.location}
-              </span>
-              <span className="status-label">Portfolio reference</span>
-            </div>
-            <h3>{x.title}</h3>
-            <p>{x.type}</p>
-            <span className="read-link">
-              View asset overview <Arrow />
-            </span>
-          </Link>
-        ))}
-        {!filtered.length && (
-          <div className="empty-state">
-            <h3>No published matches</h3>
-            <p>
-              There are no portfolio references under these filters. Contact our
-              team to discuss the requirement.
-            </p>
-            <button
-              onClick={() => {
-                setQuery("");
-                setSector("All sectors");
-                setContext("");
-                setCity("");
-                setType("");
-              }}
+        {[
+          [
+            "city",
+            "Location",
+            "All locations",
+            [...new Set(items.map((x) => x.location))].sort(),
+          ],
+          [
+            "sector",
+            "Asset class",
+            "All asset classes",
+            [...new Set(items.map((x) => x.sector))].sort(),
+          ],
+          [
+            "type",
+            "Property / transaction",
+            "All property types",
+            [...new Set(items.map((x) => x.type))].sort(),
+          ],
+        ].map(([k, label, all, values]) => (
+          <label key={k}>
+            {label}
+            <select
+              value={filters[k]}
+              onChange={(e) => update({ [k]: e.target.value })}
             >
+              <option value="">{all}</option>
+              {values.map((x) => (
+                <option key={x}>{x}</option>
+              ))}
+            </select>
+          </label>
+        ))}
+        {!!contexts.length && (
+          <label>
+            Investment context
+            <select
+              value={filters.context}
+              onChange={(e) => update({ context: e.target.value })}
+            >
+              <option value="">All contexts</option>
+              {contexts.map((x) => (
+                <option key={x.id} value={x.id}>
+                  {x.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </form>
+      {!!active.length && (
+        <div className="collection-active-filters">
+          <span>Refine your view</span>
+          {active.map(([k, v]) => (
+            <button
+              key={k}
+              onClick={() => update({ [k]: "" })}
+              aria-label={"Remove " + k + " filter: " + v}
+            >
+              {k === "context"
+                ? contexts.find((x) => x.id === v)?.label || v
+                : v}{" "}
+              ×
+            </button>
+          ))}
+          <button onClick={() => update(empty)}>Clear all</button>
+        </div>
+      )}
+      <div className="collection-results-bar">
+        <p role="status" aria-live="polite">
+          <strong>{filtered.length}</strong>{" "}
+          {filtered.length === 1 ? "property" : "properties"} in view
+        </p>
+        <div>
+          <button
+            className="collection-share"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(window.location.href);
+                setCopied("Collection link copied");
+              } catch {
+                setCopied(
+                  "Copy the address from your browser to share this collection.",
+                );
+              }
+            }}
+          >
+            Share this view ↗
+          </button>
+          <label>
+            Sort by
+            <select
+              value={filters.sort || "featured"}
+              onChange={(e) => update({ sort: e.target.value })}
+            >
+              <option value="featured">Featured</option>
+              <option value="location">Location</option>
+              <option value="title">Property name</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      {copied && (
+        <p className="collection-share-status" role="status">
+          {copied}
+        </p>
+      )}
+      <div className="property-grid">
+        {filtered.map((x) => (
+          <PropertyCard item={x} key={x.slug} />
+        ))}
+      </div>
+      {!filtered.length && (
+        <div className="collection-empty">
+          <h2>A more personal search.</h2>
+          <p>
+            There are no published properties matching this selection. Broaden
+            your filters or share your brief with our real estate team.
+          </p>
+          <div>
+            <button className="button" onClick={() => update(empty)}>
               Clear filters
             </button>
+            <Link
+              className="text-link"
+              href="/contact?interest=Real%20Estate%20Listings%20%26%20Advisory"
+            >
+              Share your property brief <Arrow />
+            </Link>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

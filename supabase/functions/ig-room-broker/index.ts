@@ -1,10 +1,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.119.0";
 import {
   ROOM_FILE_TYPES,
-  MAX_ROOM_BYTES,
+  MAX_PREVIEW_BYTES,
   roomFileType,
-  validFileSignature,
 } from "./formats.mjs";
+import { inspectStoredRoomFile } from "./inspect-upload.mjs";
 const bucket = "ig-data-rooms";
 const headers = {
   "Cache-Control": "private, no-store",
@@ -76,8 +76,8 @@ Deno.serve(async (req) => {
       if (
         !type ||
         type.mime !== p.mime ||
-        p.bytes < 1 ||
-        p.bytes > MAX_ROOM_BYTES
+        !Number.isSafeInteger(p.bytes) ||
+        p.bytes < 1
       )
         throw Object.assign(new Error("Unsupported file type or size"), {
           status: 400,
@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
       if (!existing) {
         const { error } = await admin.storage.createBucket(bucket, {
           public: false,
-          fileSizeLimit: MAX_ROOM_BYTES,
+          fileSizeLimit: null,
           allowedMimeTypes: [
             ...new Set(Object.values(ROOM_FILE_TYPES).map((x) => x.mime)),
           ],
@@ -118,18 +118,11 @@ Deno.serve(async (req) => {
         action: "upload",
         id: p.id,
       });
-      const { data: blob, error } = await admin.storage
-        .from(bucket)
-        .download(file.object_key);
-      if (error || !blob) throw new Error("Uploaded object not found");
-      const data = new Uint8Array(await blob.arrayBuffer());
-      if (data.length !== file.bytes || !validFileSignature(file.name, data))
-        throw Object.assign(
-          new Error(
-            "File contents do not match the declared format or size. Upload a valid original.",
-          ),
-          { status: 400 },
-        );
+      try {
+        await inspectStoredRoomFile(admin.storage.from(bucket), file);
+      } catch (e) {
+        throw Object.assign(new Error(e.message), {status:400});
+      }
       await rpc("ig_room_manage", {
         action: "upload_complete",
         id: p.id,
@@ -156,11 +149,12 @@ Deno.serve(async (req) => {
       if (error) throw new Error("Download unavailable");
       return Response.json({ url: data.signedUrl }, { headers });
     }
+    if (file.bytes > MAX_PREVIEW_BYTES) throw Object.assign(new Error("Ask the administrator to attach an optimised PDF preview. The original remains available to authorised downloaders."), {status:400});
     const { data, error } = await admin.storage
       .from(bucket)
       .download(file.object_key);
     if (error || !data) throw new Error("Preview source unavailable");
-    if (data.size > MAX_ROOM_BYTES)
+    if (data.size > MAX_PREVIEW_BYTES)
       throw new Error("Preview exceeds size limit");
     return new Response(data, {
       headers: {

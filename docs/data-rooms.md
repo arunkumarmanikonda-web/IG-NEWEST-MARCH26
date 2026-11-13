@@ -18,18 +18,18 @@ Original downloads use a private-storage signed URL valid for 60 seconds after a
 View-only recipients receive server-rendered, recipient-watermarked PDF/image pages. The original preview source requires both the client's authenticated project authority and a server-only broker secret. Direct client access to private Storage objects is denied. Watermarks discourage redistribution; screenshots, photographs and copies of visible pixels cannot be prevented.
 
 ## Folders and upload
-Create nested folders and empty subfolders. Upload multiple files or a local folder; browser folder uploads preserve relative paths and create the corresponding hierarchy. Three concurrent uploads, per-file progress and retry, up to 100 files / 250 MB per batch, 20 MB per file and 12 folder levels. Folder names reject traversal and control characters. Empty folders can be removed; occupied folders require their contents to be archived and children removed first.
+Create nested folders and empty subfolders. Upload multiple files or a local folder; browser folder uploads preserve relative paths and create the corresponding hierarchy. Three concurrent uploads, per-file progress and retry, up to 100 files per batch and 12 folder levels. There is no application input byte cap on files or batches; provider account limits still apply. Folder names reject traversal and control characters. Empty folders can be removed; occupied folders require their contents to be archived and children removed first.
 
-Files are initially pending. A signed upload goes directly into private Supabase Storage, avoiding the website's request-body limits. The broker validates file size and signature before marking it ready. Failed/pending objects are never available to clients. Existing files are archived/restored rather than silently overwritten.
+Files are initially pending. A signed resumable TUS upload goes directly into private Supabase Storage, avoiding the website's request-body limits. The broker validates stored object size and a bounded 4 KB signature prefix before marking it ready, without downloading the complete original into function memory. Failed/pending objects are never available to clients. Existing files are archived/restored rather than silently overwritten.
 
 ## Formats
 | Family | Extensions | View-only handling |
 | --- | --- | --- |
-| PDF | pdf | Native server-rendered, paginated and watermarked; up to 500 pages |
+| PDF | pdf | Native server-rendered, paginated and watermarked; up to 500 pages / 20 MB for rendering. Larger originals use a linked optimised PDF |
 | Word / text | doc, docx, rtf, txt, odt | Administrator uploads a linked PDF for faithful preview |
 | Excel / data | xls, xlsx, csv, ods | Linked PDF preview; original download separately controlled |
 | Presentations | ppt, pptx, odp | Linked PDF preview |
-| Images | jpg, jpeg, png, webp | Native watermarked preview |
+| Images | jpg, jpeg, png, webp | Native watermarked preview; large originals use a linked PDF |
 | Additional images | gif, tif, tiff, bmp | Linked PDF preview |
 | Archive | zip | Download-only; upload individual files for granular permissions |
 

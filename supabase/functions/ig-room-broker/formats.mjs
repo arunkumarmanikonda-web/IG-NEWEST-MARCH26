@@ -54,7 +54,8 @@ export const ROOM_FILE_TYPES = {
 export const FILE_ACCEPT = Object.keys(ROOM_FILE_TYPES)
   .map((x) => "." + x)
   .join(",");
-export const MAX_ROOM_BYTES = 20 * 1024 * 1024;
+// Rendering is bounded separately from unrestricted original-file storage.
+export const MAX_PREVIEW_BYTES = 20 * 1024 * 1024;
 export function roomFileType(name) {
   if (
     typeof name !== "string" ||
@@ -68,7 +69,7 @@ export const nativeRoomPreview = (mime) =>
   ["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(mime);
 export function validFileSignature(name, bytes) {
   const type = roomFileType(name);
-  if (!type || !bytes?.length || bytes.length > MAX_ROOM_BYTES) return false;
+  if (!type || !bytes?.length) return false;
   const h = Array.from(bytes.slice(0, 8)),
     starts = (s) => s.every((v, i) => h[i] === v);
   const ext = name.split(".").pop().toLowerCase();

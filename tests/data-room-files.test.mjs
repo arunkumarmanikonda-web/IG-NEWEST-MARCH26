@@ -5,7 +5,7 @@ import {
   ROOM_FILE_TYPES,
   roomFileType,
   validFileSignature,
-  MAX_ROOM_BYTES,
+  MAX_PREVIEW_BYTES,
 } from "../lib/data-room-formats.mjs";
 import { roomPreview } from "../lib/render-room-preview.mjs";
 import { practices, opportunities, insights } from "../lib/content.mjs";
@@ -58,7 +58,7 @@ test("Declared file format must match content signature and size", () => {
   assert.equal(validFileSignature("a.png", jpeg), false);
   assert.equal(validFileSignature("a.csv", new Uint8Array([0, 1, 2])), false);
   assert.equal(
-    validFileSignature("a.txt", new Uint8Array(MAX_ROOM_BYTES + 1)),
+    validFileSignature("a.txt", new Uint8Array(MAX_PREVIEW_BYTES + 1)),
     false,
   );
 });

@@ -474,22 +474,38 @@ export default function Editor({
           <div className="wide workspace-actions">
             <button
               type="button"
-              onClick={(e) => {
-                const form = e.currentTarget.form,
-                  source = form.elements.namedItem("location_source").value,
-                  coordinates = coordinatesFromText(source);
-                if (!coordinates) {
+              disabled={busy}
+              onClick={async (e) => {
+                const form = e.currentTarget.form;
+                const source = form.elements.namedItem("location_source").value;
+                setBusy(true);
+                try {
+                  let point = coordinatesFromText(source);
+                  if (!point) {
+                    const response = await fetch("/api/admin/location", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ source }),
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error);
+                    point = result;
+                    if (result.source.length <= 500)
+                      form.elements.namedItem("location_source").value =
+                        result.source;
+                  }
+                  for (const k of ["latitude", "longitude"])
+                    form.elements.namedItem(k).value = point[k];
+                  form.elements.namedItem("location_reviewed").checked = false;
+                  setDirty(true);
                   setMessage(
-                    "Paste a full Google Maps link containing @latitude,longitude or query=latitude,longitude in Location source. Short links and city names do not contain coordinates.",
+                    "Coordinates extracted. Verify the map pin and approve location disclosure before publication.",
                   );
-                  return;
+                } catch (error) {
+                  setMessage(error.message);
+                } finally {
+                  setBusy(false);
                 }
-                for (const [k, v] of Object.entries(coordinates))
-                  form.elements.namedItem(k).value = v;
-                setDirty(true);
-                setMessage(
-                  "Coordinates extracted from the supplied map link. Verify the location before public disclosure.",
-                );
               }}
             >
               Extract coordinates from location link
