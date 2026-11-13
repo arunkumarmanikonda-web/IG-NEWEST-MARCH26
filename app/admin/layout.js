@@ -1,5 +1,6 @@
 import PolicyUnavailable from '../policy-unavailable';
 import AdminNavigation from "./navigation";
+import CollectPaymentLink from './collect-payment-link';
 import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -42,7 +43,7 @@ export default async function AdminLayout({ children }) {
           <div className="eyebrow">PRIVATE WORKSPACE</div>
           <h1>Management suite</h1>
         </div>
-        <Link href="/account" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link>
+        <div className="workspace-header-actions"><CollectPaymentLink/><Link href="/account" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link></div>
       </div>
         {children}</div>
       </div>
