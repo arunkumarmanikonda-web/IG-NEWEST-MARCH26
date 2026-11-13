@@ -1,10 +1,10 @@
 # Client relationships, engagements and shared report rooms
 
-Updated 12 November 2026 (India Standard Time).
+Updated 14 November 2026 (India Standard Time).
 
 ## One room, multiple independent logins
 
-A client organisation can have up to 50 active named email contacts. Create the client once in **Clients & engagements**, add each contact, and open an engagement for feasibility, valuation, forensic audit, operational audit, financial review, due diligence or another assignment. The room is private and does not create a public opportunity listing.
+A client organisation can have up to 50 active named email contacts. Use **Create a client with multiple contacts** to enter the organisation and several people in one save. Every contact has a name, email, contact number and designation. **Add another contact** adds another row; **Save new contacts** adds more people to an existing organisation. Numbers persist and can be edited individually. Duplicate or invalid rows roll back the entire submission. Create the client once in **Clients & engagements**, add each contact, and open an engagement for feasibility, valuation, forensic audit, operational audit, financial review, due diligence or another assignment. The room is private and does not create a public opportunity listing.
 
 In **Manage reports & access**, select all eligible contacts or an individual subset and share once. Ten selected email addresses create ten independent grants to the same room. Uploading a report once makes that report available to each currently authorised contact. Each person authenticates using their own email and password or emailed one-time code; no shared account or shared passcode is created. The dashboard checks the current verified email against the contact record.
 

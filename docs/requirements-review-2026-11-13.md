@@ -1,6 +1,6 @@
 # India Gully requirements review · 13 November 2026
 
-This review supersedes historical launch/handover status notes. It distinguishes implemented functionality from live operational acceptance. A passing build is not proof of a completed customer transaction.
+For the latest requirement-by-requirement status, see [14 November discussion audit](discussion-audit-2026-11-14.md). This earlier upload review superseded historical launch/handover status notes. It distinguishes implemented functionality from live operational acceptance. A passing build is not proof of a completed customer transaction.
 
 | Discussion requirement | Current implementation / location | Verification or remaining action |
 |---|---|---|

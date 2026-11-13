@@ -1,6 +1,6 @@
 # India Gully programme status — 13 November 2026
 
-This is the current completion record. Earlier checkpoint documents remain historical and their upload limits or content counts may be superseded. Deployed code is not equivalent to accepted production business workflows.
+Historical checkpoint. The current requirement-by-requirement record is [14 November discussion audit](discussion-audit-2026-11-14.md). Earlier checkpoint documents remain historical and their upload limits or content counts may be superseded. Deployed code is not equivalent to accepted production business workflows.
 
 | Request | Current evidence | Remaining acceptance / work |
 | --- | --- | --- |
