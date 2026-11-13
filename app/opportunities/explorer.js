@@ -140,7 +140,7 @@ export default function Explorer({
               }
             }}
           >
-            Share this view ↗
+            Share this view
           </button>
           <label>
             Sort by

@@ -108,7 +108,7 @@ export default async function Home() {
         <nav aria-label="Explore India Gully">
           <a href="#core-practices">Our practices ↓</a>
           <a href="#real-estate-listings">Property Collection ↓</a>
-          <Link href="/horeca">HORECA catalogue ↗</Link>
+          <Link href="/horeca">HORECA catalogue</Link>
         </nav>
       </div>
       <section
