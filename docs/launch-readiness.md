@@ -34,7 +34,7 @@ Latest local validation: 147 Node tests and the Next.js production build passed.
 
 ## Release boundary
 
-Keep PR #3 in draft until authentication/recovery, production isolation and the applicable activation dependencies pass. Keep the current live domain on its existing host. Preview indexing remains off. The deployment must not be described as a fully live marketplace while payment, legal and production acceptance remain open.
+PR #3 was merged into `main` on 13 November 2026 at 05:25:55 UTC after the branch quality check and Vercel preview passed. GitHub automatically triggered READY Production deployment `dpl_4P8KkUnW9fGCU28ZyGLWjgex33QP` from merge commit `325b27e77748d05b4ef149d11b9ef6be7101684b`. The website is deployed at the protected Vercel alias; the public domain has not yet switched. Preview indexing remains off. Production payment/refund and recovery/restore acceptance must not be inferred from a successful build. See `production-domain-release.md` for the current DNS and acceptance boundary.
 
 The HORECA storefront uses business quotation and acceptance, not unverified fixed-price retail checkout. Prices, tax, freight, availability and delivery are confirmed in a released quotation. Supplier costs are never part of the customer projection.
 
@@ -68,4 +68,6 @@ Production Auth now enforces secure password change, leaked-password blocking, a
 
 Core website content was transferred from the published preview snapshots to production: three company pages, three leadership profiles, three articles and twelve historical projects, all with revision and deployment-audit records. Ten taxonomy terms were copied. All referenced local media exist. Four opportunity records remain unpublished drafts pending current mandate/availability verification; no test product, private record, account or credential was copied. The production About page displays the released company story, vision, mission and leadership. Release source: `production-content-release.json`; one-time guarded transaction: `../scripts/release-production-content.sql`.
 
-DNS remains at Cloudflare (penny.ns.cloudflare.com / jimmy.ns.cloudflare.com). Vercel reports indiagully.com is not configured for this project. No DNS, nameserver or email record was changed. PR #3 is still unmerged.
+DNS remains at Cloudflare (penny.ns.cloudflare.com / jimmy.ns.cloudflare.com). Both indiagully.com and www.indiagully.com are now attached and ownership-verified in Vercel, with www redirecting to the apex using HTTP 308. Vercel still reports DNS as misconfigured. Cloudflare sign-in is blocked pending explicit approval for the Google authentication step. No DNS, nameserver or email record was changed. PR #3 is merged; the Git-triggered Production deployment is READY.
+
+The owner's recovery email was delivered at 05:11:49 UTC and the recovery code subsequently opened `/account/security`, corroborated by a successful Auth login at 05:23:37 UTC. A password update during this recovery session has not been observed. The original owner onboarding/password setup is complete; the additional recovery reset remains unfinished. MFA was not removed or weakened.

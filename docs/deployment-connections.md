@@ -1,15 +1,17 @@
 # India Gully deployment connections
 
+Current status: PR #3 is merged, and GitHub-to-Vercel Production deployment from `main` is verified. Both production domains are attached but DNS cutover is pending. Dated sections below preserve earlier installation checkpoints; `production-domain-release.md` and `launch-readiness.md` are the current release record.
+
 ## Verified targets
 
 - Source: `arunkumarmanikonda-web/IG-NEWEST-MARCH26` on GitHub.
-- Change branch: `backend/2026-11`; PR #3 targets `main`.
+- Release source: `main`; PR #3 from `backend/2026-11` merged as `325b27e77748d05b4ef149d11b9ef6be7101684b`.
 - Vercel: `india-gully` in `akms-projects-1230b0a9`.
 - Preview Supabase: `india-gully-preview`, project `wktdgczjdocsnfgvcsat`, Mumbai.
 - Production Supabase: `india-gully-production`, `szmsvxbqtakzbfpvgeth`, Mumbai (`ap-south-1`), in India Gully Pro (`phcobqderzqawddtptqi`).
 - The other Supabase project `xjqehwvxscoktfecbwse` is not the India Gully backend.
 
-GitHub pushes already trigger Vercel preview builds. Commit `f74b926` reached READY and GitHub's Rebuild quality check passed. Preview/Development have the Supabase public URL/key and server-side integration configuration. Production now has the Mumbai database URL/publishable key and distinct sensitive master, room broker, enquiry ingest and email-worker secrets, alongside the separately saved live Razorpay pair. No provider has been activated in the production database. PR #3 remains unmerged.
+GitHub pushes trigger Vercel preview builds, and merging PR #3 automatically triggered READY Production deployment `dpl_4P8KkUnW9fGCU28ZyGLWjgex33QP` from `main`. Preview/Development have separate Supabase public URL/key and server-side integration configuration. Production has the Mumbai database URL/publishable key and distinct sensitive master, room broker, enquiry ingest and email-worker secrets, alongside the separately saved live Razorpay pair. Razorpay live, transactional Resend, OpenAI and Runway are enabled; SMS and campaign delivery remain disabled. Supabase GitHub association is saved for both projects; automatic database deployment remains off.
 
 ## Supabase Git deployment preparation
 
@@ -39,7 +41,7 @@ The production project's native GitHub integration is connected to the same repo
 
 Validation: 137 Node tests and the Next.js build passed. The new rollback-only scheduler suite verified missing/disabled origin, disabled provider, destination selection, signed requests and restricted execution; queued HTTP was rolled back before dispatch. The existing 12 delivery/permission assertions passed in production. The final check found zero test enquiries, outbox rows or HTTP queue entries, all public application tables protected by RLS, and three latest cron runs successful. Supabase security advisories reported only informational notices for deliberately inaccessible private tables, no warnings/errors.
 
-## Remaining release steps
+## Historical remaining steps at initial installation
 
 Complete production SMTP, Auth URL/security settings, owner onboarding and recovery; confirm the current legal/statutory release; decide explicitly on Pavan/Amit staff roles and the optional campaign module; finish production provider credentials/webhooks and acceptance, content release and a restore drill. The owner invitation for akm@indiagully.com is installed, but no sign-in or mail was triggered. Pavan/Amit administrator invitations were not created in production.
 
@@ -85,4 +87,4 @@ OpenAI and Runway revision 3 are enabled after successful provider checks and re
 
 The previously empty production CMS now contains 21 published core records (3 company pages, 3 leadership profiles, 3 articles, 12 historical projects), 4 unpublished opportunity drafts and 10 taxonomy terms. Only published preview content was transferred; no private data or test products were copied. New production IDs, revision snapshots and explicit deployment audit entries preserve the source project/ID/version without impersonating a user. The transaction refuses to overwrite nonempty CMS/taxonomy tables. All referenced local media exist. The production About page visibly renders the transferred content.
 
-Recovery acceptance, a restore exercise, live payment/refund acceptance and domain cutover remain outstanding. The four opportunity drafts require current mandate/availability confirmation. Cloudflare remains authoritative; Vercel domain configuration is not ready and no DNS was changed. PR #3 remains draft and unmerged.
+Recovery email delivery and code acceptance are verified; the new-password submission for that recovery session, a restore exercise, live payment/refund acceptance and domain cutover remain outstanding. The four opportunity drafts require current mandate/availability confirmation. Cloudflare remains authoritative. Both domains are attached and ownership-verified in Vercel, but DNS still targets the existing host. PR #3 is merged and its automatic Production deployment is READY. No DNS record was changed. See `production-domain-release.md`.

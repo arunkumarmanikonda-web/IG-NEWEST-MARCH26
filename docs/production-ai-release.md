@@ -23,7 +23,7 @@ The provider job reached ready; the recovery worker imported its image into priv
 
 ## Adjacent production checks
 
-Secure password change and leaked-password blocking are enabled. The server requires at least twelve characters with uppercase, lowercase, digits and symbols, matching the existing password form. Settings were saved and reopened for verification. Current-password enforcement remains off because the UI uses recent-login/reauthentication-code verification. Recovery acceptance is still pending.
+Secure password change and leaked-password blocking are enabled. The server requires at least twelve characters with uppercase, lowercase, digits and symbols, matching the existing password form. Settings were saved and reopened for verification. Current-password enforcement remains off because the UI uses recent-login/reauthentication-code verification. Recovery email delivery and code acceptance were subsequently verified on 13 November; the owner reached `/account/security`. The new-password submission during that recovery session remains unverified. See `production-domain-release.md`.
 
 Security advisors returned no WARNING or ERROR. The only findings were 21 INFO notices for private tables with intentionally deny-all RLS. A completed physical database backup dated 12 November 2026 19:23:22 UTC is available; a restore exercise has not been performed. Storage object bytes require a separate recovery strategy.
 
