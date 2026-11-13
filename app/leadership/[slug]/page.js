@@ -58,13 +58,13 @@ export default async function Page({ params }) {
           </div>}
           <div className="profile-actions">
             <Link className="button" href={contactHref}>Discuss an assignment <Arrow /></Link>
-            {!!sections.length && <a className="profile-biography-link" href={"#" + sections[0].id}>Explore the full profile <span aria-hidden="true">↓</span></a>}
+            {!!sections.length && <a className="profile-biography-link" href={"#" + sections[0].id}>Explore the full profile <Arrow /></a>}
           </div>
         </div>
       </section>
       {!!sections.length && <div className="profile-biography profile-container">
         <nav className="profile-section-nav" aria-label="Profile sections">
-          {sections.map((section) => <a key={section.id} href={"#" + section.id}>{section.title}<span aria-hidden="true">↘</span></a>)}
+          {sections.map((section) => <a key={section.id} href={"#" + section.id}>{section.title}<Arrow /></a>)}
         </nav>
         {sections.map((section) => <section className="profile-chapter" id={section.id} aria-labelledby={section.id + "-title"} key={section.id}>
           <h2 id={section.id + "-title"}>{section.title}</h2>

@@ -29,6 +29,7 @@
 .leadership-profile .profile-biography-link {display:inline-flex;align-items:center;gap:14px;font-size:12px;text-decoration:none;line-height:1.7;border-bottom:1px solid #bdbdb7;padding-bottom:4px;}
 .leadership-profile .profile-section-nav {display:flex;gap:0 34px;flex-wrap:wrap;border-block:1px solid var(--line);padding:0;}
 .leadership-profile .profile-section-nav a {display:inline-flex;gap:18px;align-items:center;text-decoration:none;font-size:12px;padding:20px 0;color:var(--muted);}
+.leadership-profile .profile-section-nav a svg,.leadership-profile .profile-biography-link svg {width:14px;height:14px;flex-shrink:0;transform:rotate(90deg);}
 .leadership-profile .profile-section-nav a:hover,.leadership-profile .profile-section-nav a:focus-visible {color:var(--ink);text-decoration:underline;text-underline-offset:6px;}
 .leadership-profile .profile-chapter {display:grid;grid-template-columns:minmax(200px,.75fr) minmax(0,2fr);gap:clamp(32px,5vw,76px);padding:43px 0;border-bottom:1px solid var(--line);scroll-margin-top:100px;}
 .leadership-profile .profile-chapter h2 {font:32px/1.25 var(--serif);letter-spacing:-.7px;margin:0;text-align:left;text-wrap:balance;}
