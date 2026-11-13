@@ -187,7 +187,7 @@ export default function ContentRegister({ module, items }) {
             className="button primary"
             href={"/admin/content/new?kind=" + kind}
           >
-            + Create{" "}
+            + Create with AI ·{" "}
             {module === "listings"
               ? "listing"
               : module === "catalogue"
@@ -365,6 +365,14 @@ export default function ContentRegister({ module, items }) {
                     <Link href={"/admin/content/" + r.id + "/teaser"}>
                       Branded PDF brief ↗
                     </Link>
+                    <br />
+                    <Link
+                      href={
+                        "/admin/data-rooms?content=" + r.id + "#room-access"
+                      }
+                    >
+                      Data room & access ↗
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -378,7 +386,10 @@ export default function ContentRegister({ module, items }) {
                 ? "No matching records."
                 : "Create your first draft."}
             </h3>
-            <p>Create manually or upload source material to the AI studio.</p>
+            <p>
+              Upload source material and let AI prepare the complete draft for
+              review.
+            </p>
           </div>
         )}
       </section>

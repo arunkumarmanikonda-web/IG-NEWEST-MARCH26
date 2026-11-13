@@ -33,11 +33,44 @@ export async function POST(request) {
       !user ||
       profile?.status !== "active" ||
       profile.must_change_password ||
-      (!isStaff(profile) || !staffVerified)
+      !isStaff(profile) ||
+      !staffVerified
     )
       throw new HttpError("Staff sign-in required", 403);
     if (p.approved !== true)
       throw new HttpError("Confirm permission to process these sources.");
+    if (p.workspace_id) {
+      const { data: workspace } = await client
+        .from("ig_content_intakes")
+        .select("id,actor_id,content_id,room_id")
+        .eq("id", p.workspace_id)
+        .maybeSingle();
+      const { data: record } = workspace
+        ? await client
+            .from("ig_content")
+            .select("kind,practice")
+            .eq("id", workspace.content_id)
+            .maybeSingle()
+        : { data: null };
+      if (
+        !workspace ||
+        workspace.actor_id !== user.id ||
+        record?.kind !== p.kind ||
+        record?.practice !== p.practice
+      )
+        throw new HttpError("Use your authorised content workspace.", 403);
+      const ids = p.source_id ? [p.source_id] : p.source_ids || [];
+      if (ids.length) {
+        const sources = await resolveIntakeSources(client, ids, p.practice);
+        const { data: files } = await client
+          .from("ig_room_files")
+          .select("id")
+          .eq("room_id", workspace.room_id)
+          .eq("status", "ready");
+        if (sources.some((s) => !files?.some((f) => f.id === s.room_file_id)))
+          throw new HttpError("Choose source files from this data room.", 403);
+      }
+    }
     const staged = ["plan", "section", "merge"].includes(p.action);
     if (p.action && !staged) throw new HttpError("Unsupported intake action");
     if (p.source_ids !== undefined && !staged)
@@ -58,6 +91,7 @@ export async function POST(request) {
       context = validateIntake({ ...p, files: [] }, [part.file]);
       metadata = {
         kind: "intake_section",
+        ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
         record_kind: p.kind,
         operation_kind: p.operation_kind,
         brief_hash: intakeBriefHash(p),
@@ -130,9 +164,11 @@ export async function POST(request) {
       );
       metadata = {
         kind: "intake",
+        ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
         record_kind: context.kind,
         operation_kind: context.operation_kind,
         brief: context.brief,
+        text: context.text,
         section_jobs_hash: createHash("sha256")
           .update(JSON.stringify([...p.jobs].sort()))
           .digest("hex"),
@@ -153,6 +189,7 @@ export async function POST(request) {
         .eq("status", "ready")
         .contains("context", {
           kind: "intake",
+          ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
           brief_hash: intakeBriefHash(p),
           section_jobs_hash: createHash("sha256")
             .update(JSON.stringify([...p.jobs].sort()))
@@ -173,6 +210,7 @@ export async function POST(request) {
       context = validateIntake(p);
       metadata = {
         kind: "intake",
+        ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
         record_kind: context.kind,
         operation_kind: context.operation_kind,
         brief: context.brief,

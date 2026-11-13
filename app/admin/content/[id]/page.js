@@ -2,10 +2,14 @@ import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
 import { notFound } from "next/navigation";
 import { accountContext } from "../../../../lib/supabase/server";
 import Editor from "./editor";
+import IntakeStudio from "../../intake-studio";
 export default async function EditPage({ params, searchParams }) {
   const { id } = await params,
-    { client } = await accountContext();
+    { client, user } = await accountContext();
+  const q = await searchParams;
   if (id !== "new" && !/^[0-9a-f-]{36}$/.test(id)) notFound();
+  if (id === "new" && !q?.ai && q?.manual !== "1")
+    return <IntakeStudio initialKind={q?.kind} />;
   const [{ data: terms }, { data: item }, { data: tags }, { data: revisions }] =
     await Promise.all([
       client.from("ig_taxonomy").select("*").order("label"),
@@ -37,7 +41,27 @@ export default async function EditPage({ params, searchParams }) {
     .eq("kind", "image")
     .order("created_at", { ascending: false })
     .limit(100);
-  const q = await searchParams;
+  const { data: intake } = item
+    ? await client
+        .from("ig_content_intakes")
+        .select("*")
+        .eq("content_id", item.id)
+        .maybeSingle()
+    : { data: null };
+  if (q?.generate === "1" && intake?.actor_id === user.id) {
+    const { data: sources } = await client
+      .from("ig_intake_sources")
+      .select("id,name")
+      .like("path", intake.room_id + "/%");
+    return (
+      <IntakeStudio
+        initialKind={item.kind}
+        initialPractice={item.practice}
+        initialWorkspace={{ ...intake, version: item.version }}
+        existingSources={sources || []}
+      />
+    );
+  }
   let catalogueSource = null;
   if (item?.kind === "product") {
     const { data: links } = await client
@@ -128,6 +152,8 @@ export default async function EditPage({ params, searchParams }) {
       initialKind={q?.kind}
       seed={seed}
       catalogueSource={catalogueSource}
+      intake={intake}
+      canResumeIntake={intake?.actor_id === user.id}
       mediaAssets={mediaAssets || []}
       creativeJobs={creativeJobs || []}
       terms={terms || []}

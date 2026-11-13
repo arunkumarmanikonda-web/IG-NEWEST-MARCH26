@@ -281,14 +281,14 @@ export default async function Module({ params, searchParams }) {
     );
     const { data: opportunities, error } = await client
       .from("ig_content")
-      .select("id,title")
-      .eq("kind", "opportunity");
+      .select("id,title,kind,slug");
     if (error || results.some((r) => r.error))
       return (
         <p role="alert">Data room administration is temporarily unavailable.</p>
       );
     return (
       <RoomsManager
+        key={roomSearch?.content || roomSearch?.room || "rooms"}
         rooms={results[0].data}
         files={results[1].data}
         folders={results[2].data}
@@ -299,11 +299,14 @@ export default async function Module({ params, searchParams }) {
         contacts={results[7].data}
         initialRoom={
           roomSearch?.room ||
+          results[0].data.find((r) => r.content_id === roomSearch?.content)
+            ?.id ||
           results[0].data.find(
             (r) => r.engagement_id === roomSearch?.engagement,
           )?.id
         }
         opportunities={opportunities || []}
+        initialContent={roomSearch?.content}
       />
     );
   }

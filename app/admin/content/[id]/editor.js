@@ -29,6 +29,8 @@ export default function Editor({
   mediaAssets = [],
   creativeJobs = [],
   catalogueSource = null,
+  intake = null,
+  canResumeIntake = false,
 }) {
   const editorForm = useRef(null);
   const router = useRouter(),
@@ -170,12 +172,14 @@ export default function Editor({
   return (
     <section className="workspace-card">
       <Link href={"/admin/" + section}>← Back to {section}</Link>
-      <p>
-        <Link href={"/admin/intake?kind=" + kind}>
-          Upload PDF, Word, Excel, images or a location link to create a
-          reviewed draft →
-        </Link>
-      </p>
+      {!item && (
+        <p>
+          <Link href={"/admin/intake?kind=" + kind}>
+            Upload PDF, Word, Excel, images or a location link to create a
+            reviewed draft →
+          </Link>
+        </p>
+      )}
       <h2>
         {item
           ? "Edit " +
@@ -192,14 +196,31 @@ export default function Editor({
                 : "content")}
       </h2>
       {item && (
-        <p>
+        <div className="workspace-actions">
           <Link
             className="module-link"
             href={"/admin/content/" + item.id + "/teaser"}
           >
             Generate branded PDF brief ↗
           </Link>
-        </p>
+          <Link
+            className="module-link"
+            href={"/admin/data-rooms?content=" + item.id + "#room-access"}
+          >
+            Data room & access ↗
+          </Link>
+          {canResumeIntake && (
+            <Link
+              className="module-link"
+              href={"/admin/content/" + item.id + "?generate=1"}
+            >
+              {intake.job_id
+                ? "Regenerate from source material"
+                : "Continue AI generation"}{" "}
+              ↗
+            </Link>
+          )}
+        </div>
       )}
       {item && (
         <p>
@@ -214,6 +235,115 @@ export default function Editor({
           <Link href={"/admin/intake?kind=" + kind}>AI creation studio</Link>,
           or complete this form manually.
         </p>
+      )}
+      {intake && (
+        <section className="workspace-note ai-review-panel">
+          <span className="eyebrow">AI DRAFT · ADMINISTRATOR REVIEW</span>
+          <h3>
+            {intake.job_id
+              ? "Your source material has filled this form."
+              : "Your private source room is ready."}
+          </h3>
+          <p>
+            Review the copy and specifications below, approve suitable imagery,
+            then save and publish. Original documents remain in the linked
+            private data room. Publishing the listing does not grant anyone
+            access to those documents.
+          </p>
+          {!!intake.review?.review_questions?.length && (
+            <div>
+              <h4>Items to confirm</h4>
+              <ul>
+                {intake.review.review_questions.map((question, i) => (
+                  <li key={i}>{question}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {intake.review?.fields?.latitude && (
+            <p>
+              Extracted location for verification:{" "}
+              {intake.review.fields.latitude}, {intake.review.fields.longitude}.
+              Source: {intake.review.fields.location_source}. Confirm the
+              location before adding coordinates to the form.
+            </p>
+          )}
+          {intake.media_id && (
+            <div className="ai-source-image">
+              <img
+                src={"/api/admin/source-media/" + intake.media_id}
+                alt="Extracted source image awaiting review"
+              />
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() =>
+                  run(async () => {
+                    await portalAction("source_media", {
+                      action: "publish",
+                      id: intake.media_id,
+                      reviewed: true,
+                    });
+                    setImage("/images/library/" + intake.media_id + ".jpg");
+                    setImageAlt(item.title);
+                    setDirty(true);
+                    setMessage(
+                      "Reviewed source image selected. Save the draft to retain it.",
+                    );
+                  })
+                }
+              >
+                Approve this source image for the listing
+              </button>
+              <small>
+                Approve only after checking the image depicts this property or
+                product and its usage rights permit publication.
+              </small>
+            </div>
+          )}
+          <details>
+            <summary>Source evidence & search-ad suggestions</summary>
+            {!!intake.review?.evidence?.length && (
+              <div className="table-scroll">
+                <table className="workspace-table">
+                  <thead>
+                    <tr>
+                      <th>Field</th>
+                      <th>Extracted value</th>
+                      <th>Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {intake.review.evidence.map((entry, i) => (
+                      <tr key={i}>
+                        <td>{entry.field}</td>
+                        <td>{entry.value}</td>
+                        <td>{entry.source}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <h4>Suggested search-ad headlines</h4>
+            <ul>
+              {intake.review?.ad_headlines?.map((text, i) => (
+                <li key={i}>{text}</li>
+              ))}
+            </ul>
+            <h4>Suggested search-ad descriptions</h4>
+            <ul>
+              {intake.review?.ad_descriptions?.map((text, i) => (
+                <li key={i}>{text}</li>
+              ))}
+            </ul>
+            <p>
+              SEO title, description and keywords are filled in the editor.
+              Advertising suggestions remain private until you choose to use
+              them.
+            </p>
+          </details>
+        </section>
       )}
       {kind === "product" && (
         <p>

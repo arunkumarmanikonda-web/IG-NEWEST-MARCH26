@@ -1,3 +1,4 @@
+import { portalReturn } from "../../lib/portal-return.mjs";
 import SignInForm from "./signin-form";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
@@ -8,12 +9,22 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";
-export default async function Login() {
+export default async function Login({ searchParams }) {
   const { user, profile, signInStatus } = await accountContext();
-  if (user && profile) redirect(accountDestination(profile, signInStatus));
+  const returnTo = portalReturn((await searchParams)?.next);
+  if (user && profile) {
+    const destination = accountDestination(profile, signInStatus);
+    redirect(
+      returnTo &&
+        signInStatus.accepted &&
+        ["/account", "/admin"].includes(destination)
+        ? returnTo
+        : destination,
+    );
+  }
   return (
     <main id="main" className="auth-page">
-      <SignInForm />
+      <SignInForm returnTo={returnTo} />
     </main>
   );
 }

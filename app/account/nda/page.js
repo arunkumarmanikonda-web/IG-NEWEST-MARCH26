@@ -10,11 +10,16 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function Page({ searchParams }) {
-  const { client, user, profile, policiesAccepted } = await accountContext();
-  if (!user || !profile) redirect("/login");
-  if (profile.status !== "active" || !policiesAccepted)
-    redirect("/account");
   const query = await searchParams;
+  const { client, user, profile, policiesAccepted } = await accountContext();
+  if (!user || !profile)
+    redirect(
+      "/login?next=" +
+        encodeURIComponent(
+          "/account/nda?opportunity=" + (query.opportunity || ""),
+        ),
+    );
+  if (profile.status !== "active" || !policiesAccepted) redirect("/account");
   const [{ data: requests, error }, { data: templates, error: te }, items] =
     await Promise.all([
       client

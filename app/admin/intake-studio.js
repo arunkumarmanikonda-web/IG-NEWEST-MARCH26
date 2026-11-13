@@ -1,10 +1,12 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { practiceOptions } from "../../lib/business.mjs";
-import { portalAction } from "../account/profile";
-import { uploadIntakeSources } from "../../lib/intake-upload.mjs";
+import {
+  intakeWorkspace,
+  uploadContentSources,
+} from "../../lib/content-intake-upload.mjs";
 import { processIntakeDraft } from "../../lib/intake-process.mjs";
 import { validateSourceSelection } from "../../lib/intake-source-spec.mjs";
 const kinds = [
@@ -17,118 +19,148 @@ const kinds = [
   ["person", "Leadership profile"],
   ["faq", "FAQ"],
 ];
-export default function IntakeStudio() {
-  const params = useSearchParams();
-  const pause = useRef(false);
+const defaultPractice = (kind) =>
+  kind === "product"
+    ? "horeca"
+    : kind === "opportunity"
+      ? "real-estate"
+      : kind === "project"
+        ? "hospitality"
+        : "corporate";
+export default function IntakeStudio({
+  initialKind,
+  initialPractice,
+  initialWorkspace = null,
+  existingSources = [],
+}) {
+  const params = useSearchParams(),
+    router = useRouter();
+  const selectedKind = initialKind || params.get("kind") || "opportunity";
   const [kind, setKind] = useState(
-      kinds.some((k) => k[0] === params.get("kind"))
-        ? params.get("kind")
-        : "opportunity",
-    ),
-    [practice, setPractice] = useState(
-      params.get("kind") === "product" ? "horeca" : "real-estate",
-    ),
-    [files, setFiles] = useState([]),
-    [result, setResult] = useState(null),
-    [busy, setBusy] = useState(false),
-    [message, setMessage] = useState(""),
-    [media, setMedia] = useState(null),
-    [chosen, setChosen] = useState(0);
-  async function generate(e) {
-    e.preventDefault();
+    kinds.some((k) => k[0] === selectedKind) ? selectedKind : "opportunity",
+  );
+  const [practice, setPractice] = useState(
+    initialPractice || defaultPractice(kind),
+  );
+  const [files, setFiles] = useState([]),
+    [sourceIds, setSourceIds] = useState(existingSources.map((s) => s.id));
+  const [busy, setBusy] = useState(false),
+    [message, setMessage] = useState("");
+  const [workspace, setWorkspace] = useState(initialWorkspace),
+    [step, setStep] = useState(0);
+  const workspaceRef = useRef(initialWorkspace),
+    requestId = useRef(null),
+    prepared = useRef(new Map()),
+    pause = useRef(false);
+  async function generate(event) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    if (
+      !files.length &&
+      !sourceIds.length &&
+      !String(form.get("text") || "").trim() &&
+      !form.get("location")
+    ) {
+      setMessage(
+        "Upload source material, paste your approved details or add a location link to begin.",
+      );
+      return;
+    }
+    if (files.length + sourceIds.length > 8) {
+      setMessage(
+        "Select up to eight sources for this AI draft. Additional documents can remain in the data room.",
+      );
+      return;
+    }
     setBusy(true);
     pause.current = false;
-    setResult(null);
-    setMessage(
-      "Reading the supplied material and preparing a structured draft…",
-    );
     try {
-      const f = new FormData(e.currentTarget);
-      const sourceIds = await uploadIntakeSources({
+      setStep(1);
+      setMessage("Creating your private source room…");
+      if (!workspaceRef.current) {
+        requestId.current ||= crypto.randomUUID();
+        workspaceRef.current = await intakeWorkspace({
+          action: "begin",
+          request_id: requestId.current,
+          kind,
+          practice,
+        });
+        setWorkspace(workspaceRef.current);
+      }
+      const current = workspaceRef.current;
+      const uploaded = await uploadContentSources({
         files,
-        practice,
-        approved: f.get("approved") === "on",
+        workspace: current,
+        prepared: prepared.current,
         projectUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
         onProgress: setMessage,
       });
-      setMessage(
-        "Uploads complete. Reading your sources and preparing the review draft…",
-      );
-      const d = await processIntakeDraft({
-        sourceIds,
+      const sources = [...new Set([...sourceIds, ...uploaded])];
+      setStep(2);
+      const result = await processIntakeDraft({
+        sourceIds: sources,
         input: {
+          workspace_id: current.id,
           kind,
           practice,
           text: [
-            f.get("text"),
-            f.get("location") ? "Location source: " + f.get("location") : "",
+            form.get("text"),
+            form.get("location")
+              ? "Location source: " + form.get("location")
+              : "",
           ]
             .filter(Boolean)
             .join("\n"),
-          brief: f.get("brief"),
-          approved: f.get("approved") === "on",
+          brief: form.get("brief"),
+          approved: true,
         },
         onProgress: setMessage,
         shouldPause: () => pause.current,
       });
-      setResult({ ...d, kind, practice });
-      setMedia(null);
-      setChosen(0);
-      setMessage(
-        "Draft prepared. Review the extracted facts, imagery and missing information before creating the record.",
-      );
-    } catch (e) {
-      setMessage(e.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function saveImage(e) {
-    e.preventDefault();
-    setBusy(true);
-    try {
-      const f = new FormData(e.currentTarget),
-        candidate = result.candidates[chosen];
-      const r = await fetch("/api/admin/source-media", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          practice: result.practice,
-          data: candidate.data,
-          source_name: candidate.name,
-          alt: f.get("alt"),
-          preset: f.get("preset"),
-          rights_reference: f.get("rights"),
-          rights_confirmed: f.get("approved") === "on",
-        }),
+      setStep(3);
+      setMessage("Filling the complete form and saving the review draft…");
+      const saved = await intakeWorkspace({
+        action: "finish",
+        id: current.id,
+        version: current.version,
+        job_id: result.id,
       });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error);
-      setMedia({ ...d, alt: f.get("alt") });
-      setMessage(
-        "Image prepared and stored privately. Review it below before public release.",
-      );
-    } catch (e) {
-      setMessage(e.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function releaseImage() {
-    setBusy(true);
-    try {
-      await portalAction("source_media", {
-        action: "publish",
-        id: media.id,
-        reviewed: true,
-      });
-      setMedia({ ...media, published: true });
-      setMessage(
-        "Reviewed media released. It can now be attached to the draft.",
-      );
-    } catch (e) {
-      setMessage(e.message);
-    } finally {
+      workspaceRef.current = saved;
+      setWorkspace(saved);
+      // Extracted imagery remains private until an administrator reviews its identity and rights.
+      if (result.candidates?.length && !saved.media_id) {
+        try {
+          const candidate = result.candidates[0];
+          const response = await fetch("/api/admin/source-media", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              practice,
+              data: candidate.data,
+              source_name: candidate.name,
+              alt: result.draft.title,
+              preset: kind === "product" ? "square" : "landscape",
+              rights_reference:
+                "Administrator-authorised source material in private room " +
+                current.room_id,
+              rights_confirmed: true,
+            }),
+          });
+          const media = await response.json();
+          if (response.ok)
+            await intakeWorkspace({
+              action: "media",
+              id: current.id,
+              media_id: media.id,
+            });
+        } catch {
+          /* The saved draft remains available; the editor can retry image selection. */
+        }
+      }
+      router.replace("/admin/content/" + saved.content_id + "?generated=1");
+      router.refresh();
+    } catch (error) {
+      setMessage(error.message);
       setBusy(false);
     }
   }
@@ -136,46 +168,58 @@ export default function IntakeStudio() {
     <>
       <div className="module-heading">
         <div>
-          <span className="eyebrow">SOURCE → STRUCTURE → REVIEW → PUBLISH</span>
-          <h2>AI creation studio</h2>
+          <span className="eyebrow">AI CONTENT CREATION</span>
+          <h2>Start with your source material.</h2>
           <p>
-            Bring your project material. Build a useful draft, a clear fact base
-            and a publication-ready image set.
+            Upload once. AI prepares the complete form. You review, refine and
+            publish.
           </p>
         </div>
-        <Link href="/admin/creative" className="module-link">
-          Runway creatives ↗
-        </Link>
+        {workspace ? (
+          <Link
+            className="module-link"
+            href={
+              "/admin/data-rooms?room=" + workspace.room_id + "#room-access"
+            }
+          >
+            Data room & access ↗
+          </Link>
+        ) : (
+          <Link
+            className="module-link"
+            href={"/admin/content/new?kind=" + kind + "&manual=1"}
+          >
+            Start a manual draft instead ↗
+          </Link>
+        )}
       </div>
       <div className="intake-steps">
         {[
-          ["01", "Supply", "Files, text & images"],
-          ["02", "Extract", "Facts with source references"],
-          ["03", "Review", "Fill gaps & approve imagery"],
-          ["04", "Publish", "Release the reviewed revision"],
-        ].map(([n, t, d]) => (
-          <div key={n}>
-            <span>{n}</span>
-            <strong>{t}</strong>
-            <small>{d}</small>
+          ["Source room", "Private files, images & location"],
+          ["AI draft", "Copy, specifications & search metadata"],
+          ["Review & publish", "Your approval controls publication"],
+        ].map(([title, description], index) => (
+          <div key={title} className={step === index + 1 ? "active" : ""}>
+            <strong>{title}</strong>
+            <small>{description}</small>
           </div>
         ))}
       </div>
       <section className="workspace-card">
         <form className="workspace-form" onSubmit={generate}>
           <label>
-            Create
+            Content type
             <select
               value={kind}
+              disabled={busy || !!workspace}
               onChange={(e) => {
                 setKind(e.target.value);
-                if (e.target.value === "product") setPractice("horeca");
-                if (e.target.value === "project") setPractice("hospitality");
+                setPractice(defaultPractice(e.target.value));
               }}
             >
-              {kinds.map(([k, l]) => (
-                <option value={k} key={k}>
-                  {l}
+              {kinds.map(([id, label]) => (
+                <option key={id} value={id}>
+                  {label}
                 </option>
               ))}
             </select>
@@ -184,58 +228,38 @@ export default function IntakeStudio() {
             Responsible practice
             <select
               value={practice}
+              disabled={busy || !!workspace}
               onChange={(e) => setPractice(e.target.value)}
             >
-              {practiceOptions.map(([k, l]) => (
-                <option key={k} value={k}>
-                  {l}
+              {practiceOptions.map(([id, label]) => (
+                <option key={id} value={id}>
+                  {label}
                 </option>
               ))}
             </select>
           </label>
-          <label className="wide">
-            What should we prepare?
-            <textarea
-              name="brief"
-              required
-              minLength={10}
-              maxLength={2000}
-              defaultValue="Prepare a concise, professional India Gully profile from the supplied material. Extract the relevant facts and create clear website copy and SEO metadata. Flag missing information."
-            />
-          </label>
-          <label className="wide">
-            Source details
-            <textarea
-              name="text"
-              maxLength={18000}
-              placeholder="Project details, product specifications, approved facts, a location link with coordinates, source references…"
-            />
-          </label>
-          <label className="wide">
-            Location / map link (optional)
-            <input
-              name="location"
-              type="url"
-              maxLength={1500}
-              placeholder="https://www.google.com/maps/@latitude,longitude,..."
-            />
-            <small>
-              A full map link with coordinates can be extracted. Short links and
-              place names are flagged for review.
-            </small>
-          </label>
+          {kind === "product" && (
+            <p className="wide workspace-note">
+              Creating many products from a brand catalogue?{" "}
+              <Link href="/admin/catalogue/import">
+                Open catalogue import →
+              </Link>{" "}
+              Individual products can be created here with an automatic,
+              editable SKU.
+            </p>
+          )}
           <label className="wide source-drop">
-            Attach source material
+            Upload to the private data room
             <input
               type="file"
               multiple
               disabled={busy}
               accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt,.jpg,.jpeg,.png,.webp"
               onChange={(e) => {
-                const list = [...e.target.files];
                 try {
-                  validateSourceSelection(list);
-                  setFiles(list);
+                  const selected = [...e.target.files];
+                  validateSourceSelection(selected);
+                  setFiles(selected);
                   setMessage("");
                 } catch (error) {
                   setMessage(error.message);
@@ -245,32 +269,86 @@ export default function IntakeStudio() {
               }}
             />
             <span>
-              PDF · Word · Excel · PowerPoint · CSV · text · JPEG · PNG · WebP.
-              Up to 8 files per draft. Large uploads resume after interruptions;
-              no website-imposed MB cap.
+              PDF, Word, Excel, PowerPoint, CSV, text and images. No
+              website-imposed MB cap. Large uploads are resumable;
+              storage-provider allowances apply.
             </span>
-            {files.map((f) => (
-              <small key={f.name}>
-                {f.name} · {Math.round(f.size / 1024)} KB
-              </small>
+            {files.map((file, i) => (
+              <small key={i}>{file.name}</small>
             ))}
           </label>
-          <p className="workspace-small wide">
-            Sources upload privately. Completed uploads are reused if you retry.
-            Office text and tables are analysed. PDF visuals can be read; source
-            photographs are gathered from supported images and embedded document
-            media. Unknown measurements, prices, legal facts and coordinates
-            remain unanswered. Do not upload private data-room or client
-            material without the required authority.
+          {!!existingSources.length && (
+            <fieldset className="wide">
+              <legend>Sources already in this room</legend>
+              {existingSources.map((source) => (
+                <label className="check" key={source.id}>
+                  <input
+                    type="checkbox"
+                    checked={sourceIds.includes(source.id)}
+                    disabled={busy}
+                    onChange={(e) =>
+                      setSourceIds((ids) =>
+                        e.target.checked
+                          ? [...ids, source.id]
+                          : ids.filter((id) => id !== source.id),
+                      )
+                    }
+                  />
+                  {source.name}
+                </label>
+              ))}
+            </fieldset>
+          )}
+          <label className="wide">
+            Additional source details (optional)
+            <textarea
+              name="text"
+              maxLength={18000}
+              disabled={busy}
+              placeholder="Paste approved property information, product specifications, a biography or any details not in the files."
+            />
+          </label>
+          <label className="wide">
+            Location or map link (optional)
+            <input
+              name="location"
+              type="url"
+              maxLength={1500}
+              disabled={busy}
+              placeholder="https://maps.google.com/…"
+            />
+          </label>
+          <details className="wide">
+            <summary>AI writing direction</summary>
+            <label>
+              Instructions
+              <textarea
+                name="brief"
+                required
+                minLength={10}
+                maxLength={2000}
+                disabled={busy}
+                defaultValue="Create the entire India Gully listing or content form from these sources. Write polished, substantive corporate copy with a clear client call to action. Extract all supported specifications, location and commercial facts. Prepare the SEO title, meta description, relevant search keywords and SEM headline and description suggestions. Preserve factual accuracy and flag missing or conflicting information for administrator review. Never invent availability, prices, measurements, credentials or legal facts."
+              />
+            </label>
+          </details>
+          <p className="wide workspace-small">
+            Originals remain in the linked private room. AI creates the title,
+            introduction, detailed content, relevant fields and SEO copy.
+            Unknown facts stay flagged for review. Search-ad suggestions are
+            saved for review; no advertising is launched. Clients receive access
+            only after approval.
           </p>
           <label className="check wide">
-            <input name="approved" required type="checkbox" />I am authorised to
-            send these sources to OpenAI for processing and use them to prepare
+            <input name="approved" type="checkbox" required disabled={busy} />I
+            am authorised to process these sources with OpenAI and prepare
             public-facing drafts.
           </label>
           <div className="workspace-actions wide">
-            <button disabled={busy} className="primary">
-              {busy ? "Preparing…" : "Generate from supplied sources"}
+            <button className="primary" disabled={busy}>
+              {busy
+                ? "Preparing your draft…"
+                : "Generate complete draft with AI"}
             </button>
             {busy && (
               <button
@@ -278,7 +356,7 @@ export default function IntakeStudio() {
                 onClick={() => {
                   pause.current = true;
                   setMessage(
-                    "Pausing after the current upload or section finishes…",
+                    "Pausing after the current section. Completed uploads and sections are retained.",
                   );
                 }}
               >
@@ -287,238 +365,18 @@ export default function IntakeStudio() {
             )}
           </div>
         </form>
+        <p className="portal-message" role="status" aria-live="polite">
+          {message}
+        </p>
+        {workspace && !busy && (
+          <p>
+            Your source room and draft are saved.{" "}
+            <Link href={"/admin/content/" + workspace.content_id}>
+              Open saved draft →
+            </Link>
+          </p>
+        )}
       </section>
-      <p role="status" className="portal-message">
-        {message}
-      </p>
-      {result && (
-        <>
-          <section className="workspace-card">
-            <div className="module-heading">
-              <div>
-                <span className="eyebrow">DRAFT / NOT PUBLISHED</span>
-                <h3>{result.draft.title}</h3>
-                <p>{result.draft.summary}</p>
-              </div>
-            </div>
-            <p className="preserve-lines">{result.draft.body}</p>
-            <div className="extracted-fields">
-              {Object.entries(result.draft.fields)
-                .filter(([, v]) => v)
-                .map(([k, v]) => (
-                  <div key={k}>
-                    <span>{k.replaceAll("_", " ")}</span>
-                    <strong>{v}</strong>
-                  </div>
-                ))}
-            </div>
-            <details>
-              <summary>Source evidence</summary>
-              <div className="table-scroll">
-                <table className="workspace-table">
-                  <thead>
-                    <tr>
-                      <th>Field</th>
-                      <th>Extracted value</th>
-                      <th>Source</th>
-                      <th>Supporting excerpt</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.draft.evidence.map((e, i) => (
-                      <tr key={i}>
-                        <td>{e.field}</td>
-                        <td>{e.value}</td>
-                        <td>{e.source}</td>
-                        <td>{e.excerpt}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </details>
-            <div className="workspace-note">
-              <h4>Search & campaign copy</h4>
-              <p>
-                <strong>SEO title:</strong> {result.draft.seo_title}
-              </p>
-              <p>{result.draft.seo_description}</p>
-              <p>
-                <strong>Suggested phrases:</strong>{" "}
-                {(result.draft.keywords || []).join(" · ")}
-              </p>
-              {result.draft.ad_headlines?.map((s, i) => (
-                <p key={i}>{s}</p>
-              ))}
-              {result.draft.ad_descriptions?.map((s, i) => (
-                <p key={i}>{s}</p>
-              ))}
-              <small>
-                Review suggestions before use. No paid campaign is activated.
-              </small>
-            </div>
-            <div className="review-questions">
-              <h4>Resolve before publication</h4>
-              {result.draft.review_questions.length ? (
-                <ul>
-                  {result.draft.review_questions.map((q, i) => (
-                    <li key={i}>{q}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>
-                  No gaps were flagged by the model. Factual and rights review
-                  is still required.
-                </p>
-              )}
-            </div>
-            <div className="workspace-actions">
-              <Link
-                className="primary"
-                href={
-                  "/admin/content/new?kind=" +
-                  result.kind +
-                  "&ai=" +
-                  result.id +
-                  (media?.published ? "&media=" + media.id : "")
-                }
-              >
-                Review in{" "}
-                {result.kind === "product"
-                  ? "product"
-                  : result.kind === "opportunity"
-                    ? "listing"
-                    : "content"}{" "}
-                editor →
-              </Link>
-            </div>
-            {["opportunity", "product"].includes(result.kind) && (
-              <p className="workspace-small">
-                After saving, open Branded PDF brief in the editor. Your content
-                and chosen image are automatically presented in India Gully’s
-                approved three-page design.
-              </p>
-            )}
-          </section>
-          {!!result.candidates.length && (
-            <section className="workspace-card">
-              <h3>Images gathered from your sources</h3>
-              <p className="workspace-small">
-                Choose an image for the listing. The formatter preserves the
-                image content, fits it within the selected frame and removes
-                metadata. It does not manufacture property features.
-              </p>
-              <div className="source-image-grid">
-                {result.candidates.map((c, i) => (
-                  <button
-                    aria-pressed={chosen === i}
-                    key={i}
-                    onClick={() => setChosen(i)}
-                  >
-                    <img
-                      src={"data:" + c.mime + ";base64," + c.data}
-                      alt={"Source candidate " + (i + 1)}
-                    />
-                    <span>{c.name}</span>
-                  </button>
-                ))}
-              </div>
-              <form className="workspace-form" onSubmit={saveImage}>
-                <label>
-                  Posting format
-                  <select name="preset">
-                    <option value="landscape">
-                      Landscape · listing / project
-                    </option>
-                    <option value="square">Square · product / social</option>
-                    <option value="portrait">Portrait · teaser</option>
-                  </select>
-                </label>
-                <label>
-                  Image description
-                  <input
-                    name="alt"
-                    required
-                    minLength={5}
-                    maxLength={250}
-                    defaultValue={result.draft.title}
-                  />
-                </label>
-                <label className="wide">
-                  Image rights / permission reference
-                  <input
-                    name="rights"
-                    required
-                    minLength={5}
-                    maxLength={500}
-                    placeholder="Owner-supplied material; approval date / source reference"
-                  />
-                </label>
-                <label className="check wide">
-                  <input name="approved" type="checkbox" required />I confirm
-                  usage rights and that this image accurately represents the
-                  stated subject.
-                </label>
-                <button disabled={busy}>Prepare & save image</button>
-              </form>
-              {media && (
-                <div className="prepared-media">
-                  <img
-                    src={"/api/admin/source-media/" + media.id}
-                    alt={media.alt}
-                  />
-                  {!media.published ? (
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        releaseImage();
-                      }}
-                    >
-                      <label className="check">
-                        <input required type="checkbox" />I approve this
-                        prepared image for public use, including identity and
-                        confidentiality.
-                      </label>
-                      <button disabled={busy}>Release reviewed image</button>
-                    </form>
-                  ) : (
-                    <p>
-                      Image approved. Use the editor link above to attach it.
-                    </p>
-                  )}
-                </div>
-              )}
-            </section>
-          )}
-          {result.notes?.map((n, i) => (
-            <p className="workspace-note" key={i}>
-              {n}
-            </p>
-          ))}
-          <section className="workspace-card">
-            <h3>Creative direction</h3>
-            <p className="preserve-lines">{result.draft.creative_brief}</p>
-            <p className="workspace-small">
-              Illustrative concepts are labelled and reviewed separately from
-              actual property photographs.
-            </p>
-            <div className="workspace-actions">
-              <Link
-                href={
-                  "/admin/creative?brief=" +
-                  encodeURIComponent(
-                    result.draft.creative_brief.slice(0, 900),
-                  ) +
-                  "&practice=" +
-                  result.practice
-                }
-              >
-                Use this brief in Runway →
-              </Link>
-            </div>
-          </section>
-        </>
-      )}
     </>
   );
 }

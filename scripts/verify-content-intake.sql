@@ -1,0 +1,44 @@
+-- Transaction-only fixtures: no provider calls, emails, grants or real uploads.
+begin;
+insert into storage.buckets(id,name,public) values('ig-data-rooms','ig-data-rooms',false) on conflict(id) do nothing;
+do $$
+declare uid uuid; sid uuid; claims jsonb; start jsonb; w jsonb; same jsonb; w2 jsonb; f uuid=gen_random_uuid(); source jsonb; job uuid=gen_random_uuid(); p jsonb; done jsonb; bad boolean; n int=0;
+begin
+ select u.id,s.id into uid,sid from auth.users u join auth.sessions s on s.user_id=u.id where u.email='akm@indiagully.com' order by s.created_at desc limit 1;
+ if sid is null then raise exception 'Owner session required';end if;
+ claims=jsonb_build_object('sub',uid,'session_id',sid,'aal','aal2','role','authenticated');perform set_config('request.jwt.claims',claims::text,true);
+ start=jsonb_build_object('action','begin','request_id',gen_random_uuid(),'kind','opportunity','practice','real-estate');
+ w=public.ig_content_intake(start);same=public.ig_content_intake(start);
+ assert w->>'id'=same->>'id','Retry created duplicate workspace';n=n+1;
+ assert exists(select 1 from public.ig_content where id=(w->>'content_id')::uuid and status='draft' and published_version is null),'New workspace became public';n=n+1;
+ assert not exists(select 1 from public.ig_room_grants where room_id=(w->>'room_id')::uuid),'New room has client grants';n=n+1;
+ same=public.ig_content_intake(jsonb_build_object('action','room','content_id',w->>'content_id'));
+ assert same->>'id'=w->>'room_id','Room action duplicated existing room';n=n+1;
+ bad=false;begin perform public.ig_content_intake(start||'{"kind":"product"}');exception when others then bad=true;end;assert bad,'Workspace type changed on retry';n=n+1;
+ insert into public.ig_room_files(id,room_id,name,folder,object_key,mime,bytes,status,created_by) values(f,(w->>'room_id')::uuid,'SYSTEM TEST.pdf','Source material',(w->>'room_id')||'/'||f,'application/pdf',12000000000,'ready',uid);
+ p=jsonb_build_object('action','source','id',w->>'id','file_id',f,'sha256',repeat('a',64),'approved',true);
+ bad=false;begin perform public.ig_content_intake(p);exception when others then bad=true;end;assert bad,'Missing original accepted';n=n+1;
+ insert into storage.objects(bucket_id,name,owner,metadata) values('ig-data-rooms',(w->>'room_id')||'/'||f,uid,jsonb_build_object('size',12000000000));
+ source=public.ig_content_intake(p);same=public.ig_content_intake(p);assert source->>'id'=same->>'id','Source retry duplicated';n=n+1;
+ same=public.ig_intake_sources_manage(jsonb_build_object('action','resolve','practice','real-estate','ids',jsonb_build_array(source->>'id')));
+ assert same->0->>'bucket'='ig-data-rooms' and (same->0->>'size')::bigint=12000000000,'Wrong source bucket or size cap';n=n+1;
+ w2=public.ig_content_intake(start||jsonb_build_object('request_id',gen_random_uuid()));
+ bad=false;begin perform public.ig_content_intake(p||jsonb_build_object('id',w2->>'id'));exception when others then bad=true;end;assert bad,'Cross-room file accepted';n=n+1;
+ insert into public.ig_ai_jobs(id,actor_id,practice,context,status,draft) values(job,uid,'real-estate',jsonb_build_object('kind','intake','record_kind','opportunity','workspace_id',w->>'id','sources',jsonb_build_array(jsonb_build_object('source_id',source->>'id'))),'ready','{"review_questions":["Confirm availability"],"ad_headlines":["Documented hotel"]}');
+ p=jsonb_build_object('action','finish','id',w->>'id','job_id',job,'version',w->'version','content',jsonb_build_object('slug','ig-opp-rollback-only','title','SYSTEM TEST AI draft','body','Source-based reviewed draft','public_data',jsonb_build_object('city','Noida','seo_keywords','hotel investment'),'term_ids','[]'::jsonb));
+ bad=false;begin perform public.ig_content_intake(p||'{"version":999}');exception when serialization_failure then bad=true;end;assert bad,'Stale revision overwritten';n=n+1;
+ done=public.ig_content_intake(p);same=public.ig_content_intake(p);assert done->>'version'=same->>'version','Finishing again rewrote content';n=n+1;
+ assert done->'review'->'review_questions'->>0='Confirm availability','Review questions lost';n=n+1;
+ assert exists(select 1 from public.ig_content where id=(w->>'content_id')::uuid and title='SYSTEM TEST AI draft' and status='draft' and published_version is null),'AI content not a private draft';n=n+1;
+ bad=false;begin perform public.ig_content_intake(p||jsonb_build_object('id',w2->>'id'));exception when others then bad=true;end;assert bad,'AI job applied to another workspace';n=n+1;
+ same=public.ig_content_intake(start||jsonb_build_object('kind','product','practice','horeca','request_id',gen_random_uuid()));
+ assert exists(select 1 from public.ig_content where id=(same->>'content_id')::uuid and nullif(public_data->>'sku','') is not null),'Product SKU not automatic';n=n+1;
+ update public.ig_profiles set roles=array['administrator'],practice_grants='{"horeca":["read","write","data_rooms"]}' where id=uid;
+ bad=false;begin perform public.ig_content_intake(start);exception when insufficient_privilege then bad=true;end;assert bad,'Cross-practice workspace accessible';n=n+1;
+ perform set_config('request.jwt.claims','{}',true);
+ bad=false;begin perform public.ig_content_intake(start);exception when insufficient_privilege then bad=true;end;assert bad,'Anonymous intake access';n=n+1;
+ assert not has_table_privilege('anon','public.ig_content_intakes','SELECT') and not has_table_privilege('authenticated','public.ig_content_intakes','INSERT'),'Private review table exposed';n=n+1;
+ perform set_config('ig.content_intake_check',jsonb_build_object('checks_passed',n,'fixtures','rolled back','provider_calls',0,'large_upload','metadata only')::text,true);
+end $$;
+select current_setting('ig.content_intake_check')::jsonb as result;
+rollback;

@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { intakeWorkspace } from "../../lib/content-intake-upload.mjs";
 import { portalAction } from "../account/profile";
 import { resumableSourceUpload } from "../../lib/intake-upload.mjs";
 import {
@@ -23,12 +24,15 @@ export default function RoomsManager({
   engagements = [],
   contacts = [],
   initialRoom,
+  initialContent,
 }) {
   const router = useRouter(),
     [selected, setSelected] = useState(
       rooms.some((r) => r.id === initialRoom)
         ? initialRoom
-        : rooms[0]?.id || "",
+        : initialContent
+          ? ""
+          : rooms[0]?.id || "",
     ),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
@@ -44,10 +48,22 @@ export default function RoomsManager({
     roomGrants = grants.filter((x) => x.room_id === selected),
     roomFolders = folders.filter((x) => x.room_id === selected);
   const engagement = engagements.find((e) => e.id === room?.engagement_id);
+  const content = opportunities.find((o) => o.id === room?.content_id);
+  const pendingContent = opportunities.find((o) => o.id === initialContent);
   const eligibleContacts = contacts.filter(
     (c) =>
       c.client_id === engagement?.client_id && c.active && c.portal_enabled,
   );
+  async function copyLink(path) {
+    try {
+      await navigator.clipboard.writeText(window.location.origin + path);
+      setMessage(
+        "Secure link copied. Recipients must sign in; the link does not grant access.",
+      );
+    } catch {
+      setMessage("Copy this secure link: " + window.location.origin + path);
+    }
+  }
   async function notifyContacts() {
     setBusy(true);
     setMessage("");
@@ -199,7 +215,7 @@ export default function RoomsManager({
   }
   return (
     <section className="workspace-card">
-      <h2>Project data rooms</h2>
+      <h2>Data rooms & client access</h2>
       <p>
         Opportunity rooms require a signed and approved project NDA. Client
         engagement rooms use the administrator-confirmed engagement and
@@ -214,41 +230,79 @@ export default function RoomsManager({
       <p role="status" className="portal-message">
         {message}
       </p>
-      <form
-        className="workspace-form"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const f = new FormData(e.currentTarget);
-          const d = await run({
-            action: "create",
-            content_id: f.get("content_id"),
-            title: f.get("title"),
-          });
-          if (d) setSelected(d.id);
-        }}
-      >
-        <h3 className="wide">Create a project room</h3>
-        <label>
-          Opportunity
-          <select name="content_id" required>
-            <option value="">Select a project</option>
-            {opportunities
-              .filter((o) => !rooms.some((r) => r.content_id === o.id))
-              .map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.title}
-                </option>
-              ))}
-          </select>
-        </label>
-        <label>
-          Room title
-          <input name="title" required maxLength={180} />
-        </label>
-        <button disabled={busy} className="primary">
-          Create private room
-        </button>
-      </form>
+      {initialContent && !room && (
+        <div className="workspace-note">
+          <h3>{pendingContent?.title || "Selected content"}</h3>
+          <p>
+            This record does not yet have a linked data room. Create it here to
+            upload source material and manage access.
+          </p>
+          <button
+            className="primary"
+            disabled={busy || !pendingContent}
+            onClick={async () => {
+              setBusy(true);
+              try {
+                const created = await intakeWorkspace({
+                  action: "room",
+                  content_id: initialContent,
+                });
+                router.replace(
+                  "/admin/data-rooms?room=" + created.id + "#room-access",
+                );
+                router.refresh();
+              } catch (error) {
+                setMessage(error.message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            Create linked private data room
+          </button>
+        </div>
+      )}
+      <details open={!room && !initialContent}>
+        <summary>Create another data room</summary>
+        <form
+          className="workspace-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const f = new FormData(e.currentTarget);
+            setBusy(true);
+            try {
+              const d = await intakeWorkspace({
+                action: "room",
+                content_id: f.get("content_id"),
+              });
+              router.replace("/admin/data-rooms?room=" + d.id);
+              router.refresh();
+            } catch (error) {
+              setMessage(error.message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          <h3 className="wide">Create a project room</h3>
+          <label>
+            Listing, product or content record
+            <select name="content_id" required>
+              <option value="">Select a project</option>
+              {opportunities
+                .filter((o) => !rooms.some((r) => r.content_id === o.id))
+                .map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.title}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <button disabled={busy} className="primary">
+            Create private room
+          </button>
+        </form>
+      </details>
       <label className="room-select">
         Manage room
         <select
@@ -273,6 +327,66 @@ export default function RoomsManager({
       </label>
       {room && (
         <>
+          <section
+            id="room-access"
+            className="room-access-summary workspace-note"
+          >
+            <span className="eyebrow">PRIVATE DATA ROOM</span>
+            <h3>{room.title}</h3>
+            <p>
+              {roomFiles.filter((f) => f.status === "ready").length} ready files
+              ·{" "}
+              {
+                roomGrants.filter(
+                  (g) => g.active && new Date(g.expires_at) > new Date(),
+                ).length
+              }{" "}
+              active client grants
+            </p>
+            <div className="workspace-actions">
+              <a className="module-link" href="#room-files">
+                Files & uploads ↓
+              </a>
+              <a className="button primary" href="#room-permissions">
+                Share access & permissions ↓
+              </a>
+              <button
+                type="button"
+                onClick={() => copyLink("/account/data-rooms/" + room.id)}
+              >
+                Copy secure room link
+              </button>
+              {content?.kind === "opportunity" && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyLink(
+                      "/account/nda?opportunity=" +
+                        encodeURIComponent(content.slug),
+                    )
+                  }
+                >
+                  Copy NDA request link
+                </button>
+              )}
+              <Link href="/admin/nda">Review NDA requests ↗</Link>
+            </div>
+            <p>
+              For a property: share the NDA request link, approve the signed
+              request, then activate the client’s access below. The secure room
+              link works only for authorised recipients. Choose view-only or
+              permitted downloads, set an expiry and revoke access here at any
+              time.
+            </p>
+            {content && content.kind !== "opportunity" && (
+              <p>
+                This is a private source room for {content.kind} content. Client
+                report circulation is managed through{" "}
+                <Link href="/admin/clients">Clients & engagements</Link>;
+                property NDA grants apply to real estate opportunities.
+              </p>
+            )}
+          </section>
           <form
             key={room.id + "-" + room.version}
             className="workspace-form"
@@ -310,7 +424,7 @@ export default function RoomsManager({
               Open room view ↗
             </Link>
           </form>
-          <div className="room-upload workspace-card">
+          <div id="room-files" className="room-upload workspace-card">
             <h3>Folders & bulk upload</h3>
             <form
               className="workspace-form"
@@ -573,7 +687,7 @@ export default function RoomsManager({
               </tbody>
             </table>
           </div>
-          <h3>
+          <h3 id="room-permissions">
             {engagement
               ? "Share with authorised client contacts"
               : "Share access after NDA approval"}
