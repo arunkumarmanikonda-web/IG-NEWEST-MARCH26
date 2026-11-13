@@ -121,7 +121,7 @@ export default function Navigation() {
           aria-current={path.startsWith("/opportunities") ? "page" : undefined}
           onClick={close}
         >
-          Property Collection
+          Real Estate Listings
         </Link>
         <Link
           href="/horeca"

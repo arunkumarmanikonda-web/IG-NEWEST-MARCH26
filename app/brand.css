@@ -639,8 +639,7 @@ body:has(.staff-workspace) > .site-footer {
   background: #ecece7;
   border-color: #ecece7;
 }
-.feature-copy > p,
-.editorial-body p {
+.feature-copy > p {
   hyphens: none;
   text-align: left;
 }
@@ -898,6 +897,14 @@ body:has(.staff-workspace) > .site-footer {
   }
   .practice-explorer {
     grid-template-columns: 250px minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .site-header .brand {
+    width: min(205px, 53vw);
+  }
+  .site-header {
+    gap: 16px;
   }
 }
 @media (max-width: 760px) {

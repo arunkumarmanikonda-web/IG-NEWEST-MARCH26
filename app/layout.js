@@ -4,6 +4,7 @@ import "./globals.css";
 import "./editorial.css";
 import "./brand.css";
 import "./property-collection.css";
+import "./leadership.css";
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
@@ -78,7 +79,7 @@ export default async function Layout({ children }) {
             </div>
             <div>
               <h2>Explore</h2>
-              <Link href="/opportunities">Property Collection</Link>
+              <Link href="/opportunities">Real Estate Listings</Link>
               <Link href="/projects">Hospitality projects</Link>
               <Link href="/valuation">Valuation studio</Link>
               <Link href="/insights">Perspectives</Link>

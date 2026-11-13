@@ -82,7 +82,7 @@ export default function PracticeExplorer() {
               className="button practice-collection-cta"
               href="/opportunities"
             >
-              Explore the Property Collection <Arrow />
+              Browse real estate listings <Arrow />
             </Link>
           )}
           <Link href={p.href || "/practices/" + p.slug} className="text-link">

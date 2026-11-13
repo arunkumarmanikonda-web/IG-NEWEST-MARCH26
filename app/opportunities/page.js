@@ -26,7 +26,7 @@ export default async function Opportunities({ searchParams }) {
           ).values(),
         ];
   const filters = Object.fromEntries(
-    ["q", "sector", "city", "type", "context", "sort"].map((k) => [
+    ["q", "sector", "city", "type", "context", "sort", "view"].map((k) => [
       k,
       typeof params?.[k] === "string" ? params[k].slice(0, 200) : "",
     ]),
@@ -36,23 +36,13 @@ export default async function Opportunities({ searchParams }) {
       <Seo path="/opportunities" />
       <header className="collection-masthead">
         <div>
-          <Eyebrow>INDIA GULLY · REAL ESTATE & HOSPITALITY</Eyebrow>
-          <h1>The Property Collection.</h1>
-          <p>Distinctive assets. A considered perspective.</p>
+          <Eyebrow>REAL ESTATE · INDIA GULLY</Eyebrow>
+          <h1>Real Estate Listings</h1>
+          <p>Commercial property, hospitality assets and development opportunities.</p>
         </div>
-        <div>
-          <p>
-            Discover properties by location, asset class and transaction
-            objective. Explore the detail, then start a conversation about the
-            possibilities.
-          </p>
-          <Link
-            className="text-link"
-            href="/contact?interest=List%20a%20property"
-          >
-            Bring your property to market <Arrow />
-          </Link>
-        </div>
+        <Link className="button" href="/contact?interest=List%20a%20property">
+          List your property <Arrow />
+        </Link>
       </header>
       <section className="collection-browser" aria-label="Browse properties">
         <Explorer items={items} contexts={contexts} initialFilters={filters} />
@@ -64,10 +54,9 @@ export default async function Opportunities({ searchParams }) {
         </p>
       </section>
       <section className="collection-service-band">
-        <Eyebrow>PROPERTY. PEOPLE. PERSPECTIVE.</Eyebrow>
+        <Eyebrow>REAL ESTATE ADVISORY</Eyebrow>
         <h2>
-          More than a listing.
-          <br />A considered next step.
+          From property search<br />to transaction.
         </h2>
         <div>
           <p>

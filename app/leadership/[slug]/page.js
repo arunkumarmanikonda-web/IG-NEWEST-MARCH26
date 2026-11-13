@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { companyContent } from "../../../lib/editorial";
 import { cmsMetadata } from "../../../lib/cms";
-import { Eyebrow, ContactBand } from "../../components";
+import { Arrow, Eyebrow, ContactBand } from "../../components";
 import { TextBody } from "../../editorial-components";
 export const dynamic = "force-dynamic";
 async function person(params) {
@@ -16,9 +16,9 @@ export default async function Page({ params }) {
   const p = await person(await params);
   if (!p) notFound();
   return (
-    <main id="main">
+    <main id="main" className="leadership-profile">
       <section className="profile-hero">
-        <div>
+        <div className="profile-introduction">
           <Link href="/leadership" className="breadcrumb">
             ← All leadership
           </Link>
@@ -54,7 +54,7 @@ export default async function Page({ params }) {
               encodeURIComponent("Connect with " + p.title)
             }
           >
-            Connect through India Gully ↗
+            Contact India Gully <Arrow />
           </Link>
         </aside>
         <TextBody text={p.body} />

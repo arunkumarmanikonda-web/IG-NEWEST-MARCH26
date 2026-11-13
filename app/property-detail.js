@@ -14,7 +14,7 @@ export default function PropertyDetail({ item, related = [] }) {
       <nav className="property-breadcrumb" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span>/</span>
-        <Link href="/opportunities">Property Collection</Link>
+        <Link href="/opportunities">Real Estate Listings</Link>
         <span>/ {x.location}</span>
       </nav>
       <header className="property-title">
@@ -33,20 +33,25 @@ export default function PropertyDetail({ item, related = [] }) {
           </Link>
         </div>
       </header>
-      <PropertyPhotograph image={x.image} alt={d.image_alt} title={x.title} />
+      <section className="property-overview" aria-label="Property at a glance">
+        <PropertyPhotograph image={x.image} alt={d.image_alt} title={x.title} />
+        <div className="property-overview-panel">
+          <Eyebrow>PROPERTY AT A GLANCE</Eyebrow>
+          <h2>{x.assetClass || x.type}</h2>
+          <dl>
+            <div><dt>Location</dt><dd>{x.location}</dd></div>
+            <div><dt>Status</dt><dd>{propertyStatus(x)}</dd></div>
+            {propertyFacts(x).filter(([key]) => key !== "Property type").map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}
+          </dl>
+          <Link className="button" href={contact}>Request property details <Arrow /></Link>
+          <Link className="text-link" href={"/opportunities/" + item.slug + "/teaser"} target="_blank">Download property brief <Arrow /></Link>
+        </div>
+      </section>
       <div className="property-detail-layout">
         <article className="property-narrative">
-          <Eyebrow>THE PROPERTY</Eyebrow>
-          <h2>A closer perspective.</h2>
+          <Eyebrow>PROPERTY INFORMATION</Eyebrow>
+          <h2>Overview</h2>
           <p className="property-summary">{item.summary}</p>
-          <dl className="property-specification">
-            {propertyFacts(x).map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
           {item.body
             ?.split(/\n\s*\n/)
             .filter((t) => t.trim() && t.trim() !== item.summary?.trim())
@@ -92,11 +97,9 @@ export default function PropertyDetail({ item, related = [] }) {
           )}
         </article>
         <aside className="property-adviser">
-          <Eyebrow>YOUR NEXT CONVERSATION</Eyebrow>
+          <Eyebrow>INDIA GULLY · REAL ESTATE</Eyebrow>
           <h2>
-            Explore the fit.
-            <br />
-            Understand the detail.
+            Speak to an adviser
           </h2>
           <p>
             Tell us your objective, investment parameters and timeline. Our real
@@ -111,7 +114,7 @@ export default function PropertyDetail({ item, related = [] }) {
             target="_blank"
             href={"/opportunities/" + item.slug + "/teaser"}
           >
-            Download / print property brief <Arrow />
+            Download property brief <Arrow />
           </Link>
           <Link
             className="text-link"
@@ -130,11 +133,11 @@ export default function PropertyDetail({ item, related = [] }) {
         <section className="section-pad property-related">
           <div className="section-heading">
             <div>
-              <Eyebrow>CONTINUE EXPLORING</Eyebrow>
-              <h2>More from the collection.</h2>
+              <Eyebrow>FURTHER OPPORTUNITIES</Eyebrow>
+              <h2>Other properties</h2>
             </div>
             <Link className="text-link" href="/opportunities">
-              View the full collection <Arrow />
+              View all properties <Arrow />
             </Link>
           </div>
           <div className="property-grid">

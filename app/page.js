@@ -68,7 +68,7 @@ export default async function Home() {
           </p>
           <div className="hero-actions">
             <LinkButton href="/opportunities" light>
-              Explore the Property Collection
+              Browse real estate listings
             </LinkButton>
             <Link href="/practices" className="hero-secondary">
               Our practices <Arrow />
@@ -84,7 +84,7 @@ export default async function Home() {
         </div>
         <div className="editorial-hero-foot">
           <span>CELEBRATING DESINESS</span>
-          <a href="#real-estate-listings">Discover the collection ↓</a>
+          <a href="#real-estate-listings">Browse real estate listings ↓</a>
         </div>
       </section>
       <div className="home-discovery">
@@ -107,7 +107,7 @@ export default async function Home() {
         </form>
         <nav aria-label="Explore India Gully">
           <a href="#core-practices">Our practices ↓</a>
-          <a href="#real-estate-listings">Property Collection ↓</a>
+          <a href="#real-estate-listings">Real Estate Listings ↓</a>
           <Link href="/horeca">HORECA catalogue</Link>
         </nav>
       </div>
@@ -118,22 +118,22 @@ export default async function Home() {
         <div className="section-heading">
           <div>
             <Eyebrow>REAL ESTATE IS AT OUR CORE</Eyebrow>
-            <h2>The Property Collection.</h2>
+            <h2>Real Estate Listings</h2>
           </div>
           <div className="collection-heading-copy">
             <p>
-              Places with possibility. Explore commercial properties,
+              Explore commercial properties,
               hospitality assets and development opportunities, with a team that
               understands the business behind them.
             </p>
             <Link className="text-link" href="/opportunities">
-              Explore the full collection <Arrow />
+              View all properties <Arrow />
             </Link>
           </div>
         </div>
         <div className="home-property-grid">
-          {listings.map((x, i) => (
-            <PropertyCard key={x.slug} item={x} featured={i === 0} />
+          {listings.map((x) => (
+            <PropertyCard key={x.slug} item={x} />
           ))}
         </div>
         {!listings.length && (

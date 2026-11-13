@@ -26,7 +26,7 @@ export default async function Practice({ params }) {
       >
         {p.slug === "real-estate" && (
           <LinkButton href="/opportunities">
-            Explore the Property Collection
+            Browse real estate listings
           </LinkButton>
         )}
         <LinkButton href={"/contact?interest=" + encodeURIComponent(p.title)}>

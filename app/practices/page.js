@@ -35,7 +35,7 @@ export default function Practices() {
                   href="/opportunities"
                   className="button practice-collection-cta"
                 >
-                  Explore the Property Collection <Arrow />
+                  Browse real estate listings <Arrow />
                 </Link>
               )}
               <Link href={"/practices/" + p.slug} className="text-link">

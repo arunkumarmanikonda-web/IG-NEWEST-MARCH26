@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import BrandLogo from "./brand-logo";
+import { Arrow } from "./components";
 
 export default function PropertyPhotograph({ image, alt, title }) {
   const dialog = useRef(null);
@@ -20,7 +21,7 @@ export default function PropertyPhotograph({ image, alt, title }) {
           src={image}
           alt={alt || title}
           fill
-          sizes="100vw"
+          sizes="(max-width:760px) 90vw, 60vw"
           unoptimized={generated}
           preload
         />
@@ -30,7 +31,7 @@ export default function PropertyPhotograph({ image, alt, title }) {
           </span>
         )}
         <button onClick={() => dialog.current.showModal()}>
-          View photograph <span aria-hidden="true">↗</span>
+          View photograph <Arrow />
         </button>
       </div>
       <dialog

@@ -12,6 +12,7 @@ const empty = {
   type: "",
   context: "",
   sort: "featured",
+  view: "grid",
 };
 export default function Explorer({
   items,
@@ -20,13 +21,14 @@ export default function Explorer({
 }) {
   const [filters, setFilters] = useState({ ...empty, ...initialFilters });
   const [copied, setCopied] = useState("");
+  const availableContexts = contexts.filter(context => items.some(item => item.contexts?.includes(context.id)));
   function update(patch) {
     const next = { ...filters, ...patch };
     setFilters(next);
     setCopied("");
     const params = new URLSearchParams();
     Object.entries(next).forEach(([k, v]) => {
-      if (v && v !== "featured") params.set(k, v);
+      if (v && v !== "featured" && !(k === "view" && v === "grid")) params.set(k, v);
     });
     window.history.replaceState(
       null,
@@ -35,9 +37,16 @@ export default function Explorer({
     );
   }
   const filtered = collectionItems(items, { ...filters, query: filters.q });
-  const active = Object.entries(filters).filter(([k, v]) => k !== "sort" && v);
+  const active = Object.entries(filters).filter(([k, v]) => !["sort", "view"].includes(k) && v);
   return (
     <>
+      <div className="listing-category-tabs" role="group" aria-label="Property sectors">
+        {["", ...new Set(items.map(x => x.sector).filter(Boolean))].map(sector => (
+          <button key={sector} type="button" aria-pressed={filters.sector === sector} onClick={() => update({sector})}>
+            {sector || "All properties"}<span>{sector ? items.filter(x => x.sector === sector).length : items.length}</span>
+          </button>
+        ))}
+      </div>
       <form
         className="collection-filters"
         role="search"
@@ -68,7 +77,7 @@ export default function Explorer({
           ],
           [
             "type",
-            "Property / transaction",
+            "Property type",
             "All property types",
             [...new Set(items.map((x) => x.type))].sort(),
           ],
@@ -86,7 +95,7 @@ export default function Explorer({
             </select>
           </label>
         ))}
-        {!!contexts.length && (
+        {!!availableContexts.length && (
           <label>
             Investment context
             <select
@@ -94,7 +103,7 @@ export default function Explorer({
               onChange={(e) => update({ context: e.target.value })}
             >
               <option value="">All contexts</option>
-              {contexts.map((x) => (
+              {availableContexts.map((x) => (
                 <option key={x.id} value={x.id}>
                   {x.label}
                 </option>
@@ -124,18 +133,22 @@ export default function Explorer({
       <div className="collection-results-bar">
         <p role="status" aria-live="polite">
           <strong>{filtered.length}</strong>{" "}
-          {filtered.length === 1 ? "property" : "properties"} in view
+          {filtered.length === 1 ? "property" : "properties"} found
         </p>
-        <div>
+        <div className="listing-display-tools">
+          <div className="listing-view-switch" role="group" aria-label="Results layout">
+            <button type="button" aria-pressed={filters.view !== "list"} onClick={() => update({view: "grid"})}>Grid</button>
+            <button type="button" aria-pressed={filters.view === "list"} onClick={() => update({view: "list"})}>List</button>
+          </div>
           <button
             className="collection-share"
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(window.location.href);
-                setCopied("Collection link copied");
+                setCopied("Property search link copied");
               } catch {
                 setCopied(
-                  "Copy the address from your browser to share this collection.",
+                  "Copy the address from your browser to share these results.",
                 );
               }
             }}
@@ -160,7 +173,7 @@ export default function Explorer({
           {copied}
         </p>
       )}
-      <div className="property-grid">
+      <div className={"property-grid" + (filters.view === "list" ? " property-list-view" : "")}>
         {filtered.map((x) => (
           <PropertyCard item={x} key={x.slug} />
         ))}
