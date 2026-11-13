@@ -869,3 +869,15 @@
 .ai-review-panel details { margin-top: 1.25rem; }
 .source-drop { padding: 1.5rem; background: #faf9f6; border: 1px dashed #aaa9a4; }
 .source-drop input[type="file"] { background: white; }
+
+/* Client relationship directory */
+.staff-workspace .client-contact-card{background:#fff;border:1px solid #d8d8d2;padding:20px;margin:16px 0 24px;border-radius:0}
+.staff-workspace .client-contact-card .workspace-form{margin:0;padding:0;border:0}
+.staff-workspace .client-contact-card legend{font-weight:650;font-size:13px;padding:0 8px}
+.staff-workspace .client-contact-batch>.button{margin:0 0 18px}
+.staff-workspace .client-add-contacts{margin:28px 0 36px;padding:24px;background:#f8f8f5;border:1px solid #deded8}
+.staff-workspace .client-add-contacts h4{margin:0 0 10px;font-size:18px}
+.staff-workspace .client-contact-count{display:inline-block;margin-left:14px;padding:5px 10px;background:#f0f0ec;font:12px var(--font-body),Arial,sans-serif;vertical-align:middle}
+.staff-workspace .client-contact-summary{display:block;font-weight:400;margin-top:5px;line-height:1.7;overflow-wrap:anywhere}
+.staff-workspace .client-save-status:not(:empty){padding:18px 20px;border-left:3px solid #30302d;background:#f3f3ef;margin:22px 0}
+@media(max-width:640px){.staff-workspace .client-add-contacts{padding:14px}.staff-workspace .client-contact-card{padding:14px}}
