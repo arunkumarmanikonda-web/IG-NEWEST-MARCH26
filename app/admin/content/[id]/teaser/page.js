@@ -37,7 +37,7 @@ export default async function Teaser({ params, searchParams }) {
         <a className="button" href={"/admin/content/" + id + "/brief.pdf?version=" + (isLive ? "live" : "draft")}>Download PDF brief</a>
       </div>
       <p className="teaser-help">
-        Download a professionally formatted PDF, with up to three pages when the property information requires it.{" "}
+        Download a three-page presentation with a full-bleed cover, property or product details, and a dedicated enquiry page.{" "}
         {isLive
           ? "Using the published revision."
           : "Draft watermark remains until you choose a published revision."}
