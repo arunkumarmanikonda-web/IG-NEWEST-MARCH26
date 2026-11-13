@@ -1,9 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { practiceOptions } from "../../lib/business.mjs";
 import { portalAction } from "../account/profile";
+import { uploadIntakeSources } from "../../lib/intake-upload.mjs";
+import { processIntakeDraft } from "../../lib/intake-process.mjs";
+import { validateSourceSelection } from "../../lib/intake-source-spec.mjs";
 const kinds = [
   ["opportunity", "Real estate opportunity"],
   ["product", "HORECA product"],
@@ -14,15 +17,9 @@ const kinds = [
   ["person", "Leadership profile"],
   ["faq", "FAQ"],
 ];
-const base64 = (file) =>
-  new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result).split(",")[1]);
-    r.onerror = () => reject(new Error("File could not be read"));
-    r.readAsDataURL(file);
-  });
 export default function IntakeStudio() {
   const params = useSearchParams();
+  const pause = useRef(false);
   const [kind, setKind] = useState(
       kinds.some((k) => k[0] === params.get("kind"))
         ? params.get("kind")
@@ -40,22 +37,26 @@ export default function IntakeStudio() {
   async function generate(e) {
     e.preventDefault();
     setBusy(true);
+    pause.current = false;
     setResult(null);
     setMessage(
       "Reading the supplied material and preparing a structured draft…",
     );
     try {
       const f = new FormData(e.currentTarget);
-      const attachments = await Promise.all(
-        files.map(async (file) => ({
-          name: file.name,
-          data: await base64(file),
-        })),
+      const sourceIds = await uploadIntakeSources({
+        files,
+        practice,
+        approved: f.get("approved") === "on",
+        projectUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        onProgress: setMessage,
+      });
+      setMessage(
+        "Uploads complete. Reading your sources and preparing the review draft…",
       );
-      const r = await fetch("/api/admin/intake", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const d = await processIntakeDraft({
+        sourceIds,
+        input: {
           kind,
           practice,
           text: [
@@ -65,12 +66,11 @@ export default function IntakeStudio() {
             .filter(Boolean)
             .join("\n"),
           brief: f.get("brief"),
-          files: attachments,
           approved: f.get("approved") === "on",
-        }),
+        },
+        onProgress: setMessage,
+        shouldPause: () => pause.current,
       });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error);
       setResult({ ...d, kind, practice });
       setMedia(null);
       setChosen(0);
@@ -229,27 +229,25 @@ export default function IntakeStudio() {
             <input
               type="file"
               multiple
+              disabled={busy}
               accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt,.jpg,.jpeg,.png,.webp"
               onChange={(e) => {
                 const list = [...e.target.files];
-                if (
-                  list.length > 8 ||
-                  list.reduce((n, f) => n + f.size, 0) > 2500000
-                ) {
-                  setMessage(
-                    "Attach up to eight files, with a combined size of 2.5 MB.",
-                  );
-                  e.target.value = "";
-                  setFiles([]);
-                } else {
+                try {
+                  validateSourceSelection(list);
                   setFiles(list);
                   setMessage("");
+                } catch (error) {
+                  setMessage(error.message);
+                  e.target.value = "";
+                  setFiles([]);
                 }
               }}
             />
             <span>
               PDF · Word · Excel · PowerPoint · CSV · text · JPEG · PNG · WebP.
-              Up to 8 files / 2.5 MB total.
+              Up to 8 files per draft. Large uploads resume after interruptions;
+              no website-imposed MB cap.
             </span>
             {files.map((f) => (
               <small key={f.name}>
@@ -258,6 +256,7 @@ export default function IntakeStudio() {
             ))}
           </label>
           <p className="workspace-small wide">
+            Sources upload privately. Completed uploads are reused if you retry.
             Office text and tables are analysed. PDF visuals can be read; source
             photographs are gathered from supported images and embedded document
             media. Unknown measurements, prices, legal facts and coordinates
@@ -273,6 +272,19 @@ export default function IntakeStudio() {
             <button disabled={busy} className="primary">
               {busy ? "Preparing…" : "Generate from supplied sources"}
             </button>
+            {busy && (
+              <button
+                type="button"
+                onClick={() => {
+                  pause.current = true;
+                  setMessage(
+                    "Pausing after the current upload or section finishes…",
+                  );
+                }}
+              >
+                Pause after this section
+              </button>
+            )}
           </div>
         </form>
       </section>
