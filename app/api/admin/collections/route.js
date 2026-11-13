@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import {after} from 'next/server';
 import {accountContext} from '../../../../lib/supabase/server';
 import {readJson,privateJson,errorJson,HttpError} from '../../../../lib/http.mjs';
@@ -7,7 +8,7 @@ import {dispatchEmailQueue} from '../../../../lib/delivery';
 import {validateCollectionInput,createCollectionLink,fetchCollectionLink,cancelCollectionLink,collectionSnapshot} from '../../../../lib/collection-links.mjs';
 import {collectionCard} from '../../../../lib/collection-card.mjs';
 export const maxDuration=60;
-async function staff(){const ctx=await accountContext();if(!ctx.user||ctx.profile?.status!=='active'||ctx.profile.must_change_password||ctx.aal!=='aal2')throw new HttpError('Staff sign-in and MFA required',403);return ctx;}
+async function staff(){const ctx=await accountContext();if(!ctx.user||ctx.profile?.status!=='active'||ctx.profile.must_change_password||(!isStaff(ctx.profile) || !ctx.staffVerified))throw new HttpError('Staff sign-in required',403);return ctx;}
 async function rpc(client,p){const{data,error}=await client.rpc('ig_collection_manage',{p});if(error)throw new HttpError(error.message,error.code==='42501'?403:400);return data;}
 export async function GET(){try{const{client}=await staff();const [context,items]=await Promise.all([rpc(client,{action:'context'}),rpc(client,{action:'list'})]);return privateJson({context,items});}catch(e){return errorJson(e);}}
 export async function POST(request){let claimed;try{

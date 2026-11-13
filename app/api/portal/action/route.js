@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
   readJson,
@@ -35,14 +36,14 @@ export async function POST(request) {
     const body = await readJson(request, 140000),
       rpc = methods[body.module];
     if (!rpc) throw new HttpError("Unknown operation");
-    const { client, user, profile, aal } = await accountContext();
+    const { client, user, profile, staffVerified } = await accountContext();
     if (!user || !profile || profile.status !== "active")
       throw new HttpError("Active sign-in required", 401);
     if (
       !["account", "invitation", "nda", "privacy", "procurement", "vendor_portal"].includes(body.module) &&
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Complete multi-factor authentication", 403);
+      throw new HttpError("Staff access required", 403);
     if (
       profile.must_change_password &&
       !["account", "nda", "privacy"].includes(body.module)

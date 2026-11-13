@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
   readJson,
@@ -11,15 +12,15 @@ export async function POST(request) {
     const p = await readJson(request, 12000);
     if (!["prepare", "complete"].includes(p.action))
       throw new HttpError("Unsupported upload operation");
-    const { client, user, profile, aal } = await accountContext();
+    const { client, user, profile, staffVerified } = await accountContext();
     if (
       !user ||
       !profile ||
       profile.status !== "active" ||
       profile.must_change_password ||
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Administrator sign-in and MFA required", 403);
+      throw new HttpError("Administrator sign-in required", 403);
     const res = await roomBroker(client, p);
     return privateJson(await res.json());
   } catch (e) {

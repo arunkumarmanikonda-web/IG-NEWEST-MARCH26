@@ -1,4 +1,3 @@
-import {currentPolicies} from "../../../lib/policies";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
@@ -11,12 +10,9 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function Page({ searchParams }) {
-  const { client, user, profile } = await accountContext();
+  const { client, user, profile, policiesAccepted } = await accountContext();
   if (!user || !profile) redirect("/login");
-  const release=await currentPolicies();
-  if (!release) redirect("/account");
-  const policyVersion=release.version;
-  if (profile.status !== "active" || profile.policy_version !== policyVersion)
+  if (profile.status !== "active" || !policiesAccepted)
     redirect("/account");
   const query = await searchParams;
   const [{ data: requests, error }, { data: templates, error: te }, items] =

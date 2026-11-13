@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PageHero, ContactBand, LinkButton } from "./components";
+import AdviserContacts from "./adviser-contacts";
 export default function PublishedContent({ item }) {
   const d = item.public_data;
   return (
@@ -56,6 +57,7 @@ export default function PublishedContent({ item }) {
           </p>
         )}
       </article>
+      {item.kind === 'product' && <section className="section-pad procurement-contacts"><h2>Plan your requirement with Pavan.</h2><AdviserContacts kind="product" subject={item.title + ' | Procurement enquiry'} /></section>}
       <ContactBand interest={item.title} />
     </main>
   );

@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import {after} from 'next/server';
 import {accountContext} from '../../../../lib/supabase/server';
 import {runtimeConfigs} from '../../../../lib/runtime-config';
@@ -6,8 +7,8 @@ import {dispatchProviderJobs} from '../../../../lib/provider-workflows';
 import {readJson,privateJson,errorJson,HttpError} from '../../../../lib/http.mjs';
 export const maxDuration=120;
 export async function POST(request){try{
- const p=await readJson(request,10000),{client,user,profile,aal}=await accountContext();
- if(!user||profile?.status!=='active'||profile.must_change_password||aal!=='aal2')throw new HttpError('Staff sign-in and MFA required',403);
+ const p=await readJson(request,10000),{client,user,profile, staffVerified}=await accountContext();
+ if(!user||profile?.status!=='active'||profile.must_change_password||(!isStaff(profile) || !staffVerified))throw new HttpError('Staff sign-in required',403);
  if(p.action==='manage'){
   const{data,error}=await client.rpc('ig_provider_manage',{p:{...p,action:p.operation}});if(error)throw new HttpError(error.message,403);return privateJson(data);
  }

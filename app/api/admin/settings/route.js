@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import {accountContext} from '../../../../lib/supabase/server';
 import {readJson,privateJson,errorJson,HttpError} from '../../../../lib/http.mjs';
 import {runtimeConfigs} from '../../../../lib/runtime-config';
@@ -6,8 +7,8 @@ import {validateIntegration,integrationSpecs} from '../../../../lib/integration-
 import {providerCredentials} from '../../../../lib/provider-credentials.mjs';
 import {stageRazorpayLive} from '../../../../lib/razorpay-live.mjs';
 export async function POST(request){try{
-  let p=await readJson(request,50000);const {client,user,profile,aal}=await accountContext();
-  if(!user||profile?.status!=='active'||!profile.roles.includes('owner')||profile.must_change_password||aal!=='aal2')throw new HttpError('Super-user access and MFA required',403);
+  let p=await readJson(request,50000);const {client,user,profile, staffVerified}=await accountContext();
+  if(!user||profile?.status!=='active'||!profile.roles.includes('owner')||profile.must_change_password||(!isStaff(profile) || !staffVerified))throw new HttpError('Super-user access required',403);
   const allowed=await client.rpc('ig_config_list');if(allowed.error)throw new HttpError('Accept current policies before changing settings',403);
   if(!Object.hasOwn(integrationSpecs,p.id))throw new HttpError('Unsupported integration');
   const previous=(await runtimeConfigs())[p.id];

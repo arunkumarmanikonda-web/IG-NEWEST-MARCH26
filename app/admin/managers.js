@@ -204,7 +204,8 @@ export function UserManager({ users, invitations, isOwner }) {
       <h2>Users & invitations</h2>
       <p>
         Invite staff by their work email. They must verify that email, accept
-        policies and complete MFA before activating the assignment. Role or
+        policies once and verify with an authenticator or email code.
+        Existing staff go directly to their assigned workspace. Role or
         status changes revoke existing sessions.
       </p>
       <form

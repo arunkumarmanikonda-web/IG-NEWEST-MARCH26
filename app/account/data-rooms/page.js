@@ -1,4 +1,3 @@
-import {currentPolicies} from "../../../lib/policies";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
@@ -9,13 +8,10 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 export default async function Page() {
-  const { client, user, profile } = await accountContext();
+  const { client, user, profile, policiesAccepted } = await accountContext();
   if (!user || !profile) redirect("/login");
-  const release=await currentPolicies();
-  if (!release) redirect("/account");
-  const policyVersion=release.version;
   if (profile.must_change_password) redirect("/account/security");
-  if (profile.status !== "active" || profile.policy_version !== policyVersion)
+  if (profile.status !== "active" || !policiesAccepted)
     redirect("/account");
   const { data, error } = await client.rpc("ig_room_dashboard", { p: {} });
   return (

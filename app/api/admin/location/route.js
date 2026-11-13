@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
   readJson,
@@ -10,14 +11,14 @@ export const maxDuration = 45;
 export async function POST(request) {
   try {
     const p = await readJson(request, 3000),
-      { client, user, profile, aal } = await accountContext();
+      { client, user, profile, staffVerified } = await accountContext();
     if (
       !user ||
       profile?.status !== "active" ||
       profile.must_change_password ||
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Staff sign-in and MFA required", 403);
+      throw new HttpError("Staff sign-in required", 403);
     const access = await client.rpc("ig_admin_overview");
     if (access.error) throw new HttpError("Staff access required", 403);
     return privateJson(await resolveMapLink(p.source));

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { isStaff } from "../../lib/sign-in.mjs";
 import { browserClient } from "../../lib/supabase/browser";
 export async function portalAction(module, payload) {
   const res = await fetch("/api/portal/action", {
@@ -12,10 +13,10 @@ export async function portalAction(module, payload) {
   if (!res.ok) throw new Error(result.error);
   return result.data;
 }
-export default function Account({ profile, email, policyVersion }) {
+export default function Account({ profile, email, policyVersion, policiesAccepted = false, pendingInvitation = false }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [accepted, setAccepted] = useState(profile.policy_version === policyVersion);
+    [accepted, setAccepted] = useState(policiesAccepted);
   async function run(task) {
     setBusy(true);
     setMessage("");
@@ -35,7 +36,7 @@ export default function Account({ profile, email, policyVersion }) {
       {profile.must_change_password && (
         <p role="alert">
           Change your initial password in{" "}
-          <Link href="/account/security">Security & MFA</Link> before activating
+          <Link href="/account/security">Account security</Link> before activating
           staff access.
         </p>
       )}
@@ -53,7 +54,11 @@ export default function Account({ profile, email, policyVersion }) {
                 adult: true,
               });
               setAccepted(true);
-              setMessage("Your policy acceptance has been recorded.");
+              const response = await fetch("/api/portal/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "continue" }) });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error);
+              if (result.next && result.next !== "/account") location.replace(result.next);
+              else setMessage("Your policy acceptance has been recorded.");
             });
           }}
         >
@@ -125,7 +130,7 @@ export default function Account({ profile, email, policyVersion }) {
             </button>
           </form>
           <div className="workspace-actions">
-            <Link href="/account/security">Security & MFA</Link>
+            <Link href="/account/security">Account security</Link>
             <Link href="/account/preferences">Communication preferences</Link><Link href="/account/payments">Invoices & payments</Link><Link href="/account/privacy">Privacy requests & grievances</Link>
             <Link href="/account/nda">Confidentiality & NDA requests</Link>
             <Link href="/account/data-rooms">My project data rooms</Link><Link href="/account/procurement">My procurement requests</Link><Link href="/account/supplier">Supplier quotations</Link>
@@ -133,12 +138,16 @@ export default function Account({ profile, email, policyVersion }) {
               <Link href="/admin">Staff workspace</Link>
             )}
           </div>
+          {!isStaff(profile) && pendingInvitation && <>
           <button
             className="text-button"
             disabled={busy}
             onClick={() =>
               run(async () => {
-                const result = await portalAction("invitation");
+                const response = await fetch("/api/portal/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "continue" }) });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+                if (result.next) { location.replace(result.next); return; }
                 setMessage(
                   result.accepted
                     ? "Staff access activated. Open the staff workspace."
@@ -151,9 +160,9 @@ export default function Account({ profile, email, policyVersion }) {
             Activate staff invitation
           </button>
           <p className="workspace-small">
-            Staff invitations require a verified email and completed
-            multi-factor authentication.
+            Verify with an authenticator or an email code to activate your invitation.
           </p>
+          </>}
         </>
       )}
       <p role="status" className="portal-message">

@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
   readJson,
@@ -16,14 +17,14 @@ export async function POST(request) {
   let page, aiJob;
   try {
     const p = await readJson(request, 10000),
-      { client, user, profile, aal } = await accountContext();
+      { client, user, profile, staffVerified } = await accountContext();
     if (
       !user ||
       profile?.status !== "active" ||
       profile.must_change_password ||
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Staff sign-in and MFA required", 403);
+      throw new HttpError("Staff sign-in required", 403);
     async function rpc(payload) {
       const { data, error } = await client.rpc("ig_brand_catalogue", {
         p: payload,

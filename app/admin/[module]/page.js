@@ -345,7 +345,7 @@ export default async function Module({ params, searchParams }) {
     const { data, error } = await client.rpc("ig_admin_users");
     return error ? (
       <p role="alert">
-        User administration requires an owner or administrator role and MFA.
+        User administration requires an owner or administrator role.
       </p>
     ) : (
       <UserManager
@@ -434,7 +434,7 @@ export default async function Module({ params, searchParams }) {
           </thead>
           <tbody>
             {[
-              ["Database, accounts & MFA", "Connected to Supabase"],
+              ["Database & account access", "Connected to Supabase"],
               [
                 "Content revision & publication",
                 "Active, permission controlled",

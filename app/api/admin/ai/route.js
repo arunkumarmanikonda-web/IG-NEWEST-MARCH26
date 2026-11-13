@@ -1,11 +1,12 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import {accountContext} from '../../../../lib/supabase/server';
 import {runtimeConfigs,integrationRpc} from '../../../../lib/runtime-config';
 import {readJson,privateJson,errorJson,HttpError} from '../../../../lib/http.mjs';
 import {editorialInput,generateEditorialDraft} from '../../../../lib/ai-drafting.mjs';
 export const maxDuration=60;
 export async function POST(request){let job;try{
- const input=await readJson(request,24000),{client,user,profile,aal}=await accountContext();
- if(!user||profile?.status!=='active'||profile.must_change_password||aal!=='aal2')throw new HttpError('Staff sign-in and MFA required',403);
+ const input=await readJson(request,24000),{client,user,profile, staffVerified}=await accountContext();
+ if(!user||profile?.status!=='active'||profile.must_change_password||(!isStaff(profile) || !staffVerified))throw new HttpError('Staff sign-in required',403);
  let context;try{context=editorialInput(input);}catch(e){throw new HttpError(e.message);}
  const config=(await runtimeConfigs()).openai;
  if(config?.mode!=='enabled'||!config.secrets.api_key)throw new HttpError('Connect OpenAI in super-user settings before generating drafts.',503);

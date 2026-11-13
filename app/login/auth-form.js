@@ -48,7 +48,7 @@ export default function AuthForm({ register = false }) {
       <p>
         {register
           ? "Register to manage your interests and request controlled information."
-          : "Receive a one-time sign-in code by email. Authorised staff also complete their security verification."}
+          : "Receive a one-time sign-in code by email. Your registered account opens its assigned workspace."}
       </p>
       {register && (
         <label>

@@ -45,9 +45,10 @@ export default function Security({ changeRequired = false }) {
         </p>
       )}
       <p>
-        Staff operations require an authenticator code in addition to your
-        password.
+        Staff can verify with an authenticator or a code sent to their registered email.
+        Manage your authenticator and passcode here.
       </p>
+      {!changeRequired && <p><Link href="/login/verify">Choose email verification or open your workspace</Link></p>}
       <p>
         Current session:{" "}
         <strong>
@@ -120,9 +121,10 @@ export default function Security({ changeRequired = false }) {
               setQr("");
               setFactor("");
               await refresh();
-              setMessage(
-                "Multi-factor authentication verified. You can return to your account.",
-              );
+              const response = await fetch('/api/portal/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'continue' }) });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error);
+              location.replace(result.next);
             });
           }}
         >

@@ -4,6 +4,7 @@ import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
 import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
 import { Arrow, Eyebrow, ContactBand } from "./components";
+import AdviserContacts from "./adviser-contacts";
 
 export default function PropertyDetail({ item, related = [] }) {
   const x = opportunityCard(item),
@@ -44,7 +45,7 @@ export default function PropertyDetail({ item, related = [] }) {
             {propertyFacts(x).filter(([key]) => key !== "Property type").map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}
           </dl>
           <Link className="button" href={contact}>Request property details <Arrow /></Link>
-          <Link className="text-link" href={"/opportunities/" + item.slug + "/teaser"} target="_blank">Download property brief <Arrow /></Link>
+          <Link className="text-link" href={"/opportunities/" + item.slug + "/brief.pdf"} prefetch={false} target="_blank">Download property brief <Arrow /></Link>
         </div>
       </section>
       <div className="property-detail-layout">
@@ -106,13 +107,15 @@ export default function PropertyDetail({ item, related = [] }) {
             estate team will confirm the property’s current position and the
             information available for review.
           </p>
+          <AdviserContacts kind="opportunity" subject={item.title + ' | Property enquiry'} />
           <Link className="button" href={contact}>
             Speak to our real estate team <Arrow />
           </Link>
           <Link
             className="text-link"
             target="_blank"
-            href={"/opportunities/" + item.slug + "/teaser"}
+            prefetch={false}
+            href={"/opportunities/" + item.slug + "/brief.pdf"}
           >
             Download property brief <Arrow />
           </Link>

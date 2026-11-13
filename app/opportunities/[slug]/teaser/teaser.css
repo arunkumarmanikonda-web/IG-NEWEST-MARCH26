@@ -2,6 +2,8 @@
   padding: 32px 16px 64px;
   background: #eae7df;
 }
+.brief-pdf-preview{display:block;width:100%;max-width:1000px;height:1100px;margin:0 auto 24px;border:0;background:#fff;box-shadow:0 12px 36px #0001;}
+@media(max-width:760px){.brief-pdf-preview{height:75vh;min-height:550px;}}
 .teaser-controls {
   max-width: 794px;
   margin: 0 auto 24px;

@@ -1,3 +1,4 @@
+import { propertyEditorial } from "../../../lib/property-editorial.mjs";
 import { pageMeta } from "../../../lib/seo.mjs";
 import Seo from "../../seo";
 import { published, cmsMetadata } from "../../../lib/cms";
@@ -35,8 +36,8 @@ export default async function Opportunity({ params }) {
   const fallback = opportunities.map((x) => ({
     slug: x.slug,
     title: x.title,
-    summary: x.description,
-    body: "This reference is carried forward from the existing India Gully portfolio. Please contact our team to verify current availability and mandate status.",
+    summary: propertyEditorial[x.slug]?.summary || x.description,
+    body: propertyEditorial[x.slug]?.body || x.description,
     kind: "opportunity",
     tags: [],
     public_data: {

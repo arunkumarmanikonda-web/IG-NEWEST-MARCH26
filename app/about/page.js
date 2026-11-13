@@ -93,20 +93,20 @@ export default async function About() {
           ))}
         </div>
       </section>
-      <section className="history-section section-pad">
-        <div>
-          <Eyebrow>OUR EVOLUTION</Eyebrow>
-          <h2>
-            A practice built
-            <br />
-            <em>one capability at a time.</em>
-          </h2>
+      <section className="history-section section-pad journey-section" id="our-journey" aria-labelledby="journey-title">
+        <div className="journey-intro">
+          <Eyebrow>THE INDIA GULLY JOURNEY</Eyebrow>
+          <h2 id="journey-title">Built through experience.<br /><em>Expanded with purpose.</em></h2>
+          <p>Each chapter has added a new perspective. Together, they have shaped a practice that connects commercial insight with the detail of execution.</p>
+          <span className="journey-years">2017 <span aria-hidden="true">→</span> TODAY</span>
+          <Link className="text-link" href="/practices">Explore our practices <Arrow /></Link>
         </div>
-        <ol className="timeline">
-          {milestones.map(([year, title, text]) => (
-            <li key={year}>
-              <span>{year}</span>
-              <div>
+        <ol className="timeline journey-timeline">
+          {milestones.map(([year, title, text, discipline]) => (
+            <li key={year} className={year === "Today" ? "journey-present" : undefined}>
+              <span className="journey-year">{year}</span>
+              <div className="journey-chapter">
+                <span className="journey-discipline">{discipline}</span>
                 <h3>{title}</h3>
                 <p>{text}</p>
               </div>

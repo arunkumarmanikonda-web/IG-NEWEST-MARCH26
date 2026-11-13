@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../lib/sign-in.mjs";
 import { expandIntakeMap } from "../../../../lib/map-links.mjs";
 import { createHash } from "node:crypto";
 import { accountContext } from "../../../../lib/supabase/server";
@@ -27,14 +28,14 @@ export async function POST(request) {
   let job;
   try {
     const p = await readJson(request, 3600000),
-      { client, user, profile, aal } = await accountContext();
+      { client, user, profile, staffVerified } = await accountContext();
     if (
       !user ||
       profile?.status !== "active" ||
       profile.must_change_password ||
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Staff sign-in and MFA required", 403);
+      throw new HttpError("Staff sign-in required", 403);
     if (p.approved !== true)
       throw new HttpError("Confirm permission to process these sources.");
     const staged = ["plan", "section", "merge"].includes(p.action);

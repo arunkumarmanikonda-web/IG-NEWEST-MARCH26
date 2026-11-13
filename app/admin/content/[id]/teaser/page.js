@@ -1,13 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { accountContext } from "../../../../../lib/supabase/server";
-import { businessDetails } from "../../../../../lib/runtime-config";
-import TeaserSheet from "../../../../teaser-sheet";
-import PrintButton from "../../../../opportunities/[slug]/teaser/print-button";
 import "../../../../opportunities/[slug]/teaser/teaser.css";
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Generate branded one-page teaser",
+  title: "Generate a branded property or product brief",
   robots: { index: false, follow: false },
 };
 export default async function Teaser({ params, searchParams }) {
@@ -27,7 +24,7 @@ export default async function Teaser({ params, searchParams }) {
     .eq("id", id)
     .maybeSingle();
   const isLive = version === "live" && live;
-  const item = isLive ? live : record;
+  const pdfUrl = "/admin/content/" + id + "/brief.pdf?version=" + (isLive ? "live" : "draft");
   return (
     <div className="teaser-workspace">
       <div className="teaser-controls">
@@ -37,20 +34,16 @@ export default async function Teaser({ params, searchParams }) {
             {isLive ? "Preview saved draft" : "Use published revision"}
           </Link>
         )}
-        <PrintButton />
+        <a className="button" href={"/admin/content/" + id + "/brief.pdf?version=" + (isLive ? "live" : "draft")}>Download PDF brief</a>
       </div>
       <p className="teaser-help">
-        A4 one-page brief. Choose “Save as PDF” in the print window, use A4 and
-        turn off browser headers and footers.{" "}
+        Download a professionally formatted PDF, with up to three pages when the property information requires it.{" "}
         {isLive
           ? "Using the published revision."
           : "Draft watermark remains until you choose a published revision."}
       </p>
-      <TeaserSheet
-        item={item}
-        business={await businessDetails()}
-        draft={!isLive}
-      />
+      <iframe className="brief-pdf-preview" title="India Gully PDF brief preview" src={pdfUrl + "&inline=1"} />
+      <p className="teaser-help">If your browser cannot show the preview, <a href={pdfUrl}>download the PDF brief</a>.</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { isStaff } from "../../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../../lib/supabase/server";
 import {
   readJson,
@@ -14,14 +15,14 @@ import {
 export async function POST(request) {
   try {
     const p = await readJson(request, 4000);
-    const { client, user, profile, aal } = await accountContext();
+    const { client, user, profile, staffVerified } = await accountContext();
     if (
       !user ||
       profile?.status !== "active" ||
       profile.must_change_password ||
-      aal !== "aal2"
+      (!isStaff(profile) || !staffVerified)
     )
-      throw new HttpError("Staff sign-in and MFA required", 403);
+      throw new HttpError("Staff sign-in required", 403);
     try {
       validateSourceSelection([p]);
     } catch (e) {
