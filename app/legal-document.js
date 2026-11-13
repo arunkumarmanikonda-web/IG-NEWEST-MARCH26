@@ -1,0 +1,11 @@
+import PolicyUnavailable from './policy-unavailable';
+import Link from 'next/link';
+import {PageHero} from './components';
+import {TextBody} from './editorial-components';
+import {currentPolicies} from '../lib/policies';
+import {businessDetails} from '../lib/runtime-config';
+import {policyPaths} from '../lib/legal-content.mjs';
+export default async function LegalDocument({policy}){
+  const [release,business]=await Promise.all([currentPolicies(),businessDetails()]);if(!release)return <PolicyUnavailable title="Policies are being finalised"/>;const document=release.documents[policy];
+  return <main id="main"><PageHero eyebrow={'POLICY VERSION · '+release.version} title={document.title} description="Clear terms. Responsible information handling. A documented process."/><article className="prose-section legal-document"><aside className="statutory-panel"><h2>Statutory information</h2><dl><dt>Legal entity</dt><dd>{business.legal_name}</dd><dt>CIN</dt><dd>{business.cin}</dd><dt>GSTIN</dt><dd>{business.gstin}</dd><dt>Registered office</dt><dd>{business.registered_office||'Full registered-office address awaiting company confirmation before public launch.'}</dd><dt>Contact</dt><dd><a href={'mailto:'+business.email}>{business.email}</a> · <a href={'tel:'+business.phone}>{business.phone}</a></dd><dt>Grievance officer</dt><dd>{business.grievance_name?business.grievance_name+' · '+business.grievance_designation:'Appointment details awaiting company confirmation before public launch.'}</dd><dt>Grievance contact</dt><dd><a href={'mailto:'+business.grievance_email}>{business.grievance_email}</a> · <a href={"tel:"+(business.grievance_phone||business.phone)}>{business.grievance_phone||business.phone}</a></dd></dl></aside><TextBody text={document.body}/><nav className="legal-links" aria-label="Related policies">{Object.entries(policyPaths).map(([key,path])=><Link key={key} href={path}>{release.documents[key].title}</Link>)}<Link href="/account/privacy">Submit or track a privacy request</Link></nav><p className="workspace-small">Version {release.version}. {release.legal_reviewed?'Published following owner confirmation of legal review.':'Preview policy release. Final legal review and statutory disclosure confirmation remain required before public commerce activation.'}</p></article></main>;
+}

@@ -1,0 +1,2 @@
+drop policy nda_templates_read on public.ig_nda_templates;
+create policy nda_templates_read on public.ig_nda_templates for select to authenticated using ((status='active' and (select ig_private.allowed('account'))) or (select ig_private.allowed('nda.manage')) or ((select ig_private.allowed('account')) and exists(select 1 from public.ig_nda_requests r where r.user_id=(select auth.uid()) and r.template_id=ig_nda_templates.id)));

@@ -1,0 +1,24 @@
+# The hosted target is selected by the Supabase GitHub integration.
+# Keep credentials, SMTP, callback URLs and provider settings in each environment.
+project_id = "india-gully"
+
+[db]
+major_version = 17
+
+# Seed files contain editorial starting content, not a production release.
+[db.seed]
+enabled = false
+
+# These functions authenticate inside their handlers: broker secret, signed
+# provider events or integration secret. Match the existing hosted configuration.
+[functions.ig-room-broker]
+verify_jwt = false
+entrypoint = "./functions/ig-room-broker/index.ts"
+
+[functions.ig-provider-webhook]
+verify_jwt = false
+entrypoint = "./functions/ig-provider-webhook/index.ts"
+
+[functions.ig-creative-media]
+verify_jwt = false
+entrypoint = "./functions/ig-creative-media/index.ts"

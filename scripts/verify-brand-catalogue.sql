@@ -1,0 +1,40 @@
+-- All records and simulated provider state are rolled back. No paid provider calls.
+begin;
+do $$
+declare uid uuid;sid uuid;claims jsonb;c jsonb;r jsonb;again jsonb;saved jsonb;product jsonb;image jsonb;sku text;denied boolean;checks int=0;k text=repeat('c',64);path text;pid uuid;
+begin
+ select u.id,s.id into uid,sid from auth.users u join auth.sessions s on s.user_id=u.id where u.email='akm@indiagully.com' order by s.created_at desc limit 1;
+ if sid is null then raise exception 'Owner session required';end if;
+ claims=jsonb_build_object('sub',uid,'session_id',sid,'aal','aal2','role','authenticated');perform set_config('request.jwt.claims',claims::text,true);
+ update ig_private.integration_root set secret_hash=encode(extensions.digest(convert_to(k,'UTF8'),'sha256'),'hex');
+ product=jsonb_build_object('kind','product','practice','horeca','slug','system-test-auto-'||gen_random_uuid(),'title','SYSTEM TEST auto SKU','body','Rollback-only fixture','public_data',jsonb_build_object('brand','Test Brand','uom','piece'));
+ saved=public.ig_save_content(product);select public_data->>'sku' into sku from public.ig_content where id=(saved->>'id')::uuid;
+ assert sku~'^IG-TEST-[0-9]+$','Automatic SKU not assigned';checks=checks+1;
+ saved=public.ig_save_content(product||jsonb_build_object('id',saved->>'id','version',saved->'version'));
+ assert (select public_data->>'sku'=sku from public.ig_content where id=(saved->>'id')::uuid),'Editing silently changed SKU';checks=checks+1;
+ denied=false;begin perform public.ig_save_content(product||jsonb_build_object('slug','system-test-duplicate-'||gen_random_uuid(),'public_data',jsonb_build_object('sku',lower(sku))));exception when unique_violation then denied=true;end;assert denied,'Case-insensitive duplicate SKU accepted';checks=checks+1;
+ saved=public.ig_catalogue_import(jsonb_build_object('rows',jsonb_build_array(jsonb_build_object('title','SYSTEM TEST CSV no SKU','brand','Test Brand'))));assert (saved->>'created')::int=1,'CSV automatic SKU failed';checks=checks+1;
+ c=public.ig_brand_catalogue(jsonb_build_object('action','prepare','name','SYSTEM TEST.pdf','brand','Test Brand','sha256',encode(extensions.digest(convert_to(gen_random_uuid()::text,'UTF8'),'sha256'),'hex'),'rights_reference','Rollback test source permission','approved',true));
+ again=public.ig_brand_catalogue(jsonb_build_object('action','prepare','name','SYSTEM TEST.pdf','brand','Test Brand','sha256',c->>'sha256','rights_reference','Rollback test source permission','approved',true));assert again->>'id'=c->>'id','Same source created duplicate catalogue';checks=checks+1;
+ denied=false;begin perform public.ig_brand_catalogue(jsonb_build_object('action','claim','id',c->>'id','page',1));exception when others then denied=true;end;assert denied,'Unuploaded catalogue processed';checks=checks+1;
+ insert into storage.objects(bucket_id,name,owner) values('ig-brand-catalogues',c->>'path',uid);
+ r=public.ig_brand_catalogue(jsonb_build_object('action','claim','id',c->>'id','page',1));assert r->'page'->>'status'='processing','Page not claimed';checks=checks+1;
+ denied=false;begin perform public.ig_brand_catalogue(jsonb_build_object('action','claim','id',c->>'id','page',1));exception when others then denied=true;end;assert denied,'Concurrent duplicate page claim accepted';checks=checks+1;
+ denied=false;begin perform public.ig_catalogue_finish('wrong',jsonb_build_object('page_id',r->'page'->>'id','lease_token',r->'page'->>'lease_token','status','ready','result',jsonb_build_object('products','[]'::jsonb)));exception when others then denied=true;end;assert denied,'Unauthorised provider result accepted';checks=checks+1;
+ image=public.ig_brand_catalogue(jsonb_build_object('action','asset','id',c->>'id','page',1,'lease_token',r->'page'->>'lease_token','item_no',0,'alt','SYSTEM TEST product photograph'));
+ assert public.ig_public_media_path((image->>'id')::uuid) is null,'Catalogue image public before review';checks=checks+1;
+ again=public.ig_brand_catalogue(jsonb_build_object('action','asset','id',c->>'id','page',1,'lease_token',r->'page'->>'lease_token','item_no',0,'alt','SYSTEM TEST product photograph'));assert image->>'id'=again->>'id','Image retry duplicated media';checks=checks+1;
+ perform public.ig_catalogue_finish(k,jsonb_build_object('page_id',r->'page'->>'id','lease_token',r->'page'->>'lease_token','status','ready','page_count',2,'result',jsonb_build_object('complete',true,'notes','','products',jsonb_build_array(jsonb_build_object('title','SYSTEM TEST extracted plate','reference','SYSTEM-TEST-'||(c->>'id'),'category','Crockery','uom','piece','summary','Test plate','specifications','Diameter 27 cm','evidence','27 cm','review_notes','','image_box',jsonb_build_array(10,10,500,500))))));checks=checks+1;
+ saved=public.ig_brand_catalogue(jsonb_build_object('action','drafts','id',c->>'id','page',1));assert (saved->>'created')::int=1,'Product draft not created';pid=(saved->'ids'->>0)::uuid;checks=checks+1;
+ assert not exists(select 1 from public.ig_public_content where id=pid),'Unreviewed import became public';checks=checks+1;
+ assert exists(select 1 from public.ig_catalogue_items where content_id=pid and media_id=(image->>'id')::uuid),'Private product-image association missing';checks=checks+1;
+ again=public.ig_brand_catalogue(jsonb_build_object('action','drafts','id',c->>'id','page',1));assert again->>'created'='0' and again->'ids'=saved->'ids','Page retry duplicated products';checks=checks+1;
+ again=public.ig_brand_catalogue(jsonb_build_object('action','claim','id',c->>'id','page',1));assert again->'page'->>'status'='ready','Ready page was charged for processing again';checks=checks+1;
+ denied=false;begin perform public.ig_brand_catalogue(jsonb_build_object('action','claim','id',c->>'id','page',3));exception when others then denied=true;end;assert denied,'Out-of-range page accepted';checks=checks+1;
+ perform set_config('request.jwt.claims',jsonb_set(claims,'{aal}','"aal1"')::text,true);
+ denied=false;begin perform public.ig_brand_catalogue(jsonb_build_object('action','drafts','id',c->>'id','page',1));exception when insufficient_privilege then denied=true;end;assert denied,'Catalogue accessible without MFA';checks=checks+1;
+ perform set_config('request.jwt.claims','{}',true);assert not ig_private.catalogue_allowed((c->>'id')::uuid),'Anonymous catalogue access allowed';checks=checks+1;
+ perform set_config('ig.catalogue_test_result',jsonb_build_object('passed',checks,'fixtures','rolled back','provider_calls',0)::text,true);
+end $$;
+select current_setting('ig.catalogue_test_result')::jsonb as result;
+rollback;

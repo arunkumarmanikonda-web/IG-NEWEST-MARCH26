@@ -1,12 +1,8 @@
 # India Gully: operating platform implementation contract
 Updated 11 November 2026. This extends the original master plan with the owner's subsequent requirements.
 
-## Actual delivery status
-Public website: implemented in the rebuild branch. Valuation API: implemented. Automated quality workflow: enabled.
-Domain policy functions: implemented with unit tests, but not connected to live provider APIs.
-CMS, database, identity, private document storage, signatures, mail, SMS, AI generation, advertising and remarketing: not provisioned or activated.
-Vercel creation is blocked by HTTP 402 resource_creation_blocked (account suspension). The editing workspace subsequently became unavailable; GitHub preserved the source.
-A passing domain-policy test is not evidence that authentication, a signature service, delivery, consent persistence or access isolation is operational.
+## Current status
+See [launch-readiness.md](launch-readiness.md). The architecture and scope below are the original implementation contract, not a current provisioning status. Supabase, CMS, identity, private storage and operational engines have since been implemented.
 
 ## Fixed owner requirements
 - Public enquiries and automatic acknowledgements: hello@indiagully.com.

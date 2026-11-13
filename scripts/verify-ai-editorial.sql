@@ -1,0 +1,45 @@
+-- Rollback-only: no provider calls, no publication, no retained data.
+begin;
+create temp table ig_checks(name text,passed boolean);
+create function pg_temp.check_it(ok boolean,label text) returns void language plpgsql as $$begin if ok is distinct from true then raise exception 'FAILED: %',label;end if;insert into ig_checks values(label,true);end$$;
+do $$
+declare uid uuid;sid uuid;claims jsonb;j jsonb;saved jsonb;ctx jsonb='{"kind":"article","brief":"A public introduction","facts":[{"id":"F1","value":"India Gully provides feasibility studies","sourceId":"Approved services page"}]}';
+begin
+ select u.id,s.id into uid,sid from auth.users u join auth.sessions s on s.user_id=u.id where lower(u.email)='akm@indiagully.com' order by s.created_at desc limit 1;
+ if sid is null then raise exception 'Existing owner session required';end if;
+ claims=jsonb_build_object('sub',uid,'session_id',sid,'aal','aal2','role','authenticated');perform set_config('request.jwt.claims',claims::text,true);
+ update ig_private.integration_config set mode='disabled' where id='openai';
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Disabled provider accepted';exception when raise_exception then if sqlerrm<>'OpenAI is disabled' then raise;end if;end;
+ perform pg_temp.check_it(true,'Disabled OpenAI cannot reserve a generation');
+ update ig_private.integration_config set mode='enabled',settings=settings||'{"daily_request_limit":100}'::jsonb where id='openai';
+ update public.ig_profiles set roles=array['client'],practice_grants='{}' where id=uid;
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Client generated draft';exception when insufficient_privilege then null;end;
+ perform pg_temp.check_it(true,'Client cannot request staff AI generation');
+ update public.ig_profiles set roles=array['editor'],practice_grants='{"hospitality":["read","write"]}'::jsonb where id=uid;
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Cross-practice generation';exception when insufficient_privilege then null;end;
+ perform pg_temp.check_it(true,'Editor cannot draft outside assigned practice');
+ update public.ig_profiles set roles=array['owner'],practice_grants='{}' where id=uid;
+ perform set_config('request.jwt.claims',(claims||'{"aal":"aal1"}'::jsonb)::text,true);
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'MFA bypass';exception when insufficient_privilege then null;end;
+ perform pg_temp.check_it(true,'Staff AI requires MFA');
+ perform set_config('request.jwt.claims',claims::text,true);
+ j=public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));
+ perform pg_temp.check_it(j->>'id' is not null,'Authorised generation reserves one audited job');
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Cooldown bypass';exception when raise_exception then if sqlerrm<>'Wait 30 seconds before generating another draft' then raise;end if;end;
+ perform pg_temp.check_it(true,'Per-user generation cooldown enforced');
+ update public.ig_ai_jobs set created_at=now()-interval '1 minute' where id=(j->>'id')::uuid;
+ update ig_private.integration_config set settings=settings||'{"daily_request_limit":1}'::jsonb where id='openai';
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Daily cap bypass';exception when raise_exception then if sqlerrm<>'Daily AI request limit reached' then raise;end if;end;
+ perform pg_temp.check_it(true,'Daily request cap enforced before another provider request');
+ begin perform public.ig_ai_finish('invalid-test-secret',jsonb_build_object('id',j->>'id','status','ready'));raise exception 'Forged provider result';exception when insufficient_privilege then null;end;
+ perform pg_temp.check_it(true,'Client cannot forge server completion');
+ update public.ig_ai_jobs set status='ready',draft='{"title":"SYSTEM TEST editorial","summary":"Reviewed test","body":"India Gully provides feasibility studies.","seo_title":"Feasibility studies","seo_description":"A test description"}' where id=(j->>'id')::uuid;
+ begin perform public.ig_ai_save(jsonb_build_object('id',j->>'id','slug','system-test-ai','reviewed',false));raise exception 'Unreviewed output saved';exception when raise_exception then if sqlerrm<>'Review the completed draft before saving' then raise;end if;end;
+ perform pg_temp.check_it(true,'Saving requires explicit editorial review');
+ saved=public.ig_ai_save(jsonb_build_object('id',j->>'id','slug','system-test-ai','reviewed',true));
+ perform pg_temp.check_it(exists(select 1 from public.ig_content where id=(saved->>'id')::uuid and status='draft'),'Reviewed output saves only as an unpublished CMS draft');
+ perform pg_temp.check_it(not exists(select 1 from public.ig_public_content where id=(saved->>'id')::uuid),'AI draft does not appear on the public website');
+ perform pg_temp.check_it(public.ig_ai_save(jsonb_build_object('id',j->>'id','slug','system-test-ai','reviewed',true))->>'id'=saved->>'id','Repeated save returns the same CMS draft');
+end$$;
+select * from ig_checks;
+rollback;

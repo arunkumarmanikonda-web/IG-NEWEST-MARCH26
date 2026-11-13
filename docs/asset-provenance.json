@@ -21,13 +21,17 @@
     "path": "public/images/jaipur.jpg",
     "sourcePath": "public/static/mandates/jaipur/jaipur-exterior-front.jpg",
     "sha": "cacd89058c88a4016d3c3d94e551ea6397992e56",
-    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a",
+    "status": "removed-invalid-source-response",
+    "reviewed": "2026-11-11"
   },
   {
     "path": "public/images/courtyard.jpg",
     "sourcePath": "public/static/mandates/jaipur/jaipur-interior-arches.jpg",
     "sha": "cacd89058c88a4016d3c3d94e551ea6397992e56",
-    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a"
+    "sourceCommit": "b6caa6e4781a630501f4b825f37be7d4aa56df0a",
+    "status": "removed-invalid-source-response",
+    "reviewed": "2026-11-11"
   },
   {
     "path": "public/images/rajshree.webp",
