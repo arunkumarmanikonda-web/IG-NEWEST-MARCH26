@@ -28,3 +28,15 @@ test("withholding does not accept fabricated source references or blank evidence
   assert.equal(result.fields.city, "");
   assert.equal(result.fields.keys, "110");
 });
+test("overlong advertising suggestions cannot block or truncate supported property facts", () => {
+  const input = { ...draft, ad_headlines: ["A valid short headline", "An overlong advertising headline that must not block the draft"], ad_descriptions: ["x".repeat(91)], keywords: Array.from({ length: 10 }, (_, i) => "keyword " + i) };
+  const result = withholdUnsupportedIntakeFields(input);
+  assert.deepEqual(result.ad_headlines, ["A valid short headline"]);
+  assert.deepEqual(result.ad_descriptions, []);
+  assert.equal(result.keywords.length, 8);
+  assert.equal(result.fields.keys, "110");
+  assert.equal(result.body, draft.body);
+  assert.match(result.review_questions.join(" "), /suggestions exceeding.*omitted/);
+  assert.doesNotThrow(() => checkIntakeResult(result, context));
+  assert.equal(input.ad_headlines.length, 2);
+});
