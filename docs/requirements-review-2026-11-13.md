@@ -10,8 +10,8 @@ This review supersedes historical launch/handover status notes. It distinguishes
 | Remove numbered practice bullets; fuller practice content | Public practice presentation and detailed practice pages | Existing public revision retained |
 | Profile alignment, expanded biographies, LinkedIn | Dedicated leadership pages with verified profile links | Existing published revision retained |
 | Gradual company journey including 2022/2023/2025 | About / journey | Published narrative retained |
-| Global filterable search | /search | Search route and public content filtering implemented |
-| Enquiry interest selection and prominent thank-you/reference | Contact form and confirmation state | Automated tests; delivery records checked separately |
+| Global filterable search | /search | Live browser: content-type filter plus Chandigarh search returns the matching hotel listing |
+| Enquiry interest selection and prominent thank-you/reference | Contact form and confirmation state | Live browser can switch from Real Estate Advisory to HORECA after selection; confirmation covered by automated tests; delivery records checked separately |
 | Enquiry mail to Arun, Pavan and Amit plus client acknowledgement | Transactional outbox and Resend worker | Current delivered records exist for all three named senior mailboxes; provider delivery is not proof of inbox placement |
 | Grievance contact | Pavan, pavan@indiagully.com, +91 8988988988 | Business settings/public grievance content |
 | Vyapar excluded | No Vyapar integration | Remains excluded |
@@ -31,10 +31,10 @@ This review supersedes historical launch/handover status notes. It distinguishes
 | SEO and SEM | Generated metadata/keywords in form; advertising suggestions saved privately | No ranking guarantees; suggestions do not launch paid campaigns |
 | Branded luxury property/HORECA brief | Shared approved three-page PDF renderer | Full-bleed cover and CTA, gold frame, header/footer; Arun + Amit for real estate, Pavan for HORECA; design unchanged |
 | Bulk live/unlive with checkbox/filter | Content registers | Existing version/permission-aware bulk actions retained |
-| Staff amount-defined payment links / QR / attribution | /admin/collections | Live mode configured; one collection-link record currently exists. Actual paid/webhook/reconciliation acceptance must be checked separately |
+| Staff amount-defined payment links / QR / attribution | /admin/collections | Production records confirm a live INR 10 collection paid in full and attributed to Arun Manikonda on 14 November 2026 at 01:59 IST. Bank settlement remains a separate provider process |
 | Branded friendly payment request with QR in card | Collection card/PDF/email renderer | Automated QR decoding, attribution and amount checks; live client receipt/payment not inferred |
-| HORECA RFQ, vendor comparison and fulfilment | HORECA procurement and customer/supplier portal | Implemented registers and approval flow; real operational acceptance still required |
-| PMC programmes, budgets, variations, progress | PMC delivery workspace | Implemented registers and approval flow; real operational acceptance still required |
+| HORECA RFQ, vendor comparison and fulfilment | HORECA procurement and customer/supplier portal | Rollback-only database checks pass for quote, award, receipt, dispatch, delivery and return; real operational acceptance still required |
+| PMC programmes, budgets, variations, progress | PMC delivery workspace | Rollback-only database checks pass for baseline protection, variation approval, measured completion and corrected progress; real operational acceptance still required |
 | AI for other practice records | Practice/operations creation | Existing source-based operational drafting retained; financial/award approvals stay explicit |
 | Individual business mailbox | My business mailbox | OAuth connection still required per mailbox; general Resend service emails are separate |
 | Automated marketing | Campaign and interest/consent controls | Optional campaign provider activation remains outstanding; no unsolicited campaigns enabled |
@@ -42,6 +42,16 @@ This review supersedes historical launch/handover status notes. It distinguishes
 | Backup recoverability | Database backup exists | Restore drill and Storage-object recovery exercise still outstanding |
 
 ## Verification boundaries
+
+### Checks completed on 14 November 2026 (India time)
+
+- 204 automated JavaScript tests and the production build passed for the main upload/data-room release.
+- 153 rollback-only database assertions passed: AI content intake (18), brand catalogue (20), staff collections (31), client engagements and file permissions (25), procurement portal (21), and HORECA/PMC operations (38). These checks leave no test records and do not call paid providers or send mail.
+- No production error/fatal entries were returned by Vercel for the inspected 15-minute window ending at 02:33 IST. This is a scoped log check, not a claim that every future request is error-free.
+- Supabase security advisors returned no warning/error findings in this review.
+- The public property PDF endpoint returned HTTP 200, application/pdf, attachment disposition and a 367,438-byte file. Browser file retrieval completed successfully. The first browser download-event observer timed out; direct retrieval of the same visible link succeeded. The approved three-page renderer is unchanged.
+- A final follow-up preserves the saved source text and writing instructions when regenerating an existing AI draft, so a text-only source does not reopen as an empty form.
+- Live property-page visual evidence: [property layout](verification/property-check-2026-11-14.jpg).
 
 - Source files in the user's screenshots were not supplied as actual PPTX/XLSX/PDF attachments to this session, so their exact contents were not processed here.
 - This browser currently reaches the sign-in screen; a signed-in administrator run is needed to verify upload → AI → editor → publication with those original files.

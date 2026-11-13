@@ -32,6 +32,8 @@ export default function IntakeStudio({
   initialPractice,
   initialWorkspace = null,
   existingSources = [],
+  initialSourceText = "",
+  initialBrief = "",
 }) {
   const params = useSearchParams(),
     router = useRouter();
@@ -303,6 +305,7 @@ export default function IntakeStudio({
             Additional source details (optional)
             <textarea
               name="text"
+              defaultValue={initialSourceText}
               maxLength={18000}
               disabled={busy}
               placeholder="Paste approved property information, product specifications, a biography or any details not in the files."
@@ -328,7 +331,7 @@ export default function IntakeStudio({
                 minLength={10}
                 maxLength={2000}
                 disabled={busy}
-                defaultValue="Create the entire India Gully listing or content form from these sources. Write polished, substantive corporate copy with a clear client call to action. Extract all supported specifications, location and commercial facts. Prepare the SEO title, meta description, relevant search keywords and SEM headline and description suggestions. Preserve factual accuracy and flag missing or conflicting information for administrator review. Never invent availability, prices, measurements, credentials or legal facts."
+                defaultValue={initialBrief || "Create the entire India Gully listing or content form from these sources. Write polished, substantive corporate copy with a clear client call to action. Extract all supported specifications, location and commercial facts. Prepare the SEO title, meta description, relevant search keywords and SEM headline and description suggestions. Preserve factual accuracy and flag missing or conflicting information for administrator review. Never invent availability, prices, measurements, credentials or legal facts."}
               />
             </label>
           </details>

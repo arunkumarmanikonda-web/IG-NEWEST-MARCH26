@@ -49,6 +49,14 @@ export default async function EditPage({ params, searchParams }) {
         .maybeSingle()
     : { data: null };
   if (q?.generate === "1" && intake?.actor_id === user.id) {
+    const { data: sourceJob } = intake.job_id
+      ? await client
+          .from("ig_ai_jobs")
+          .select("context")
+          .eq("id", intake.job_id)
+          .eq("actor_id", user.id)
+          .maybeSingle()
+      : { data: null };
     const { data: sources } = await client
       .from("ig_intake_sources")
       .select("id,name")
@@ -59,6 +67,8 @@ export default async function EditPage({ params, searchParams }) {
         initialPractice={item.practice}
         initialWorkspace={{ ...intake, version: item.version }}
         existingSources={sources || []}
+        initialSourceText={sourceJob?.context?.text || ""}
+        initialBrief={sourceJob?.context?.brief || ""}
       />
     );
   }
