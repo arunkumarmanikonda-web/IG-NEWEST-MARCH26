@@ -277,3 +277,12 @@ test("Merged facts retain original evidence and flag unsupported or conflicting 
   assert.equal(conflict.evidence.length, 0);
   assert.match(conflict.review_questions.join(" "), /100 \/ 200/);
 });
+
+test("capitalisation and ampersands in an asset class do not erase corroborated evidence", () => {
+  const parts = ["Hotel & Land", "hotel and land"].map((value, section) => ({
+    context: {section}, draft: {fields: {asset_class:value}, evidence:[{field:"asset_class", value, source:"S1", excerpt:value}]}
+  }));
+  const result = reconcileMergedFacts({fields:{asset_class:""}, evidence:[], review_questions:[]}, [{parts}]);
+  assert.equal(result.fields.asset_class,"Hotel & Land");
+  assert.equal(result.review_questions.length,0);
+});

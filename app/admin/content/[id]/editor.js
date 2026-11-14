@@ -254,6 +254,8 @@ export default function Editor({
             private data room. Publishing the listing does not grant anyone
             access to those documents.
           </p>
+          {intake.review?.superseded_by && <p><Link href={"/admin/content/" + intake.review.superseded_by}>Open the current listing →</Link></p>}
+          {intake.review?.related_source_room && <p><Link href={"/admin/data-rooms?room=" + intake.review.related_source_room + "#room-access"}>Open the earlier source room →</Link></p>}
           <h4>Files in the private data room</h4>
           {roomFiles?.length ? <ul>{roomFiles.map(file => <li key={file.id}>
             <strong>{file.name}</strong> · {new Intl.NumberFormat('en-IN').format(file.bytes)} bytes · {file.status}
