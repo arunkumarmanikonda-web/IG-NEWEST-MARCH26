@@ -1,7 +1,8 @@
 "use client";
 import CataloguePhotoImport from "./catalogue-photo-import";
 import { visibleInRegister } from "../../lib/registers.mjs";
-import { useState } from "react";
+import { contentPath } from "../../lib/content-routes.mjs";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { practiceOptions } from "../../lib/business.mjs";
@@ -39,10 +40,10 @@ export default function ContentRegister({ module, items }) {
     [state, setState] = useState("active"),
     [practice, setPractice] = useState(""),
     [selected, setSelected] = useState([]),
-    [action, setAction] = useState(""),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
     [results, setResults] = useState([]);
+  const inFlight = useRef(false);
   const [title, description, kind] = labels[module];
   const rows = items.filter(
     (r) =>
@@ -62,6 +63,7 @@ export default function ContentRegister({ module, items }) {
   );
   const chosen = items.filter((r) => selected.includes(r.id)),
     allVisible = rows.length > 0 && rows.every((r) => selected.includes(r.id));
+  const missingUnit = chosen.filter(row => row.kind === "product" && !row.public_data?.uom);
   async function changeDeletion(row, operation) {
     const messages = {
       trash: "Move “" + row.title + "” to Deleted? It will be removed from the website and active listings. Its data room and history are retained.",
@@ -82,33 +84,30 @@ export default function ContentRegister({ module, items }) {
       setBusy(false);
     }
   }
-  async function run(e) {
-    e.preventDefault();
+  async function run(action) {
+    if (!chosen.length || inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setResults([]);
-    const snapshot = chosen.map((r) => ({ ...r }));
+    const count = chosen.length;
+    setMessage(action === "publish" ? "Publishing " + count + "…" : "Taking " + count + " offline…");
     try {
-      const result = await publishSelection(
-        snapshot,
-        action,
-        (p) => portalAction("publication", p),
-        (n, total) =>
-          setMessage("Updating " + n + " of " + total + " records…"),
+      const outcomes = await publishSelection(
+        chosen, action, payload => portalAction("bulk_publication", payload),
+        (done, total) => setMessage("Processed " + done + " of " + total + "…"),
       );
-      setResults(result);
-      setSelected(result.filter((x) => !x.ok).map((x) => x.id));
-      setMessage(
-        result.filter((x) => x.ok).length +
-          " updated; " +
-          result.filter((x) => !x.ok).length +
-          " need attention.",
-      );
-      setAction("");
+      const successful = outcomes.filter(row => row.ok).length;
+      const failed = outcomes.filter(row => !row.ok);
+      setResults(outcomes.map(row => ({ ...row, action })));
+      setSelected(failed.map(row => row.id));
+      setMessage(successful + " of " + count + (action === "publish" ? " confirmed live." : " confirmed offline.") +
+        (failed.length ? " " + failed.length + " need attention below." : ""));
       router.refresh();
-    } catch (e) {
-      setMessage(e.message);
+    } catch (error) {
+      setMessage(error.message);
     } finally {
       setBusy(false);
+      inFlight.current = false;
     }
   }
   return (
@@ -161,7 +160,7 @@ export default function ContentRegister({ module, items }) {
             <input
               disabled={busy}
               value={search}
-              onChange={(e) => {setSearch(e.target.value);setSelected([]);setAction("");}}
+              onChange={(e) => {setSearch(e.target.value);setSelected([]);}}
               type="search"
               placeholder="Title, city, SKU, brand or category"
             />
@@ -171,7 +170,7 @@ export default function ContentRegister({ module, items }) {
             <select
               disabled={busy}
               value={state}
-              onChange={(e) => {setState(e.target.value);setSelected([]);setAction("");}}
+              onChange={(e) => {setState(e.target.value);setSelected([]);}}
             >
               {[
                 ["active", "Active records"],
@@ -193,7 +192,7 @@ export default function ContentRegister({ module, items }) {
             <select
               disabled={busy}
               value={practice}
-              onChange={(e) => {setPractice(e.target.value);setSelected([]);setAction("");}}
+              onChange={(e) => {setPractice(e.target.value);setSelected([]);}}
             >
               <option value="">All practices</option>
               {practiceOptions.map(([v, l]) => (
@@ -216,6 +215,10 @@ export default function ContentRegister({ module, items }) {
           </Link>
         </div>
         <div className="bulk-toolbar">
+          <p id="publish-review" className="publish-review">Make selected live publishes the checked revisions immediately. By publishing, you confirm the facts, availability, media rights and approval for public release.</p>
+          {missingUnit.length > 0 && <p className="publish-review">
+            {missingUnit.length} selected {missingUnit.length === 1 ? "product needs" : "products need"} an order unit before publication.
+          </p>}
           <label className="check">
             <input
               type="checkbox"
@@ -235,13 +238,13 @@ export default function ContentRegister({ module, items }) {
           </span>
           <button
             disabled={busy || !chosen.length}
-            onClick={() => setAction("publish")}
+            type="button" className="publish-selected" aria-describedby="publish-review" onClick={() => run("publish")}
           >
             Make selected live
           </button>
           <button
             disabled={busy || !chosen.length}
-            onClick={() => setAction("archive")}
+            type="button" onClick={() => run("archive")}
           >
             Take selected offline
           </button>
@@ -249,71 +252,19 @@ export default function ContentRegister({ module, items }) {
             disabled={busy || !chosen.length}
             onClick={() => {
               setSelected([]);
-              setAction("");
             }}
           >
             Clear selection
           </button>
         </div>
-        {action && (
-          <form
-            key={action + chosen.map((r) => r.id + ":" + r.version).join("|")}
-            onSubmit={run}
-            className="bulk-review"
-          >
-            <h3>
-              {action === "publish" ? "Publish" : "Unpublish"} {chosen.length}{" "}
-              selected records
-            </h3>
-            <p>
-              {action === "publish"
-                ? "This releases each selected saved revision to the website."
-                : "This removes the selected records from public view and search. Their saved content remains in the admin register."}
-            </p>
-            <ul>
-              {chosen.map((r) => (
-                <li key={r.id}>
-                  {r.title} · revision {r.version}
-                </li>
-              ))}
-            </ul>
-            {action === "publish" && (
-              <>
-                <label className="check">
-                  <input required type="checkbox" />I have reviewed facts,
-                  availability and claims for every selected revision.
-                </label>
-                <label className="check">
-                  <input required type="checkbox" />
-                  Media rights and public disclosure are approved for every
-                  selected record.
-                </label>
-              </>
-            )}
-            <div className="workspace-actions">
-              <button className="primary" disabled={busy || !chosen.length}>
-                {busy
-                  ? "Updating…"
-                  : action === "publish"
-                    ? "Confirm publish"
-                    : "Confirm unpublish"}
-              </button>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => setAction("")}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        )}
-        <p role="status" className="portal-message">
-          {message}
-        </p>
+        <div role="status" className={message ? "workspace-note" : undefined} aria-live="polite">{message}</div>
+        {results.some(r => r.ok && r.action === "publish") && <details className="publication-receipt" open={results.filter(r => r.ok).length <= 5}>
+          <summary>View published pages ({results.filter(r => r.ok).length})</summary>
+          <ul>{results.filter(r => r.ok).map(r => <li key={r.id}><Link href={contentPath(r)}>{r.title} ↗</Link></li>)}</ul>
+        </details>}
         {results.some((r) => !r.ok) && (
           <div role="alert" className="workspace-note">
-            <h4>These records were not changed</h4>
+            <h4>Records that need attention</h4>
             <ul>
               {results
                 .filter((r) => !r.ok)

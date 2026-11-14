@@ -60,50 +60,35 @@ test("filtered checkbox selection retains intentional selections outside a filte
   ]);
   assert.deepEqual(selectVisible(["a", "b"], [{ id: "b" }], false), ["a"]);
 });
-test("bulk publication carries the reviewed revision and reports partial permission failures", async () => {
-  const calls = [],
-    progress = [];
-  const r = await publishSelection(
-    [
-      { id: "a", version: 4, title: "A" },
-      { id: "b", version: 3, title: "B" },
-    ],
-    "publish",
-    async (p) => {
-      calls.push(p);
-      if (p.id === "b") throw new Error("Practice permission denied");
-    },
-    (n) => progress.push(n),
-  );
-  assert.deepEqual(calls[0], {
-    id: "a",
-    version: 4,
-    action: "publish",
-    factsConfirmed: true,
-    rightsConfirmed: true,
-    privacyConfirmed: true,
-  });
-  assert.deepEqual(
-    r.map((x) => x.ok),
-    [true, false],
-  );
-  assert.match(r[1].error, /permission/);
-  assert.deepEqual(progress, [1, 2]);
+test("bulk publication confirms each saved revision and maps unordered server results", async () => {
+  const rows = Array.from({length: 52}, (_, i) => ({id: String(i), version: 4, title: "Record " + i}));
+  const calls = [], progress = [];
+  const results = await publishSelection(rows, "publish", async payload => {
+    calls.push(payload);
+    return payload.rows.map(row => row.id === "7" ? {...row, ok: false, error: "Unit required"} : {...row, ok: true}).reverse();
+  }, done => progress.push(done));
+  assert.deepEqual(calls.map(p => p.rows.length), [25,25,2]);
+  assert.deepEqual(calls[0].rows[0], {id:"0",version:4});
+  assert.equal(calls[0].action,"publish");
+  assert.ok(calls[0].factsConfirmed && calls[0].rightsConfirmed && calls[0].privacyConfirmed);
+  assert.deepEqual(progress,[25,50,52]);
+  assert.equal(results.filter(r => r.ok).length, 51);
+  assert.equal(results[7].error,"Unit required");
 });
-test("unpublishing never substitutes deletion, while invalid actions fail", async () => {
-  let payload;
-  await publishSelection([{ id: "a", version: 2 }], "archive", async (p) => {
-    payload = p;
+test("an interrupted batch has no false success and later batches remain unsubmitted", async () => {
+  const rows = Array.from({length:30}, (_,i) => ({id:String(i),version:1}));
+  let calls = 0;
+  const results = await publishSelection(rows,"archive",async payload => {
+    calls++;
+    assert.equal(payload.action,"archive");
+    assert.equal(payload.factsConfirmed,undefined);
+    throw Error("Connection interrupted");
   });
-  assert.deepEqual(payload, { id: "a", version: 2, action: "archive" });
-  await assert.rejects(
-    () => publishSelection([], "publish", () => {}),
-    /Select/,
-  );
-  const r = await publishSelection([{ id: "a", version: 1 }], "delete", () =>
-    assert.fail(),
-  );
-  assert.equal(r[0].ok, false);
+  assert.equal(calls,1);
+  assert.equal(results[0].ok,false);
+  assert.match(results[25].error,/Not submitted/);
+  await assert.rejects(() => publishSelection([], "publish", () => {}), /Select/);
+  await assert.rejects(() => publishSelection(rows, "delete", () => assert.fail()),/Invalid/);
 });
 test("teasers bound long content and exclude unsafe image paths and unsupplied facts", () => {
   const d = teaserData({

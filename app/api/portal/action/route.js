@@ -18,6 +18,7 @@ const methods = {
   invitation_revoke: "ig_revoke_invitation",
   content: "ig_save_content",
   publication: "ig_content_action",
+  bulk_publication: "ig_bulk_publication",
   taxonomy: "ig_taxonomy_action",
   users: "ig_users_action",
   enquiry: "ig_enquiry_update",
