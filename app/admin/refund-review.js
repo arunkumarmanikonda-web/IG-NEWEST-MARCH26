@@ -9,7 +9,11 @@ export default function RefundReview({ row, call }) {
   const [result, setResult] = useState(null);
   async function check() {
     setBusy(true); setError(''); setReview(null);
-    try { setReview((await call({action:'review_refund',id:row.id})).review); }
+    try {
+      const latest = (await call({action:'review_refund',id:row.id})).review;
+      setReview(latest);
+      setResult(previous => previous && (latest.refunds.find(r => r.id === previous.id) || previous));
+    }
     catch (e) { setError(e.message); }
     finally { setBusy(false); }
   }
