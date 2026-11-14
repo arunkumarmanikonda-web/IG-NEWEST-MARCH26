@@ -38,3 +38,22 @@ test('embedded photographic XObjects keep finite page coordinates',async()=>{
  assert.equal(rendered.candidates[0].source,'Embedded product image');
  assert.ok(rendered.candidates[0].box.every(Number.isFinite));
 });
+
+test('a flattened landscape spread is never an isolated product candidate',async()=>{
+ const {PDFDocument}=await import('pdf-lib');
+ const {createCanvas}=await import('@napi-rs/canvas');
+ const pdf=await PDFDocument.create(),page=pdf.addPage([800,500]);
+ const raster=createCanvas(800,500),ctx=raster.getContext('2d');
+ ctx.fillStyle='#999';ctx.fillRect(0,0,800,500);
+ const img=await pdf.embedJpg(await raster.encode('jpeg',85));
+ page.drawImage(img,{x:0,y:0,width:800,height:500});
+ const result=await renderCataloguePage(Buffer.from(await pdf.save()),1);
+ assert.equal(result.candidates.length,0);
+});
+test('visual variants may share a model crop and keep separate supplier references',()=>{
+ const products=['6W','12W'].map(reference=>({reference,image_id:'',image_box:[90,100,220,340]}));
+ const montage={reference:'FULL',image_id:'',image_box:[0,0,1000,1000]};
+ resolveCatalogueImages({products:[...products,montage]},[],[]);
+ assert.deepEqual(products.map(p=>p.image_box),[[90,100,220,340],[90,100,220,340]]);
+ assert.deepEqual(montage.image_box,[]);
+});

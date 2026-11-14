@@ -780,6 +780,7 @@ export default function Editor({
               summary: f.get("summary"),
               body: f.get("body"),
               sku: f.get("sku"),
+              brand: f.get("brand"),
             };
           }}
           onChoose={(path, alt) => {

@@ -1,4 +1,5 @@
 "use client";
+import {staffPhoto} from "../../lib/staff-photo.mjs";
 import CataloguePhotoImport from "./catalogue-photo-import";
 import { visibleInRegister } from "../../lib/registers.mjs";
 import { contentPath } from "../../lib/content-routes.mjs";
@@ -306,6 +307,9 @@ export default function ContentRegister({ module, items }) {
                     />
                   </td>
                   <td>
+                    {r.kind === "product" && (r.public_data.image
+                      ? <img width="68" height="54" loading="lazy" style={{objectFit:"contain",display:"block"}} src={staffPhoto(r.public_data.image)} alt={r.public_data.image_alt || r.title}/>
+                      : <Link href={"/admin/content/" + r.id + "#product-images"}>Add product photo</Link>)}
                     <strong>{r.title}</strong>
                     <small>
                       {r.public_data.sku || r.public_data.city || r.kind}

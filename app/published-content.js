@@ -4,7 +4,7 @@ import AdviserContacts from "./adviser-contacts";
 export default function PublishedContent({ item }) {
   const d = item.public_data;
   return (
-    <main id="main">
+    <main id="main" className={item.kind === "product" ? "catalogue-product-detail" : undefined}>
       <PageHero
         eyebrow={[d.sector || item.kind, d.city, d.region]
           .filter(Boolean)

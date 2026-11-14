@@ -10,7 +10,7 @@ begin
     from auth.users u join auth.sessions s on s.user_id=u.id where u.email='owner@example.invalid' limit 1;
   perform set_config('request.jwt.claims',jsonb_build_object('sub',staff_id,'session_id',staff_session,'aal','aal2','role','authenticated')::text,true);
   product := public.ig_save_content(jsonb_build_object('kind','product','practice','horeca','title','Regression product',
-    'slug',test_slug,'body','Reviewed description','public_data',jsonb_build_object('uom','piece')));
+    'slug',test_slug,'body','Reviewed description','public_data',jsonb_build_object('uom','piece','image','/images/catalogue/ankur/boost.webp')));
   other := public.ig_save_content(jsonb_build_object('kind','opportunity','practice','real-estate','title','Regression property',
     'slug',test_slug||'-property','body','Reviewed description','public_data','{}'::jsonb));
   invalid := public.ig_save_content(jsonb_build_object('kind','product','practice','horeca','title','Draft without unit',
@@ -38,6 +38,11 @@ begin
     jsonb_build_object('id',product->'id','version',product->'version','verify_only',true))));
   assert not (result->0->>'ok')::boolean;
   reset role;
+  invalid := public.ig_save_content(jsonb_build_object('kind','product','practice','horeca','title','Product awaiting photograph',
+    'slug',test_slug||'-no-photo','public_data',jsonb_build_object('uom','each')));
+  result := public.ig_bulk_publication(request||jsonb_build_object('rows',jsonb_build_array(jsonb_build_object('id',invalid->'id','version',invalid->'version'))));
+  assert result->0->>'error' like '%product photo%';
+  assert not exists(select 1 from public.ig_public_content where id=(invalid->>'id')::uuid);
   set local role anon;
   assert exists(select 1 from public.ig_public_content where slug=test_slug and kind='product');
   reset role;

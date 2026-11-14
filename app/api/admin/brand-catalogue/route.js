@@ -119,13 +119,17 @@ export async function POST(request) {
         usage: extraction.usage,
       });
       aiJob = null;
+      const matchedArtwork = new Map();
       for (let i = 0; i < extraction.result.products.length; i++) {
         const product = extraction.result.products[i];
-        if (!product.image_id) continue;
+        const candidate = rendered.candidates.find(c => c.id === product.image_id);
+        if (!candidate && product.image_box.length !== 4) continue;
         try {
+          const artworkKey = candidate?.id || product.image_box.join(",");
+          const sourceItem = matchedArtwork.get(artworkKey);
           const bytes = await cropCatalogueImage(
-            rendered.candidates.find((c) => c.id === product.image_id).image,
-            [0, 0, 1000, 1000],
+            candidate ? candidate.image : rendered.image,
+            candidate ? [0, 0, 1000, 1000] : product.image_box,
           );
           if (!bytes) {
             product.review_notes +=
@@ -138,6 +142,7 @@ export async function POST(request) {
             page: p.page,
             lease_token: page.lease_token,
             item_no: i,
+            ...(sourceItem !== undefined ? {source_item_no:sourceItem} : {}),
             alt: (product.title + " · catalogue image").slice(0, 250),
           });
           if (media.state !== "ready") {
@@ -155,6 +160,8 @@ export async function POST(request) {
             });
             if (done.error) throw new Error(done.error.message);
           }
+          matchedArtwork.set(artworkKey,i);
+          product.photo_source = candidate ? "isolated_asset" : "product_crop";
         } catch {
           product.review_notes +=
             " The source image needs a manual upload or replacement.";
@@ -175,10 +182,10 @@ export async function POST(request) {
     // Keep hand-edited or published products intact when a page is processed again.
     if (drafts.ids?.length) {
       const {data:records,error}=await client.from("ig_content").select("id,kind,practice,slug,title,summary,body,public_data,status,version,published_version,seo_title,seo_description")
-        .in("id",drafts.ids).eq("kind","product").eq("status","draft").eq("version",1).is("published_version",null);
+        .in("id",drafts.ids).eq("kind","product").eq("status","draft").is("published_version",null);
       if(error) throw new HttpError("Product drafts were saved. Resume this page to complete search metadata.",503);
       for(const row of records || []) {
-        if(row.seo_title || row.seo_description || row.public_data.seo_keywords) continue;
+        if(row.version > 2 || row.seo_title || row.seo_description || row.public_data.seo_keywords) continue;
         const item=page.result?.products?.[drafts.ids.indexOf(row.id)];
         const phrases=[item?.search_phrases,row.title,row.public_data.category,row.public_data.brand,row.public_data.reference].filter(Boolean);
         const {error:saveError}=await client.rpc("ig_save_content",{p:{...row,seo_title:[row.title,row.public_data.brand].filter(Boolean).join(" | ").slice(0,90),
