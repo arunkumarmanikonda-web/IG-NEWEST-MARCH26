@@ -1,3 +1,4 @@
+import { readRegister } from "../../../lib/registers.mjs";
 import { siteRecordSlugs } from "../../../lib/site-cms-records.mjs";
 import ProcurementManager from "../procurement-manager";
 import MediaLibrary from "../media-library";
@@ -26,23 +27,10 @@ export default async function Module({ params, searchParams }) {
   if (!profile) redirect("/login");
   if (module === "procurement") {
     const r = await Promise.all([
-      client
-        .from("ig_procurement_requests")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(500),
-      client
-        .from("ig_operations")
-        .select("*")
-        .in("kind", ["vendor", "rfq"])
-        .eq("archived", false)
-        .limit(2000),
-      client.from("ig_vendor_contacts").select("*").limit(1000),
-      client
-        .from("ig_vendor_assignments")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(1000),
+      readRegister(() => client.from("ig_procurement_requests").select("*"), "created_at"),
+      readRegister(() => client.from("ig_operations").select("*").in("kind", ["vendor", "rfq"]).eq("archived", false)),
+      readRegister(() => client.from("ig_vendor_contacts").select("*")),
+      readRegister(() => client.from("ig_vendor_assignments").select("*"), "created_at"),
     ]);
     if (r.some((x) => x.error))
       return (
@@ -63,19 +51,11 @@ export default async function Module({ params, searchParams }) {
   if (["horeca", "pmc"].includes(module)) {
     const practice = module === "horeca" ? "horeca" : "hospitality";
     const r = await Promise.all([
-      client
-        .from("ig_operations")
-        .select("*")
-        .eq("practice", practice)
-        .order("updated_at", { ascending: false })
-        .limit(2000),
+      readRegister(() => client.from("ig_operations").select("*").eq("practice", practice), "updated_at"),
       client.rpc("ig_client_directory"),
-      client.from("ig_engagements").select("*").eq("active", true).limit(1000),
-      client
-        .from("ig_content")
-        .select("id,title,public_data")
-        .eq("kind", "product")
-        .limit(1000),
+      readRegister(() => client.from("ig_engagements").select("*").eq("active", true)),
+      readRegister(() => client.from("ig_content").select("id,title,public_data").eq("kind", "product")
+        .is("deleted_at", null).neq("status", "archived")),
     ]);
     if (r.some((x) => x.error))
       return (
@@ -99,41 +79,20 @@ export default async function Module({ params, searchParams }) {
   if (
     ["cms", "listings", "catalogue", "projects", "content"].includes(module)
   ) {
-    let query = client
-      .from("ig_content")
-      .select(
-        "id,kind,slug,practice,title,status,version,published_version,public_data,updated_at,deleted_at",
-      )
-      .order("updated_at", { ascending: false })
-      .limit(1000);
-    if (module === "listings") query = query.eq("kind", "opportunity");
-    else if (module === "catalogue") query = query.eq("kind", "product");
-    else if (module === "projects") query = query.eq("kind", "project");
-    else
-      query = query.in("kind", [
-        "page",
-        "practice",
-        "article",
-        "person",
-        "faq",
-      ]);
-    const [{ data, error }, { data: live, error: liveError }] =
-      await Promise.all([
-        query,
-        client.from("ig_public_content").select("id,version").limit(10000),
-      ]);
-    const versions = new Map((live || []).map((r) => [r.id, r.version]));
-    return error || liveError ? (
-      <p role="alert">Your permissions do not allow these records.</p>
-    ) : (
-      <ContentRegister
-        module={module === "content" ? "cms" : module}
-        items={(data || []).filter(x => x.kind !== "page" || !siteRecordSlugs.includes(x.slug)).map((r) => ({
-          ...r,
-          live_version: versions.get(r.id) || null,
-        }))}
-      />
-    );
+    const kinds = {
+      listings: ["opportunity"], catalogue: ["product"], projects: ["project"],
+      cms: ["page", "practice", "article", "person", "faq"],
+    };
+    const register = module === "content" ? "cms" : module;
+    const { data, error } = await readRegister(() => client.from("ig_content").select(
+      "id,kind,slug,practice,title,status,version,public_data,updated_at,deleted_at,ig_public_content(version)"
+    ).in("kind", kinds[register]), "updated_at");
+    if (error) return <p role="alert">The publishing register could not be loaded. Refresh to retry.</p>;
+    const items = data.filter(row => row.kind !== "page" || !siteRecordSlugs.includes(row.slug))
+      .map(({ig_public_content: snapshot, ...row}) => ({
+        ...row, live_version: snapshot?.version ?? snapshot?.[0]?.version ?? null,
+      }));
+    return <ContentRegister module={register} items={items}/>;
   }
   if (module === "creative") {
     const { data, error } = await client
@@ -188,13 +147,7 @@ export default async function Module({ params, searchParams }) {
       "ig_data_rooms",
     ];
     const r = await Promise.all(
-      tables.map((t) =>
-        client
-          .from(t)
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(1000),
-      ),
+      tables.map(t => readRegister(() => client.from(t).select("*"), "created_at")),
     );
     if (r.some((x) => x.error))
       return (
@@ -217,11 +170,7 @@ export default async function Module({ params, searchParams }) {
   if (module === "payments") {
     const [{ data: users, error: ue }, { data, error }] = await Promise.all([
       client.rpc("ig_admin_users"),
-      client
-        .from("ig_payment_requests")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(250),
+      readRegister(() => client.from("ig_payment_requests").select("*"), "created_at"),
     ]);
     return error || ue ? (
       <p>Payment administration requires administrator access.</p>
@@ -252,11 +201,7 @@ export default async function Module({ params, searchParams }) {
   if (module === "privacy") {
     if (!profile.roles.includes("owner"))
       return <p>Super-user access is required.</p>;
-    const { data, error } = await client
-      .from("ig_privacy_requests")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(250);
+    const { data, error } = await readRegister(() => client.from("ig_privacy_requests").select("*"), "created_at");
     return error ? (
       <p>Register unavailable.</p>
     ) : (
@@ -278,11 +223,11 @@ export default async function Module({ params, searchParams }) {
       "ig_client_contacts",
     ];
     const results = await Promise.all(
-      tables.map((t) => client.from(t).select("*").limit(2000)),
+      tables.map(t => t === "ig_room_file_rules"
+        ? readRegister(() => client.from(t).select("*"), null, ["grant_id", "file_id"])
+        : readRegister(() => client.from(t).select("*"))),
     );
-    const { data: opportunities, error } = await client
-      .from("ig_content")
-      .select("id,title,kind,slug");
+    const { data: opportunities, error } = await readRegister(() => client.from("ig_content").select("id,title,kind,slug").is("deleted_at",null));
     if (error || results.some((r) => r.error))
       return (
         <p role="alert">Data room administration is temporarily unavailable.</p>
@@ -314,15 +259,8 @@ export default async function Module({ params, searchParams }) {
   if (module === "nda") {
     const [{ data: requests, error }, { data: templates, error: te }] =
       await Promise.all([
-        client
-          .from("ig_nda_requests")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(250),
-        client
-          .from("ig_nda_templates")
-          .select("*")
-          .order("created_at", { ascending: false }),
+        readRegister(() => client.from("ig_nda_requests").select("*"), "created_at"),
+        readRegister(() => client.from("ig_nda_templates").select("*"), "created_at"),
       ]);
     if (error || te) return <p role="alert">NDA records unavailable.</p>;
     return (
@@ -360,20 +298,12 @@ export default async function Module({ params, searchParams }) {
     );
   }
   if (module === "enquiries") {
-    const [{ data, error }, { data: outbox }] = await Promise.all([
-      client
-        .from("ig_enquiries")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(250),
-      client
-        .from("ig_outbox")
-        .select("id,enquiry_id,recipient,kind,status,attempts")
-        .order("created_at", { ascending: false })
-        .limit(1000),
+    const [{ data, error }, { data: outbox, error: deliveryError }] = await Promise.all([
+      readRegister(() => client.from("ig_enquiries").select("*"), "created_at"),
+      readRegister(() => client.from("ig_outbox").select("id,enquiry_id,recipient,kind,status,attempts,created_at").not("enquiry_id","is",null), "created_at"),
     ]);
-    return error ? (
-      <p>Enquiry access requires owner, administrator or sales permissions.</p>
+    return error || deliveryError ? (
+      <p role="alert">The enquiry register or its delivery history could not be loaded. Refresh to retry.</p>
     ) : (
       <EnquiryManager items={data || []} outbox={outbox || []} />
     );

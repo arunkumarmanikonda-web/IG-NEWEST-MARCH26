@@ -1,5 +1,6 @@
 "use client";
 import CataloguePhotoImport from "./catalogue-photo-import";
+import { visibleInRegister } from "../../lib/registers.mjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -35,7 +36,7 @@ const labels = {
 export default function ContentRegister({ module, items }) {
   const router = useRouter(),
     [search, setSearch] = useState(""),
-    [state, setState] = useState("all"),
+    [state, setState] = useState("active"),
     [practice, setPractice] = useState(""),
     [selected, setSelected] = useState([]),
     [action, setAction] = useState(""),
@@ -45,13 +46,7 @@ export default function ContentRegister({ module, items }) {
   const [title, description, kind] = labels[module];
   const rows = items.filter(
     (r) =>
-      (state === "deleted" ? !!r.deleted_at : !r.deleted_at) &&
-      (state === "deleted" || state === "all" ||
-        (state === "live"
-          ? !!r.live_version
-          : state === "unlive"
-            ? !r.live_version
-            : r.status === state)) &&
+      visibleInRegister(r, state) &&
       (!practice || r.practice === practice) &&
       [
         r.title,
@@ -148,9 +143,9 @@ export default function ContentRegister({ module, items }) {
       {module === "catalogue" && <CataloguePhotoImport/>}
       <div className="metric-grid">
         {[
-          ["Total", items.filter(r => !r.deleted_at).length],
+          ["Active records", items.filter(r => visibleInRegister(r, "active")).length],
           ["Live", items.filter((r) => r.live_version).length],
-          ["Not live", items.filter((r) => !r.deleted_at && !r.live_version).length],
+          ["Not live", items.filter(r => visibleInRegister(r, "unlive")).length],
           ["Draft revisions", items.filter((r) => !r.deleted_at && r.status === "draft").length],
         ].map(([k, v]) => (
           <div key={k}>
@@ -166,7 +161,7 @@ export default function ContentRegister({ module, items }) {
             <input
               disabled={busy}
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {setSearch(e.target.value);setSelected([]);setAction("");}}
               type="search"
               placeholder="Title, city, SKU, brand or category"
             />
@@ -179,7 +174,7 @@ export default function ContentRegister({ module, items }) {
               onChange={(e) => {setState(e.target.value);setSelected([]);setAction("");}}
             >
               {[
-                ["all", "All records"],
+                ["active", "Active records"],
                 ["live", "Live on website"],
                 ["unlive", "Not live"],
                 ["draft", "Draft revisions"],
@@ -198,7 +193,7 @@ export default function ContentRegister({ module, items }) {
             <select
               disabled={busy}
               value={practice}
-              onChange={(e) => setPractice(e.target.value)}
+              onChange={(e) => {setPractice(e.target.value);setSelected([]);setAction("");}}
             >
               <option value="">All practices</option>
               {practiceOptions.map(([v, l]) => (
@@ -385,7 +380,7 @@ export default function ContentRegister({ module, items }) {
                     )}
                   </td>
                   <td>
-                    <Link href={"/admin/content/" + r.id}>Manage →</Link>
+                    {!r.deleted_at && <Link href={"/admin/content/" + r.id}>Manage →</Link>}
                     <br />
                     <Link href={"/admin/content/" + r.id + "/teaser"}>
                       Branded PDF brief ↗

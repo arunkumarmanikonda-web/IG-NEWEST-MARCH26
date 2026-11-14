@@ -174,3 +174,14 @@ test("upload errors explain authentication failure without leaking provider secr
   assert.match(msg, /Storage 400/);
   assert.doesNotMatch(msg, /must-not-leak|capacity/);
 });
+
+
+test("source classifications require supporting excerpts and remain editor choices", async () => {
+  const {suggestedClassifications} = await import("../lib/classification.mjs");
+  const terms = [{id:"insolvency",label:"CIRP",slug:"cirp",active:true,dimension:"opportunity-context"}];
+  const fact = {value:"CIRP",source:"Investor deck, page 4",excerpt:"The company was admitted to CIRP."};
+  assert.equal(suggestedClassifications([fact],terms).get("insolvency"),fact);
+  for (const excerpt of ["CIRP is proposed.","CIRP concluded.","No proceedings recorded.","No CIRP is pending."])
+    assert.equal(suggestedClassifications([{...fact,excerpt}],terms).size,0);
+  assert.equal(suggestedClassifications([fact],[{...terms[0],active:false}]).size,0);
+});

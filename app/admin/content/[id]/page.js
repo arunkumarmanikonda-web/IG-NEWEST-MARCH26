@@ -1,4 +1,5 @@
 import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { accountContext } from "../../../../lib/supabase/server";
 import Editor from "./editor";
@@ -10,7 +11,7 @@ export default async function EditPage({ params, searchParams }) {
   if (id !== "new" && !/^[0-9a-f-]{36}$/.test(id)) notFound();
   if (id === "new" && !q?.ai && q?.manual !== "1")
     return <IntakeStudio initialKind={q?.kind} />;
-  const [{ data: terms }, { data: item }, { data: tags }, { data: revisions }] =
+  const [{ data: terms, error: termError }, { data: item }, { data: tags, error: tagError }, { data: revisions }] =
     await Promise.all([
       client.from("ig_taxonomy").select("*").order("label"),
       id === "new"
@@ -29,6 +30,13 @@ export default async function EditPage({ params, searchParams }) {
             .limit(30),
     ]);
   if (id !== "new" && !item) notFound();
+  if (termError || tagError) return <p role="alert">The classifications could not be loaded. Refresh before editing this record.</p>;
+  if (item?.deleted_at) {
+    const register = { opportunity: "listings", product: "catalogue", project: "projects" }[item.kind] || "cms";
+    return <section className="workspace-card"><h2>This record is in Deleted.</h2>
+      <p>To edit it, open the register, choose Deleted and restore it as a private draft.</p>
+      <Link href={"/admin/" + register}>Open register →</Link></section>;
+  }
   const { data: mediaAssets } = await client
     .from("ig_source_media")
     .select("id,alt,source_name,path,preset,state,published,practice")

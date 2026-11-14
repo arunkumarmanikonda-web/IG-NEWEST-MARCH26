@@ -1,4 +1,5 @@
 "use client";
+import { suggestedClassifications } from "../../../../lib/classification.mjs";
 import ListingImages from "../../listing-images";
 import ProductImages from "../../product-images";
 import MediaLibrary from "../../media-library";
@@ -61,6 +62,7 @@ export default function Editor({
     [editSku, setEditSku] = useState(false);
   const [image, setImage] = useState(data.image || ""),
     [imageAlt, setImageAlt] = useState(data.image_alt || "");
+  const suggestions = suggestedClassifications(kind === "opportunity" ? intake?.review?.evidence : [], terms);
   const applicableTerms = terms.filter(
     (t) =>
       selectedTerms.includes(t.id) ||
@@ -710,6 +712,9 @@ export default function Editor({
                   />
                   {t.label}
                   {!t.active ? " (retired: remove before saving)" : ""}
+                  {suggestions.has(t.id) && !selectedTerms.includes(t.id) && <small>
+                    Suggested from {suggestions.get(t.id).source} · “{suggestions.get(t.id).excerpt}”
+                  </small>}
                 </label>
               ))}
           </fieldset>
