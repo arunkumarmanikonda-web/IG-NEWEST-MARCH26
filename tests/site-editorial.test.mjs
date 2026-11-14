@@ -37,3 +37,16 @@ test("ad measurement requires the latest affirmative consent and a matching inte
   assert.equal(advertisingEvent({...input,label:""}),null);
   assert.equal(advertisingEvent({...input,token:"client@example.com"}),null);
 });
+
+import {scheduledSnapshot,effectiveSnapshot} from "../lib/site-schedules.mjs";
+test("future text stays encrypted in the public snapshot and appears only when due",()=>{
+  const secret="sample local test key for scheduled publication",at="2032-04-01T12:00:00.000Z",due=Date.parse(at);
+  const prior={content:{title:"Live"},version:3},next={title:"Embargoed announcement"};
+  const sealed=scheduledSnapshot("home",4,next,at,prior,secret);
+  assert.ok(!JSON.stringify(sealed).includes(next.title));
+  assert.deepEqual(effectiveSnapshot("home",4,sealed,{time:due-1,secret}),{...prior,scheduled_at:at});
+  assert.deepEqual(effectiveSnapshot("home",4,sealed,{time:due,secret}).content,next);
+  assert.deepEqual(effectiveSnapshot("home",4,sealed,{draft:true,time:due-1,secret}).content,next);
+  assert.throws(()=>effectiveSnapshot("about",4,sealed,{time:due,secret}));
+  assert.throws(()=>effectiveSnapshot("home",4,{...sealed,at:"2000-01-01"},{secret}));
+});

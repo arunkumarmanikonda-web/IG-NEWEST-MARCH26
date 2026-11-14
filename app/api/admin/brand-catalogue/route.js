@@ -171,10 +171,25 @@ export async function POST(request) {
         result: extraction.result,
         page_count: rendered.page_count,
       });
+      page.result = extraction.result;
       page.status = "ready";
       catalogue.page_count = rendered.page_count;
     }
     const drafts = await rpc({ action: "drafts", id: p.id, page: p.page });
+    // Keep hand-edited or published products intact when a page is processed again.
+    if (drafts.ids?.length) {
+      const {data:records,error}=await client.from("ig_content").select("id,kind,practice,slug,title,summary,body,public_data,status,version,published_version,seo_title,seo_description")
+        .in("id",drafts.ids).eq("kind","product").eq("status","draft").eq("version",1).is("published_version",null);
+      if(error) throw new HttpError("Product drafts were saved. Resume this page to complete search metadata.",503);
+      for(const row of records || []) {
+        if(row.seo_title || row.seo_description || row.public_data.seo_keywords) continue;
+        const item=page.result?.products?.[drafts.ids.indexOf(row.id)];
+        const phrases=[item?.search_phrases,row.title,row.public_data.category,row.public_data.brand,row.public_data.reference].filter(Boolean);
+        const {error:saveError}=await client.rpc("ig_save_content",{p:{...row,seo_title:[row.title,row.public_data.brand].filter(Boolean).join(" | ").slice(0,90),
+          seo_description:(row.summary||row.title).slice(0,200),public_data:{...row.public_data,seo_keywords:phrases.join(", ").slice(0,500)}}});
+        if(saveError && saveError.code!=="40001") throw new HttpError("Product drafts were saved. Resume this page to complete search metadata.",503);
+      }
+    }
     return privateJson({
       ok: true,
       page_count: catalogue.page_count,
