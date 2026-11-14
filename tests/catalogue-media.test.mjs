@@ -25,3 +25,16 @@ test('saved catalogues use byte ranges, retain product evidence and reject a ful
  await assert.rejects(withPrivatePdf({url},()=>{},()=>Promise.resolve(new Response(pdf))),/read in parts/);
  await assert.rejects(adminResponse(new Response('<!DOCTYPE html>',{status:504})),/504.*saved draft/);
 });
+
+test('embedded photographic XObjects keep finite page coordinates',async()=>{
+ const {PDFDocument} = await import('pdf-lib');
+ const {createCanvas} = await import('@napi-rs/canvas');
+ const pdf=await PDFDocument.create(),page=pdf.addPage([420,500]);
+ const photo=createCanvas(120,100),ctx=photo.getContext('2d');
+ ctx.fillStyle='#c87524';ctx.fillRect(0,0,120,100);
+ const product=await pdf.embedJpg(await photo.encode('jpeg',88));
+ page.drawImage(product,{x:40,y:80,width:120,height:100});
+ const rendered=await renderCataloguePage(Buffer.from(await pdf.save()),1);
+ assert.equal(rendered.candidates[0].source,'Embedded product image');
+ assert.ok(rendered.candidates[0].box.every(Number.isFinite));
+});
