@@ -3,38 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Arrow } from "./components";
-const groups = [
-  {
-    title: "The firm",
-    links: [
-      ["/about", "About India Gully"],
-      ["/leadership", "Our leadership"],
-      ["/our-work", "Selected work"],
-      ["/nda", "Confidentiality & NDA"],
-    ],
-  },
-  {
-    title: "Our practices",
-    links: [
-      ["/practices", "All practices"],
-      ["/practices/real-estate", "Real estate listings & advisory"],
-      ["/practices/transaction-advisory", "Transaction advisory"],
-      ["/practices/debt-special-situations", "Debt & special situations"],
-      ["/projects", "Hospitality, design & PMC"],
-      ["/practices/retail-leasing", "Retail leasing"],
-      ["/practices/entertainment", "Entertainment & destinations"],
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      ["/insights", "Perspectives"],
-      ["/valuation", "Valuation studio"],
-      ["/account", "Client & staff portal"],
-    ],
-  },
-];
-export default function Navigation() {
+export default function Navigation({ groups }) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const root = useRef(null);
@@ -132,7 +101,7 @@ export default function Navigation() {
         </Link>
         <details className="nav-group">
           <summary>
-            Resources<span aria-hidden="true">⌄</span>
+            {groups[2].title}<span aria-hidden="true">⌄</span>
           </summary>
           <div className="nav-dropdown">
             {groups[2].links.map(([href, label]) => (

@@ -1,3 +1,4 @@
+import { siteSection } from "../../lib/website";
 import Link from "next/link";
 import { pageMeta } from "../../lib/seo.mjs";
 import Seo from "../seo";
@@ -8,6 +9,7 @@ import { published, opportunityCard } from "../../lib/cms";
 export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/opportunities");
 export default async function Opportunities({ searchParams }) {
+  const copy = await siteSection("opportunities");
   const [records, params] = await Promise.all([
     published("opportunity"),
     searchParams,
@@ -36,42 +38,29 @@ export default async function Opportunities({ searchParams }) {
       <Seo path="/opportunities" />
       <header className="collection-masthead">
         <div>
-          <Eyebrow>REAL ESTATE · INDIA GULLY</Eyebrow>
-          <h1>Real Estate Listings</h1>
-          <p>Commercial property, hospitality assets and development opportunities.</p>
+          <Eyebrow>{copy["real-estate-india-gully"]}</Eyebrow>
+          <h1>{copy["real-estate-listings"]}</h1>
+          <p>{copy["commercial-property-hospitality-assets-and-development-opportunities"]}</p>
         </div>
-        <Link className="button" href="/contact?interest=List%20a%20property">
-          List your property <Arrow />
+        <Link className="button" href="/contact?interest=List%20a%20property">{copy["list-your-property"]} <Arrow />
         </Link>
       </header>
       <section className="collection-browser" aria-label="Browse properties">
         <Explorer items={items} contexts={contexts} initialFilters={filters} />
-        <p className="fine-note">
-          Portfolio references are not current offers. Availability, ownership
-          particulars, commercial terms and mandate status require confirmation.
-          Special-situation classifications appear only where supported by
-          approved information.
-        </p>
+        <p className="fine-note">{copy["portfolio-references-are-not-current-offers-availability"]}</p>
       </section>
       <section className="collection-service-band">
-        <Eyebrow>REAL ESTATE ADVISORY</Eyebrow>
-        <h2>
-          From property search<br />to transaction.
-        </h2>
+        <Eyebrow>{copy["real-estate-advisory"]}</Eyebrow>
+        <h2>{copy["from-property-search"]}<br />{copy["to-transaction"]}</h2>
         <div>
-          <p>
-            Whether you are acquiring an asset, seeking a development partner,
-            leasing a space or considering a sale, we connect your property
-            brief with the commercial advice it needs.
-          </p>
-          <Link className="text-link" href="/practices/real-estate">
-            Real Estate Listings & Advisory <Arrow />
+          <p>{copy["whether-you-are-acquiring-an-asset-seeking"]}</p>
+          <Link className="text-link" href="/practices/real-estate">{copy["real-estate-listings-advisory"]} <Arrow />
           </Link>
         </div>
       </section>
       <ContactBand
-        title="A specific property in mind?"
-        text="Share your preferred location, asset class, transaction objective and investment parameters."
+        title={copy["title-a-specific-property-in-mind"]}
+        text={copy["text-share-your-preferred-location-asset-class-transaction"]}
         interest="Real Estate Listings & Advisory"
       />
     </main>

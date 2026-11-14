@@ -1,0 +1,400 @@
+{
+  "home": {
+    "src-images-city-jpg": "/images/city.jpg",
+    "alt-commercial-architecture-in-gurugram": "Commercial architecture in Gurugram",
+    "property-advisory-transactions": "PROPERTY · ADVISORY · TRANSACTIONS",
+    "distinctive-properties": "Distinctive properties.",
+    "considered-decisions": "Considered decisions.",
+    "connected-expertise": "Connected expertise.",
+    "discover-real-estate-and-hospitality-assets-across": "Discover real estate and hospitality assets across India.",
+    "find-the-right-property-shape-the-next": "Find the right property. Shape the next chapter.",
+    "browse-real-estate-listings": "Browse real estate listings",
+    "our-practices": "Our practices",
+    "est-2017": "EST. 2017",
+    "indian-roots": "Indian roots.",
+    "a-national-perspective": "A national perspective.",
+    "celebrating-desiness": "CELEBRATING DESINESS",
+    "browse-real-estate-listings-1": "Browse real estate listings ↓",
+    "find-a-practice-property-or-product": "Find a practice, property or product",
+    "placeholder-location-asset-type-service-or-sku": "Location, asset type, service or SKU",
+    "search": "Search",
+    "our-practices-2": "Our practices ↓",
+    "real-estate-listings": "Real Estate Listings ↓",
+    "horeca-catalogue": "HORECA catalogue",
+    "real-estate-is-at-our-core": "REAL ESTATE IS AT OUR CORE",
+    "real-estate-listings-3": "Real Estate Listings",
+    "explore-commercial-properties-hospitality-assets-and-development": "Explore commercial properties, hospitality assets and development opportunities, with a team that understands the business behind them.",
+    "view-all-properties": "View all properties",
+    "your-next-property-starts-with-a-brief": "Your next property starts with a brief.",
+    "tell-us-your-location-asset-class-and": "Tell us your location, asset class and transaction objectives. Our team will confirm suitable properties and their current availability.",
+    "share-your-requirement": "Share your requirement",
+    "portfolio-references-are-clearly-identified-current-availability": "Portfolio references are clearly identified. Current availability and mandate status are confirmed by our team.",
+    "bring-your-property-to-market": "Bring your property to market",
+    "the-practices": "THE PRACTICES",
+    "specialist-depth": "Specialist depth.",
+    "a-shared-commercial-view": "A shared commercial view.",
+    "choose-the-discipline-that-fits-your-brief": "Choose the discipline that fits your brief. We bring the connected expertise that the assignment requires.",
+    "our-perspective": "OUR PERSPECTIVE",
+    "assets-capital-and": "Assets, capital and",
+    "operations-are-connected": "operations are connected.",
+    "so-are-we": "So are we.",
+    "a-property-decision-is-also-a-business": "A property decision is also a business decision. A transaction has to work beyond the signing table.",
+    "india-gully-brings-together-real-estate-advisory": "India Gully brings together real estate advisory, transaction preparation, debt and special situations, hospitality projects and HORECA procurement. We work with owners, promoters, investors and operators to connect the commercial case with a practical delivery plan.",
+    "our-story-and-approach": "Our story and approach",
+    "src-images-dining-jpg": "/images/dining.jpg",
+    "alt-hospitality-dining-experience": "Hospitality dining experience",
+    "hospitality-design-coordination-pmc": "HOSPITALITY / DESIGN COORDINATION / PMC",
+    "a-distinctive-experience": "A distinctive experience.",
+    "a-sound-business-behind-it": "A sound business behind it.",
+    "from-feasibility-and-operator-selection-to-design": "From feasibility and operator selection to design coordination, project management and opening readiness. Keep the owner’s objectives and the guest experience in the same conversation.",
+    "feasibility": "Feasibility",
+    "operator-strategy": "Operator strategy",
+    "design-coordination": "Design coordination",
+    "pmc": "PMC",
+    "explore-project-delivery": "Explore project delivery",
+    "selected-work": "SELECTED WORK",
+    "experience-in-context": "Experience in context.",
+    "explore-our-work": "Explore our work",
+    "horeca-procurement": "HORECA PROCUREMENT",
+    "every-detail-contributes": "Every detail contributes",
+    "to-the-experience": "to the experience.",
+    "tableware-linen-equipment-housekeeping-and-operating-supplies": "Tableware, linen, equipment, housekeeping and operating supplies. Build a sourcing brief around your specifications, budget and delivery programme.",
+    "explore-procurement": "Explore procurement",
+    "complimentary-valuation-studio": "COMPLIMENTARY VALUATION STUDIO",
+    "understand-the-assumptions": "Understand the assumptions",
+    "behind-the-number": "behind the number.",
+    "explore-property-income-capitalisation-discounted-cash-flow": "Explore property income capitalisation, discounted cash flow and hotel enterprise value. Adjust the inputs and compare indicative scenarios.",
+    "open-valuation-tools": "Open valuation tools",
+    "the-people-behind-the-practice": "THE PEOPLE BEHIND THE PRACTICE",
+    "senior-experience": "Senior experience.",
+    "direct-involvement": "Direct involvement.",
+    "meet-our-leadership": "Meet our leadership",
+    "perspectives": "PERSPECTIVES",
+    "questions-that-shape": "Questions that shape",
+    "better-decisions": "better decisions.",
+    "read-all-perspectives": "Read all perspectives",
+    "title-what-are-you-planning-next": "What are you planning next?",
+    "text-an-asset-a-transaction-a-hospitality-project": "An asset, a transaction, a hospitality project or a procurement brief. Let’s start with your commercial priorities."
+  },
+  "home-layout": [
+    "hero",
+    "search",
+    "listings",
+    "trust",
+    "practices",
+    "perspective",
+    "hospitality",
+    "work",
+    "services",
+    "leadership",
+    "confidentiality",
+    "insights",
+    "contact"
+  ],
+  "about": {
+    "2017": "2017",
+    "src-images-city-jpg": "/images/city.jpg",
+    "alt-india-s-evolving-commercial-landscape": "India’s evolving commercial landscape",
+    "our-story-established-2017": "OUR STORY / ESTABLISHED 2017",
+    "rooted-in-india": "Rooted in India.",
+    "built-around-possibility": "Built around possibility.",
+    "advisory-transactions-and-delivery": "Advisory, transactions and delivery.",
+    "connected-by-people-who-understand-the-business": "Connected by people who understand the business.",
+    "discover-india-gully": "Discover India Gully",
+    "celebrating-desiness": "CELEBRATING DESINESS",
+    "who-we-are": "WHO WE ARE",
+    "how-we-work": "HOW WE WORK",
+    "principles-that-guide": "Principles that guide",
+    "the-engagement": "the engagement.",
+    "professional-standards-matter-in-the-everyday-decisions": "Professional standards matter in the everyday decisions: what we disclose, how we assess a brief and who remains accountable.",
+    "the-india-gully-journey": "THE INDIA GULLY JOURNEY",
+    "built-through-experience": "Built through experience.",
+    "expanded-with-purpose": "Expanded with purpose.",
+    "each-chapter-has-added-a-new-perspective": "Each chapter has added a new perspective. Together, they have shaped a practice that connects commercial insight with the detail of execution.",
+    "today": "TODAY",
+    "explore-our-practices": "Explore our practices",
+    "our-leadership": "OUR LEADERSHIP",
+    "experience-with": "Experience with",
+    "personal-accountability": "personal accountability.",
+    "meet-the-team": "Meet the team",
+    "the-company-behind-the-brand": "THE COMPANY BEHIND THE BRAND",
+    "vivacious-entertainment-and": "Vivacious Entertainment and",
+    "hospitality-private-limited": "Hospitality Private Limited",
+    "established": "Established",
+    "2017-new-delhi-india": "2017 · New Delhi, India",
+    "corporate-identity-number": "Corporate identity number",
+    "u74999dl2017ptc323237": "U74999DL2017PTC323237",
+    "gst-registration": "GST registration",
+    "07aagcv0867p1zn": "07AAGCV0867P1ZN",
+    "title-a-commercial-question-deserves-a-considered-conversation": "A commercial question deserves a considered conversation."
+  },
+  "practices": {
+    "eyebrow-our-practices": "OUR PRACTICES",
+    "commercial-perspective": "Commercial perspective.",
+    "across-the-lifecycle": "Across the lifecycle.",
+    "description-a-connected-set-of-advisory-and-delivery": "A connected set of advisory and delivery capabilities, organised around the decisions owners, promoters and investors need to make.",
+    "browse-real-estate-listings": "Browse real estate listings",
+    "explore-the-practice": "Explore the practice"
+  },
+  "practice-detail": {
+    "browse-real-estate-listings": "Browse real estate listings",
+    "discuss-your-requirement": "Discuss your requirement",
+    "home": "Home",
+    "our-practices": "Our practices",
+    "how-we-can-help": "HOW WE CAN HELP",
+    "from-the-question": "From the question",
+    "to-the-next-decision": "to the next decision.",
+    "a-clear-scope": "A CLEAR SCOPE",
+    "work-with-a-defined-outcome": "Work with a defined outcome.",
+    "every-engagement-begins-with-the-objective-available": "Every engagement begins with the objective, available information, responsibilities and a clear scope of deliverables.",
+    "india-gully-acts-as-an-adviser-and": "India Gully acts as an adviser and facilitator, not a lender. Funding and transaction outcomes depend on counterparties, diligence, approvals and agreed terms.",
+    "specialist-legal-tax-audit-and-technical-opinions": "Specialist legal, tax, audit and technical opinions are provided by the appropriately appointed professionals."
+  },
+  "projects": {
+    "eyebrow-hospitality-design-coordination-pmc": "HOSPITALITY / DESIGN COORDINATION / PMC",
+    "a-considered-concept": "A considered concept.",
+    "a-coordinated-delivery": "A coordinated delivery.",
+    "description-bring-the-owner-s-commercial-objectives-the": "Bring the owner’s commercial objectives, the designer’s vision and the operator’s requirements into one project brief.",
+    "image-images-dining-jpg": "/images/dining.jpg",
+    "alt-hospitality-dining-environment": "Hospitality dining environment",
+    "discuss-a-project": "Discuss a project",
+    "the-project-lifecycle": "THE PROJECT LIFECYCLE",
+    "join-the-decisions-together": "Join the decisions together.",
+    "greenfield-development-repositioning-or-a-project-already": "Greenfield development, repositioning or a project already under way. The scope starts with the stage you are at and the decisions that remain.",
+    "owner-focused-project-management": "OWNER-FOCUSED PROJECT MANAGEMENT",
+    "clarity-on-progress": "Clarity on progress.",
+    "visibility-on-decisions": "Visibility on decisions.",
+    "project-management-consultancy-brings-structure-to-the": "Project management consultancy brings structure to the programme and the interfaces between appointed parties.",
+    "design-coordination": "DESIGN COORDINATION",
+    "keep-the-brief-connected-to-operations": "Keep the brief connected to operations.",
+    "coordinate-architectural-interior-mep-kitchen-and-specialist": "Coordinate architectural, interior, MEP, kitchen and specialist interfaces with the appointed consultants. Review guest and service flows, room standards, back-of-house needs and procurement dependencies.",
+    "procurement": "PROCUREMENT",
+    "make-specification-and-delivery-visible": "Make specification and delivery visible.",
+    "organise-boqs-vendor-comparisons-samples-approvals-delivery": "Organise BOQs, vendor comparisons, samples, approvals, delivery schedules and installation interfaces. Keep substitutions and commercial changes traceable.",
+    "detailed-design-engineering-statutory-submissions-certifications-and": "Detailed design, engineering, statutory submissions, certifications and safety assessments remain with the qualified professionals appointed for those scopes.",
+    "title-where-is-your-project-today": "Where is your project today?",
+    "stages": [
+      [
+        "Define",
+        "Establish the commercial brief, target guest, positioning and scope."
+      ],
+      [
+        "Evaluate",
+        "Test the operating model, financial scenarios and operator requirements."
+      ],
+      [
+        "Coordinate",
+        "Align the design team, owner decisions, programme and cost plan."
+      ],
+      [
+        "Deliver",
+        "Track project progress, procurement, interfaces and issue resolution."
+      ],
+      [
+        "Prepare",
+        "Coordinate handover, supplies and the operating team’s opening requirements."
+      ]
+    ]
+  },
+  "horeca": {
+    "eyebrow-hotels-restaurants-caf-s": "HOTELS. RESTAURANTS. CAFÉS.",
+    "the-right-detail": "The right detail.",
+    "for-every-operation": "For every operation.",
+    "description-horeca-procurement-organised-around-what-the-operation": "HORECA procurement organised around what the operation needs: a clear specification, comparable commercial terms and a practical delivery plan.",
+    "image-images-dining-jpg": "/images/dining.jpg",
+    "alt-tableware-and-service-in-a-restaurant": "Tableware and service in a restaurant",
+    "share-your-procurement-brief": "Share your procurement brief",
+    "procurement-categories": "PROCUREMENT CATEGORIES",
+    "from-the-kitchen": "From the kitchen",
+    "to-the-guest-room": "to the guest room.",
+    "plan-a-complete-opening-requirement-source-a": "Plan a complete opening requirement, source a defined category or review an existing BOQ with the team.",
+    "discuss-this-category": "Discuss this category",
+    "from-requirement-to-delivery": "FROM REQUIREMENT TO DELIVERY",
+    "compare-like-for-like": "Compare like for like.",
+    "product-descriptions-quantities-and-commercial-terms-need": "Product descriptions, quantities and commercial terms need to line up before a price comparison becomes meaningful.",
+    "bring-us-the-working-requirement": "Bring us the working requirement.",
+    "a-boq-category-list-or-opening-brief": "A BOQ, category list or opening brief is a useful starting point. Include quantities, destination, required delivery dates and any approved brands or specifications. The team can then identify the information needed for a comparable quotation.",
+    "read-our-procurement-perspective": "Read our procurement perspective",
+    "plan-your-requirement-with-pavan": "Plan your requirement with Pavan.",
+    "title-let-s-build-the-right-requirement": "Let’s build the right requirement.",
+    "categories": [
+      [
+        "Tableware & service",
+        "Crockery, cutlery, glassware, buffet and banquet service requirements."
+      ],
+      [
+        "Kitchen & refrigeration",
+        "Preparation, cooking, refrigeration, washing and specialist kitchen equipment."
+      ],
+      [
+        "Linen & guest supplies",
+        "Bed, bath and table linen, in-room amenities and operating consumables."
+      ],
+      [
+        "Housekeeping & cleaning",
+        "Cleaning machines, housekeeping equipment, trolleys and operational supplies."
+      ],
+      [
+        "Furniture, fixtures & equipment",
+        "Project furniture, selected fixtures and equipment coordinated to the approved brief."
+      ],
+      [
+        "Project procurement",
+        "BOQ consolidation, specification comparison, vendor coordination and delivery planning."
+      ]
+    ]
+  },
+  "opportunities": {
+    "real-estate-india-gully": "REAL ESTATE · INDIA GULLY",
+    "real-estate-listings": "Real Estate Listings",
+    "commercial-property-hospitality-assets-and-development-opportunities": "Commercial property, hospitality assets and development opportunities.",
+    "list-your-property": "List your property",
+    "portfolio-references-are-not-current-offers-availability": "Portfolio references are not current offers. Availability, ownership particulars, commercial terms and mandate status require confirmation. Special-situation classifications appear only where supported by approved information.",
+    "real-estate-advisory": "REAL ESTATE ADVISORY",
+    "from-property-search": "From property search",
+    "to-transaction": "to transaction.",
+    "whether-you-are-acquiring-an-asset-seeking": "Whether you are acquiring an asset, seeking a development partner, leasing a space or considering a sale, we connect your property brief with the commercial advice it needs.",
+    "real-estate-listings-advisory": "Real Estate Listings & Advisory",
+    "title-a-specific-property-in-mind": "A specific property in mind?",
+    "text-share-your-preferred-location-asset-class-transaction": "Share your preferred location, asset class, transaction objective and investment parameters."
+  },
+  "insights": {
+    "eyebrow-india-gully-perspectives": "INDIA GULLY PERSPECTIVES",
+    "questions-worth-asking": "Questions worth asking.",
+    "decisions-worth-preparing-for": "Decisions worth preparing for.",
+    "description-practical-perspectives-on-the-commercial-and-operational": "Practical perspectives on the commercial and operational questions behind assets, transactions and projects."
+  },
+  "our-work": {
+    "eyebrow-selected-experience": "SELECTED EXPERIENCE",
+    "different-businesses": "Different businesses.",
+    "a-considered-approach": "A considered approach.",
+    "description-a-selection-of-engagements-across-transactions-retail": "A selection of engagements across transactions, retail destinations, hospitality projects and procurement. Each assignment reflects a specific scope of involvement.",
+    "image-images-dining-jpg": "/images/dining.jpg",
+    "alt-hospitality-dining-setting": "Hospitality dining setting",
+    "our-work": "OUR WORK",
+    "experience-across": "Experience across",
+    "the-commercial-lifecycle": "the commercial lifecycle.",
+    "historical-assignments-are-presented-separately-from-current": "Historical assignments are presented separately from current opportunities. Named engagements do not imply a current exclusive mandate or endorsement.",
+    "title-bring-your-brief-into-focus": "Bring your brief into focus."
+  },
+  "leadership": {
+    "eyebrow-the-people-behind-the-practice": "THE PEOPLE BEHIND THE PRACTICE",
+    "leadership-that-stays": "Leadership that stays",
+    "close-to-the-work": "close to the work.",
+    "description-sector-experience-direct-engagement-and-clear-accountability": "Sector experience, direct engagement and clear accountability. Meet the people leading India Gully’s advisory, real estate and hospitality practices.",
+    "title-start-with-the-right-conversation": "Start with the right conversation."
+  },
+  "contact": {
+    "eyebrow-start-a-conversation": "START A CONVERSATION",
+    "what-comes-next": "What comes next",
+    "starts-here": "starts here.",
+    "description-tell-us-about-the-asset-transaction-or": "Tell us about the asset, transaction or project you have in mind. A clear initial brief helps us understand where to begin.",
+    "india-gully": "INDIA GULLY",
+    "let-s-understand": "Let’s understand",
+    "your-priorities": "your priorities.",
+    "real-estate-transaction-advisory-debt-and-special": "Real estate · Transaction advisory · Debt and special situations · Hospitality and PMC · Retail · Entertainment · HORECA",
+    "please-keep-your-first-message-to-a": "Please keep your first message to a non-confidential summary. The team can agree an appropriate process for detailed documents."
+  },
+  "valuation": {
+    "india-gully-advisory": "INDIA GULLY ADVISORY",
+    "a-clearer-view": "A clearer view",
+    "of": "of",
+    "value": "value.",
+    "explore-the-economics-of-your-property-or": "Explore the economics of your property or hospitality business. Understand the assumptions behind every number.",
+    "01-income-approach": "01 / Income approach",
+    "02-discounted-cash-flow": "02 / Discounted cash flow",
+    "03-hotel-enterprise-value": "03 / Hotel enterprise value",
+    "value-starts-with": "VALUE STARTS WITH",
+    "the-right-questions": "THE RIGHT QUESTIONS.",
+    "india-gully-valuation-studio": "INDIA GULLY / VALUATION STUDIO",
+    "sample-assumptions-are-editable-and-are-not": "Sample assumptions are editable and are not market benchmarks.",
+    "the-methodology": "THE METHODOLOGY",
+    "transparent-by-design": "Transparent by design.",
+    "every-result-uses-your-assumptions-these-calculators": "Every result uses your assumptions. These calculators provide indicative scenarios, not a certified valuation or investment recommendation.",
+    "income-capitalisation": "Income capitalisation",
+    "capitalise-annual-net-operating-income-after-a": "Capitalise annual net operating income after a clearly stated capital reserve. NOI must already reflect vacancy and operating costs.",
+    "discounted-cash-flow": "Discounted cash flow",
+    "discount-each-year-s-cash-flow-and": "Discount each year’s cash flow and the net exit proceeds to today. Year 1 is your entered figure, with growth starting in Year 2.",
+    "hotel-enterprise-value": "Hotel enterprise value",
+    "estimate-revenue-and-ebitda-then-apply-a": "Estimate revenue and EBITDA, then apply a multiple. The equity bridge adjusts for debt and surplus cash. Property ownership and lease terms require separate review.",
+    "from-scenario-to-decision": "FROM SCENARIO TO DECISION",
+    "your-asset-deserves": "Your asset deserves",
+    "a-closer-look": "a closer look.",
+    "discuss-the-operating-model-location-title-condition": "Discuss the operating model, location, title, condition and market evidence with India Gully.",
+    "discuss-your-asset": "Discuss your asset"
+  },
+  "nda": {
+    "eyebrow-confidentiality-registered-access": "CONFIDENTIALITY / REGISTERED ACCESS",
+    "a-considered-process": "A considered process.",
+    "a-confidential-conversation": "A confidential conversation.",
+    "description-understand-the-opportunity-before-the-detail-our": "Understand the opportunity before the detail. Our disclosure process connects a verified account, the applicable confidentiality terms and a review of your information request.",
+    "manage-nda-access-requests": "Manage NDA & access requests",
+    "the-disclosure-journey": "THE DISCLOSURE JOURNEY",
+    "four-steps": "Four steps.",
+    "clear-responsibilities": "Clear responsibilities.",
+    "each-opportunity-has-its-own-disclosure-conditions": "Each opportunity has its own disclosure conditions. A public listing, registration or NDA acceptance does not guarantee access or confirm availability.",
+    "information-handling": "INFORMATION HANDLING",
+    "disclosure-should": "Disclosure should",
+    "serve-a-defined-purpose": "serve a defined purpose.",
+    "keep-your-evaluation-purpose-specific-the-team": "Keep your evaluation purpose specific. The team can then establish which documents are relevant and whether the mandate permits disclosure.",
+    "01": "01",
+    "public-briefs-without-exact-addresses": "Public briefs without exact addresses",
+    "02": "02",
+    "verified-registration-and-policy-acceptance": "Verified registration and policy acceptance",
+    "03": "03",
+    "versioned-agreement-and-acceptance-record": "Versioned agreement and acceptance record",
+    "04": "04",
+    "separate-review-of-each-information-request": "Separate review of each information request",
+    "frequently-asked-questions": "FREQUENTLY ASKED QUESTIONS",
+    "title-need-clarity-before-requesting-access": "Need clarity before requesting access?",
+    "steps": [
+      [
+        "Explore the brief",
+        "Review the approved public overview, broad location and transaction context."
+      ],
+      [
+        "Register your interest",
+        "Use a verified account to identify the opportunity and explain your evaluation purpose."
+      ],
+      [
+        "Review the agreement",
+        "Read the applicable NDA version and record your name, authority and explicit acceptance."
+      ],
+      [
+        "Obtain approval",
+        "India Gully reviews the request and confirms what information may be shared and how."
+      ]
+    ],
+    "faqs": [
+      [
+        "Why is some information restricted?",
+        "Property identity, precise addresses, ownership information, financials and transaction documents can be commercially sensitive. The public brief is designed to support an initial conversation without disclosing the full information set."
+      ],
+      [
+        "Does accepting an NDA give me immediate access?",
+        "No. Acceptance and disclosure approval are separate steps. India Gully reviews the purpose, mandate conditions and authority to disclose before approving information sharing."
+      ],
+      [
+        "How is my acceptance recorded?",
+        "The account workflow records the agreement text and version, a hash of that text, your typed name and organisation, your confirmation of authority and the server-recorded acceptance time. A receipt is retained in your account."
+      ],
+      [
+        "Can I sign for my organisation?",
+        "Only if you are authorised to do so. Enter your own full name and the organisation you represent. Additional authorisation or a separately executed agreement may be required for a particular mandate."
+      ],
+      [
+        "Can I withdraw my request?",
+        "You can withdraw an open request in your account. Withdrawal ends the access request; it does not cancel confidentiality obligations already accepted."
+      ],
+      [
+        "What if a separate NDA is required?",
+        "Some owners, lenders, insolvency professionals or transaction processes require their own documents. India Gully will identify the applicable process. A general website acceptance does not replace those requirements."
+      ]
+    ]
+  },
+  "search": {
+    "eyebrow-find-your-next-step": "FIND YOUR NEXT STEP",
+    "title-search-india-gully": "Search India Gully.",
+    "description-explore-our-practices-real-estate-listings-horeca": "Explore our practices, real estate listings, HORECA products, selected work and insights in one place."
+  }
+}

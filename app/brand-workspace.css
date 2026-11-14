@@ -881,3 +881,13 @@
 .staff-workspace .client-contact-summary{display:block;font-weight:400;margin-top:5px;line-height:1.7;overflow-wrap:anywhere}
 .staff-workspace .client-save-status:not(:empty){padding:18px 20px;border-left:3px solid #30302d;background:#f3f3ef;margin:22px 0}
 @media(max-width:640px){.staff-workspace .client-add-contacts{padding:14px}.staff-workspace .client-contact-card{padding:14px}}
+
+.site-editor-form fieldset { min-width: 0; border: 0; padding: 0; }
+.site-editor-form label, .site-editor-fields { display: grid; gap: .5rem; }
+.site-editor-fields { grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr)); gap: 1rem; }
+.site-editor-form textarea, .site-editor-form input { width: 100%; padding: .75rem; border: 1px solid #ccc; font: inherit; }
+.site-editor-form .site-editor-group { grid-column: 1/-1; margin: 1rem 0; }
+.site-editor-row { border-bottom: 1px solid #ddd; padding: .8rem 0; }
+.site-editor-row summary { cursor: pointer; font-weight: 600; }
+.site-editor-row[open] summary { margin-bottom: 1rem; }
+.site-editor-form .workspace-actions { margin: .8rem 0; gap: .65rem; }

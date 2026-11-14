@@ -109,6 +109,7 @@ export default function ContentRegister({ module, items }) {
           <p>{description}</p>
         </div>
         <div className="workspace-actions">
+          {module === "cms" && <Link className="primary" href="/admin/cms/site">Edit website pages & menus</Link>}
           {module === "catalogue" && (
             <Link className="primary" href="/admin/catalogue/import">
               Upload brand catalogue

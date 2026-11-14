@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import MediaLibrary from "./media-library";
 import { listingImageBrief } from "../../lib/listing-images.mjs";
 export default function ListingImages({
+  contentId,
   assets,
   jobs,
   practice,
@@ -24,7 +25,7 @@ export default function ListingImages({
       (x) =>
         x.practice === practice &&
         x.kind === "image" &&
-        !x.input.product_image_mode,
+        !x.input.product_image_mode && (!x.input.content_id || x.input.content_id === contentId),
     ),
     pending = results.some((x) =>
       ["queued", "submitting", "pending"].includes(x.status),
@@ -112,6 +113,7 @@ export default function ListingImages({
                 practice,
                 ratio: "1280:720",
                 prompt,
+                content_id: contentId,
                 request_id: request.current,
                 reference_media_id: mode === "enhance" ? source : undefined,
                 public_approved: f.get("approved") === "on",

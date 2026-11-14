@@ -8,7 +8,7 @@ import "./leadership.css";
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
-import { practices, contact } from "../lib/content.mjs";
+import { siteSection, livePractices } from "../lib/website";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: {
@@ -31,7 +31,7 @@ export const metadata = {
   manifest: "/manifest.webmanifest",
 };
 export default async function Layout({ children }) {
-  const business=await businessDetails();
+  const [business, groups, practices] = await Promise.all([businessDetails(), siteSection("navigation"), livePractices()]);
   return (
     <html lang="en">
       <body>
@@ -46,7 +46,7 @@ export default async function Layout({ children }) {
             Explore the valuation studio <Arrow />
           </Link>
         </div>
-        <Navigation />
+        <Navigation groups={groups} />
         {children}
         <footer className="site-footer">
           <div className="footer-top">
@@ -71,11 +71,11 @@ export default async function Layout({ children }) {
             <div>
               <h2>Our practices</h2>
               {practices.map((p) => (
-                <Link key={p.slug} href={"/practices/" + p.slug}>
+                <Link key={p.slug} href={p.href || "/practices/" + p.slug}>
                   {p.title}
                 </Link>
               ))}
-              <Link href="/horeca">HORECA Procurement</Link>
+
             </div>
             <div>
               <h2>Explore</h2>

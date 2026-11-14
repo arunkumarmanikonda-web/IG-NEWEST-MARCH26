@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
 export default async function PublishedPage({ params }) {
   const item = await lookup(params);
   if (!item) notFound();
-  if (["opportunity", "article", "product", "person", "project"].includes(item.kind))
+  if (["opportunity", "article", "product", "person", "project", "practice"].includes(item.kind))
     permanentRedirect(contentPath(item));
   return <PublishedContent item={item} />;
 }

@@ -1,3 +1,4 @@
+import { siteRecordSlugs } from "../../../lib/site-cms-records.mjs";
 import ProcurementManager from "../procurement-manager";
 import MediaLibrary from "../media-library";
 import OperationsWorkspace from "../operations/workspace";
@@ -101,7 +102,7 @@ export default async function Module({ params, searchParams }) {
     let query = client
       .from("ig_content")
       .select(
-        "id,kind,practice,title,status,version,published_version,public_data,updated_at",
+        "id,kind,slug,practice,title,status,version,published_version,public_data,updated_at",
       )
       .order("updated_at", { ascending: false })
       .limit(1000);
@@ -127,7 +128,7 @@ export default async function Module({ params, searchParams }) {
     ) : (
       <ContentRegister
         module={module === "content" ? "cms" : module}
-        items={(data || []).map((r) => ({
+        items={(data || []).filter(x => x.kind !== "page" || !siteRecordSlugs.includes(x.slug)).map((r) => ({
           ...r,
           live_version: versions.get(r.id) || null,
         }))}

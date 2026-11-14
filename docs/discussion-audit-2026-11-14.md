@@ -4,7 +4,20 @@ This is the current requirement-by-requirement review. It replaces blanket compl
 
 **Status definitions:** Verified = observed live or supported by production evidence; Implemented = code/database controls exist, with the stated test scope; Partial = a substantive requested capability is still missing; Activation = a person/provider configuration is required; Acceptance = a representative real business workflow remains unobserved. These labels are deliberately distinct.
 
-## Material gaps still open
+## Follow-up release and evidence
+
+| Workstream | Verified result | Remaining acceptance |
+|---|---|---|
+| Website CMS | Nineteen sections cover the main page templates, homepage order and visibility, header menus, company journey and practice profiles. Draft and immediate publication can use the established CMS records. | Scheduled releases require the dedicated database migration. |
+| HORECA products | The production register holds 50 Ariane drafts with independent SKUs, covering 39 crockery and 11 cutlery references. Manufacturer data was separated from the private quotation. | Product photograph review and publication remain with the catalogue editor. The original Ankur PDF and Trillion upload pair were unavailable for a repeat test. |
+| AI images | Source-first drafts and catalogue imports can request a private illustrative image when a source image is missing. Provider limits and editorial review govern publication. | An actual provider completion against the original files is unverified. |
+| Marketing | Both application configuration flags and the database delivery flag are enabled. Eligible audiences remain practice-specific and opt-in. Recent published listings can supply campaign copy and opted-in customers can see relevant listings in their account. | Paid advertising and ad-platform conversion tracking need an advertiser account and budget. No campaign was released during this work. |
+| Operations and recovery | An isolated PostgreSQL rehearsal replayed the platform migrations and passed 23 procurement, 38 operations, 25 client-engagement, 21 payment-reconciliation, 20 brand-catalogue and 11 client-contact checks. A second database restored the rehearsal snapshot with its released copy and storage metadata intact. | A provider backup restore including object bytes, actual third-party sign-ins, a production refund and real report delivery are separate acceptance cases. |
+| Staff mail | The business mailbox portal exists. Production lacks the central Google OAuth client credentials. | Configure the OAuth application before each staff member connects their mailbox. Staff activation belongs to Arun. |
+
+[Production Ariane catalogue](https://indiagully.com/admin/catalogue) · [Capture of the catalogue](verification/ariane-drafts-2026-11-14.jpg)
+
+## Gaps recorded before the follow-up release
 
 1. **Complete CMS control is partial.** Listings, products, projects, articles, people and company-story records are editable. The home hero, practice presentation and journey milestones still contain code-managed copy. A CMS practice record currently has a generic published route; it does not replace the main `/practices/[slug]` page. A complete page/menu/block editor, publication scheduling and complete layout control are not delivered.
 2. **Business mailbox integration is not connected.** Production has zero connected staff mailboxes. The OAuth application setup and each person's authorisation are outstanding. Transactional enquiry/payment emails through Resend are a separate working service.

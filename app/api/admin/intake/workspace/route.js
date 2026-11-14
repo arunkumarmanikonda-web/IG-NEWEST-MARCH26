@@ -1,3 +1,4 @@
+import { queueDraftHero } from "../../../../../lib/draft-hero";
 import { isStaff } from "../../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../../lib/supabase/server";
 import {
@@ -20,6 +21,15 @@ export async function POST(request) {
       !staffVerified
     )
       throw new HttpError("Staff sign-in required", 403);
+    if (p.action === "hero") {
+      const { data: workspace } = await client.from("ig_content_intakes").select("actor_id,content_id,media_id,job_id").eq("id",p.id).maybeSingle();
+      if (!workspace || workspace.actor_id !== user.id || !workspace.job_id || p.approved !== true) throw new HttpError("Completed authorised intake required.",403);
+      if (workspace.media_id) return privateJson({status:"existing"});
+      const {data: record}=await client.from("ig_content").select("id,kind,practice,title,body,summary,public_data").eq("id",workspace.content_id).single();
+      if (!record) throw new HttpError("Saved draft unavailable.",409);
+      try { return privateJson({status:await queueDraftHero(client,record)}); }
+      catch(error){ throw new HttpError(error.message,409); }
+    }
     if (!["begin", "source", "finish", "media", "room"].includes(p.action))
       throw new HttpError("Unsupported action");
     if (p.action === "finish") {

@@ -97,6 +97,7 @@ export default async function EditPage({ params, searchParams }) {
           brand: catalogue?.brand,
           page: page.page_number,
           media_id: link.media_id,
+          search_phrases: product?.search_phrases,
           evidence: product?.evidence,
           review_notes: product?.review_notes,
         };
@@ -159,6 +160,7 @@ export default async function EditPage({ params, searchParams }) {
     <Editor
       key={item?.id + "-" + item?.version + "-" + item?.status}
       item={item}
+      imageState={q?.image}
       initialKind={q?.kind}
       seed={seed}
       catalogueSource={catalogueSource}

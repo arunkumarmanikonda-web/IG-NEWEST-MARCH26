@@ -1,3 +1,4 @@
+import { siteSection, livePractices } from "../../lib/website";
 import { publishedSearchRecords } from "../../lib/cms";
 import { buildSearchIndex } from "../../lib/site-search.mjs";
 import { PageHero } from "../components";
@@ -9,14 +10,15 @@ export const metadata = {
   alternates: { canonical: "/search" },
 };
 export default async function Search({ searchParams }) {
+  const copy = await siteSection("search");
   const p = await searchParams;
-  const items = buildSearchIndex(await publishedSearchRecords());
+  const items = buildSearchIndex(await publishedSearchRecords(), await livePractices());
   return (
     <main id="main">
       <PageHero
-        eyebrow="FIND YOUR NEXT STEP"
-        title="Search India Gully."
-        description="Explore our practices, real estate listings, HORECA products, selected work and insights in one place."
+        eyebrow={copy["eyebrow-find-your-next-step"]}
+        title={copy["title-search-india-gully"]}
+        description={copy["description-explore-our-practices-real-estate-listings-horeca"]}
       />
       <section className="section-pad">
         <Results

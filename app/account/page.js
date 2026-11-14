@@ -1,3 +1,4 @@
+import { recentUpdates } from "../../lib/practice-updates.mjs";
 import PolicyUnavailable from '../policy-unavailable';
 import {currentPolicies} from "../../lib/policies";
 import Link from "next/link";
@@ -32,10 +33,18 @@ export default async function AccountPage({ searchParams }) {
     policiesAccepted && !profile.must_change_password
       ? await client.rpc("ig_room_dashboard", { p: {} })
       : { data: [] };
+  const preferences = policiesAccepted ? await client.from("ig_consents").select("granted,practices")
+    .eq("user_id",user.id).eq("purpose","personalisation").order("created_at",{ascending:false}).order("id",{ascending:false}).limit(1).maybeSingle() : {};
+  const updates = preferences.data?.granted ? await recentUpdates(client,preferences.data.practices || []) : [];
   return (
     <main id="main" className="auth-page account-dashboard">
       <div>
         <Account profile={profile} email={user.email} policyVersion={policyVersion} policiesAccepted={policiesAccepted} pendingInvitation={signInStatus?.pending_invitation} />
+        {updates.length > 0 && <section className="shared-rooms">
+          <h2>Latest from your selected practices</h2>
+          {updates.slice(0,6).map(item=><Link key={item.id} className="workspace-card" href={item.path}><strong>{item.title}</strong><p>{item.summary}</p></Link>)}
+          <Link href="/account/preferences">Edit your interests</Link>
+        </section>}
         {rooms?.length > 0 && (
           <section className="shared-rooms">
             <div className="eyebrow">SHARED WITH YOU</div>

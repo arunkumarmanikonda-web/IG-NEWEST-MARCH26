@@ -1,61 +1,35 @@
+import { siteSection } from "../../lib/website";
 import { pageMeta } from "../../lib/seo.mjs";
 import Seo from "../seo";
 import { PageHero, Eyebrow, ContactBand, LinkButton } from "../components";
 export const metadata = pageMeta("/projects");
-const stages = [
-  [
-    "Define",
-    "Establish the commercial brief, target guest, positioning and scope.",
-  ],
-  [
-    "Evaluate",
-    "Test the operating model, financial scenarios and operator requirements.",
-  ],
-  [
-    "Coordinate",
-    "Align the design team, owner decisions, programme and cost plan.",
-  ],
-  [
-    "Deliver",
-    "Track project progress, procurement, interfaces and issue resolution.",
-  ],
-  [
-    "Prepare",
-    "Coordinate handover, supplies and the operating team’s opening requirements.",
-  ],
-];
-export default function Projects() {
+
+export default async function Projects() {
+  const copy = await siteSection("projects");
+  const stages = copy.stages;
   return (
     <main id="main">
       <Seo path="/projects" />
       <PageHero
-        eyebrow="HOSPITALITY / DESIGN COORDINATION / PMC"
+        eyebrow={copy["eyebrow-hospitality-design-coordination-pmc"]}
         title={
-          <>
-            A considered concept.
-            <br />
-            <em>A coordinated delivery.</em>
+          <>{copy["a-considered-concept"]}<br />
+            <em>{copy["a-coordinated-delivery"]}</em>
           </>
         }
-        description="Bring the owner’s commercial objectives, the designer’s vision and the operator’s requirements into one project brief."
-        image="/images/dining.jpg"
-        alt="Hospitality dining environment"
+        description={copy["description-bring-the-owner-s-commercial-objectives-the"]}
+        image={copy["image-images-dining-jpg"]}
+        alt={copy["alt-hospitality-dining-environment"]}
       >
-        <LinkButton href="/contact?interest=Hospitality%20project">
-          Discuss a project
-        </LinkButton>
+        <LinkButton href="/contact?interest=Hospitality%20project">{copy["discuss-a-project"]}</LinkButton>
       </PageHero>
       <section className="section-pad">
         <div className="section-heading">
           <div>
-            <Eyebrow>THE PROJECT LIFECYCLE</Eyebrow>
-            <h2>Join the decisions together.</h2>
+            <Eyebrow>{copy["the-project-lifecycle"]}</Eyebrow>
+            <h2>{copy["join-the-decisions-together"]}</h2>
           </div>
-          <p>
-            Greenfield development, repositioning or a project already under
-            way. The scope starts with the stage you are at and the decisions
-            that remain.
-          </p>
+          <p>{copy["greenfield-development-repositioning-or-a-project-already"]}</p>
         </div>
         <div className="process-list">
           {stages.map(([title, text]) => (
@@ -68,16 +42,9 @@ export default function Projects() {
       </section>
       <section className="scope-section">
         <div>
-          <Eyebrow>OWNER-FOCUSED PROJECT MANAGEMENT</Eyebrow>
-          <h2>
-            Clarity on progress.
-            <br />
-            Visibility on decisions.
-          </h2>
-          <p>
-            Project management consultancy brings structure to the programme and
-            the interfaces between appointed parties.
-          </p>
+          <Eyebrow>{copy["owner-focused-project-management"]}</Eyebrow>
+          <h2>{copy["clarity-on-progress"]}<br />{copy["visibility-on-decisions"]}</h2>
+          <p>{copy["project-management-consultancy-brings-structure-to-the"]}</p>
         </div>
         <ul className="output-list">
           {[
@@ -97,33 +64,20 @@ export default function Projects() {
       <section className="section-pad">
         <div className="service-grid">
           <article className="service-item">
-            <Eyebrow>DESIGN COORDINATION</Eyebrow>
-            <h3>Keep the brief connected to operations.</h3>
-            <p>
-              Coordinate architectural, interior, MEP, kitchen and specialist
-              interfaces with the appointed consultants. Review guest and
-              service flows, room standards, back-of-house needs and procurement
-              dependencies.
-            </p>
+            <Eyebrow>{copy["design-coordination"]}</Eyebrow>
+            <h3>{copy["keep-the-brief-connected-to-operations"]}</h3>
+            <p>{copy["coordinate-architectural-interior-mep-kitchen-and-specialist"]}</p>
           </article>
           <article className="service-item">
-            <Eyebrow>PROCUREMENT</Eyebrow>
-            <h3>Make specification and delivery visible.</h3>
-            <p>
-              Organise BOQs, vendor comparisons, samples, approvals, delivery
-              schedules and installation interfaces. Keep substitutions and
-              commercial changes traceable.
-            </p>
+            <Eyebrow>{copy["procurement"]}</Eyebrow>
+            <h3>{copy["make-specification-and-delivery-visible"]}</h3>
+            <p>{copy["organise-boqs-vendor-comparisons-samples-approvals-delivery"]}</p>
           </article>
         </div>
-        <p className="fine-note">
-          Detailed design, engineering, statutory submissions, certifications
-          and safety assessments remain with the qualified professionals
-          appointed for those scopes.
-        </p>
+        <p className="fine-note">{copy["detailed-design-engineering-statutory-submissions-certifications-and"]}</p>
       </section>
       <ContactBand
-        title="Where is your project today?"
+        title={copy["title-where-is-your-project-today"]}
         interest="Hospitality project"
       />
     </main>

@@ -31,6 +31,7 @@ export default function Editor({
   catalogueSource = null,
   intake = null,
   canResumeIntake = false,
+  imageState,
 }) {
   const editorForm = useRef(null);
   const router = useRouter(),
@@ -195,6 +196,8 @@ export default function Editor({
                 ? "product"
                 : "content")}
       </h2>
+      {imageState === "queued" && <p role="status">Your illustrative image is in the image studio below for review.</p>}
+      {imageState === "review" && <p role="status">Draft saved. Automatic image generation needs attention. Open the image studio below to retry.</p>}
       {item && (
         <div className="workspace-actions">
           <Link
@@ -707,7 +710,7 @@ export default function Editor({
           Search keywords / phrases
           <input
             name="seo_keywords"
-            defaultValue={data.seo_keywords || ""}
+            defaultValue={data.seo_keywords || (catalogueSource && [catalogueSource.search_phrases,initial.title,data.category,data.brand,data.reference].filter(Boolean).join(", ").slice(0,500)) || ""}
             maxLength={500}
             placeholder="Property type, location and relevant transaction phrases, separated by commas"
           />
@@ -733,7 +736,7 @@ export default function Editor({
           SEO title
           <input
             name="seo_title"
-            defaultValue={initial.seo_title || ""}
+            defaultValue={initial.seo_title || (catalogueSource && [initial.title,data.brand].filter(Boolean).join(" | ").slice(0,90)) || ""}
             maxLength={90}
           />
         </label>
@@ -741,7 +744,7 @@ export default function Editor({
           Search description
           <textarea
             name="seo_description"
-            defaultValue={initial.seo_description || ""}
+            defaultValue={initial.seo_description || (catalogueSource && initial.summary?.slice(0,200)) || ""}
             maxLength={200}
           />
         </label>
@@ -775,6 +778,7 @@ export default function Editor({
         />
       ) : ["opportunity", "project"].includes(kind) ? (
         <ListingImages
+          contentId={item?.id}
           assets={mediaAssets}
           jobs={creativeJobs}
           practice={selectedPractice}

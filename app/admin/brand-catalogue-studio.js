@@ -27,6 +27,7 @@ export default function BrandCatalogueStudio({
     stop = useRef(false),
     [selected, setSelected] = useState(initialId || catalogues[0]?.id || ""),
     [busy, setBusy] = useState(false),
+    [autoImage,setAutoImage] = useState(true),
     [notice, setNotice] = useState(""),
     [file, setFile] = useState(null);
   useEffect(
@@ -49,12 +50,32 @@ export default function BrandCatalogueStudio({
     setBusy(true);
     let created = 0,
       completed = 0;
+    const imageIssues = new Set();
+    let pauseImages = false;
     try {
       for (let page = start; page <= last && !stop.current; page++) {
         setNotice(
           "Reading catalogue page " + page + " and creating product drafts…",
         );
         const d = await post({ action: "process", id, page });
+        if (autoImage && !pauseImages) {
+          for (const product of new Set(d.ids || [])) {
+            if (stop.current) break;
+            setNotice("Checking product imagery on page " + page + "…");
+            try {
+              let result = await post({action:"image",id,page,product,approved:true});
+              if (result.status === "wait") {
+                setNotice("Product drafts are saved. Waiting for the next image request…");
+                for (let n=0;n<result.seconds && !stop.current;n++) await new Promise(resolve=>setTimeout(resolve,1000));
+                if (!stop.current) result=await post({action:"image",id,page,product,approved:true});
+              }
+              if (["wait","failed","cancelled"].includes(result.status)) imageIssues.add("Some product images need review.");
+            } catch (e) {
+              imageIssues.add(e.message);
+              if (/daily|credit limit|disabled/i.test(e.message)) { pauseImages=true; break; }
+            }
+          }
+        }
         created += d.created;
         completed++;
         if (d.page_count) last = Math.min(last, d.page_count);
@@ -78,7 +99,7 @@ export default function BrandCatalogueStudio({
           completed +
           " pages processed; " +
           created +
-          " new product drafts created. Review product specifications and image matches before publication.",
+          " new product drafts created. Review product specifications and image matches before publication. " + [...imageIssues].join(" "),
       );
     } catch (e) {
       setNotice(
@@ -103,6 +124,10 @@ export default function BrandCatalogueStudio({
           </p>
         </div>
       </div>
+      <label className="check">
+        <input type="checkbox" checked={autoImage} disabled={busy} onChange={e=>setAutoImage(e.target.checked)} />
+        Generate a private illustrative image with Runway when a product has no matching source photograph. Your configured credit limit applies.
+      </label>
       <form
         className="workspace-form"
         onSubmit={async (e) => {

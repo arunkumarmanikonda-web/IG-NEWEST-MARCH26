@@ -81,8 +81,7 @@ export default function Preferences({ history }) {
         ))}
       </fieldset>
       <p>
-        No advertising pixels or automated marketing delivery are active in this
-        preview.
+        You can change your interests or unsubscribe from practice updates at any time.
       </p>
       <button className="button" disabled={busy}>
         Save preferences

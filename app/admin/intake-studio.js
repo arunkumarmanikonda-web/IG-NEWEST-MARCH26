@@ -130,7 +130,8 @@ export default function IntakeStudio({
       workspaceRef.current = saved;
       setWorkspace(saved);
       // Extracted imagery remains private until an administrator reviews its identity and rights.
-      if (result.candidates?.length && !saved.media_id) {
+      let hasImage = Boolean(saved.media_id);
+      if (result.candidates?.length && !hasImage) {
         try {
           const candidate = result.candidates[0];
           const response = await fetch("/api/admin/source-media", {
@@ -149,17 +150,27 @@ export default function IntakeStudio({
             }),
           });
           const media = await response.json();
-          if (response.ok)
+          if (response.ok) {
             await intakeWorkspace({
               action: "media",
               id: current.id,
               media_id: media.id,
             });
+            hasImage = true;
+          }
         } catch {
           /* The saved draft remains available; the editor can retry image selection. */
         }
       }
-      router.replace("/admin/content/" + saved.content_id + "?generated=1");
+      let imageState = "";
+      if (!hasImage && ["product","opportunity"].includes(kind) && form.get("auto_image")) {
+        setMessage("Draft saved. Preparing its illustrative image…");
+        try {
+          const hero = await intakeWorkspace({action:"hero",id:current.id,approved:true});
+          imageState = hero.status === "existing" ? "" : "&image=" + (["failed","cancelled"].includes(hero.status) ? "review" : "queued");
+        } catch { imageState = "&image=review"; }
+      }
+      router.replace("/admin/content/" + saved.content_id + "?generated=1" + imageState);
       router.refresh();
     } catch (error) {
       setMessage(error.message);
@@ -347,6 +358,7 @@ export default function IntakeStudio({
             am authorised to process these sources with OpenAI and prepare
             public-facing drafts.
           </label>
+          {["product","opportunity"].includes(kind) && <label className="check wide"><input name="auto_image" type="checkbox" defaultChecked disabled={busy} />When no source photo is available, use the draft description to generate an illustrative image with Runway for review (estimated 5 credits).</label>}
           <div className="workspace-actions wide">
             <button className="primary" disabled={busy}>
               {busy

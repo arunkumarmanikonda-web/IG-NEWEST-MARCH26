@@ -1,23 +1,24 @@
+import { siteSection } from "../../lib/website";
 import { pageMeta } from "../../lib/seo.mjs";
 import Seo from "../seo";
 import Link from "next/link";
-import { practices } from "../../lib/content.mjs";
+import { livePractices } from "../../lib/website";
 import { PageHero, Eyebrow, Arrow, ContactBand } from "../components";
 export const metadata = pageMeta("/practices");
-export default function Practices() {
+export default async function Practices() {
+  const copy = await siteSection("practices");
+  const practices = await livePractices();
   return (
     <main id="main">
       <Seo path="/practices" />
       <PageHero
-        eyebrow="OUR PRACTICES"
+        eyebrow={copy["eyebrow-our-practices"]}
         title={
-          <>
-            Commercial perspective.
-            <br />
-            <em>Across the lifecycle.</em>
+          <>{copy["commercial-perspective"]}<br />
+            <em>{copy["across-the-lifecycle"]}</em>
           </>
         }
-        description="A connected set of advisory and delivery capabilities, organised around the decisions owners, promoters and investors need to make."
+        description={copy["description-a-connected-set-of-advisory-and-delivery"]}
       />
       <section className="section-pad">
         <div className="service-grid">
@@ -25,7 +26,7 @@ export default function Practices() {
             <article className="service-item" key={p.slug}>
               <Eyebrow>
                 {p.slug === "real-estate"
-                  ? "PROPERTY COLLECTION & ADVISORY"
+                  ? "REAL ESTATE LISTINGS & ADVISORY"
                   : "OUR EXPERTISE"}
               </Eyebrow>
               <h2>{p.title}</h2>
@@ -34,12 +35,10 @@ export default function Practices() {
                 <Link
                   href="/opportunities"
                   className="button practice-collection-cta"
-                >
-                  Browse real estate listings <Arrow />
+                >{copy["browse-real-estate-listings"]} <Arrow />
                 </Link>
               )}
-              <Link href={"/practices/" + p.slug} className="text-link">
-                Explore the practice <Arrow />
+              <Link href={p.href || "/practices/" + p.slug} className="text-link">{copy["explore-the-practice"]} <Arrow />
               </Link>
             </article>
           ))}

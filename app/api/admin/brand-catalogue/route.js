@@ -1,3 +1,4 @@
+import { queueDraftHero } from "../../../../lib/draft-hero";
 import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
@@ -51,6 +52,25 @@ export async function POST(request) {
         catalogue,
         upload: { path: data.path, token: data.token },
       });
+    }
+    if (p.action === "image") {
+      if (p.approved !== true) throw new HttpError("Image generation requires approval.");
+      const { data: pageRow, error: pageError } = await client.from("ig_catalogue_pages")
+        .select("id").eq("catalogue_id",p.id).eq("page_number",p.page).eq("status","ready").maybeSingle();
+      if (pageError || !pageRow) throw new HttpError("The completed catalogue page is unavailable.",404);
+      const { data: links, error: linkError } = await client.from("ig_catalogue_items")
+        .select("media_id,ig_source_media(state)").eq("page_id",pageRow.id).eq("content_id",p.product);
+      if (linkError || !links?.length) throw new HttpError("This product is unavailable on the selected page.",404);
+      if (links.some(row=>row.ig_source_media?.state === "ready")) return privateJson({status:"existing"});
+      const {data: record,error: recordError} = await client.from("ig_content")
+        .select("id,kind,practice,title,body,summary,public_data,status,published_version").eq("id",p.product).eq("kind","product").single();
+      if (recordError || !record) throw new HttpError("Product draft unavailable.",404);
+      if (record.status !== "draft" || record.published_version) return privateJson({status:"existing"});
+      try { return privateJson({status:await queueDraftHero(client,record)}); }
+      catch (e) {
+        if (/wait 30 seconds/i.test(e.message)) return privateJson({status:"wait",seconds:31});
+        throw new HttpError(e.message,409);
+      }
     }
     if (
       p.action !== "process" ||
