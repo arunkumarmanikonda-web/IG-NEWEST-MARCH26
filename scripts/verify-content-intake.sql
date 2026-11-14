@@ -36,6 +36,9 @@ begin
  bad=false;begin perform public.ig_content_intake(p||jsonb_build_object('id',w2->>'id'));exception when others then bad=true;end;assert bad,'AI job applied to another workspace';n=n+1;
  same=public.ig_content_intake(start||jsonb_build_object('kind','product','practice','horeca','request_id',gen_random_uuid()));
  assert exists(select 1 from public.ig_content where id=(same->>'content_id')::uuid and nullif(public_data->>'sku','') is not null),'Product SKU not automatic';n=n+1;
+ -- A withdrawn snapshot can still have a previously published revision recorded.
+ update public.ig_content set published_version=version where id=(w->>'content_id')::uuid;
+ assert (public.ig_admin_overview()->>'published')::int=(select count(*) from public.ig_public_content),'Dashboard count differs from live snapshots';n=n+1;
  select to_jsonb(c) into p from public.ig_content c where c.id=(w->>'content_id')::uuid;
  perform public.ig_save_content(p || '{"term_ids":[]}'::jsonb);
  assert not exists(select 1 from public.ig_content_tags where content_id=(w->>'content_id')::uuid),'Explicit tag removal failed';n=n+1;
