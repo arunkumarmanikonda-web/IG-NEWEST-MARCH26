@@ -29,7 +29,7 @@ The exact 8,027,336-byte Shirdi presentation matched the SHA-256 fingerprint of 
 4. **Real HORECA catalogue release is outstanding.** The import mechanism passed a live two-product fixture; production still has zero published products. Actual Ankur/Ariane imports, product-image matching, specifications and release require completion. Catalogue-import SEO uses generated titles/summaries as fallback; dedicated keyword population is not automatic on that particular route.
 5. **AI image creation is assisted, not wholly unattended.** Suitable extracted source media can be prepared privately. Generate/enhance controls are available, but an administrator still starts a generation where a suitable source image is absent and approves the image. An automatic fallback hero for every source-free draft is not established.
 6. **Operational acceptance is incomplete.** HORECA RFQ-to-delivery and PMC baseline-to-variation-to-progress controls passed transactional checks. Actual full commercial workflows, multiple real client sign-ins, and end-to-end client report circulation have not all been observed.
-7. **Staff onboarding remains open for Pavan and Amit.** Both invitations were still unaccepted in the production read on 14 November. Arun's staff session works. The exact previously requested password-reset outcome is unverified; this audit contains no credentials.
+7. **Staff onboarding remains open for Pavan and Amit.** Both invitations were still unaccepted in the production read on 14 November. Arun's staff session works. Arun withdrew the owner passcode reset.
 8. **Recovery acceptance remains open.** A database/Storage restore exercise, full recovery-password completion and production refund/failure acceptance are not established by the successful upload or live INR 10 collection tests.
 
 ## Request ledger
@@ -95,7 +95,7 @@ The exact 8,027,336-byte Shirdi presentation matched the SHA-256 fingerprint of 
 | 57 | Razorpay live, not test | Production live credentials and verified live collection | Verified; refund and failure/recovery acceptance remain open |
 | 58 | Staff/admin direct returning login, keep email, choose authenticator or email code | Saved sign-in state and either approved verification method | Verified Arun staff session; identity verification is still required for expired sessions |
 | 59 | Do not ask for already-recorded terms acceptance repeatedly | Original registration acceptance retained and duplicate consent prevented | Implemented in staff-verification migration |
-| 60 | Requested owner passcode reset without repeat change prompt | Owner can sign in; exact reset outcome not verified in this review | **Acceptance open**; no password copied into documentation or source |
+| 60 | Owner passcode reset | Withdrawn by the owner on 14 November | Closed |
 | 61 | HORECA RFQs, vendor comparison, quotes and fulfilment | Procurement workspace, customer/supplier portal and audited state transitions | Implemented; actual full commercial lifecycle acceptance remains open |
 | 62 | PMC programme, budget, variations and progress | Operational records and approval/baseline/progress controls | Implemented; actual programme lifecycle acceptance remains open |
 | 63 | AI drafting for other practice operations | Source-based operational drafting | Implemented; budget/award/payment approvals are explicit |

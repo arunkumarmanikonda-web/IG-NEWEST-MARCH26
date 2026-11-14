@@ -30,6 +30,7 @@ export default function Editor({
   creativeJobs = [],
   catalogueSource = null,
   intake = null,
+  roomFiles = [],
   canResumeIntake = false,
   imageState,
 }) {
@@ -253,6 +254,11 @@ export default function Editor({
             private data room. Publishing the listing does not grant anyone
             access to those documents.
           </p>
+          <h4>Files in the private data room</h4>
+          {roomFiles?.length ? <ul>{roomFiles.map(file => <li key={file.id}>
+            <strong>{file.name}</strong> · {new Intl.NumberFormat('en-IN').format(file.bytes)} bytes · {file.status}
+          </li>)}</ul> : <p>{roomFiles ? "No original files are visible in this room yet." : "The file register could not be loaded."}</p>}
+          <Link href={"/admin/data-rooms?room="+intake.room_id+"#room-access"}>Open files and access settings</Link>
           {!!intake.review?.review_questions?.length && (
             <div>
               <h4>Items to confirm</h4>

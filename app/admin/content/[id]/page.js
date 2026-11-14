@@ -48,6 +48,10 @@ export default async function EditPage({ params, searchParams }) {
         .eq("content_id", item.id)
         .maybeSingle()
     : { data: null };
+  const { data: sourceFiles, error: roomFileError } = intake?.room_id
+    ? await client.from("ig_room_files").select("id,name,folder,bytes,status")
+        .eq("room_id",intake.room_id).is("preview_for",null).order("created_at")
+    : { data: [], error: null };
   if (q?.generate === "1" && intake?.actor_id === user.id) {
     const { data: sourceJob } = intake.job_id
       ? await client
@@ -175,6 +179,7 @@ export default async function EditPage({ params, searchParams }) {
       seed={seed}
       catalogueSource={catalogueSource}
       intake={intake}
+      roomFiles={roomFileError ? null : sourceFiles}
       canResumeIntake={intake?.actor_id === user.id}
       mediaAssets={mediaAssets || []}
       creativeJobs={creativeJobs || []}
