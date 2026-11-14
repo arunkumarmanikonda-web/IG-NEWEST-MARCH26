@@ -1,3 +1,4 @@
+import AdvertisingEvent from "../advertising-event";
 import { siteSection } from "../../lib/website";
 import Link from "next/link";
 import { pageMeta } from "../../lib/seo.mjs";
@@ -35,7 +36,7 @@ export default async function Opportunities({ searchParams }) {
   );
   return (
     <main id="main" className="collection-page">
-      <Seo path="/opportunities" />
+      <Seo path="/opportunities" /><AdvertisingEvent practice="real-estate"/>
       <header className="collection-masthead">
         <div>
           <Eyebrow>{copy["real-estate-india-gully"]}</Eyebrow>

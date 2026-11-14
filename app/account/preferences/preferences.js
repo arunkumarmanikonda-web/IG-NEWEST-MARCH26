@@ -54,7 +54,7 @@ export default function Preferences({ history }) {
       {[
         ["email_marketing", "Email updates about your selected practices"],
         ["personalisation", "Use recorded interests to personalise updates"],
-        ["remarketing", "Advertising remarketing when enabled"],
+        ["remarketing", "Allow Google Ads to use my visits to selected practice pages and completed enquiries for personalised advertising and conversion measurement, when enabled"],
         ["sms", "Promotional SMS when enabled"],
       ].map(([id, label]) => (
         <label className="check" key={id}>

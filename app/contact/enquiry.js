@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import AdvertisingEvent from "../advertising-event";
 import Link from "next/link";
 import { contact } from "../../lib/content.mjs";
 import { Arrow } from "../components";
@@ -68,6 +69,7 @@ export default function Enquiry({ initialInterest, submitRequest = fetch }) {
         );
       setSaved({
         id: result.id,
+        ads:result.ads,
         name: d.get("name"),
         interest: d.get("interest"),
       });
@@ -92,6 +94,7 @@ export default function Enquiry({ initialInterest, submitRequest = fetch }) {
           ✓
         </span>
         <div className="eyebrow">ENQUIRY RECEIVED</div>
+        {saved.ads && <AdvertisingEvent practice={saved.ads.practice} receipt={saved.id} proof={saved.ads.proof}/>}
         <h2 id="enquiry-thanks">Thank you, {saved.name.split(" ")[0]}.</h2>
         <p>
           Your enquiry has been recorded for our advisory team. We will review

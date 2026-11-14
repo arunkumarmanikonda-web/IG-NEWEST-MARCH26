@@ -359,7 +359,7 @@ export default function Editor({
         <aside className="catalogue-source-panel">
           <span className="eyebrow">IMPORTED FROM BRAND CATALOGUE</span>
           <h3>
-            {catalogueSource.brand} · page {catalogueSource.page}
+            {catalogueSource.brand}{catalogueSource.page ? " · page "+catalogueSource.page : " · manufacturer photograph"}
           </h3>
           {catalogueSource.media_id && (
             <img

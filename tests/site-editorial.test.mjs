@@ -27,3 +27,13 @@ test("published property and catalogue campaign drafts use their own practice an
   }
   assert.equal(practiceUpdate({kind:"page",title:"Other page",slug:"page"}),null);
 });
+
+import {advertisingEvent} from "../lib/advertising.mjs";
+test("ad measurement requires the latest affirmative consent and a matching interest",()=>{
+  const input={id:"AW-123456",label:"Enquiry01",practice:"horeca",event:"enquiry",token:"a".repeat(64),granted:true,interests:["horeca"]};
+  assert.equal(advertisingEvent(input)[2].send_to,"AW-123456/Enquiry01");
+  assert.equal(advertisingEvent({...input,granted:false}),null);
+  assert.equal(advertisingEvent({...input,interests:["real-estate"]}),null);
+  assert.equal(advertisingEvent({...input,label:""}),null);
+  assert.equal(advertisingEvent({...input,token:"client@example.com"}),null);
+});

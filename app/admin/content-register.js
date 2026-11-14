@@ -1,4 +1,5 @@
 "use client";
+import CataloguePhotoImport from "./catalogue-photo-import";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -123,6 +124,7 @@ export default function ContentRegister({ module, items }) {
           </Link>
         </div>
       </div>
+      {module === "catalogue" && <CataloguePhotoImport/>}
       <div className="metric-grid">
         {[
           ["Total", items.length],

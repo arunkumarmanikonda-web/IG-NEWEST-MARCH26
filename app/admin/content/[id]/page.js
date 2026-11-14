@@ -115,6 +115,16 @@ export default async function EditPage({ params, searchParams }) {
       .maybeSingle();
     if (source) mediaAssets?.unshift(source);
   }
+  if (item?.kind === "product" && !catalogueSource?.media_id) {
+    const {data:matched} = await client.from("ig_source_media").select("id,alt,source_name,path,preset,state,published,practice")
+      .eq("practice","horeca").eq("state","ready").like("source_name","catalogue-photo-"+item.id+"-%")
+      .order("created_at",{ascending:false}).limit(1).maybeSingle();
+    if (matched) {
+      catalogueSource = {...catalogueSource, brand:item.public_data?.brand,media_id:matched.id,
+        evidence:catalogueSource?.evidence || "Photograph matched by manufacturer code "+item.public_data?.reference};
+      if (mediaAssets && !mediaAssets.some(m=>m.id===matched.id)) mediaAssets.unshift(matched);
+    }
+  }
   let seed = null;
   if (id === "new" && q?.ai) {
     const { data: job } = await client

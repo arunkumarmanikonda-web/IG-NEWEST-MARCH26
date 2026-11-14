@@ -66,7 +66,11 @@ export async function POST(request) {
         error.code === "P0429" ? 429 : 400,
       );
     after(async()=>{try{await dispatchEmailQueue(data.id);}catch{/* Queued record remains visible for controlled retry. */}});
-    return privateJson({ ok: true, ...data });
+    const interest=payload.practice.trim().toLowerCase();
+    const adsPractice=/^horeca(?: |$)/.test(interest)?"horeca":/^real estate(?: |$)/.test(interest)?"real-estate":null;
+    const conversion=adsPractice && data.id ? createHmac("sha256",secret).update("ads:"+data.id+":"+adsPractice).digest("hex") : null;
+    const ads=process.env.GOOGLE_ADS_ENQUIRY_LABEL && conversion ? {practice:adsPractice,proof:{token:conversion,signature:createHmac("sha256",secret).update("event:"+conversion+":"+adsPractice).digest("hex")}} : null;
+    return privateJson({ ok: true, ...data, ...(ads?{ads}:{}) });
   } catch (e) {
     return errorJson(e);
   }
