@@ -59,7 +59,17 @@ export default function BrandCatalogueStudio({
         setNotice(
           "Reading catalogue page " + page + " and creating product drafts…",
         );
-        const d = await post({ action: "process", id, page });
+        const request = {action:"process",id,page};
+        let d;
+        try {
+          d = await post(request);
+        } catch (error) {
+          if (!/Wait 30 seconds/i.test(error.message)) throw error;
+          setNotice("Waiting for the next AI request slot. The saved PDF will be reused.");
+          for (let n=0;n<31 && !stop.current;n++) await new Promise(resolve=>setTimeout(resolve,1000));
+          if (stop.current) break;
+          d = await post(request);
+        }
         if (autoImage && !pauseImages) {
           for (const product of new Set(d.ids || [])) {
             if (stop.current) break;
