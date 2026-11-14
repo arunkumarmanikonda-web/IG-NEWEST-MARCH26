@@ -11,7 +11,9 @@ export async function POST(request){try{
   if(!user||profile?.status!=='active'||!profile.roles.includes('owner')||profile.must_change_password||(!isStaff(profile) || !staffVerified))throw new HttpError('Super-user access required',403);
   const allowed=await client.rpc('ig_config_list');if(allowed.error)throw new HttpError('Accept current policies before changing settings',403);
   if(!Object.hasOwn(integrationSpecs,p.id))throw new HttpError('Unsupported integration');
-  const previous=(await runtimeConfigs())[p.id];
+  if(p.id==='google_mail' && process.env.VERCEL_ENV!=='production')throw new HttpError('Open the production website to configure staff mail.',403);
+  const previous=(await runtimeConfigs(p.id))[p.id];
+  if(!previous)throw new HttpError('These settings are not available yet. Refresh and try again.',503);
   if(p.action==='stage_razorpay_live'){
     if(p.id!=='razorpay')throw new HttpError('Unsupported credential staging');
     try{p={id:p.id,version:p.version,...stageRazorpayLive(previous,process.env)};}catch(e){throw new HttpError(e.message);}
@@ -20,6 +22,8 @@ export async function POST(request){try{
   if(p.clear_credentials&&p.mode!=='disabled')throw new HttpError('Disable the provider before removing CMS credentials');
   const secrets=p.clear_credentials?{}:{...previous.storedSecrets};
   for(const [key,value]of Object.entries(changes)){if(value!=='')secrets[key]=value;}
+  if(p.id==='google_mail' && secrets.client_secret && p.settings?.client_id!==previous.settings.client_id && !changes.client_secret)
+    throw new HttpError('When changing the Client ID, enter its matching Client secret.');
   let settings;try{settings=validateIntegration(p.id,p.mode,p.settings,providerCredentials(p.id,secrets,process.env));}catch(e){throw new HttpError(e.message);}
   if(p.id==='razorpay'&&p.mode==='live'){
     const all=await runtimeConfigs(),{data:release}=await client.from('ig_policy_releases').select('legal_reviewed').eq('current',true).single();
