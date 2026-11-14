@@ -1,6 +1,7 @@
 'use client';
+import {mailboxConnectionMessages} from '../../../lib/mailbox-connection.mjs';
 import {useState} from 'react';import {useRouter,useSearchParams} from 'next/navigation';
-export default function Mailbox({enabled,settingsUnavailable,canConfigure,email,connection,messages}){const router=useRouter(),params=useSearchParams(),[busy,setBusy]=useState(false),[notice,setNotice]=useState(params.get('status')==='connected'?'Your Google mailbox is connected.':params.get('status')==='email_mismatch'?'Choose the Google mailbox matching your verified staff email.':params.get('status')==='connection_failed'?'Connection was not completed. Review the Google permissions and try again.':''),[list,setList]=useState(null),[thread,setThread]=useState(null),[draft,setDraft]=useState(null),[compose,setCompose]=useState({to:'',subject:'',text:''});
+export default function Mailbox({enabled,settingsUnavailable,canConfigure,email,connection,messages}){const router=useRouter(),params=useSearchParams(),[busy,setBusy]=useState(false),[notice,setNotice]=useState(Object.hasOwn(mailboxConnectionMessages,params.get('status'))?mailboxConnectionMessages[params.get('status')]:''),[list,setList]=useState(null),[thread,setThread]=useState(null),[draft,setDraft]=useState(null),[compose,setCompose]=useState({to:'',subject:'',text:''});
 async function call(p,url='/api/mailbox'){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}),j=await r.json();if(!r.ok)throw new Error(j.error);return j;}
 async function run(fn){setBusy(true);setNotice('');try{await fn();}catch(e){setNotice(e.message);}finally{setBusy(false);}}
 function edit(field,value){setCompose({...compose,[field]:value});}

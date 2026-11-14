@@ -18,3 +18,11 @@ test('Owner-managed Google mail keeps credentials paired and honours disabling',
   assert.throws(() => validateIntegration('google_mail', 'enabled', {client_id:'copied-wrong-value'}, storedSecrets));
   assert.throws(() => validateIntegration('google_mail', 'enabled', settings, {}));
 });
+
+test('Google mailbox diagnostics only surface known provider error codes',async()=>{
+  const {googleMailboxErrorCode} = await import('../lib/mailbox-connection.mjs');
+  assert.equal(googleMailboxErrorCode({error:{details:[{reason:'SERVICE_DISABLED'}]}}),'gmail_api_disabled');
+  assert.equal(googleMailboxErrorCode({error:{errors:[{reason:'accessNotConfigured'}]}}),'gmail_api_disabled');
+  assert.equal(googleMailboxErrorCode({error:'invalid_client'}),'invalid_client');
+  assert.equal(googleMailboxErrorCode({error:{message:'provider-specific private details'}}),undefined);
+});
