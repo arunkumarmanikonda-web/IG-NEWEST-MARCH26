@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { PageHero, ContactBand, LinkButton } from "./components";
+import {catalogueImageCredit,catalogueSourcePhoto} from "../lib/product-images.mjs";
 import AdviserContacts from "./adviser-contacts";
 export default function PublishedContent({ item }) {
   const d = item.public_data;
+  const credit=item.kind==="product" ? catalogueImageCredit(d) : "";
+  const source=credit && catalogueSourcePhoto(d);
   return (
     <main id="main" className={item.kind === "product" ? "catalogue-product-detail" : undefined}>
       <PageHero
@@ -23,7 +26,8 @@ export default function PublishedContent({ item }) {
         )}
       </PageHero>
       <article className="prose-section">
-        {d.image?.startsWith("/images/generated/")&&<p className="fine-note">{item.kind==="product"&&d.image_alt?.startsWith("AI-enhanced product image")?"AI-enhanced product image. Confirm the final specification in your quotation.":"Illustrative AI-generated concept. This is not a photograph of the listed property, product or completed project."}</p>}
+        {credit && <p className="fine-note">{credit}. {source && <a className="text-link" href={source}>View the original supplier photograph</a>}</p>}
+        {item.kind!=="product" && d.image?.startsWith("/images/generated/") && <p className="fine-note">Illustrative AI-generated concept. This is not a photograph of the listed property, product or completed project.</p>}
         {item.kind==="opportunity"&&<p><Link className="text-link" href={"/opportunities/"+item.slug+"/brief.pdf"} prefetch={false} target="_blank">Download property brief →</Link></p>}
         {!!item.tags?.length && (
           <p>{item.tags.map((t) => t.label).join(" · ")}</p>

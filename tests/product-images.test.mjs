@@ -3,3 +3,13 @@ const product={title:'White porcelain dinner plate',summary:'Plain round porcela
 test('Product imagery uses supplied details and preserves enhancement identity instructions',()=>{const p=productImageBrief(product,{mode:'enhance'});assert.match(p,/@source/);assert.match(p,/Preserve its geometry/);assert.match(p,/270 mm/);assert.ok(p.length<=900);assert.throws(()=>productImageBrief({title:'Plate'}));assert.match(productImageBrief(product),/catalogue concept/);});
 test('Enhancement requires a valid source and cannot become an unrelated video request',()=>{const c={settings:{}},p={kind:'image',ratio:'720:720',prompt:productImageBrief(product,{mode:'enhance'}),public_approved:true,product_image_mode:'enhance',product_title:product.title,practice:'horeca'};assert.throws(()=>creativeInput(p,c));const v=creativeInput({...p,reference_media_id:'11111111-1111-4111-8111-111111111111'},c);assert.equal(v.product_image_mode,'enhance');assert.equal(productImageLabel({input:v}),'AI-enhanced product image');assert.throws(()=>creativeInput({...p,practice:'real-estate',reference_media_id:'11111111-1111-4111-8111-111111111111'},c));});
 test('Runway enhancement sends the leased reference image with its source tag',async()=>{let body;const c={mode:'enabled',secrets:{api_key:'TEST'},settings:{image_model:'gen4_image'},reference_image_url:'https://example.com/short-lived-source'};await startCreative(c,{kind:'image',ratio:'720:720',prompt:productImageBrief(product,{mode:'enhance'}),public_approved:true,product_image_mode:'enhance',product_title:product.title,reference_media_id:'11111111-1111-4111-8111-111111111111'},async(_u,opts)=>{body=JSON.parse(opts.body);return {ok:true,json:async()=>({id:'22222222-2222-4222-8222-222222222222'})};});assert.deepEqual(body.referenceImages,[{uri:c.reference_image_url,tag:'source'}]);});
+
+test('enhanced catalogue images disclose their origin and link to the supplier reference',async()=>{
+ const {catalogueImageCredit,catalogueSourcePhoto}=await import('../lib/product-images.mjs');
+ for(const image_alt of ['AI-assisted product illustration','AI-enhanced product image']){
+  const photo={image:'/images/catalogue/ankur/micro-white-hd.webp',image_alt:image_alt+' · Downlight'};
+  assert.equal(catalogueImageCredit(photo),image_alt);
+  assert.equal(catalogueSourcePhoto(photo),'/images/catalogue/ankur/micro-white.webp');
+ }
+ assert.equal(catalogueSourcePhoto({image:'/images/catalogue/ankur/luci-hd.webp',image_alt:'Manufacturer product photograph'}),'');
+});

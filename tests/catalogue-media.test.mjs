@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';import {loadImage} from '@napi-rs/canvas';import {renderCataloguePage,cropCatalogueImage} from '../lib/catalogue-media.mjs';
-test('real PDF page rendering retains its products, page count and usable image crops',async()=>{const bytes=await readFile(new URL('./fixtures/catalogue.pdf',import.meta.url)),page=await renderCataloguePage(bytes,1);assert.equal(page.page_count,2);assert.equal(page.candidates.length,2);const plate=await loadImage(page.candidates[0].image),lamp=await loadImage(page.candidates[1].image);assert.ok(Math.abs(plate.width/plate.height-1)<.1);assert.ok(lamp.height/lamp.width>2);assert.deepEqual(page.candidates.map(c=>c.id),['IMG1','IMG2']);for(const c of page.candidates){const source=await loadImage(c.image),label=await loadImage(c.labelled);assert.equal(label.height,source.height+72);assert.ok(label.width>=320);}assert.match(page.text,/TEST-P27/);assert.match(page.text,/220-240 V/);const crop=await cropCatalogueImage(page.image,[115,210,365,390]);const im=await loadImage(crop);assert.equal(im.width,1000);assert.equal(im.height,1000);assert.equal(await cropCatalogueImage(page.image,[]),null);await assert.rejects(renderCataloguePage(bytes,3),/outside/);});
+test('real PDF page rendering retains its products, page count and usable image crops',async()=>{const bytes=await readFile(new URL('./fixtures/catalogue.pdf',import.meta.url)),page=await renderCataloguePage(bytes,1);assert.equal(page.page_count,2);assert.equal(page.candidates.length,2);const plate=await loadImage(page.candidates[0].image),lamp=await loadImage(page.candidates[1].image);assert.ok(Math.abs(plate.width/plate.height-1)<.1);assert.ok(lamp.height/lamp.width>2);assert.deepEqual(page.candidates.map(c=>c.id),['IMG1','IMG2']);for(const c of page.candidates){const source=await loadImage(c.image),label=await loadImage(c.labelled);assert.equal(label.height,Math.round(source.height*Math.min(1,640/Math.max(source.width,source.height)))+72);assert.ok(label.width>=320);}assert.match(page.text,/TEST-P27/);assert.match(page.text,/220-240 V/);const crop=await cropCatalogueImage(page.image,[115,210,365,390]);const im=await loadImage(crop);const preview=await loadImage(page.image);assert.equal(im.width,Math.round(preview.width*.25));assert.equal(im.height,Math.round(preview.height*.18));assert.equal(await cropCatalogueImage(page.image,[]),null);await assert.rejects(renderCataloguePage(bytes,3),/outside/);});
 
 import {resolveCatalogueImages} from '../lib/brand-catalogue.mjs';
 test('printed manufacturer codes resolve swapped vision image proposals on the real PDF',async()=>{const page=await renderCataloguePage(await readFile(new URL('./fixtures/catalogue.pdf',import.meta.url)),1);const result={products:[{reference:'TEST-P27',image_id:'IMG2'},{reference:'TEST-L42',image_id:'IMG1'}]};resolveCatalogueImages(result,page.candidates,page.anchors);assert.deepEqual(result.products.map(p=>p.image_id),['IMG1','IMG2']);});
@@ -56,4 +56,15 @@ test('visual variants may share a model crop and keep separate supplier referenc
  resolveCatalogueImages({products:[...products,montage]},[],[]);
  assert.deepEqual(products.map(p=>p.image_box),[[90,100,220,340],[90,100,220,340]]);
  assert.deepEqual(montage.image_box,[]);
+});
+
+test('a large original survives the vision thumbnail and a tiny crop retains its native dimensions',async()=>{
+ const {createCanvas}=await import('@napi-rs/canvas');
+ const {catalogueProductPhoto,labelledCandidate}=await import('../lib/catalogue-media.mjs');
+ const source=createCanvas(1550,950);
+ const full=await catalogueProductPhoto(source,[0,0,1000,1000]);
+ assert.deepEqual([full.width,full.height,full.needsEnhancement],[1550,950,false]);
+ assert.equal((await loadImage(await labelledCandidate(full.bytes,'IMG1'))).width,640);
+ const tiny=await catalogueProductPhoto(source,[0,0,100,100]);
+ assert.deepEqual([tiny.width,tiny.height,tiny.needsEnhancement],[155,95,true]);
 });

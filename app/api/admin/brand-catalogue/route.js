@@ -11,7 +11,7 @@ import { runtimeConfigs, integrationRpc } from "../../../../lib/runtime-config";
 import { extractCataloguePage } from "../../../../lib/brand-catalogue.mjs";
 import {
   renderCataloguePage,
-  cropCatalogueImage,
+  catalogueProductPhoto,
 } from "../../../../lib/catalogue-media.mjs";
 import { privatePdfUrl } from "../../../../lib/private-pdf.mjs";
 export const maxDuration = 180;
@@ -57,17 +57,19 @@ export async function POST(request) {
     if (p.action === "image") {
       if (p.approved !== true) throw new HttpError("Image generation requires approval.");
       const { data: pageRow, error: pageError } = await client.from("ig_catalogue_pages")
-        .select("id").eq("catalogue_id",p.id).eq("page_number",p.page).eq("status","ready").maybeSingle();
+        .select("id,result").eq("catalogue_id",p.id).eq("page_number",p.page).eq("status","ready").maybeSingle();
       if (pageError || !pageRow) throw new HttpError("The completed catalogue page is unavailable.",404);
       const { data: links, error: linkError } = await client.from("ig_catalogue_items")
-        .select("media_id,ig_source_media(state)").eq("page_id",pageRow.id).eq("content_id",p.product);
+        .select("media_id,item_no,ig_source_media(state)").eq("page_id",pageRow.id).eq("content_id",p.product);
       if (linkError || !links?.length) throw new HttpError("This product is unavailable on the selected page.",404);
-      if (links.some(row=>row.ig_source_media?.state === "ready")) return privateJson({status:"existing"});
+      const source=links.find(row=>row.ig_source_media?.state === "ready");
+      const enhance=source && pageRow.result?.products?.[source.item_no]?.image_quality === "enhance";
+      if (source && !enhance) return privateJson({status:"existing"});
       const {data: record,error: recordError} = await client.from("ig_content")
         .select("id,kind,practice,title,body,summary,public_data,status,published_version").eq("id",p.product).eq("kind","product").single();
       if (recordError || !record) throw new HttpError("Product draft unavailable.",404);
       if (record.status !== "draft" || record.published_version) return privateJson({status:"existing"});
-      try { return privateJson({status:await queueDraftHero(client,record)}); }
+      try { return privateJson({status:await queueDraftHero(client,record,enhance ? source.media_id : null)}); }
       catch (e) {
         if (/wait 30 seconds/i.test(e.message)) return privateJson({status:"wait",seconds:31});
         throw new HttpError(e.message,409);
@@ -127,11 +129,11 @@ export async function POST(request) {
         try {
           const artworkKey = candidate?.id || product.image_box.join(",");
           const sourceItem = matchedArtwork.get(artworkKey);
-          const bytes = await cropCatalogueImage(
-            candidate ? candidate.image : rendered.image,
+          const photo = await catalogueProductPhoto(
+            candidate ? candidate.image : rendered.artwork,
             candidate ? [0, 0, 1000, 1000] : product.image_box,
           );
-          if (!bytes) {
+          if (!photo) {
             product.review_notes +=
               " Image crop was too small; upload an original image.";
             continue;
@@ -148,7 +150,7 @@ export async function POST(request) {
           if (media.state !== "ready") {
             const upload = await client.storage
               .from("ig-source-media")
-              .upload(media.path, bytes, {
+              .upload(media.path, photo.bytes, {
                 contentType: "image/jpeg",
                 upsert: false,
                 cacheControl: "0",
@@ -161,6 +163,9 @@ export async function POST(request) {
             if (done.error) throw new Error(done.error.message);
           }
           matchedArtwork.set(artworkKey,i);
+          product.image_quality=photo.needsEnhancement ? "enhance" : "original";
+          product.image_dimensions=[photo.width,photo.height];
+          if(photo.needsEnhancement) product.review_notes += " Small source photograph ("+photo.width+" × "+photo.height+" px). Review the enhanced option before choosing a cover.";
           product.photo_source = candidate ? "isolated_asset" : "product_crop";
         } catch {
           product.review_notes +=

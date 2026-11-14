@@ -138,7 +138,7 @@ export default function BrandCatalogueStudio({
       </div>
       <label className="check">
         <input type="checkbox" checked={autoImage} disabled={busy} onChange={e=>setAutoImage(e.target.checked)} />
-        Generate a private illustrative image with Runway when a product has no matching source photograph. Your configured credit limit applies.
+        Use Runway to enhance small supplier photographs or create an illustrative image when a photograph is missing. Images are saved for review. Your configured credit limit applies.
       </label>
       <form
         className="workspace-form"
