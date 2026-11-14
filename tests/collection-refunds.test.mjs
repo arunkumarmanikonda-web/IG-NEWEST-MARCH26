@@ -30,3 +30,14 @@ test('refund uses the checked payment and balance, repeatable provider receipt a
   assert.equal(count,0);assert.equal((await issueCollectionRefund(cfg,row,r,input,'actor',post)).id,refund.id);
   assert.equal(mayRefund({roles:['publisher']}),false);assert.equal(mayRefund({roles:['owner']}),true);
 });
+test('refund tracking uses only bank references from the refund itself', async () => {
+  const history = async data => (await reviewCollectionRefund(cfg, row, provider({
+    paymentData:{...payment, amount_refunded:1000, status:'refunded', acquirer_data:{rrn:'paymentOnly'}},
+    entries:[{...refund, ...data}],
+  }))).refunds[0];
+  const record = await history({created_at:1780012345, acquirer_data:{rrn:'000123456789', utr:123456789, extra:'private'}});
+  assert.deepEqual(record.bankReferences,[{type:'RRN',value:'000123456789'},{type:'UTR',value:'123456789'}]);
+  assert.equal(record.createdAt,new Date(1780012345000).toISOString());
+  assert.deepEqual((await history({acquirer_data:{rrn:null,arn:'',utr:{value:'invalid'}}})).bankReferences,[]);
+  assert.deepEqual((await history({})).bankReferences,[]);
+});

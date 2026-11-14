@@ -30,7 +30,13 @@ export default function RefundReview({ row, call }) {
     {error&&<p role="alert">{error}</p>}
     {result&&<p role="status">Razorpay refund {result.id} · {collectionMoney(result.amount)} · {result.status}</p>}
     {review&&<><p>{row.customer_name} · {row.reference}<br/>Razorpay payment {review.payment_id} · {review.method}</p>
-      {review.refunds.length>0&&<ul>{review.refunds.map(r=><li key={r.id}>{r.id} · {collectionMoney(r.amount)} · {r.status}</li>)}</ul>}
+      {review.refunds.length>0&&<ul>{review.refunds.map(r=><li key={r.id}>
+        <strong>{collectionMoney(r.amount)} · {r.status} by Razorpay</strong><br/>
+        Refund ID <code>{r.id}</code>
+        {r.createdAt&&<> · Requested {new Date(r.createdAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})} IST</>}
+        {r.bankReferences.map(ref=><div key={ref.type}>Bank reference ({ref.type}) <code>{ref.value}</code></div>)}
+        {r.status==='processed'&&<div>{r.bankReferences.length?'The customer can give this reference to their bank to trace the credit.':'Razorpay has yet to return a bank trace reference. Refresh the history to check again.'}</div>}
+      </li>)}</ul>}
       {review.pending?<p>A refund is pending with Razorpay.</p>:!review.reconciled?<p>Razorpay is reconciling this payment. Check again before issuing a refund.</p>:
         review.remaining>=100?<><p>Return <strong>{collectionMoney(review.remaining)}</strong> to the payment method used for this collection using a normal-speed refund.</p>
         <button className="primary" disabled={busy} onClick={confirm}>Confirm {collectionMoney(review.remaining)} refund</button></>:<p>No refundable balance is available through the website.</p>}
