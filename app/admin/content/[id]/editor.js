@@ -292,7 +292,7 @@ export default function Editor({
                 disabled={busy}
                 onClick={() =>
                   run(async () => {
-                    await portalAction("source_media", {
+                    if (!["product_crop","isolated_asset"].includes(catalogueSource.photo_source)) await portalAction("source_media", {
                       action: "publish",
                       id: intake.media_id,
                       reviewed: true,
@@ -371,7 +371,8 @@ export default function Editor({
           <h3>
             {catalogueSource.brand}{catalogueSource.page ? " · page "+catalogueSource.page : " · manufacturer photograph"}
           </h3>
-          {catalogueSource.media_id && (
+          {catalogueSource.photo_source === "full_page_reference" && <p>The original catalogue spread is retained as source material. The matched model photo appears under Product images.</p>}
+          {catalogueSource.media_id && catalogueSource.photo_source !== "full_page_reference" && (
             <img
               src={"/api/admin/source-media/" + catalogueSource.media_id}
               alt="Product image extracted from the catalogue"
@@ -382,10 +383,9 @@ export default function Editor({
             <p className="workspace-note">{catalogueSource.review_notes}</p>
           )}
           <p>
-            Specifications and an automatic SKU have been saved. Review this
-            image against the source before using it publicly.
+            Review the manufacturer’s specifications and model photo before publication.
           </p>
-          {catalogueSource.media_id && (
+          {catalogueSource.media_id && catalogueSource.photo_source !== "full_page_reference" && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();

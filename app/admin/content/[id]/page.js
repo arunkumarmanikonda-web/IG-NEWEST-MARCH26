@@ -113,6 +113,7 @@ export default async function EditPage({ params, searchParams }) {
           brand: catalogue?.brand,
           page: page.page_number,
           media_id: link.media_id,
+          photo_source: product?.photo_source,
           search_phrases: product?.search_phrases,
           evidence: product?.evidence,
           review_notes: product?.review_notes,

@@ -26,6 +26,9 @@ begin
  again=public.ig_brand_catalogue(jsonb_build_object('action','asset','id',c->>'id','page',1,'lease_token',r->'page'->>'lease_token','item_no',0,'alt','SYSTEM TEST product photograph'));assert image->>'id'=again->>'id','Image retry duplicated media';checks=checks+1;
  insert into storage.objects(bucket_id,name,owner) values('ig-source-media',image->>'path',uid);
  perform public.ig_source_media_manage(jsonb_build_object('action','complete','id',image->>'id'));
+ again:=public.ig_brand_catalogue(jsonb_build_object('action','asset','id',c->>'id','page',1,
+    'lease_token',r->'page'->>'lease_token','item_no',1,'source_item_no',0,'alt','Same model in the second size'));
+ assert again->>'id'=image->>'id' and again->>'state'='ready','Size variant failed to reuse the completed model photo';checks=checks+1;
  perform public.ig_catalogue_finish(k,jsonb_build_object('page_id',r->'page'->>'id','lease_token',r->'page'->>'lease_token','status','ready','page_count',2,'result',jsonb_build_object('complete',true,'notes','','products',jsonb_build_array(jsonb_build_object('title','SYSTEM TEST extracted plate','reference','SYSTEM-TEST-'||(c->>'id'),'category','Crockery','uom','piece','summary','Test plate','specifications','Diameter 27 cm','evidence','27 cm','review_notes','','photo_source','product_crop','image_box',jsonb_build_array(10,10,500,500))))));checks=checks+1;
  saved=public.ig_brand_catalogue(jsonb_build_object('action','drafts','id',c->>'id','page',1));assert (saved->>'created')::int=1,'Product draft not created';pid=(saved->'ids'->>0)::uuid;checks=checks+1;
  assert not exists(select 1 from public.ig_public_content where id=pid),'Unreviewed import became public';checks=checks+1;
