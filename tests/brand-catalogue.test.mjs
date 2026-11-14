@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {validateCatalogueResult,extractCataloguePage} from '../lib/brand-catalogue.mjs';
+import {validateCatalogueResult,extractCataloguePage,reviewCataloguePage} from '../lib/brand-catalogue.mjs';
 import {slugFromTitle,contentPath} from '../lib/content-routes.mjs';
 const product={image_id:'',title:'Dinner plate',reference:'P-27',category:'Crockery',uom:'',summary:'27 cm plate',specifications:'Diameter: 27 cm. Material: porcelain.',evidence:'P-27. Porcelain. 27 cm.',image_box:[100,100,500,500],review_notes:''};
 test('catalogue rejects invented image bounds and unsupported or oversized product output',()=>{
@@ -10,7 +10,7 @@ test('catalogue rejects invented image bounds and unsupported or oversized produ
  assert.deepEqual(validateCatalogueResult({products:[],complete:true,notes:'Cover page'}).products,[]);
 });
 test('catalogue extraction uses strict structured output, no retention, and preserves missing facts',async()=>{
- const result={products:[{...product,image_box:[]}],complete:false,notes:'Two codes are unreadable.'};let request;
+ const result={page_type:'product_detail',products:[{...product,image_box:[]}],complete:false,notes:'Two codes are unreadable.'};let request;
  const d=await extractCataloguePage({settings:{model:'vision-fixture',max_output_tokens:3000},secrets:{api_key:'fixture'}},{brand:'Test',name:'test.pdf',page:2,text:'source',image:Buffer.from('test')},async(url,options)=>{request=JSON.parse(options.body);return {ok:true,json:async()=>({id:'test',status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(result)}]}]})};});
  assert.equal(request.store,false);assert.equal(request.text.format.strict,true);assert.equal(d.result.products[0].uom,'');assert.equal(d.result.complete,false);assert.equal(request.input[0].content[1].type,'input_image');
 });
@@ -19,4 +19,23 @@ test('partial AI responses never become a partial catalogue import',async()=>{
 });
 test('product URLs use the public catalogue route and title conversion handles punctuation',()=>{
  assert.equal(contentPath({kind:'product',slug:'white-plate'}),'/horeca/products/white-plate');assert.equal(contentPath({kind:'opportunity',slug:'ig-opp-private'}),'/opportunities/ig-opp-private');assert.equal(slugFromTitle('Café · Crockery / Tableware!'),'cafe-crockery-tableware');assert.equal(slugFromTitle('a'.repeat(99)+' -- xyz').endsWith('-'),false);
+});
+
+test('directory entries and editorial images never produce SKUs or reviewable image requests', () => {
+ for (const page_type of ['directory','editorial']) {
+  const page = reviewCataloguePage({page_type, products:[product], complete:false, notes:'Source page.'});
+  assert.deepEqual(page.products, []);
+  assert.equal(page.complete, true);
+ }
+});
+
+test('a full batch requires reconciliation even when the model reports the page complete', () => {
+ const result = {page_type:'mixed', products:Array(24).fill(product), complete:true, notes:'Overview and detail tables.'};
+ const page = reviewCataloguePage(result);
+ assert.equal(page.complete, false);
+ assert.equal(page.products.length, 24);
+ assert.match(page.notes, /per-page product limit/);
+ assert.match(page.notes, /detail tables/);
+ assert.equal(reviewCataloguePage({...result, products:[product]}).complete, true);
+ assert.throws(()=>reviewCataloguePage({...result,page_type:'unknown'}), /classification/);
 });
