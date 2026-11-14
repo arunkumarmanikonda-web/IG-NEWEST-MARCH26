@@ -1,4 +1,5 @@
 "use client";
+import { adminResponse } from "../../lib/admin-response.mjs";
 import { useState } from "react";
 import Link from "next/link";
 import { isStaff } from "../../lib/sign-in.mjs";
@@ -9,7 +10,7 @@ export async function portalAction(module, payload) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ module, payload }),
   });
-  const result = await res.json();
+  const result = await adminResponse(res);
   if (!res.ok) throw new Error(result.error);
   return result.data;
 }
@@ -55,7 +56,7 @@ export default function Account({ profile, email, policyVersion, policiesAccepte
               });
               setAccepted(true);
               const response = await fetch("/api/portal/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "continue" }) });
-              const result = await response.json();
+              const result = await adminResponse(response);
               if (!response.ok) throw new Error(result.error);
               if (result.next && result.next !== "/account") location.replace(result.next);
               else setMessage("Your policy acceptance has been recorded.");
@@ -145,7 +146,7 @@ export default function Account({ profile, email, policyVersion, policiesAccepte
             onClick={() =>
               run(async () => {
                 const response = await fetch("/api/portal/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "continue" }) });
-                const result = await response.json();
+                const result = await adminResponse(response);
                 if (!response.ok) throw new Error(result.error);
                 if (result.next) { location.replace(result.next); return; }
                 setMessage(

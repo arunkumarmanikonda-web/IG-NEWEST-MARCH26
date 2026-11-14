@@ -22,6 +22,7 @@ import {
   sectionSummaryFiles,
   reconcileMergedFacts,
 } from "../../../../lib/intake-sections.mjs";
+import { privatePdfUrl } from "../../../../lib/private-pdf.mjs";
 import { gatherImages } from "../../../../lib/source-media.mjs";
 export const maxDuration = 180;
 export async function POST(request) {
@@ -82,11 +83,16 @@ export async function POST(request) {
       mergeGroups,
       media = { candidates: [], notes: [] };
     if (p.action === "plan" || p.action === "section") {
-      const [file] = await loadIntakeSources(client, [p.source_id], p.practice);
-      // Validate brief and signatures before parsing any document or making a paid call.
-      context = validateIntake({ ...p, files: [] }, [file]);
-      if (p.action === "plan")
+      const [source] = await resolveIntakeSources(client, [p.source_id], p.practice);
+      const largePdf = source.mime === "application/pdf" && source.size > 20 * 1024 * 1024;
+      const file = largePdf
+        ? {name:source.name, source_id:source.id, remotePdf:{
+            url:await privatePdfUrl(client,source.bucket,source.path),size:source.size}}
+        : (await loadIntakeSources(client,[p.source_id],p.practice))[0];
+      if (p.action === "plan") {
+        if (!largePdf) validateIntake({ ...p, files: [] }, [file]);
         return privateJson(await describeSourceSections(file));
+      }
       const part = await readSourceSection(file, p.section);
       context = validateIntake({ ...p, files: [] }, [part.file]);
       metadata = {
@@ -100,11 +106,6 @@ export async function POST(request) {
         section_count: part.count,
       };
       // Digest refers to the unchanged original, not the provider-sized processing copy.
-      const [source] = await resolveIntakeSources(
-        client,
-        [p.source_id],
-        p.practice,
-      );
       metadata.source_sha256 = source.sha256;
       const { data: cached } = await client
         .from("ig_ai_jobs")

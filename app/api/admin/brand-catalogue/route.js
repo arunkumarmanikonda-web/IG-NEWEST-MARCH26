@@ -13,6 +13,7 @@ import {
   renderCataloguePage,
   cropCatalogueImage,
 } from "../../../../lib/catalogue-media.mjs";
+import { privatePdfUrl } from "../../../../lib/private-pdf.mjs";
 export const maxDuration = 180;
 export async function POST(request) {
   let page, aiJob;
@@ -86,14 +87,9 @@ export async function POST(request) {
     page = claim.page;
     const catalogue = claim.catalogue;
     if (page.status !== "ready") {
-      const { data: source, error } = await client.storage
-        .from("ig-brand-catalogues")
-        .download(catalogue.path);
-      if (error) throw new HttpError("Catalogue PDF is unavailable", 503);
-      const rendered = await renderCataloguePage(
-        Buffer.from(await source.arrayBuffer()),
-        p.page,
-      );
+      const source = catalogue.room_source;
+      const url = await privatePdfUrl(client, source ? "ig-data-rooms" : "ig-brand-catalogues", source?.path || catalogue.path);
+      const rendered = await renderCataloguePage({url, size:source?.size}, p.page);
       const prepared = await client.rpc("ig_ai_prepare", {
         p: {
           practice: "horeca",

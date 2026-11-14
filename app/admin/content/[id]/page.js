@@ -63,14 +63,18 @@ export default async function EditPage({ params, searchParams }) {
       : { data: null };
     const { data: sources } = await client
       .from("ig_intake_sources")
-      .select("id,name")
+      .select("id,name,sha256")
       .like("path", intake.room_id + "/%");
+    const pdf = item.kind === "product" && sources?.find(s => /\.pdf$/i.test(s.name));
+    const {data: catalogue} = pdf ? await client.from("ig_brand_catalogues").select("id")
+      .eq("actor_id",user.id).eq("sha256",pdf.sha256).order("created_at",{ascending:false}).limit(1).maybeSingle() : {data:null};
     return (
       <IntakeStudio
         initialKind={item.kind}
         initialPractice={item.practice}
         initialWorkspace={{ ...intake, version: item.version }}
         existingSources={sources || []}
+        savedCatalogueId={catalogue?.id || ""}
         initialSourceText={sourceJob?.context?.text || ""}
         initialBrief={sourceJob?.context?.brief || ""}
       />

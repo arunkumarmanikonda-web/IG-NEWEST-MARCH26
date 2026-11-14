@@ -1,4 +1,5 @@
 "use client";
+import { adminResponse } from "../../lib/admin-response.mjs";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,7 +13,7 @@ async function post(payload) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }),
-    d = await r.json();
+    d = await adminResponse(r);
   if (!r.ok) throw new Error(d.error);
   return d;
 }
@@ -22,6 +23,7 @@ export default function BrandCatalogueStudio({
   reviews = [],
   items = [],
   initialId = "",
+  initialFile = null,
 }) {
   const router = useRouter(),
     stop = useRef(false),
@@ -29,7 +31,7 @@ export default function BrandCatalogueStudio({
     [busy, setBusy] = useState(false),
     [autoImage,setAutoImage] = useState(true),
     [notice, setNotice] = useState(""),
-    [file, setFile] = useState(null);
+    [file, setFile] = useState(initialFile);
   useEffect(
     () => () => {
       stop.current = true;
@@ -185,10 +187,11 @@ export default function BrandCatalogueStudio({
           Brand catalogue PDF
           <input
             type="file"
-            required
+            required={!file}
             accept="application/pdf,.pdf"
             onChange={(e) => setFile(e.target.files[0])}
           />
+          {initialFile && file && <small>Selected PDF: {file.name}</small>}
           <small>
             No website-imposed MB cap. Interrupted uploads resume. AI processes
             catalogues of up to 500 pages; completed pages are retained.

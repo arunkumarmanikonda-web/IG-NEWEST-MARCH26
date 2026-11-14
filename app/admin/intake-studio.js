@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import Link from "next/link";
+import BrandCatalogueStudio from "./brand-catalogue-studio";
 import { useRouter, useSearchParams } from "next/navigation";
 import { practiceOptions } from "../../lib/business.mjs";
 import {
@@ -34,6 +35,7 @@ export default function IntakeStudio({
   existingSources = [],
   initialSourceText = "",
   initialBrief = "",
+  savedCatalogueId = "",
 }) {
   const params = useSearchParams(),
     router = useRouter();
@@ -44,6 +46,7 @@ export default function IntakeStudio({
   const [practice, setPractice] = useState(
     initialPractice || defaultPractice(kind),
   );
+  const [catalogueMode, setCatalogueMode] = useState(false);
   const [files, setFiles] = useState([]),
     [sourceIds, setSourceIds] = useState(existingSources.map((s) => s.id));
   const [busy, setBusy] = useState(false),
@@ -177,6 +180,12 @@ export default function IntakeStudio({
       setBusy(false);
     }
   }
+  if (catalogueMode && kind === "product") return (
+    <>
+      <button className="module-link" onClick={() => setCatalogueMode(false)}>Back to single product</button>
+      <BrandCatalogueStudio initialFile={files.find(file => /\.pdf$/i.test(file.name)) || null} />
+    </>
+  );
   return (
     <>
       <div className="module-heading">
@@ -252,14 +261,15 @@ export default function IntakeStudio({
             </select>
           </label>
           {kind === "product" && (
-            <p className="wide workspace-note">
-              Creating many products from a brand catalogue?{" "}
-              <Link href="/admin/catalogue/import">
-                Open catalogue import →
-              </Link>{" "}
-              Individual products can be created here with an automatic,
-              editable SKU.
-            </p>
+            <div className="wide workspace-note">
+              <strong>Are you adding one product or a whole brand catalogue?</strong>
+              <p>This form creates one product. A brand catalogue creates separate product drafts with their own SKUs, specifications and images.</p>
+              {savedCatalogueId ? <Link className="module-link" href={"/admin/catalogue/import?catalogue="+savedCatalogueId}>
+                Process the saved PDF as a brand catalogue →
+              </Link> : <button type="button" className="module-link" disabled={busy} onClick={() => setCatalogueMode(true)}>
+                Create products from a brand catalogue →
+              </button>}
+            </div>
           )}
           <label className="wide source-drop">
             Upload to the private data room
@@ -385,7 +395,7 @@ export default function IntakeStudio({
         </p>
         {workspace && !busy && (
           <p>
-            Your source room and draft are saved.{" "}
+            Your source room and draft record are saved. AI preparation may still be incomplete.{" "}
             <Link href={"/admin/content/" + workspace.content_id}>
               Open saved draft →
             </Link>
