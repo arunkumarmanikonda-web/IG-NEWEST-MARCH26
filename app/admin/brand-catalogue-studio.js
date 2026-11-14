@@ -275,7 +275,8 @@ export default function BrandCatalogueStudio({
                 {results.filter((p) => p.status === "ready").length} pages
                 prepared
                 {catalogue.page_count ? " of " + catalogue.page_count : ""}.
-                Products and source images remain drafts until reviewed.
+                Review each source photograph against the original before publication.{" "}
+                <a href={"/api/admin/brand-catalogue/" + selected + "/source"}>Download original catalogue</a>
               </p>
             )}
             <form
@@ -374,6 +375,7 @@ export default function BrandCatalogueStudio({
                       ? " · additional review required"
                       : ""}
                   </summary>
+                  <a href={"/api/admin/brand-catalogue/" + selected + "/source?page=" + page.page_number} target="_blank" rel="noreferrer">View original page artwork</a>
                   {page.note && <p role="alert">{page.note}</p>}
                   {page.result?.notes && <p>{page.result.notes}</p>}
                   <div className="catalogue-product-grid">
