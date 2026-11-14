@@ -102,7 +102,7 @@ export default async function Module({ params, searchParams }) {
     let query = client
       .from("ig_content")
       .select(
-        "id,kind,slug,practice,title,status,version,published_version,public_data,updated_at",
+        "id,kind,slug,practice,title,status,version,published_version,public_data,updated_at,deleted_at",
       )
       .order("updated_at", { ascending: false })
       .limit(1000);

@@ -167,7 +167,7 @@ export default function Editor({
       setMessage(
         a === "publish" ? "Published this revision." : "Content updated.",
       );
-      if (a === "delete") router.replace("/admin/" + section);
+      if (a === "delete" || a === "trash" || a === "restore") router.replace("/admin/" + section);
       router.refresh();
     });
   }
@@ -261,7 +261,7 @@ export default function Editor({
           <Link href={"/admin/data-rooms?room="+intake.room_id+"#room-access"}>Open files and access settings</Link>
           {!!intake.review?.review_questions?.length && (
             <div>
-              <h4>Items to confirm</h4>
+              <h4>Editorial review</h4>
               <ul>
                 {intake.review.review_questions.map((question, i) => (
                   <li key={i}>{question}</li>
@@ -851,7 +851,7 @@ export default function Editor({
               The public disclosure contains no restricted information.
             </label>
             <div className="workspace-actions">
-              <button disabled={busy || dirty} className="primary">
+              <button disabled={busy || dirty || !!item.deleted_at} className="primary">
                 Publish revision {item.version}
               </button>
               <button
@@ -864,7 +864,10 @@ export default function Editor({
               >
                 Archive / unpublish
               </button>
-              {item.status === "archived" && (
+              {!item.deleted_at && <button type="button" disabled={busy || dirty} onClick={() => {
+                if (confirm("Move this listing to Deleted and withdraw it from the website? Its files and history will remain available.")) action("trash");
+              }}>Delete listing</button>}
+              {(item.status === "archived" || item.deleted_at) && (
                 <>
                   <button
                     type="button"

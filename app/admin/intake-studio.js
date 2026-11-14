@@ -390,14 +390,14 @@ export default function IntakeStudio({
             )}
           </div>
         </form>
-        <p className="portal-message" role="status" aria-live="polite">
+        <p className="workspace-note" role="status" aria-live="polite" hidden={!message}>
           {message}
         </p>
         {workspace && !busy && (
           <p>
-            Your source room and draft record are saved. AI preparation may still be incomplete.{" "}
+            {workspace.job_id ? "Your listing is ready for editorial review." : "Your files are saved. Resume generation here to fill the listing."}{" "}
             <Link href={"/admin/content/" + workspace.content_id}>
-              Open saved draft →
+              {workspace.job_id ? "Review the listing →" : "View the saved record →"}
             </Link>
           </p>
         )}

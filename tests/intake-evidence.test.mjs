@@ -54,3 +54,13 @@ test("ordinary public prose about search is preserved", () => {
   const body = "## Search strategy\nKeywords should reflect the actual property.\n\nProperty notes:\n110 keys.";
   assert.equal(separateIntakeEditorialCopy({ ...draft, body }).body, body);
 });
+
+test("structured field paths retain the location and reject unrelated paths", () => {
+  const input = structuredClone(draft);
+  input.evidence[0].field = "fields.city";
+  input.evidence[1].field = "other.keys";
+  const result = withholdUnsupportedIntakeFields(input);
+  assert.equal(result.fields.city, "QA Test City");
+  assert.equal(result.evidence[0].field, "city");
+  assert.equal(result.fields.keys, "");
+});

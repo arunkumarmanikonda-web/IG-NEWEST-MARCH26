@@ -45,7 +45,8 @@ export default function ContentRegister({ module, items }) {
   const [title, description, kind] = labels[module];
   const rows = items.filter(
     (r) =>
-      (state === "all" ||
+      (state === "deleted" ? !!r.deleted_at : !r.deleted_at) &&
+      (state === "deleted" || state === "all" ||
         (state === "live"
           ? !!r.live_version
           : state === "unlive"
@@ -66,6 +67,26 @@ export default function ContentRegister({ module, items }) {
   );
   const chosen = items.filter((r) => selected.includes(r.id)),
     allVisible = rows.length > 0 && rows.every((r) => selected.includes(r.id));
+  async function changeDeletion(row, operation) {
+    const messages = {
+      trash: "Move “" + row.title + "” to Deleted? It will be removed from the website and active listings. Its data room and history are retained.",
+      restore: "Restore “" + row.title + "” as a private draft?",
+      delete: "Permanently delete “" + row.title + "” and its revision history? This cannot be undone.",
+    };
+    if (!window.confirm(messages[operation])) return;
+    setBusy(true);
+    setResults([]);
+    try {
+      await portalAction("publication", {id:row.id,version:row.version,action:operation});
+      setSelected(ids => ids.filter(id => id !== row.id));
+      setMessage(operation === "trash" ? "Listing moved to Deleted." : operation === "restore" ? "Restored as a private draft." : "Listing permanently deleted.");
+      router.refresh();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   async function run(e) {
     e.preventDefault();
     setBusy(true);
@@ -127,10 +148,10 @@ export default function ContentRegister({ module, items }) {
       {module === "catalogue" && <CataloguePhotoImport/>}
       <div className="metric-grid">
         {[
-          ["Total", items.length],
+          ["Total", items.filter(r => !r.deleted_at).length],
           ["Live", items.filter((r) => r.live_version).length],
-          ["Not live", items.filter((r) => !r.live_version).length],
-          ["Draft revisions", items.filter((r) => r.status === "draft").length],
+          ["Not live", items.filter((r) => !r.deleted_at && !r.live_version).length],
+          ["Draft revisions", items.filter((r) => !r.deleted_at && r.status === "draft").length],
         ].map(([k, v]) => (
           <div key={k}>
             <span>{k}</span>
@@ -155,7 +176,7 @@ export default function ContentRegister({ module, items }) {
             <select
               disabled={busy}
               value={state}
-              onChange={(e) => setState(e.target.value)}
+              onChange={(e) => {setState(e.target.value);setSelected([]);setAction("");}}
             >
               {[
                 ["all", "All records"],
@@ -164,6 +185,7 @@ export default function ContentRegister({ module, items }) {
                 ["draft", "Draft revisions"],
                 ["published", "Published revisions"],
                 ["archived", "Archived"],
+                ["deleted", "Deleted"],
               ].map(([v, l]) => (
                 <option value={v} key={v}>
                   {l}
@@ -202,7 +224,7 @@ export default function ContentRegister({ module, items }) {
           <label className="check">
             <input
               type="checkbox"
-              disabled={busy || !rows.length}
+              disabled={busy || !rows.length || state === "deleted"}
               checked={allVisible}
               onChange={(e) =>
                 setSelected(selectVisible(selected, rows, e.target.checked))
@@ -327,7 +349,7 @@ export default function ContentRegister({ module, items }) {
                   <td>
                     <input
                       type="checkbox"
-                      disabled={busy}
+                      disabled={busy || !!r.deleted_at}
                       aria-label={"Select " + r.title}
                       checked={selected.includes(r.id)}
                       onChange={(e) =>
@@ -376,6 +398,12 @@ export default function ContentRegister({ module, items }) {
                     >
                       Data room & access ↗
                     </Link>
+                    <div className="workspace-actions">
+                      {r.deleted_at ? <>
+                        <button type="button" disabled={busy} onClick={() => changeDeletion(r,"restore")}>Restore</button>
+                        <button type="button" disabled={busy} onClick={() => changeDeletion(r,"delete")}>Delete permanently</button>
+                      </> : <button type="button" disabled={busy} aria-label={"Delete " + r.title} onClick={() => changeDeletion(r,"trash")}>Delete</button>}
+                    </div>
                   </td>
                 </tr>
               ))}

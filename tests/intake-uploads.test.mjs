@@ -263,6 +263,9 @@ test("Merged facts retain original evidence and flag unsupported or conflicting 
     evidence: [],
     review_questions: [],
   };
+  const omitted = reconcileMergedFacts({...draft, fields:{area:""}}, [{parts:[part(0, "100")]}]);
+  assert.equal(omitted.fields.area, "100");
+  assert.equal(omitted.evidence[0].source, "S1");
   const valid = reconcileMergedFacts(draft, [{ parts: [part(0, "100")] }]);
   assert.equal(valid.fields.area, "100");
   assert.equal(valid.fields.city, "");

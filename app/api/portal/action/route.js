@@ -67,7 +67,9 @@ export async function POST(request) {
             : 400;
       throw new HttpError(
         error.code === "23503"
-          ? "This record is still referenced. Reassign its references first."
+          ? (body.module === "publication" && body.payload?.action === "delete"
+            ? "Permanent deletion is unavailable while linked records exist. Keep this listing in Deleted to preserve its data room and history."
+            : "This record is still referenced. Reassign its references first.")
           : error.code === "23505"
             ? "That reference already exists."
             : error.message,
