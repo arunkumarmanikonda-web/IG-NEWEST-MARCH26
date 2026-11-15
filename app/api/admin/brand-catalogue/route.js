@@ -35,6 +35,11 @@ export async function POST(request) {
         throw new HttpError(error.message, error.code === "42501" ? 403 : 409);
       return data;
     }
+    if (["queue","pause","status"].includes(p.action)) {
+      const {data:run,error}=await client.rpc("ig_catalogue_run",{p});
+      if(error)throw new HttpError(error.message,error.code==="42501"?403:409);
+      return privateJson({run});
+    }
     if (p.action === "prepare") {
       if (
         !/\.pdf$/i.test(p.name || "") ||

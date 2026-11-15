@@ -1,6 +1,6 @@
 "use client";
 import { adminResponse } from "../../lib/admin-response.mjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -26,102 +26,53 @@ export default function BrandCatalogueStudio({
   initialFile = null,
 }) {
   const router = useRouter(),
-    stop = useRef(false),
+    [run,setRun] = useState(null),
+    [runRevision,setRunRevision] = useState(0),
     [selected, setSelected] = useState(initialId || catalogues[0]?.id || ""),
     [busy, setBusy] = useState(false),
     [autoImage,setAutoImage] = useState(true),
     [notice, setNotice] = useState(""),
     [file, setFile] = useState(initialFile);
-  useEffect(
-    () => () => {
-      stop.current = true;
-    },
-    [],
-  );
+  useEffect(() => {
+    let cancelled=false, timer;
+    setRun(null);
+    async function refresh() {
+      try {
+        const {run}=await post({action:"status",id:selected});
+        if(cancelled)return;
+        setRun(run);
+        if(run && ["queued","working","waiting"].includes(run.state)) {
+          router.refresh();
+          timer=setTimeout(refresh,30000);
+        }
+      } catch {
+        if(!cancelled)timer=setTimeout(refresh,60000);
+      }
+    }
+    if(selected)refresh();
+    return ()=>{cancelled=true;clearTimeout(timer);};
+  },[selected,router,runRevision]);
   const itemMap = new Map(items.map((i) => [i.page_id + ":" + i.item_no, i]));
   const catalogue = catalogues.find((x) => x.id === selected),
     results = pages
       .filter((x) => x.catalogue_id === selected)
       .sort((a, b) => a.page_number - b.page_number);
-  async function processPages(id, start = 1, last = 500) {
-    if (last < start) {
-      setNotice("The final page must be after the starting page.");
-      return;
-    }
-    stop.current = false;
+  async function processPages(id, first=1, last=500) {
     setBusy(true);
-    let created = 0,
-      completed = 0;
-    const imageIssues = new Set();
-    let pauseImages = false;
     try {
-      for (let page = start; page <= last && !stop.current; page++) {
-        setNotice(
-          "Reading catalogue page " + page + " and creating product drafts…",
-        );
-        const request = {action:"process",id,page};
-        let d;
-        try {
-          d = await post(request);
-        } catch (error) {
-          if (!/Wait 30 seconds/i.test(error.message)) throw error;
-          setNotice("Waiting for the next AI request slot. The saved PDF will be reused.");
-          for (let n=0;n<31 && !stop.current;n++) await new Promise(resolve=>setTimeout(resolve,1000));
-          if (stop.current) break;
-          d = await post(request);
-        }
-        if (autoImage && !pauseImages) {
-          for (const product of new Set(d.ids || [])) {
-            if (stop.current) break;
-            setNotice("Checking product imagery on page " + page + "…");
-            try {
-              let result = await post({action:"image",id,page,product,approved:true});
-              if (result.status === "wait") {
-                setNotice("Product drafts are saved. Waiting for the next image request…");
-                for (let n=0;n<result.seconds && !stop.current;n++) await new Promise(resolve=>setTimeout(resolve,1000));
-                if (!stop.current) result=await post({action:"image",id,page,product,approved:true});
-              }
-              if (["wait","failed","cancelled"].includes(result.status)) imageIssues.add("Some product images need review.");
-            } catch (e) {
-              imageIssues.add(e.message);
-              if (/daily|credit limit|disabled/i.test(e.message)) { pauseImages=true; break; }
-            }
-          }
-        }
-        created += d.created;
-        completed++;
-        if (d.page_count) last = Math.min(last, d.page_count);
-        router.refresh();
-        if (page < last && !stop.current) {
-          setNotice(
-            "Page " +
-              page +
-              " saved. " +
-              created +
-              " new drafts created. Continuing with page " +
-              (page + 1) +
-              " shortly…",
-          );
-          for (let second = 0; second < 31 && !stop.current; second++)
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-      }
-      setNotice(
-        (stop.current ? "Paused. " : "Finished selected pages. ") +
-          completed +
-          " pages processed; " +
-          created +
-          " new product drafts created. Review product specifications and image matches before publication. " + [...imageIssues].join(" "),
-      );
-    } catch (e) {
-      setNotice(
-        e.message +
-          " Completed pages are saved. Resume from the next unfinished page.",
-      );
-    } finally {
-      setBusy(false);
+      if(last<first)throw Error("The final page must be on or after the starting page.");
+      const {run}=await post({action:"queue",id,first,last,auto_images:autoImage});
+      setRun(run);setRunRevision(value=>value+1);
+      setNotice("Catalogue queued. You can close this page and return to review the product drafts.");
       router.refresh();
-    }
+    }catch(error){setNotice(error.message);}
+    finally{setBusy(false);}
+  }
+  async function pause() {
+    try {
+      const {run}=await post({action:"pause",id:selected});
+      setRun(run);setRunRevision(value=>value+1);setNotice("Paused. Any page already in progress can finish.");
+    }catch(error){setNotice(error.message);}
   }
   return (
     <section className="workspace-card catalogue-studio">
@@ -228,25 +179,14 @@ export default function BrandCatalogueStudio({
         </div>
         <p className="workspace-small wide">
           SKUs are assigned automatically and can be edited in each product.
-          Manufacturer codes are retained separately. Keep this page open while
-          processing; pause or resume at any time. Your configured daily AI
-          limit applies.
+          Manufacturer codes are retained separately. Processing continues after you close the dashboard. If the daily AI allowance is reached, the import resumes after midnight India time.
         </p>
       </form>
       <p role="status" aria-live="polite" className="portal-message">
         {notice}
       </p>
-      {busy && (
-        <button
-          type="button"
-          onClick={() => {
-            stop.current = true;
-            setNotice("Pausing after the current page finishes…");
-          }}
-        >
-          Pause after this page
-        </button>
-      )}
+      {run && <p role="status">Background import · {run.state}{run.note && " · "+run.note}</p>}
+      {run && ["queued","working","waiting"].includes(run.state) && <button type="button" onClick={pause}>Pause after this page</button>}
       {!!catalogues.length && (
         <>
           <div className="catalogue-resume">

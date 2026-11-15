@@ -22,3 +22,7 @@ entrypoint = "./functions/ig-provider-webhook/index.ts"
 [functions.ig-creative-media]
 verify_jwt = false
 entrypoint = "./functions/ig-creative-media/index.ts"
+
+[functions.ig-catalogue-media]
+verify_jwt = false
+entrypoint = "./functions/ig-catalogue-media/index.ts"
