@@ -11,7 +11,8 @@ from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-from pypdf import PdfReader, PdfWriter
+from tempfile import NamedTemporaryFile
+import pikepdf
 import pypdfium2 as pdf
 import pypdfium2.raw as raw
 
@@ -32,6 +33,12 @@ class PrivateSource(io.RawIOBase):
         self.blocks = OrderedDict()
         self.etag = None
         self.http = build_opener(NoRedirect())
+
+    def readable(self):
+        return True
+
+    def seekable(self):
+        return True
 
     def tell(self):
         return self.pos
@@ -118,16 +125,20 @@ def render(stream, number):
 def render_source(source, number):
     # Resolve only this page and its resource references via the PDF cross-reference
     # table. Giving the original to PDFium can trigger a scan of all 199 pages.
-    reader = PdfReader(source, strict=True)
-    total = len(reader.pages)
-    if not 1 <= number <= total <= 500:
-        raise ValueError("Invalid catalogue page")
-    writer = PdfWriter()
-    writer.add_page(reader.pages[number-1], excluded_keys=("/Annots", "/B"))
-    subset = io.BytesIO()
-    writer.write(subset)
-    subset.seek(0)
-    result = render(subset, 1)
+    with pikepdf.Pdf.open(source, attempt_recovery=False) as original:
+        total = len(original.pages)
+        if not 1 <= number <= total <= 500:
+            raise ValueError("Invalid catalogue page")
+        with pikepdf.Pdf.new() as subset, NamedTemporaryFile(suffix=".pdf") as scratch:
+            subset.pages.append(original.pages[number-1])
+            page = subset.pages[0].obj
+            for key in ("/Annots", "/B", "/AA", "/PieceInfo", "/Thumb", "/Metadata"):
+                if key in page:
+                    del page[key]
+            subset.remove_unreferenced_resources()
+            subset.save(scratch, compress_streams=False)
+            scratch.flush()
+            result = render(scratch.name, 1)
     result["page_count"] = total
     return result
 
