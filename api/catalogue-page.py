@@ -4,12 +4,14 @@ import hmac
 import io
 import json
 import os
+from time import sleep
 from threading import Lock
 from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
+from pypdf import PdfReader, PdfWriter
 import pypdfium2 as pdf
 import pypdfium2.raw as raw
 
@@ -29,7 +31,6 @@ class PrivateSource(io.RawIOBase):
         self.url, self.size, self.pos = url, size, 0
         self.blocks = OrderedDict()
         self.etag = None
-        self.failed = False
         self.http = build_opener(NoRedirect())
 
     def tell(self):
@@ -47,13 +48,20 @@ class PrivateSource(io.RawIOBase):
             headers = {"Range": f"bytes={start}-{end}", "Accept-Encoding": "identity"}
             if self.etag:
                 headers["If-Match"] = self.etag
-            with self.http.open(Request(self.url, headers=headers), timeout=15) as response:
-                if response.status != 206 or response.headers.get("Content-Range") != f"bytes {start}-{end}/{self.size}":
-                    raise IOError("Source range unavailable")
-                data = response.read(end - start + 2)
-                if len(data) != end - start + 1:
-                    raise IOError("Incomplete source range")
-                self.etag = self.etag or response.headers.get("ETag")
+            for attempt in range(3):
+                try:
+                    with self.http.open(Request(self.url, headers=headers), timeout=15) as response:
+                        if response.status != 206 or response.headers.get("Content-Range") != f"bytes {start}-{end}/{self.size}":
+                            raise IOError("Unexpected byte range")
+                        data = response.read(end - start + 2)
+                        if len(data) != end - start + 1:
+                            raise IOError("Incomplete byte range")
+                        self.etag = self.etag or response.headers.get("ETag")
+                    break
+                except OSError:
+                    if attempt == 2:
+                        raise
+                    sleep(0.3 * (attempt + 1))
             self.blocks[start] = data
             if len(self.blocks) > 32:
                 self.blocks.popitem(last=False)
@@ -64,18 +72,13 @@ class PrivateSource(io.RawIOBase):
         dest = memoryview(buffer).cast("B")
         count = min(len(dest), max(0, self.size - self.pos))
         written = 0
-        try:
-            while written < count:
-                offset = self.pos % self.block_size
-                block = self.block(self.pos - offset)
-                n = min(len(block) - offset, count - written)
-                dest[written:written+n] = memoryview(block)[offset:offset+n]
-                written += n
-                self.pos += n
-        except Exception:
-            # PDFium reads via a C callback. Never return a partial document.
-            self.failed = True
-            return 0
+        while written < count:
+            offset = self.pos % self.block_size
+            block = self.block(self.pos - offset)
+            n = min(len(block) - offset, count - written)
+            dest[written:written+n] = memoryview(block)[offset:offset+n]
+            written += n
+            self.pos += n
         return written
 
 
@@ -102,8 +105,6 @@ def render(stream, number):
             if len(boxes) == 24:
                 break
         text = page.get_textpage().get_text_bounded()[:18000]
-        if getattr(stream, "failed", False):
-            raise IOError("Catalogue read interrupted")
         # The Vercel response includes base64, so bound the encoded JPEG too.
         for quality in (94, 90, 84, 78):
             out = io.BytesIO()
@@ -112,6 +113,23 @@ def render(stream, number):
                 return {"page_count": len(doc), "text": text, "boxes": boxes,
                         "jpeg": base64.b64encode(out.getvalue()).decode("ascii")}
         raise ValueError("Page artwork exceeds the renderer response allowance")
+
+
+def render_source(source, number):
+    # Resolve only this page and its resource references via the PDF cross-reference
+    # table. Giving the original to PDFium can trigger a scan of all 199 pages.
+    reader = PdfReader(source, strict=True)
+    total = len(reader.pages)
+    if not 1 <= number <= total <= 500:
+        raise ValueError("Invalid catalogue page")
+    writer = PdfWriter()
+    writer.add_page(reader.pages[number-1], excluded_keys=("/Annots", "/B"))
+    subset = io.BytesIO()
+    writer.write(subset)
+    subset.seek(0)
+    result = render(subset, 1)
+    result["page_count"] = total
+    return result
 
 
 class handler(BaseHTTPRequestHandler):
@@ -134,10 +152,13 @@ class handler(BaseHTTPRequestHandler):
             if type(size) is not int or size <= 0 or type(number) is not int:
                 raise ValueError("Invalid catalogue coordinates")
             with render_lock:
-                result = render(PrivateSource(data["url"], size), number)
+                result = render_source(PrivateSource(data["url"], size), number)
             body = json.dumps(result, separators=(",", ":")).encode()
         except Exception as error:
-            print("Catalogue renderer failed:", type(error).__name__, flush=True)
+            frame = error.__traceback__
+            while frame.tb_next:
+                frame = frame.tb_next
+            print("Catalogue renderer failed:", type(error).__name__, frame.tb_frame.f_code.co_name, frame.tb_lineno, flush=True)
             self.send_error(502, "Could not render the saved catalogue page")
             return
         self.send_response(200)
