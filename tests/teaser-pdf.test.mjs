@@ -63,3 +63,24 @@ test('A short product section starts in the left column and keeps the HORECA adv
  assert.match(closing,/Pavan Manikonda/);assert.doesNotMatch(closing,/Arun Manikonda/);
  await loading.destroy();
 });
+
+test('Assigned site photography is embedded on every page of a property brief',async()=>{
+ const record={...item,public_data:{...item.public_data,image:'/images/shirdi-hotel-exterior.jpg'}};
+ const result=await createTeaserPDF(record,businessDefaults);
+ const document=await PDFDocument.load(result.bytes);
+ for(const page of document.getPages()){
+  const resources=page.node.Resources().lookup(PDFName.of('XObject'));
+  const pictures=resources.values().map(ref=>document.context.lookup(ref).dict);
+  assert.ok(pictures.some(dict=>dict.get(PDFName.of('Width'))?.asNumber()===1280 && dict.get(PDFName.of('Height'))?.asNumber()===960));
+ }
+});
+test('A temporary failure loading an assigned photograph can be retried',async t=>{
+ const record={...item,public_data:{...item.public_data,image:'/images/library/test-retry.jpg'}};
+ const {readFile}=await import('node:fs/promises');
+ const photo=await readFile('public/images/shirdi-hotel-exterior.jpg');
+ const fetch=t.mock.method(globalThis,'fetch',async()=>new Response('',{status:503}));
+ await assert.rejects(createTeaserPDF(record,businessDefaults),/photograph/);
+ fetch.mock.mockImplementation(async()=>new Response(photo,{headers:{'content-type':'image/jpeg'}}));
+ assert.equal((await createTeaserPDF(record,businessDefaults)).pages,3);
+ assert.equal(fetch.mock.callCount(),2);
+});

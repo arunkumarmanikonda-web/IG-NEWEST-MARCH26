@@ -3,8 +3,7 @@ import { opportunityCard } from "../lib/cms";
 import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
 import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
-import { Arrow, Eyebrow, ContactBand } from "./components";
-import AdviserContacts from "./adviser-contacts";
+import { Arrow, Eyebrow } from "./components";
 
 export default function PropertyDetail({ item, related = [] }) {
   const x = opportunityCard(item),
@@ -99,18 +98,7 @@ export default function PropertyDetail({ item, related = [] }) {
         </article>
         <aside className="property-adviser">
           <Eyebrow>INDIA GULLY · REAL ESTATE</Eyebrow>
-          <h2>
-            Speak to an adviser
-          </h2>
-          <p>
-            Tell us your objective, investment parameters and timeline. Our real
-            estate team will confirm the property’s current position and the
-            information available for review.
-          </p>
-          <AdviserContacts kind="opportunity" subject={item.title + ' | Property enquiry'} />
-          <Link className="button" href={contact}>
-            Speak to our real estate team <Arrow />
-          </Link>
+          <h2>Property documents</h2>
           <Link
             className="text-link"
             target="_blank"
@@ -150,11 +138,6 @@ export default function PropertyDetail({ item, related = [] }) {
           </div>
         </section>
       )}
-      <ContactBand
-        interest={item.title}
-        title="Let’s discuss your property brief."
-        text="Buying, investing, leasing or bringing an asset to market. Start with a conversation about your objectives."
-      />
     </main>
   );
 }
