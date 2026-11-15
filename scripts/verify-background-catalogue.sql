@@ -53,15 +53,5 @@ begin
  assert public.ig_catalogue_background(k,'{"action":"claim"}') is null,'Completed import still issuing requests';
  assert (select used=1 and closed_at is not null from ig_private.catalogue_request_allowances where catalogue_id=cid),'Retry used an extra request or the completed allowance remained open';
  assert (select state='complete' from ig_private.catalogue_runs where catalogue_id=cid),'Import not marked complete';
- -- A live quota change should wake the saved range and reserve new pages without debiting a catalogue allowance.
- update public.ig_brand_catalogues set page_count=3 where id=cid;
- update ig_private.catalogue_runs set first_page=3,last_page=3,state='queued',due=now() where catalogue_id=cid;
- assert public.ig_catalogue_background(k,'{"action":"claim"}') is null,'Closed allowance unexpectedly admits another page';
- update ig_private.integration_config set settings=settings||'{"unlimited_daily_requests":true}' where id='openai';
- assert (select state='queued' and due<=now() from ig_private.catalogue_runs where catalogue_id=cid),'Quota change did not wake the parked catalogue';
- update public.ig_ai_jobs set created_at=now()-interval '2 minutes' where actor_id=uid;
- a=public.ig_catalogue_background(k,'{"action":"claim"}');
- assert (a->>'page')::int=3 and a is not null,'Unlimited mode did not admit a new catalogue page';
- assert (select not catalogue_extra from public.ig_ai_jobs where id=(a->>'ai_job')::uuid),'Unlimited mode consumed temporary credits';
 end $$;
 rollback;

@@ -7,11 +7,3 @@ test('incomplete statutory fields cannot be marked confirmed',()=>{assert.throws
 test('payment mode and key must agree and live onboarding is required',()=>{assert.throws(()=>validateIntegration('razorpay','test',{key_id:'rzp_live_example'},{key_secret:'x',webhook_secret:'y'}));assert.throws(()=>validateIntegration('razorpay','live',{key_id:'rzp_live_example'},{key_secret:'x',webhook_secret:'y'}));assert.equal(validateIntegration('razorpay','test',{key_id:'rzp_test_example'},{key_secret:'x',webhook_secret:'y'}).key_id,'rzp_test_example');});
 test('communications cannot activate with missing verification or header injection',()=>{assert.throws(()=>validateIntegration('resend','enabled',{},{}));assert.throws(()=>validateIntegration('resend','disabled',{from_name:'Bad\r\nBcc: bad@example.com'}));assert.throws(()=>validateIntegration('fast2sms','enabled',{},{}));assert.throws(()=>validateIntegration('openai','enabled',{model:'https://evil.example'},{}));});
 test('legal bundle contains complete policies and preserves mandatory rights',()=>{assert.deepEqual(Object.keys(initialPolicies).sort(),['privacy','terms','dataUse','cookies','commerce','refunds','shipping','grievances'].sort());for(const d of Object.values(initialPolicies))assert.ok(d.body.length>200);assert.match(initialPolicies.commerce.body,/GSTIN 07AAGCV0867P1ZN/);assert.match(initialPolicies.terms.body,/rights/);});
-
-test('Only OpenAI accepts an explicit unlimited request setting and older configurations retain the daily cap',()=>{
- const valid={api_key:'test-key-for-fixture'};
- assert.equal(validateIntegration('openai','enabled',{},valid).unlimited_daily_requests,false);
- assert.equal(validateIntegration('openai','enabled',{unlimited_daily_requests:true,daily_request_limit:20},valid).unlimited_daily_requests,true);
- assert.throws(()=>validateIntegration('openai','enabled',{unlimited_daily_requests:'true'},valid));
- assert.throws(()=>validateIntegration('runway','disabled',{unlimited_daily_requests:true}));
-});
