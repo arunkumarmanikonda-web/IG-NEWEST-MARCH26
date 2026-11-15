@@ -37,7 +37,7 @@ export default async function Teaser({ params, searchParams }) {
         <a className="button" href={"/admin/content/" + id + "/brief.pdf?version=" + (isLive ? "live" : "draft")}>Download PDF brief</a>
       </div>
       <p className="teaser-help">
-        India Gully’s approved three-page design is applied automatically to every saved revision: a photographic cover, property or product details, and an adviser enquiry page.{" "}
+        Property briefs expand to fit the saved information. Each brief opens with the cover and closes with the relevant enquiry contacts.{" "}
         {isLive
           ? "Using the published revision."
           : "Draft watermark remains until you choose a published revision."}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { opportunityCard } from "../lib/cms";
 import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
+import { narrativeParagraphs } from "../lib/teaser.mjs";
 import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
 import { Arrow, Eyebrow } from "./components";
@@ -52,9 +53,7 @@ export default function PropertyDetail({ item, related = [] }) {
           <Eyebrow>PROPERTY INFORMATION</Eyebrow>
           <h2>Overview</h2>
           <p className="property-summary">{item.summary}</p>
-          {item.body
-            ?.split(/\n\s*\n/)
-            .filter((t) => t.trim() && t.trim() !== item.summary?.trim())
+          {narrativeParagraphs(item.body,item.summary)
             .map((text, i) =>
               text.startsWith("## ") ? (
                 <h3 key={i}>{text.slice(3)}</h3>

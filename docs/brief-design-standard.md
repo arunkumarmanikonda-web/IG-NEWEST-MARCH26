@@ -26,9 +26,10 @@ draft, sends it to a client or grants data-room access.
 
 ## Design requirements
 
-- A4 portrait, three pages, using the original India Gully logo assets.
+- A4 portrait using the original India Gully logo assets.
 - Opening page: full-bleed approved photograph, fine gold frame, discreet
   branding and footer, restrained serif title in the lower part of the page.
+- Property briefs flow the complete approved narrative onto additional editorial pages as needed. Product briefs retain the three-page format.
 - Overview: photographic masthead, prominent supplied facts, clear summary,
   aligned editorial sections, readable spacing and a quiet enquiry callout.
 - Closing page: photographic hero, clear invitation, named advisers,
@@ -50,7 +51,7 @@ Keep both PDF routes on this shared renderer. Preserve the approved composition
 when extending fields or AI workflows. Do not resurrect `app/teaser-sheet.js`
 or the old browser-print layout for new brief flows.
 
-After any renderer change, inspect all three rendered pages and run
+After any renderer change, inspect every rendered page and run
 `node --test tests/teaser-pdf.test.mjs`. Check long titles, six supplied facts,
 short HORECA copy, draft labels, page bounds, adviser links and QR decoding.
 Preview arbitrary new records, not just the original sample properties.

@@ -10,9 +10,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Approved India Gully brief design
 
-The owner approved the report-inspired three-page brief design on 14 November
+The owner approved the report-inspired brief design on 14 November
 2026 (India time) and requested its automatic use for future briefs. Follow
-`docs/brief-design-standard.md` for all property and HORECA brief work. Keep
+`docs/brief-design-standard.md` for all property and HORECA brief work. Property briefs expand with the available material, with the contact page last. Keep
 `lib/teaser-pdf.mjs` as the shared renderer for AI-created and manually created
 records, admin previews, downloads and public property briefs. Do not introduce
 a separate ad hoc layout or return these flows to the legacy one-page sheet.

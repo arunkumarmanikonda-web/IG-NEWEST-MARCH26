@@ -30,11 +30,24 @@ test('Export is a compact PDF with selectable text, both contact links and a sca
  assert.equal((await createTeaserPDF(item,businessDefaults)).etag,result.etag);
  assert.notEqual((await createTeaserPDF({...item,summary:'Updated approved text.'},businessDefaults)).etag,result.etag);
 });
-test('Detailed briefs stop at three pages and drafts remain clearly marked',async()=>{
- const result=await createTeaserPDF({...item,body:('## Review\n\n'+('Approved property information. '.repeat(30))+'\n\n').repeat(20)},businessDefaults,{draft:true});
- assert.equal(result.pages,3);
+test('A property brief preserves every paragraph and closes with both advisers after the last detail page',async()=>{
+ const paragraphs=Array.from({length:31},(_,i)=>'Section'+i+' opens here. '+('Approved property information. '.repeat(15))+'EndMarker'+i+'X.');
+ const result=await createTeaserPDF({...item,body:paragraphs.join('\n\n')},businessDefaults,{draft:true});
  const loading=getDocument({data:result.bytes.slice()}),doc=await loading.promise;
- for(let i=1;i<=3;i++){const page=await doc.getPage(i),text=(await page.getTextContent()).items.map(x=>x.str).join(' ');assert.match(text,/DRAFT - FOR INTERNAL REVIEW/);if(i===3){assert.match(text,/Arun Manikonda/);assert.match(text,/Amit Jhingan/);}}
+ assert.ok(result.pages>3);assert.equal(result.pages,doc.numPages);
+ let editorial='';
+ for(let i=1;i<=doc.numPages;i++){
+  const page=await doc.getPage(i),parts=(await page.getTextContent()).items;
+  const text=parts.map(x=>x.str).join(' ');
+  assert.match(text,/DRAFT - FOR INTERNAL REVIEW/);
+  if(i>1 && i<doc.numPages)editorial+=' '+text;
+  if(i===doc.numPages){assert.match(text,/Arun Manikonda/);assert.match(text,/Amit Jhingan/);}
+  for(const part of parts.filter(x=>x.str.trim())){
+   assert.ok(part.transform[4]>=39 && part.transform[4]+part.width<=557,'Text outside frame');
+   assert.ok(part.transform[5]>=25,'Text below frame');
+  }
+ }
+ for(let i=0;i<paragraphs.length;i++)assert.equal(editorial.split('EndMarker'+i+'X.').length,2,'Missing or duplicate paragraph '+i);
  await loading.destroy();
 });
 test('Long titles and six facts stay inside the frame without crowding the draft label',async()=>{
