@@ -34,9 +34,16 @@ begin
  update ig_private.catalogue_runs set due=now() where catalogue_id=cid;
  assert public.ig_catalogue_background(k,'{"action":"claim"}') is null,'Daily cap bypassed';
  assert (select state='waiting' and (due at time zone 'Asia/Kolkata')::time='00:00' from ig_private.catalogue_runs where catalogue_id=cid),'Reset was not scheduled at India midnight';
- update public.ig_ai_jobs set created_at=now()-interval '2 days' where actor_id=uid;
+ -- A one-request allowance for page two must not apply to other pages or charge a retry.
+ update public.ig_ai_jobs set created_at=now()-interval '2 minutes' where actor_id=uid;
+ insert into ig_private.catalogue_request_allowances(catalogue_id,first_page,last_page,request_limit) values(cid,1,1,1);
+ update ig_private.catalogue_runs set due=now() where catalogue_id=cid;
+ assert public.ig_catalogue_background(k,'{"action":"claim"}') is null,'Page outside allowance was admitted';
+ update ig_private.catalogue_request_allowances set first_page=2,last_page=2 where catalogue_id=cid;
  update ig_private.catalogue_runs set due=now() where catalogue_id=cid;
  a=public.ig_catalogue_background(k,'{"action":"claim"}');assert (a->>'page')::int=2,'Did not resume at next page';
+ assert (select used=1 from ig_private.catalogue_request_allowances where catalogue_id=cid),'Allowance was not debited';
+ assert (select catalogue_extra from public.ig_ai_jobs where id=(a->>'ai_job')::uuid),'Request charged to general budget';
  perform public.ig_ai_finish(k,jsonb_build_object('id',a->'ai_job','status','ready','draft','{"products":[],"complete":true}'::jsonb));
  perform public.ig_catalogue_background(k,a||'{"action":"fail","note":"Temporary storage failure"}');
  update ig_private.catalogue_runs set due=now() where catalogue_id=cid;
@@ -44,6 +51,7 @@ begin
  perform public.ig_catalogue_background(k,a||'{"action":"finish","page_count":2,"result":{"products":[],"complete":true}}');
  update ig_private.catalogue_runs set due=now() where catalogue_id=cid;
  assert public.ig_catalogue_background(k,'{"action":"claim"}') is null,'Completed import still issuing requests';
+ assert (select used=1 and closed_at is not null from ig_private.catalogue_request_allowances where catalogue_id=cid),'Retry used an extra request or the completed allowance remained open';
  assert (select state='complete' from ig_private.catalogue_runs where catalogue_id=cid),'Import not marked complete';
 end $$;
 rollback;
