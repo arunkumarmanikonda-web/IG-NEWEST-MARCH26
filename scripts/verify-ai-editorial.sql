@@ -40,6 +40,11 @@ begin
  perform pg_temp.check_it(exists(select 1 from public.ig_content where id=(saved->>'id')::uuid and status='draft'),'Reviewed output saves only as an unpublished CMS draft');
  perform pg_temp.check_it(not exists(select 1 from public.ig_public_content where id=(saved->>'id')::uuid),'AI draft does not appear on the public website');
  perform pg_temp.check_it(public.ig_ai_save(jsonb_build_object('id',j->>'id','slug','system-test-ai','reviewed',true))->>'id'=saved->>'id','Repeated save returns the same CMS draft');
+ assert ig_private.openai_daily_cap('{"setup_quota_date":"2026-11-15","daily_request_limit":20}',date '2026-11-15')=100;
+ assert ig_private.openai_daily_cap('{"setup_quota_date":"2026-11-15","daily_request_limit":20}',date '2026-11-16')=20;
+ update ig_private.integration_config set settings=settings||jsonb_build_object('setup_quota_date',to_char(now() at time zone 'Asia/Kolkata','YYYY-MM-DD')) where id='openai';
+ update public.ig_ai_jobs set created_at=now()-interval '2 minutes' where actor_id=uid;
+ perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));
 end$$;
 select * from ig_checks;
 rollback;
