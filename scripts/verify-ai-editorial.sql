@@ -40,6 +40,11 @@ begin
  perform pg_temp.check_it(exists(select 1 from public.ig_content where id=(saved->>'id')::uuid and status='draft'),'Reviewed output saves only as an unpublished CMS draft');
  perform pg_temp.check_it(not exists(select 1 from public.ig_public_content where id=(saved->>'id')::uuid),'AI draft does not appear on the public website');
  perform pg_temp.check_it(public.ig_ai_save(jsonb_build_object('id',j->>'id','slug','system-test-ai','reviewed',true))->>'id'=saved->>'id','Repeated save returns the same CMS draft');
+ update ig_private.integration_config set settings=settings||'{"unlimited_daily_requests":true}' where id='openai';
+ update public.ig_ai_jobs set created_at=now()-interval '2 minutes' where actor_id=uid;
+ perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));
+ update ig_private.integration_config set settings=settings||'{"unlimited_daily_requests":false}' where id='openai';
+ begin perform public.ig_ai_prepare(jsonb_build_object('practice','transaction-advisory','context',ctx));raise exception 'Restored cap bypassed';exception when raise_exception then if sqlerrm<>'Daily AI request limit reached' then raise;end if;end;
 end$$;
 select * from ig_checks;
 rollback;
