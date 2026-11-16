@@ -49,6 +49,7 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
                 {r.agreement_snapshot?.recipient_email}
               </p>
               <div className="agreement-text">{r.agreement_snapshot?.body}</div>
+              {r.agreement_snapshot?.disclaimer && <p>{r.agreement_snapshot.disclaimer}</p>}
               <p className="workspace-note">
                 SHA-256: {r.agreement_snapshot?.sha256}
               </p>

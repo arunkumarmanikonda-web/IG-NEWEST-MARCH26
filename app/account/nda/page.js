@@ -42,11 +42,14 @@ export default async function Page({ searchParams }) {
   const projects=(items||[]).filter(item=>options.data.includes(item.slug));
   if(slug) {
     const item=projects.find(x=>x.slug===slug);
-    const identities=await client.from("ig_legal_entities").select("*").eq("user_id",user.id).order("consent_at");
+    const [identities, disclaimer] = await Promise.all([
+      client.from("ig_legal_entities").select("*").eq("user_id",user.id).order("consent_at"),
+      client.rpc("ig_project_disclaimer"),
+    ]);
     return <main id="main" className="auth-page"><div className="nda-account">
       <Link href={(kind==="project"?"/our-work/":"/opportunities/")+slug}>← Back to listing</Link>
-      {error||te||identities.error||!item?<p role="alert">This request could not be loaded. Try again.</p>:
-        <ProjectRequest item={{title:item.title,slug,kind}} template={templates.find(t=>t.content_id===item.id)||null}
+      {error||te||identities.error||disclaimer.error||!disclaimer.data||!item?<p role="alert">This request could not be loaded. Try again.</p>:
+        <ProjectRequest disclaimer={disclaimer.data} item={{title:item.title,slug,kind}} template={templates.find(t=>t.content_id===item.id)||null}
           request={requests.find(r=>r.content_id===item.id)} entities={identities.data} offline={!!process.env.UIDAI_OFFLINE_SIGNING_CERT}/>}
     </div></main>;
   }

@@ -8,6 +8,7 @@ import Identities from "../legal-names/identities";
 export default function ProjectRequest({
   item,
   template,
+  disclaimer,
   entities,
   request,
   offline,
@@ -61,6 +62,7 @@ export default function ProjectRequest({
             <div className="agreement-text">
               {request.agreement_snapshot?.body}
             </div>
+            {request.agreement_snapshot?.disclaimer && <p>{request.agreement_snapshot.disclaimer}</p>}
           </details>
         )}
         {request.response_note && <p>{request.response_note}</p>}
@@ -101,9 +103,8 @@ export default function ProjectRequest({
                 entity_id: entity.id,
                 purpose,
                 template_id: template.id,
-                signed_name: f.get("signed_name").trim(),
-                agreed: f.has("agreed"),
-                authority: f.has("authority"),
+                accepted: f.has("accepted"),
+                disclaimer,
               });
             else
               send("project_signature", {
@@ -159,26 +160,11 @@ export default function ProjectRequest({
           )}
           {template && entity ? (
             <>
-              <label className="wide">
-                Type the authorised signatory’s full name: {entity.signer}
-                <input
-                  name="signed_name"
-                  required
-                  maxLength={120}
-                  autoComplete="name"
-                />
-              </label>
-              <label className="check wide">
-                <input type="checkbox" name="agreed" required />I have read this
-                version and intend to sign it electronically for the selected
-                recipient.
-              </label>
-              <label className="check wide">
-                <input type="checkbox" name="authority" required />I am the
-                named signatory and have authority to sign for this recipient.
+              <label className="check wide" key={JSON.stringify([template.id,entity.id,purpose,disclaimer])}>
+                <input type="checkbox" name="accepted" required />{disclaimer}
               </label>
               <button className="primary" disabled={busy}>
-                Sign NDA and Request Access
+                Accept and Submit
               </button>
             </>
           ) : (

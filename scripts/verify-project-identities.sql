@@ -30,7 +30,7 @@ begin
  assert not has_table_privilege('anon','public.ig_legal_entities','SELECT');
  assert not has_table_privilege('authenticated','public.ig_legal_entities','UPDATE');
  assert not ig_private.kyc_object(concat_ws('/',buyer,entity,1,'aadhaar_offline'),true);
- signature=jsonb_build_object('slug',app.slug,'template_id',tmpl->>'id','entity_id',entity,'purpose','Review a synthetic opportunity','signed_name','Example Signatory','agreed',true,'authority',true);
+ signature=jsonb_build_object('slug',app.slug,'template_id',tmpl->>'id','entity_id',entity,'purpose','Review a synthetic opportunity','accepted',true,'disclaimer',public.ig_project_disclaimer());
  blocked=false;begin perform public.ig_project_signature(signature);exception when others then blocked=true;end;assert blocked,'Unverified legal name accepted';
  foreach evidence in array array['incorporation','gst','resolution'] loop
    assert ig_private.kyc_object(concat_ws('/',buyer,entity,1,evidence),true);
@@ -44,8 +44,13 @@ begin
  blocked=false;begin perform public.ig_project_signature(signature);exception when others then blocked=true;end;assert blocked,'Different account could sign';
  perform set_config('request.jwt.claims',buyer_jwt,true);
  blocked=false;begin perform public.ig_project_signature(signature||jsonb_build_object('template_id',other_t->>'id'));exception when others then blocked=true;end;assert blocked,'Different project terms accepted';
+ blocked=false;begin perform public.ig_project_signature(signature||'{"accepted":false}');exception when others then blocked=true;end;assert blocked,'Unchecked disclaimer was accepted';
+ blocked=false;begin perform public.ig_project_signature(signature-'accepted');exception when others then blocked=true;end;assert blocked,'Missing acceptance was accepted';
+ blocked=false;begin perform public.ig_project_signature(signature||'{"disclaimer":"previous wording"}');exception when others then blocked=true;end;assert blocked,'Stale disclaimer was accepted';
  select count(*) into before_count from public.ig_room_grants;
  request=public.ig_project_signature(signature);
+ assert request->>'signed_name'='Example Signatory' and request->'agreement_snapshot'->>'method'='project-disclaimer-acceptance'
+   and request->'agreement_snapshot'->>'disclaimer'=public.ig_project_disclaimer();
  assert request->>'status'='accepted' and request->'agreement_snapshot'->>'legal_name'='Sample Hospitality Limited';
  assert public.ig_project_signature(signature)->>'id'=request->>'id','Retry created another signature';
  actual=public.ig_project_signature(signature||jsonb_build_object('kind','project','slug',other.slug,'template_id',other_t->>'id'));

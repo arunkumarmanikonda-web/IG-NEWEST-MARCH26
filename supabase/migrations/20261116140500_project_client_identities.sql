@@ -102,6 +102,12 @@ begin
  spec=replace(spec,'set status=''retired'' where status=''active''','set status=''retired'' where status=''active'' and content_id is not distinct from t.content_id');
  execute spec;
 end $$;
+create function public.ig_project_disclaimer() returns text language sql immutable set search_path='' as $$
+ select 'I am authorised to sign for the selected legal name. I have read and accept this project''s confidentiality agreement. By clicking Accept and Submit, I sign this agreement electronically.'::text
+$$;
+revoke all on function public.ig_project_disclaimer() from public,anon;
+grant execute on function public.ig_project_disclaimer() to authenticated;
+
 create function ig_private.require_project_signature() returns trigger language plpgsql set search_path='' as $$
 declare e public.ig_legal_entities; t public.ig_nda_templates; body text;
 begin
@@ -111,7 +117,7 @@ begin
   if e.id is null or t.id is null or new.signed_name<>e.signer then raise exception 'Choose a verified legal name and the current project agreement';end if;
   body=concat_ws(E'\n',new.public_title,'Recipient: '||e.legal_name,'Authorised signatory: '||e.signer,'Purpose: '||new.purpose,'',t.body);
   new.organisation=case when e.kind='company' then e.legal_name else '' end;
-  new.agreement_snapshot=new.agreement_snapshot||jsonb_build_object('body',body,'sha256',encode(extensions.digest(convert_to(body,'UTF8'),'sha256'),'hex'),'legal_entity',e.id,'legal_name',e.legal_name,'kyc_revision',e.revision,'content_id',new.content_id);
+  new.agreement_snapshot=new.agreement_snapshot||jsonb_build_object('body',body,'sha256',encode(extensions.digest(convert_to(body,'UTF8'),'sha256'),'hex'),'legal_entity',e.id,'legal_name',e.legal_name,'kyc_revision',e.revision,'content_id',new.content_id,'method','project-disclaimer-acceptance','disclaimer',public.ig_project_disclaimer());
  end if;
  if new.template_id is not null and exists(select from public.ig_nda_templates where id=new.template_id and content_id is not null and content_id<>new.content_id) then raise exception 'Agreement belongs to a different project';end if;
  return new;
@@ -132,7 +138,9 @@ begin
   return to_jsonb(r);
  end if;
  select * into e from public.ig_legal_entities where user_id=auth.uid() and id=(p->>'entity_id')::uuid and status='verified' for share;
- if e.id is null or p->>'signed_name' is distinct from e.signer or p->>'agreed' is distinct from 'true' or p->>'authority' is distinct from 'true' then raise exception 'Select a verified legal name and confirm the signatory and agreement';end if;
+ if e.id is null or p->'accepted' is distinct from 'true'::jsonb or p->>'disclaimer' is distinct from public.ig_project_disclaimer() then
+  raise exception 'Select a verified legal name and accept the current project disclaimer';
+ end if;
  select * into t from public.ig_nda_templates where id=(p->>'template_id')::uuid and status='active' and content_id=c.id for share;
  if t.id is null then raise exception 'The agreement has changed. Review its current version.';end if;
  insert into public.ig_nda_requests(user_id,content_id,public_title,purpose,legal_entity_id) values(auth.uid(),c.id,c.title,trim(p->>'purpose'),e.id) on conflict(user_id,content_id) do nothing;
@@ -140,7 +148,7 @@ begin
  if r.status in ('accepted','approved') and r.legal_entity_id=e.id and r.template_id=t.id and r.purpose=trim(p->>'purpose') then return to_jsonb(r);end if;
  if r.status<>'requested' then raise exception 'A disclosure decision or signature already exists for this project. Check your requests.';end if;
  update public.ig_nda_requests set legal_entity_id=e.id,purpose=trim(p->>'purpose') where id=r.id;
- return ig_private.nda_action(p||jsonb_build_object('action','accept','id',r.id,'version',r.version,'organisation',e.legal_name));
+ return ig_private.nda_action(p||jsonb_build_object('action','accept','id',r.id,'version',r.version,'signed_name',e.signer,'organisation',e.legal_name,'agreed',true,'authority',true));
 end $$;
 revoke all on function public.ig_project_signature(jsonb) from public,anon;
 grant execute on function public.ig_project_signature(jsonb) to authenticated;

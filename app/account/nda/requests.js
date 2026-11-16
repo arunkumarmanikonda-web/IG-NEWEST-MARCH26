@@ -169,10 +169,7 @@ export default function NdaAccount({
                 <dd>{r.agreement_snapshot?.sha256}</dd>
               </dl>
               <div className="agreement-text">{r.agreement_snapshot?.body}</div>
-              <p>
-                Method: typed name and explicit electronic acceptance. This is
-                not a certificate-based digital signature.
-              </p>
+              <p>{r.agreement_snapshot?.disclaimer || "Accepted by typed name and explicit electronic acceptance."}</p>
             </details>
           )}
           {r.status === "approved" && (
