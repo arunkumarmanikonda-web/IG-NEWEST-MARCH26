@@ -1,0 +1,55 @@
+<svg class="gullu-patang" data-mood="welcome" width="192" height="192" viewBox="0 0 100 100" role="img" aria-labelledby="gullu-kite-title" focusable="false" xmlns="http://www.w3.org/2000/svg"><title id="gullu-kite-title">Gullu, India Gully’s smiling patang</title><style>
+.gullu-patang {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  overflow: visible;
+  pointer-events: auto;
+}
+.gullu-patang .patang-flight { transform-origin: 50px 40px; animation: gullu-glide 5.5s ease-in-out infinite; }
+.gullu-patang .patang-pose { transform-origin: 46px 39px; transition: transform .35s ease; }
+.gullu-patang .patang-tail { transform-origin: 49px 69px; animation: gullu-ribbon 2.5s ease-in-out infinite alternate; }
+.gullu-patang .patang-tassel { transform-origin: 85px 35px; animation: gullu-fringe 2.1s ease-in-out infinite alternate; }
+.gullu-patang .patang-eye { transform-origin: 0 0; animation: gullu-blink 5.7s linear infinite; }
+.gullu-patang .patang-pupil { transform: translate(var(--gullu-look-x, 0px), var(--gullu-look-y, 0px)); transition: transform .12s ease-out; }
+.gullu-patang .patang-mouth { transform-origin: 47px 51px; }
+.gullu-patang .patang-wink, .gullu-patang .patang-ponder { opacity: 0; }
+.gullu-patang[data-mood="listening"] .patang-pose { transform: rotate(-9deg) translate(-.6px, .5px); }
+.gullu-patang[data-mood="listening"] .patang-brow { transform: translateY(-1.6px); }
+.gullu-patang[data-mood="thinking"] .patang-pose { transform: rotate(7deg); }
+.gullu-patang[data-mood="thinking"] .patang-mouth { opacity: 0; }
+.gullu-patang[data-mood="thinking"] .patang-ponder { opacity: 1; }
+.gullu-patang[data-mood="thinking"] .patang-pupil { animation: gullu-consider 2.4s ease-in-out infinite; }
+.gullu-patang[data-mood="reply"] .patang-mouth { animation: gullu-talk .65s ease-in-out 4; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-pose { animation: gullu-wave .95s ease-in-out 2; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-eye-far { animation: gullu-brief-wink 1.9s ease-in-out both; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-wink-far { animation: gullu-wink-line 1.9s ease-in-out both; }
+@media (hover: hover) {
+  button:hover .gullu-patang[data-mood="idle"] .patang-pose,
+  .gullu-patang[data-mood="idle"]:hover .patang-pose { transform: rotate(-6deg) scale(1.04); }
+}
+@keyframes gullu-glide {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-1.6px) rotate(2deg); }
+}
+@keyframes gullu-ribbon { from { transform: rotate(-7deg); } to { transform: rotate(8deg) skewX(-3deg); } }
+@keyframes gullu-fringe { from { transform: rotate(-5deg); } to { transform: rotate(10deg); } }
+@keyframes gullu-blink { 0%, 48%, 52%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.12); } }
+@keyframes gullu-wave {
+  0%, 100% { transform: rotate(0deg); }
+  28% { transform: translateY(-1px) rotate(-9deg) scale(.99,1.04); }
+  70% { transform: rotate(7deg) scale(1.04,.96); }
+}
+@keyframes gullu-consider { 0%, 100% { transform: translate(1.5px,-1.5px); } 50% { transform: translate(-1.5px,-1px); } }
+@keyframes gullu-talk { 0%, 100% { transform: scale(1,.68); } 45% { transform: scale(.93,1.2); } }
+@keyframes gullu-brief-wink { 0%, 28%, 62%, 100% { opacity: 1; } 34%, 55% { opacity: 0; } }
+@keyframes gullu-wink-line { 0%, 28%, 62%, 100% { opacity: 0; } 34%, 55% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .gullu-patang *, button:hover .gullu-patang .patang-pose, .gullu-patang:hover .patang-pose {
+    animation: none !important;
+    transition: none !important;
+  }
+  .gullu-patang .patang-pupil { transform: none !important; }
+}
+
+</style><g class="patang-flight"><g class="patang-pose"><g class="patang-tail"><path d="M49 69C48 77 47 81 56 83S70 86 69 95" fill="none" stroke="#31303b" stroke-width="2.8" stroke-linecap="round"></path><path d="m48 80-6-5-2 7 8 1 5 5 2-6z" fill="#dc6048" stroke="#34313b" stroke-width="1.3" stroke-linejoin="round"></path><path d="m68 88-6 3 1-7 5 2 6-4 1 6z" fill="#24a799" stroke="#34313b" stroke-width="1.3" stroke-linejoin="round"></path></g><path class="patang-tassel" d="m85 34 7-6-1 5 5-1-6 7-7-1z" fill="#ee7151" stroke="#35313b" stroke-width="1.3" stroke-linejoin="round"></path><path d="M47 4Q66 12 90 35Q67 50 48 72Q34 53 8 37Q22 18 47 4Z" fill="#f7ad28" stroke="#272938" stroke-width="2.7" stroke-linejoin="round"></path><path d="M47 6Q56 10 65 17L48 24 31 16Q39 10 47 6Z" fill="#117e7e"></path><path d="m34 17 14 6 13-5" fill="none" stroke="#f9e4a1" stroke-width="2" stroke-linecap="round"></path><path d="M11 37Q19 27 25 23L19 38l10 10Z" fill="#e96b41"></path><path d="m48 69-8-10q8 3 16-1z" fill="#167d7e"></path><path d="M12 36Q48 17 87 34M47 8l1 12m0 39v9" fill="none" stroke="#6d4728" stroke-width="1.3" opacity=".6"></path><path class="patang-brow" d="M28.5 27.4q3-3.3 7.8-2.6m16.8.4q3.1-2.6 7.1.1" fill="none" stroke="#30303a" stroke-width="2.7" stroke-linecap="round"></path><g transform="translate(36 38)"><g class="patang-eye patang-eye-near"><ellipse rx="6.8" ry="8.2" fill="#fff7dc" stroke="#282a34" stroke-width="1.8"></ellipse><g class="patang-pupil"><ellipse cx="0.7" cy="0.5" rx="3.8" ry="5.1" fill="#242837"></ellipse><circle cx="1.6" cy="-1.6" r="1.3" fill="#fffdf1"></circle></g></g><path class="patang-wink patang-wink-near" d="M-5 1Q0 -4 5 0" fill="none" stroke="#292b33" stroke-width="3" stroke-linecap="round"></path></g><g transform="translate(56 38)"><g class="patang-eye patang-eye-far"><ellipse rx="6.8" ry="8.2" fill="#fff7dc" stroke="#282a34" stroke-width="1.8"></ellipse><g class="patang-pupil"><ellipse cx="0.7" cy="0.5" rx="3.8" ry="5.1" fill="#242837"></ellipse><circle cx="1.6" cy="-1.6" r="1.3" fill="#fffdf1"></circle></g></g><path class="patang-wink patang-wink-far" d="M-5 1Q0 -4 5 0" fill="none" stroke="#292b33" stroke-width="3" stroke-linecap="round"></path></g><g fill="#da6544"><ellipse cx="24" cy="43" rx="3.5" ry="1.8" transform="rotate(16 24 43)"></ellipse><ellipse cx="67" cy="42" rx="3.5" ry="1.8" transform="rotate(-14 67 42)"></ellipse></g><g class="patang-mouth"><path d="M38.4 49q7.4 4.3 16.7-1.4c-1.3 8.3-12.1 12-16.7 1.4Z" fill="#382e38" stroke="#382e38" stroke-width="1.3" stroke-linejoin="round"></path><path d="M43.5 54q4.1-3.6 8-2.3c-1.5 2.5-4.6 3.7-8 2.3Z" fill="#ee8778"></path></g><path class="patang-ponder" d="M43 51q4.5 1.8 7.5-.5" fill="none" stroke="#382e38" stroke-width="2.5" stroke-linecap="round"></path></g></g></svg>

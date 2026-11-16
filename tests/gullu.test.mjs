@@ -60,3 +60,20 @@ test("callbacks reject altered or expired answers and changed conversation ids",
   }
   assert.equal(verifiedTurn(turn,receipt,"secret",86402000),false);
 });
+
+import {socialReply,acceptsFollowup,conversationLanguage} from "../lib/gullu-conversation.mjs";
+test("Arun’s Hinglish greeting, assent, unfinished message and pause stay conversational",()=>{
+ let history=[];
+ for(const [q,pattern] of [["KYA HORAHA HAI GULLU",/mast hoon/],["HANJI",/Haan ji/],["H,,",/beech mein/],["HMM",/Aaram se/]]){
+  const lang=conversationLanguage(q,history,"auto"), reply=socialReply(q,history,lang);
+  assert.match(reply.answer,pattern);assert.deepEqual(reply.sources,[]);history.push({question:q,answer:reply.answer});
+ }
+ assert.equal(socialReply("Hi Gullu, does Park Plaza have a price?",history,"English"),null);
+ assert.equal(acceptsFollowup("HANJI",{answer:"Yeh detail confirm nahi hui. Kya team se follow-up karwaun?"}),true);
+ assert.equal(acceptsFollowup("yes please",{answer:"Would you like our team to check it for you?"}),true);
+ assert.equal(acceptsFollowup("hmm",{answer:"Would you like our team to check it for you?"}),false);
+ assert.equal(acceptsFollowup("yes",{answer:"Would you like to see hotels?"}),false);
+ assert.equal(conversationLanguage("who is your managing director",history,"Hinglish"),"Hinglish");
+ const md=directAnswer("WHO IS YOU MANAGING DIRECTOR",[{kind:"person",title:"Arun Manikonda",href:"/leadership/arun-manikonda",chunks:["Founder and Managing Director."]}],history,"Hinglish");
+ assert.equal(md.answer,"Arun Manikonda India Gully ke Managing Director hain.");
+});

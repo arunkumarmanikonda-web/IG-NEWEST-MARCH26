@@ -1,0 +1,52 @@
+.gullu-patang {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+  overflow: visible;
+  pointer-events: auto;
+}
+.gullu-patang .patang-flight { transform-origin: 50px 40px; animation: gullu-glide 5.5s ease-in-out infinite; }
+.gullu-patang .patang-pose { transform-origin: 46px 39px; transition: transform .35s ease; }
+.gullu-patang .patang-tail { transform-origin: 49px 69px; animation: gullu-ribbon 2.5s ease-in-out infinite alternate; }
+.gullu-patang .patang-tassel { transform-origin: 85px 35px; animation: gullu-fringe 2.1s ease-in-out infinite alternate; }
+.gullu-patang .patang-eye { transform-origin: 0 0; animation: gullu-blink 5.7s linear infinite; }
+.gullu-patang .patang-pupil { transform: translate(var(--gullu-look-x, 0px), var(--gullu-look-y, 0px)); transition: transform .12s ease-out; }
+.gullu-patang .patang-mouth { transform-origin: 47px 51px; }
+.gullu-patang .patang-wink, .gullu-patang .patang-ponder { opacity: 0; }
+.gullu-patang[data-mood="listening"] .patang-pose { transform: rotate(-9deg) translate(-.6px, .5px); }
+.gullu-patang[data-mood="listening"] .patang-brow { transform: translateY(-1.6px); }
+.gullu-patang[data-mood="thinking"] .patang-pose { transform: rotate(7deg); }
+.gullu-patang[data-mood="thinking"] .patang-mouth { opacity: 0; }
+.gullu-patang[data-mood="thinking"] .patang-ponder { opacity: 1; }
+.gullu-patang[data-mood="thinking"] .patang-pupil { animation: gullu-consider 2.4s ease-in-out infinite; }
+.gullu-patang[data-mood="reply"] .patang-mouth { animation: gullu-talk .65s ease-in-out 4; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-pose { animation: gullu-wave .95s ease-in-out 2; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-eye-far { animation: gullu-brief-wink 1.9s ease-in-out both; }
+.gullu-patang:is([data-mood="welcome"], [data-mood="wave"]) .patang-wink-far { animation: gullu-wink-line 1.9s ease-in-out both; }
+@media (hover: hover) {
+  button:hover .gullu-patang[data-mood="idle"] .patang-pose,
+  .gullu-patang[data-mood="idle"]:hover .patang-pose { transform: rotate(-6deg) scale(1.04); }
+}
+@keyframes gullu-glide {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-1.6px) rotate(2deg); }
+}
+@keyframes gullu-ribbon { from { transform: rotate(-7deg); } to { transform: rotate(8deg) skewX(-3deg); } }
+@keyframes gullu-fringe { from { transform: rotate(-5deg); } to { transform: rotate(10deg); } }
+@keyframes gullu-blink { 0%, 48%, 52%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.12); } }
+@keyframes gullu-wave {
+  0%, 100% { transform: rotate(0deg); }
+  28% { transform: translateY(-1px) rotate(-9deg) scale(.99,1.04); }
+  70% { transform: rotate(7deg) scale(1.04,.96); }
+}
+@keyframes gullu-consider { 0%, 100% { transform: translate(1.5px,-1.5px); } 50% { transform: translate(-1.5px,-1px); } }
+@keyframes gullu-talk { 0%, 100% { transform: scale(1,.68); } 45% { transform: scale(.93,1.2); } }
+@keyframes gullu-brief-wink { 0%, 28%, 62%, 100% { opacity: 1; } 34%, 55% { opacity: 0; } }
+@keyframes gullu-wink-line { 0%, 28%, 62%, 100% { opacity: 0; } 34%, 55% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .gullu-patang *, button:hover .gullu-patang .patang-pose, .gullu-patang:hover .patang-pose {
+    animation: none !important;
+    transition: none !important;
+  }
+  .gullu-patang .patang-pupil { transform: none !important; }
+}

@@ -4,6 +4,7 @@ import { dispatchEmailQueue } from "../../../lib/delivery";
 import { HttpError, errorJson, privateJson, readJson } from "../../../lib/http.mjs";
 import { integrationRpc, runtimeConfigs } from "../../../lib/runtime-config";
 import { answerFromPassages, directAnswer, isPublicPath, rankPassages, languageFor } from "../../../lib/gullu.mjs";
+import {socialReply,acceptsFollowup} from "../../../lib/gullu-conversation.mjs";
 import { liveGulluDocuments } from "../../../lib/gullu-sources";
 
 export const maxDuration=60;
@@ -33,20 +34,30 @@ export async function POST(request) {
     const context=await integrationRpc("ig_gullu_guest",{action:"context",...ids});
     const stored=context.existing;
     const publicTurn=t=>({turn_id:t.turn_id,question:t.question,answer:t.answer,sources:t.sources,practice_interest:t.practice_interest});
-    if(body.action==="followup"){
-      if(!stored||body.consent!==true)throw new HttpError("Choose a saved reply for the team to follow up.");
-      const ack=await integrationRpc("ig_gullu_guest",{...publicTurn(stored),...ids,action:"record",follow_up:true});
+    async function refer(saved){
+      const ack=await integrationRpc("ig_gullu_guest",{...ids,...publicTurn(saved),action:"record",follow_up:true});
       if(!ack?.enquiry_id)throw new Error("Missing reference");
       after(async()=>{try{await dispatchEmailQueue(ack.enquiry_id);}catch{/* The queue retries. */}});
-      return privateJson({reference:ack.enquiry_id});
+      return ack.enquiry_id;
+    }
+    if(body.action==="followup"){
+      if(!stored||body.consent!==true)throw new HttpError("Choose a saved reply for the team to follow up.");
+      return privateJson({reference:await refer(stored)});
     }
     if(typeof body.question!=="string"||!body.question.trim()||body.question.length>700)throw new HttpError("Ask a question of up to 700 characters.");
     const question=body.question.trim();
     if(stored){if(stored.question!==question)throw new HttpError("Please send this as a new question.",409);return privateJson(publicTurn(stored));}
     const history=(context.history||[]).map(t=>({question:redact(t.question),answer:t.answer,sources:t.sources.map(s=>s.href).filter(isPublicPath)}));
     const query=redact(question), page=isPublicPath(body.page)?body.page:"/",language=languageFor(query,history,body.language);
-    const docs=await liveGulluDocuments(query,history,page);
-    let result=directAnswer(query,docs,history,language);
+    const previous=context.history?.at(-1);
+    let result=socialReply(query,history,language);
+    if(acceptsFollowup(query,previous)){
+      const record=await integrationRpc("ig_gullu_guest",{action:"context",...ids,turn_id:previous.turn_id});
+      const ref=await refer(record.existing);
+      result={answer:(language==="English"?"I’ve sent your previous question to our team. Your reference is ":language==="Hindi"?"मैंने आपका पिछला सवाल हमारी टीम को भेज दिया है। आपकी संदर्भ संख्या है ":"Maine aapka pichhla sawaal team ko bhej diya hai. Aapka reference hai ")+ref+".",sources:[],practice_interest:record.existing.practice_interest};
+    }
+    const docs=result?[]:await liveGulluDocuments(query,history,page);
+    result??=directAnswer(query,docs,history,language);
     if(!result){
       const candidates=rankPassages(docs,query,history,page);
       const config=candidates.length?(await runtimeConfigs("openai").catch(()=>({}))).openai:null;
