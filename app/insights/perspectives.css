@@ -1,0 +1,33 @@
+.perspective-archive { max-width: 1500px; margin-inline: auto; }
+.perspective-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; margin: 32px 0 24px; }
+.perspective-filters label { display: grid; gap: 6px; min-width: 0; font-size: 13px; font-weight: 600; }
+.perspective-filters label:first-child { flex: 1 1 280px; }
+.perspective-filters input, .perspective-filters select { background: white; color: var(--ink); border: 1px solid var(--line); border-radius: 0; padding: 10px 12px; width: 100%; min-height: 46px; font-weight: 400; }
+.perspective-filters .button { min-height: 46px; background: var(--ink); color: white; justify-content: center; }
+.perspective-filters > a, .archive-pages a, .perspective-notes a, .perspective-sources a { text-decoration: underline; text-underline-offset: .2em; }
+.perspective-filters > a { padding-block: 10px; }
+.archive-total, .archive-pages, .archive-meta, .perspective-article-meta, .perspective-notes { font-size: 13px; }
+.archive-items { border-bottom: 1px solid var(--line); margin: 10px 0 20px; }
+.archive-item { display: grid; grid-template-columns: minmax(140px, .42fr) minmax(0, 1fr) 44px; align-items: start; gap: 30px; padding: 28px 0; border-top: 1px solid var(--line); }
+.archive-meta { display: grid; gap: 5px; }
+.archive-cover { width: min(100%, 200px); height: auto; aspect-ratio: 2 / 1; object-fit: cover; margin-bottom: 8px; }
+.archive-meta span { color: var(--gold-dark); }
+.archive-item h3 a:hover { text-decoration: underline; text-underline-offset: .12em; }
+.archive-item p, .perspective-passage p { text-align: justify; }
+.archive-item p { margin-top: 10px; }
+.archive-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); }
+.archive-pages, .perspective-notes, .perspective-article-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.archive-pages { justify-content: space-between; }
+.perspective-article-meta { margin-bottom: 24px; }
+.perspective-notes { margin: 6px 0 22px; color: var(--muted); }
+.perspective-sources { margin-top: 2rem; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.perspective-sources ol { padding-left: 1.5em; }
+.perspective-sources li { padding-block: .5em; }
+.perspective-sources time { color: var(--muted); font-size: .9em; }
+@media (max-width: 680px) {
+  .archive-item { display: block; }
+  .archive-cover { display: none; }
+  .archive-meta { display: flex; flex-wrap: wrap; gap: .3em 1em; margin-bottom: 8px; }
+  .archive-arrow { display: none; }
+  .perspective-filters label { flex: 1 1 100%; }
+}

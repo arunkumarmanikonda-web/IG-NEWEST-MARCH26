@@ -1,0 +1,37 @@
+.gullu { position:fixed; right:max(18px,env(safe-area-inset-right)); bottom:max(16px,env(safe-area-inset-bottom)); z-index:60; color:#292820; font:14px/1.45 var(--sans,Arial,sans-serif); }
+.gullu-launch { min-height:45px; display:flex; align-items:center; justify-content:center; gap:9px; border:1px solid #c7a83d; border-radius:24px; background:#2b2a26; color:white; padding:8px 18px; font:600 14px/1.2 var(--sans,Arial,sans-serif); box-shadow:0 3px 12px #18170c33; cursor:pointer; }
+.gullu-panel { position:absolute; right:0; bottom:55px; width:min(405px,calc(100vw - 32px)); max-height:min(690px,calc(100dvh - 92px)); display:flex; flex-direction:column; overflow:hidden; border:1px solid #c9c3b5; background:#fff; border-radius:10px; box-shadow:0 12px 48px #16140735; }
+.gullu-head { flex:none; display:flex; align-items:center; justify-content:space-between; background:#2b2a26; padding:14px 17px; color:#fff; }
+.gullu-head h2 { margin:0; font:normal 26px/1.05 var(--serif,Georgia,serif); color:#fff; }
+.gullu-head p { margin:3px 0 0; color:#eee8d9; font-size:12px; }
+.gullu-head button { min-width:38px; min-height:38px; border:0; background:transparent; color:white; cursor:pointer; font-size:26px; }
+.gullu-scroll { min-height:0; overflow:auto; overscroll-behavior:contain; padding:14px 17px; }
+.gullu-intro,.gullu-reply p { margin:0 0 10px; }
+.gullu-prompts { display:flex; flex-wrap:wrap; gap:5px; }
+.gullu-prompts button,.gullu-follow,.gullu-follow-form button { padding:6px 9px; border:1px solid #c5bead; border-radius:4px; background:white; color:inherit; cursor:pointer; font:inherit; }
+.gullu-log article { margin:12px 0; }
+.gullu-question { background:#f5f3ed; padding:9px 11px; margin:0 0 9px; }
+.gullu-log strong { display:block; color:#695826; font-size:11px; letter-spacing:.045em; }
+.gullu-reply p { white-space:pre-line; }
+.gullu-reply ul { padding-inline-start:18px; }
+.gullu-panel a,.gullu-new { color:#685217; text-decoration:underline; }
+.gullu-question,.gullu-reply,.gullu-receipt { overflow-wrap:anywhere; }
+.gullu-follow-form { display:grid; gap:7px; padding:9px 0; }
+.gullu-follow-form h3,.gullu-follow-form p { margin:0; }
+.gullu-follow-form label:not(.gullu-check) { display:grid; gap:2px; }
+.gullu-follow-form input:not([type=checkbox]) { min-height:37px; border:1px solid #bfb9aa; padding-inline:8px; }
+.gullu-follow-form button+button { margin-left:6px; }
+.gullu-compose { border-top:1px solid #e1ded4; padding:10px 17px 12px; flex:none; max-height:56dvh; overflow:auto; }
+.gullu-compose>label:first-child { font-weight:600; }
+.gullu-entry { display:flex; gap:6px; margin:4px 0 7px; }
+.gullu-entry textarea { flex:1; min-width:0; min-height:44px; padding:7px; border:1px solid #b7b2a2; border-radius:3px; resize:none; font:inherit; }
+.gullu-entry button { align-self:stretch; border:0; background:#2b2a26; color:white; padding:0 12px; font:inherit; cursor:pointer; }
+.gullu button:disabled { opacity:.65; cursor:default; }
+.gullu-check { display:flex; align-items:flex-start; gap:6px; font-size:12px; line-height:1.35; }
+.gullu-check input { flex:none; margin:2px 0 0; }
+.gullu-notice,.gullu-error { margin:7px 0 0; font-size:12px; line-height:1.35; }
+.gullu-error { color:#7c321a; }
+.gullu-new { background:none; border:0; padding:6px 0 0; font:inherit; font-size:12px; cursor:pointer; }
+.gullu :focus-visible { outline:2px solid #94760b; outline-offset:2px; }
+@media(max-width:500px) { .gullu { right:12px; bottom:max(12px,env(safe-area-inset-bottom)); }.gullu-panel { width:calc(100vw - 24px); } }
+@media print { .gullu { display:none; } }
