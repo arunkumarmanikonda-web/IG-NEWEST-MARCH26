@@ -1,6 +1,8 @@
 import LiveListings from "./live-listings";
 import { listingRevision } from "../lib/listing-revision.mjs";
 import { siteSection, renderSections } from "../lib/website";
+import { featuredProducts } from "../lib/featured-products";
+import PriorityProducts from "./horeca/priority-products";
 import PracticeExplorer from "./practice-explorer";
 import Image from "next/image";
 import PropertyCard from "./property-card";
@@ -30,11 +32,12 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/");
 export default async function Home() {
   const [copy, layout] = await Promise.all([siteSection("home"), siteSection("home-layout")]);
-  const [articles, assets, { people, work }, features] = await Promise.all([
+  const [articles, assets, { people, work }, features, priority] = await Promise.all([
     published("article"),
     published("opportunity"),
     companyContent(),
     liveFeatures(),
+    featuredProducts(),
   ]);
   const posts =
     articles === null
@@ -116,7 +119,7 @@ export default async function Home() {
           </div>
           <div className="collection-heading-copy">
             {!selected.length && <p>{copy["explore-commercial-properties-hospitality-assets-and-development"]}</p>}
-            <Link className="text-link" href="/opportunities">{copy["view-all-properties"]} <Arrow />
+            <Link className="button opportunity-browse-cta" href="/opportunities">{copy["view-all-properties"] === "View all properties" ? "View all opportunities" : copy["view-all-properties"]} <Arrow />
             </Link>
           </div>
         </div>
@@ -220,11 +223,16 @@ export default async function Home() {
 
         "services": (<div className="two-paths">
         <article>
+          <LiveListings revision={priority.revision} endpoint="/api/horeca/priorities" />
           <Eyebrow>{copy["horeca-procurement"]}</Eyebrow>
-          <h2>{copy["every-detail-contributes"]}<br />{copy["to-the-experience"]}</h2>
-          <p>{copy["tableware-linen-equipment-housekeeping-and-operating-supplies"]}</p>
-          <Link className="text-link" href="/horeca">{copy["explore-procurement"]} <Arrow />
-          </Link>
+          {priority.products.length ? <>
+            <h2>Featured HORECA products</h2>
+            <PriorityProducts products={priority.products} />
+          </> : <>
+            <h2>{copy["every-detail-contributes"]}<br />{copy["to-the-experience"]}</h2>
+            <p>{copy["tableware-linen-equipment-housekeeping-and-operating-supplies"]}</p>
+          </>}
+          <Link className="button catalogue-browse-cta" href="/horeca#catalogue">View all HORECA products <Arrow /></Link>
         </article>
         <article>
           <Eyebrow>{copy["complimentary-valuation-studio"]}</Eyebrow>
