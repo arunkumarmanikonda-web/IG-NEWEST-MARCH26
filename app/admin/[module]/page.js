@@ -1,3 +1,5 @@
+import { published } from "../../../lib/cms";
+import IdentityReviews from "../identity-reviews";
 import { readRegister } from "../../../lib/registers.mjs";
 import { siteRecordSlugs } from "../../../lib/site-cms-records.mjs";
 import ProcurementManager from "../procurement-manager";
@@ -257,18 +259,22 @@ export default async function Module({ params, searchParams }) {
     );
   }
   if (module === "nda") {
-    const [{ data: requests, error }, { data: templates, error: te }] =
+    const [{ data: requests, error }, { data: templates, error: te }, projects, showcases, identities] =
       await Promise.all([
         readRegister(() => client.from("ig_nda_requests").select("*"), "created_at"),
         readRegister(() => client.from("ig_nda_templates").select("*"), "created_at"),
+        client.rpc("ig_room_listing_slugs"),
+        client.rpc("ig_room_listing_slugs",{content_kind:"project"}),
+        readRegister(()=>client.from("ig_legal_entities").select("*").eq("status","submitted"),"consent_at"),
       ]);
-    if (error || te) return <p role="alert">NDA records unavailable.</p>;
+    if (error || te || projects.error || showcases.error || identities.error) return <p role="alert">NDA records unavailable.</p>;
+    const roomListings=[...(await published("opportunity") || []).filter(x=>projects.data.includes(x.slug)),...(await published("project")||[]).filter(x=>showcases.data.includes(x.slug))].map(x=>({id:x.id,title:x.title}));
     return (
-      <NdaManager
+      <><IdentityReviews records={identities.data||[]}/><NdaManager projects={roomListings}
         requests={requests || []}
         templates={templates || []}
         isOwner={profile.roles.includes("owner")}
-      />
+      /></>
     );
   }
   if (module === "taxonomy") {

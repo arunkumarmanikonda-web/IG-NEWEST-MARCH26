@@ -9,7 +9,7 @@ export default function NdaAccount({
   template,
   opportunities,
   selected,
-  profile,
+  profile, roomProjects=[],
 }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
@@ -91,7 +91,8 @@ export default function NdaAccount({
           {r.response_note && (
             <p className="workspace-note">India Gully: {r.response_note}</p>
           )}
-          {r.status === "requested" && template && (
+          {r.status === "requested" && roomProjects.some(x=>x.id===r.content_id) && <a href={"/account/nda?"+roomProjects.find(x=>x.id===r.content_id).kind+"="+roomProjects.find(x=>x.id===r.content_id).slug}>Continue project registration and NDA</a>}
+          {r.status === "requested" && !roomProjects.some(x=>x.id===r.content_id) && template && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -168,10 +169,7 @@ export default function NdaAccount({
                 <dd>{r.agreement_snapshot?.sha256}</dd>
               </dl>
               <div className="agreement-text">{r.agreement_snapshot?.body}</div>
-              <p>
-                Method: typed name and explicit electronic acceptance. This is
-                not a certificate-based digital signature.
-              </p>
+              <p>{r.agreement_snapshot?.disclaimer || "Accepted by typed name and explicit electronic acceptance."}</p>
             </details>
           )}
           {r.status === "approved" && (

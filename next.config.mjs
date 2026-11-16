@@ -1,8 +1,9 @@
 import { siteConfig } from "./lib/seo.mjs";
 export default {
   poweredByHeader: false,
-  serverExternalPackages: ["pdfjs-dist", "@napi-rs/canvas"],
+  serverExternalPackages: ["pdfjs-dist", "@napi-rs/canvas", "tesseract.js", "tesseract.js-core", "sharp"],
   outputFileTracingIncludes: {
+    "/api/account/identity-check": ["./node_modules/tesseract.js/src/**", "./node_modules/tesseract.js-core/**", "./node_modules/@tesseract.js-data/eng/4.0.0_best_int/**", "./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/standard_fonts/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
     "/opportunities/*/brief.pdf": ["./public/logo-dark.png", "./public/logo-white.png", "./public/images/**", "./assets/fonts/briefs/**", "./node_modules/@napi-rs/canvas*/**"],
     "/admin/content/*/brief.pdf": ["./public/logo-dark.png", "./public/logo-white.png", "./public/images/**", "./assets/fonts/briefs/**", "./node_modules/@napi-rs/canvas*/**"],
     "/api/admin/collections": ["./public/logo-dark.png", "./assets/fonts/IG-Card.ttf", "./node_modules/@napi-rs/canvas*/**"],

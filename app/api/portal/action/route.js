@@ -24,7 +24,10 @@ const methods = {
   taxonomy: "ig_taxonomy_action",
   users: "ig_users_action",
   enquiry: "ig_enquiry_update",
+  identity: "ig_client_identity",
+  project_signature: "ig_project_signature",
   nda: "ig_nda_action",
+  nda_draft: "ig_edit_project_nda",
   nda_admin: "ig_nda_admin",
   rooms: "ig_room_manage",
   privacy: "ig_privacy_request",
@@ -43,7 +46,7 @@ export async function POST(request) {
     if (!user || !profile || profile.status !== "active")
       throw new HttpError("Active sign-in required", 401);
     if (
-      !["account", "invitation", "nda", "privacy", "procurement", "vendor_portal"].includes(body.module) &&
+      !["account", "identity", "project_signature", "invitation", "nda", "privacy", "procurement", "vendor_portal"].includes(body.module) &&
       (!isStaff(profile) || !staffVerified)
     )
       throw new HttpError("Staff access required", 403);
