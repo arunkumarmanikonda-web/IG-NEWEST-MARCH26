@@ -8,7 +8,7 @@ import {
   intakeWorkspace,
   uploadContentSources,
 } from "../../lib/content-intake-upload.mjs";
-import { processIntakeDraft } from "../../lib/intake-process.mjs";
+import { firstIntakeImage, processIntakeDraft } from "../../lib/intake-process.mjs";
 import { validateSourceSelection } from "../../lib/intake-source-spec.mjs";
 const kinds = [
   ["opportunity", "Real estate opportunity"],
@@ -102,23 +102,23 @@ export default function IntakeStudio({
       });
       const sources = [...new Set([...sourceIds, ...uploaded])];
       setStep(2);
+      const input = {
+        workspace_id: current.id,
+        kind,
+        practice,
+        text: [
+          form.get("text"),
+          form.get("location")
+            ? "Location source: " + form.get("location")
+            : "",
+        ]
+          .filter(Boolean)
+          .join("\n"),
+        brief: form.get("brief"),
+        approved: true,
+      };
       const result = await processIntakeDraft({
-        sourceIds: sources,
-        input: {
-          workspace_id: current.id,
-          kind,
-          practice,
-          text: [
-            form.get("text"),
-            form.get("location")
-              ? "Location source: " + form.get("location")
-              : "",
-          ]
-            .filter(Boolean)
-            .join("\n"),
-          brief: form.get("brief"),
-          approved: true,
-        },
+        sourceIds: sources, input,
         onProgress: setMessage,
         shouldPause: () => pause.current,
       });
@@ -126,6 +126,7 @@ export default function IntakeStudio({
       setMessage("Filling the complete form and saving the review draft…");
       const saved = await intakeWorkspace({
         action: "finish",
+        receipt: true,
         id: current.id,
         version: current.version,
         job_id: result.id,
@@ -134,39 +135,40 @@ export default function IntakeStudio({
       setWorkspace(saved);
       // Extracted imagery remains private until an administrator reviews its identity and rights.
       let hasImage = Boolean(saved.media_id);
-      if (result.candidates?.length && !hasImage) {
-        try {
-          const candidate = result.candidates[0];
-          const response = await fetch("/api/admin/source-media", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              practice,
-              data: candidate.data,
-              source_name: candidate.name,
-              alt: result.draft.title,
-              preset: kind === "product" ? "square" : "landscape",
-              rights_reference:
-                "Administrator-authorised source material in private room " +
-                current.room_id,
-              rights_confirmed: true,
-            }),
-          });
-          const media = await response.json();
-          if (response.ok) {
-            await intakeWorkspace({
-              action: "media",
-              id: current.id,
-              media_id: media.id,
-            });
-            hasImage = true;
-          }
-        } catch {
-          /* The saved draft remains available; the editor can retry image selection. */
-        }
-      }
       let imageState = "";
-      if (!hasImage && ["product","opportunity"].includes(kind) && form.get("auto_image")) {
+      if (!hasImage && (result.candidates?.length || result.sections?.length)) {
+        setMessage("Draft saved. Checking the source for a photograph…");
+        try {
+          const candidate = result.candidates?.[0] || await firstIntakeImage(input, result.sections);
+          if (candidate) {
+            const response = await fetch("/api/admin/source-media", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                practice,
+                data: candidate.data,
+                source_name: candidate.name,
+                alt: result.draft.title,
+                preset: kind === "product" ? "square" : "landscape",
+                rights_reference:
+                  "Administrator-authorised source material in private room " +
+                  current.room_id,
+                rights_confirmed: true,
+              }),
+            });
+            const media = await response.json();
+            if (response.ok) {
+              await intakeWorkspace({
+                action: "media",
+                id: current.id,
+                media_id: media.id,
+              });
+              hasImage = true;
+            } else throw new Error("Source photo needs review");
+          }
+        } catch { imageState = "&image=review"; }
+      }
+      if (!hasImage && !imageState && ["product","opportunity"].includes(kind) && form.get("auto_image")) {
         setMessage("Draft saved. Preparing its illustrative image…");
         try {
           const hero = await intakeWorkspace({action:"hero",id:current.id,approved:true});
