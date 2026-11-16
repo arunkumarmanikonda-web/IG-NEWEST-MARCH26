@@ -117,7 +117,13 @@ test("portal return accepts only shared room or project NDA destinations", () =>
     portalReturn("/account/data-rooms/12345678-1234-1234-1234-123456789012"),
     "/account/data-rooms/12345678-1234-1234-1234-123456789012",
   );
+  const listing = "/account/nda?opportunity=ig-opp-123";
+  const feature = "59b5643d-1643-4977-bee4-6b83cb5ba507";
+  assert.equal(portalReturn(listing + "&feature=" + feature), listing + "&feature=" + feature);
   for (const url of [
+    listing + "&feature=" + feature + "&next=/admin",
+    listing + "&feature=bad",
+    "/account/nda?project=ig-project-123&feature=" + feature,
     "//evil.example",
     "https://evil.example",
     "/admin",

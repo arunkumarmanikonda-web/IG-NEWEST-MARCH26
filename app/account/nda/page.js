@@ -1,3 +1,4 @@
+import { featureId } from "../../../lib/feature-referral.mjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
@@ -18,7 +19,8 @@ export default async function Page({ searchParams }) {
   const { client, user, profile, policiesAccepted } = await accountContext();
   const kind=query.project?"project":"opportunity";
   const slug=typeof query[kind]==="string"?query[kind]:"";
-  const destination="/account/nda?"+kind+"="+encodeURIComponent(slug);
+  const referral = kind === "opportunity" ? featureId(query.feature) : null;
+  const destination="/account/nda?"+kind+"="+encodeURIComponent(slug)+(referral?"&feature="+referral:"");
   const options=await client.rpc("ig_room_listing_slugs",{content_kind:kind});
   if(options.error) return <main className="auth-page"><p role="alert">Project access is temporarily unavailable.</p></main>;
   if(slug && !options.data.includes(slug)) return <main className="auth-page"><div className="portal-form"><h1>Data Room Unavailable</h1><p>This property currently has no active data room.</p><Link href="/opportunities">Return to real estate listings</Link></div></main>;
@@ -49,7 +51,7 @@ export default async function Page({ searchParams }) {
     return <main id="main" className="auth-page"><div className="nda-account">
       <Link href={(kind==="project"?"/our-work/":"/opportunities/")+slug}>← Back to listing</Link>
       {error||te||identities.error||disclaimer.error||!disclaimer.data||!item?<p role="alert">This request could not be loaded. Try again.</p>:
-        <ProjectRequest disclaimer={disclaimer.data} item={{title:item.title,slug,kind}} template={templates.find(t=>t.content_id===item.id)||null}
+        <ProjectRequest feature={referral} disclaimer={disclaimer.data} item={{title:item.title,slug,kind}} template={templates.find(t=>t.content_id===item.id)||null}
           request={requests.find(r=>r.content_id===item.id)} entities={identities.data} offline={!!process.env.UIDAI_OFFLINE_SIGNING_CERT}/>}
     </div></main>;
   }

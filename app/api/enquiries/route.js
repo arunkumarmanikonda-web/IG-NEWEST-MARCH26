@@ -1,3 +1,4 @@
+import { listingReferral } from "../../../lib/feature-referral.mjs";
 import {after} from "next/server";
 export const maxDuration = 120;
 import {dispatchEmailQueue} from "../../../lib/delivery";
@@ -42,6 +43,7 @@ export async function POST(request) {
         throw new HttpError("Invalid enquiry field");
       payload[k] = p[k] || "";
     }
+    Object.assign(payload, listingReferral(p.feature_id, p.listing_slug));
     payload.privacy = p.privacy === true;
     const ip = process.env.VERCEL
       ? request.headers.get("x-vercel-forwarded-for") || "unknown"

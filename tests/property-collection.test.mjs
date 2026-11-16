@@ -10,7 +10,7 @@ test('Collection combines words across fields and applies all filters',()=>{
 test('Sorting does not mutate the CMS source ordering',()=>{
  assert.deepEqual(collectionItems(items,{sort:'title'}).map(x=>x.title),['A hotel','Hill retreat','Prism Tower']);
  assert.deepEqual(collectionItems(items),items);
- assert.deepEqual(collectionItems(items,{sort:'featured'}).map(x=>x.title),['Prism Tower','Hill retreat','A hotel']);
+ assert.deepEqual(collectionItems(items,{sort:'featured'}).map(x=>x.title),['Prism Tower','A hotel','Hill retreat']);
  const newestFirst=[items[1],items[0],items[2]];
  assert.deepEqual(collectionItems(newestFirst,{sort:''}),newestFirst);
  assert.equal(collectionItems(newestFirst,{sector:'Hospitality'})[0],items[1]);
@@ -21,4 +21,11 @@ test('Historical reference never implies current availability and unknown facts 
  assert.equal(propertyStatus({}),'Availability on enquiry');
  assert.deepEqual(propertyFacts({}),[]);
  assert.deepEqual(propertyFacts({area:'1200',areaUnit:'sq ft',keys:12}),[['Area','1200 sq ft'],['Keys',12]]);
+});
+
+test('Campaigns respect filters and explicit chronological sorting',()=>{
+ const cards = [{...items[0],feature:{slot:2}},items[1],{...items[2],feature:{slot:1}}];
+ assert.deepEqual(collectionItems(cards,{sort:'featured'}).map(x=>x.title),['Hill retreat','Prism Tower','A hotel']);
+ assert.deepEqual(collectionItems(cards,{sort:'featured',sector:'Commercial'}).map(x=>x.title),['Prism Tower']);
+ assert.deepEqual(collectionItems(cards,{sort:'newest'}),cards);
 });

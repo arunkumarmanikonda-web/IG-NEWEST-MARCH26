@@ -1,3 +1,5 @@
+"use client";
+import { useFeatureImpression } from "./opportunities/featured-banner";
 import {propertyPhotoURL} from '../lib/listing-images.mjs';
 import {listingHeading} from "../lib/listing-heading.mjs";
 import Image from "next/image";
@@ -8,15 +10,17 @@ import BrandLogo from "./brand-logo";
 import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
 
 export default function PropertyCard({ item: x }) {
-  const href = "/opportunities/" + x.slug;
+  const featureId = x.feature?.id;
+  const cardRef = useFeatureImpression(featureId);
+  const href = "/opportunities/" + x.slug + (featureId ? "?feature=" + encodeURIComponent(featureId) : "");
   const facts = propertyFacts(x).filter(([key]) => ["Area", "Keys", "Tenure"].includes(key));
   return (
-    <article className="property-card">
+    <article className="property-card" ref={cardRef}>
       <Link className="property-card-image" href={href} aria-label={"View " + x.title}>
         {x.image ? <Image src={propertyPhotoURL(x.image)} unoptimized={/^\/images\/(generated|library)\//.test(x.image)} alt={x.imageAlt || x.title} fill sizes="(max-width:640px) 90vw, (max-width:1000px) 44vw, 29vw" /> : (
           <div className="property-no-photo"><BrandLogo light /><span>Photography on request</span></div>
         )}
-        <span className="property-image-label">{x.sector}</span>
+        <span className="property-image-label">{featureId ? "Featured opportunity" : x.sector}</span>
         {x.image?.startsWith("/images/generated/") && <span className="generated-badge">Illustrative AI-generated concept</span>}
       </Link>
       <div className="property-card-copy">

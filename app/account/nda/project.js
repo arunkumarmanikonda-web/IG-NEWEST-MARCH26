@@ -13,6 +13,7 @@ export default function ProjectRequest({
   entities,
   request,
   offline,
+  feature = null,
 }) {
   const router = useRouter();
   const verified = entities.filter((e) => e.status === "verified");
@@ -27,7 +28,7 @@ export default function ProjectRequest({
     setBusy(true);
     setMessage("");
     try {
-      await portalAction(module, p);
+      await portalAction(module, feature ? { ...p, feature_id: feature } : p);
       router.refresh();
       setMessage(
         p.action !== "request"

@@ -1,3 +1,5 @@
+import FeatureManager from "./feature-manager";
+import { opportunityCard } from "../../../../lib/cms";
 import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -183,7 +185,17 @@ export default async function EditPage({ params, searchParams }) {
         },
       };
   }
-  return (
+  let promotion = null;
+  if (item?.kind === "opportunity") {
+    const [{data:history,error},{data:publication}] = await Promise.all([
+      client.rpc("ig_manage_listing_feature",{p:{action:"report",content_id:id}}),
+      client.from("ig_public_content").select("id,slug,title,summary,public_data").eq("id",id).maybeSingle(),
+    ]);
+    if (!error) promotion = <FeatureManager contentId={id} card={publication ? opportunityCard({...publication,tags:[]}) : null} initial={history || []}/>;
+    else if (error.code !== "42501") promotion = <p role="alert">Featured placements could not be loaded. Refresh to try again.</p>;
+  }
+  return (<>
+    {promotion}
     <Editor
       key={item?.id + "-" + item?.version + "-" + item?.status}
       item={item}
@@ -200,5 +212,5 @@ export default async function EditPage({ params, searchParams }) {
       selectedTerms={(tags || []).map((x) => x.term_id)}
       revisions={revisions || []}
     />
-  );
+  </>);
 }

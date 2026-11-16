@@ -1,3 +1,4 @@
+import { FeatureBriefOpen } from "./opportunities/featured-banner";
 import { listingHeading } from "../lib/listing-heading.mjs";
 import PropertyTags from "./property-tags";
 import Link from "next/link";
@@ -8,13 +9,21 @@ import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
 import { Arrow, Eyebrow } from "./components";
 
-export default function PropertyDetail({ item, hasRoom = false, related = [] }) {
+export default function PropertyDetail({ item, hasRoom = false, related = [], feature = null }) {
   const x = opportunityCard(item),
     d = item.public_data;
-  const contact = "/contact?interest=" + encodeURIComponent(item.title);
-  const roomLink = "/account/nda?opportunity=" + encodeURIComponent(item.slug);
+  const contactParams = new URLSearchParams({ interest: item.title });
+  const roomParams = new URLSearchParams({ opportunity: item.slug });
+  if (feature) {
+    contactParams.set("feature", feature);
+    contactParams.set("listing", item.slug);
+    roomParams.set("feature", feature);
+  }
+  const contact = "/contact?" + contactParams;
+  const roomLink = "/account/nda?" + roomParams;
   return (
     <main id="main" className="property-detail-page">
+      {feature && <FeatureBriefOpen campaignId={feature}/>}
       <nav className="property-breadcrumb" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span>/</span>

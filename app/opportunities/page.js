@@ -1,3 +1,4 @@
+import { liveFeatures } from "../../lib/featured-listings";
 import LiveListings from "../live-listings";
 import { listingRevision } from "../../lib/listing-revision.mjs";
 import AdvertisingEvent from "../advertising-event";
@@ -13,11 +14,11 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/opportunities");
 export default async function Opportunities({ searchParams }) {
   const copy = await siteSection("opportunities");
-  const [records, params] = await Promise.all([
+  const [records, params, features] = await Promise.all([
     published("opportunity"),
-    searchParams,
+    searchParams, liveFeatures(),
   ]);
-  const items = records === null ? opportunities : records.map(opportunityCard);
+  const items = records === null ? opportunities : records.map(row => opportunityCard(row, features.find(f => f.content_id === row.id)));
   const contexts =
     records === null
       ? undefined
@@ -49,7 +50,7 @@ export default async function Opportunities({ searchParams }) {
         </Link>
       </header>
       <section className="collection-browser" aria-label="Browse properties">
-        {records && <LiveListings revision={listingRevision(records)} />}
+        {records && <LiveListings revision={listingRevision(records, features)} />}
         <Explorer items={items} contexts={contexts} initialFilters={filters} />
         <p className="fine-note">{copy["portfolio-references-are-not-current-offers-availability"]}</p>
       </section>

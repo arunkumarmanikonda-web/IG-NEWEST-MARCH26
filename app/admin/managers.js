@@ -407,9 +407,12 @@ export function EnquiryManager({ items, outbox }) {
               className="workspace-form"
               onSubmit={(e) => {
                 e.preventDefault();
+                const form = new FormData(e.currentTarget);
+                const qualified = form.has("qualified");
                 state.run("enquiry", {
                   id: x.id,
-                  status: new FormData(e.currentTarget).get("status"),
+                  status: form.get("status"),
+                  ...(qualified !== Boolean(x.qualified_at) ? { qualified } : {}),
                   assigned_to: x.assigned_to,
                 });
               }}
@@ -421,6 +424,10 @@ export function EnquiryManager({ items, outbox }) {
                     <option key={s}>{s}</option>
                   ))}
                 </select>
+              </label>
+              <label className="check">
+                <input type="checkbox" name="qualified" defaultChecked={Boolean(x.qualified_at)} />
+                Qualified enquiry
               </label>
               <div className="workspace-actions">
                 <button disabled={state.busy}>Save status</button>
