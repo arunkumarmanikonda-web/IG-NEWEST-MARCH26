@@ -64,3 +64,36 @@ test("structured field paths retain the location and reject unrelated paths", ()
   assert.equal(result.evidence[0].field, "city");
   assert.equal(result.fields.keys, "");
 });
+
+function generateWithCopy(copy) {
+  const response = { status: "completed", output: [{ content: [
+    { type: "output_text", text: JSON.stringify({ ...draft, ...copy }) },
+  ] }] };
+  return generateIntake({ settings: { model: "fixture" }, secrets: { api_key: "fixture" } },
+    context, async () => ({ ok: true, json: async () => response }));
+}
+
+test("overlong listing metadata does not discard the body or source evidence", async () => {
+  const sentence = "The hotel has a courtyard. ";
+  const { draft: saved } = await generateWithCopy({
+    title: "Courtyard Hotel ".repeat(16), seo_title: "Courtyard Hotel",
+    summary: sentence.repeat(25), seo_description: "A".repeat(201),
+  });
+  assert.equal(saved.title, "Courtyard Hotel");
+  assert.equal(saved.summary, sentence.repeat(18).trim());
+  assert.equal(saved.seo_description, "");
+  assert.equal(saved.body, draft.body);
+  assert.deepEqual(saved.evidence, draft.evidence);
+  assert.match(saved.review_questions.join(" "), /title, summary, seo description/);
+});
+
+test("bounds long narratives at a complete sentence and handles missing title or description", async () => {
+  const sentence = "The hotel has a courtyard. ";
+  const { draft: saved } = await generateWithCopy({
+    title: "", seo_title: "Courtyard Hotel", body: sentence.repeat(1200),
+  });
+  assert.equal(saved.title, "Courtyard Hotel");
+  assert.ok(saved.body.length <= 30000 && saved.body.endsWith("courtyard."));
+  await assert.rejects(generateWithCopy({ title: " ", seo_title: "" }), /usable title/);
+  await assert.rejects(generateWithCopy({ body: "SEO title: private metadata" }), /usable description/);
+});
