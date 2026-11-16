@@ -60,7 +60,7 @@ export async function POST(request) {
     result??=directAnswer(query,docs,history,language);
     if(!result){
       const candidates=rankPassages(docs,query,history,page);
-      const config=candidates.length?(await runtimeConfigs("openai").catch(()=>({}))).openai:null;
+      const config=(await runtimeConfigs("openai").catch(()=>({}))).openai;
       result=await answerFromPassages({question:query,history,candidates,language,config});
     }
     const turn={...ids,question,...result};
