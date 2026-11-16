@@ -11,7 +11,7 @@ const empty = {
   city: "",
   type: "",
   context: "",
-  sort: "newest",
+  sort: "featured",
   view: "grid",
 };
 export default function Explorer({
@@ -19,7 +19,7 @@ export default function Explorer({
   contexts = opportunityContexts,
   initialFilters = {},
 }) {
-  const [filters, setFilters] = useState({ ...empty, ...initialFilters });
+  const [filters, setFilters] = useState({ ...empty, ...initialFilters, sort: initialFilters.sort || "featured" });
   const [copied, setCopied] = useState("");
   const availableContexts = contexts.filter(context => items.some(item => item.contexts?.includes(context.id)));
   function update(patch) {
@@ -28,7 +28,7 @@ export default function Explorer({
     setCopied("");
     const params = new URLSearchParams();
     Object.entries(next).forEach(([k, v]) => {
-      if (v && !(k === "sort" && v === "newest") && !(k === "view" && v === "grid")) params.set(k, v);
+      if (v && !(k === "sort" && v === "featured") && !(k === "view" && v === "grid")) params.set(k, v);
     });
     window.history.replaceState(
       null,
@@ -158,11 +158,11 @@ export default function Explorer({
           <label>
             Sort by
             <select
-              value={filters.sort || "newest"}
+              value={filters.sort || "featured"}
               onChange={(e) => update({ sort: e.target.value })}
             >
               <option value="newest">Newest published</option>
-              <option value="featured">Featured</option>
+              <option value="featured">Featured first</option>
               <option value="location">Location</option>
               <option value="title">Property name</option>
             </select>

@@ -4,7 +4,8 @@ import { siteSection, renderSections } from "../lib/website";
 import PracticeExplorer from "./practice-explorer";
 import Image from "next/image";
 import PropertyCard from "./property-card";
-import { collectionItems } from "../lib/property-collection.mjs";
+import { liveFeatures } from "../lib/featured-listings";
+import FeaturedBanner from "./opportunities/featured-banner";
 import Link from "next/link";
 import { pageMeta } from "../lib/seo.mjs";
 import { livePractices } from "../lib/website";
@@ -29,10 +30,11 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/");
 export default async function Home() {
   const [copy, layout] = await Promise.all([siteSection("home"), siteSection("home-layout")]);
-  const [articles, assets, { people, work }] = await Promise.all([
+  const [articles, assets, { people, work }, features] = await Promise.all([
     published("article"),
     published("opportunity"),
     companyContent(),
+    liveFeatures(),
   ]);
   const posts =
     articles === null
@@ -42,9 +44,9 @@ export default async function Home() {
           image: x.public_data.image || "/images/city.jpg",
           category: x.public_data.sector || "INDIA GULLY PERSPECTIVES",
         }));
-  const listings = collectionItems(
-    assets === null ? opportunities : assets.map(opportunityCard),
-  ).slice(0, 3);
+  const cards = assets === null ? opportunities : assets.map(row => opportunityCard(row, features.find(f => f.content_id === row.id)));
+  const selected = cards.filter(card => card.feature);
+  const listings = cards.slice(0, 3);
   return (
     <main id="main">
       <Seo path="/" />
@@ -106,23 +108,23 @@ export default async function Home() {
         className="section-pad home-property-collection"
         id="real-estate-listings"
       >
-        {assets && <LiveListings revision={listingRevision(assets)} />}
+        {assets && <LiveListings revision={listingRevision(assets, features)} />}
         <div className="section-heading">
           <div>
             <Eyebrow>{copy["real-estate-is-at-our-core"]}</Eyebrow>
-            <h2>{copy["real-estate-listings-3"]}</h2>
+            <h2>{selected.length ? "Featured Opportunities" : copy["real-estate-listings-3"]}</h2>
           </div>
           <div className="collection-heading-copy">
-            <p>{copy["explore-commercial-properties-hospitality-assets-and-development"]}</p>
+            {!selected.length && <p>{copy["explore-commercial-properties-hospitality-assets-and-development"]}</p>}
             <Link className="text-link" href="/opportunities">{copy["view-all-properties"]} <Arrow />
             </Link>
           </div>
         </div>
-        <div className="home-property-grid">
+        {selected.length ? <FeaturedBanner items={selected} /> : <div className="home-property-grid">
           {listings.map((x) => (
             <PropertyCard key={x.slug} item={x} />
           ))}
-        </div>
+        </div>}
         {!listings.length && (
           <div className="listing-enquiry">
             <h3>{copy["your-next-property-starts-with-a-brief"]}</h3>

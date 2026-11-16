@@ -4,7 +4,7 @@ import AdvertisingEvent from "../advertising-event";
 import Link from "next/link";
 import { contact } from "../../lib/content.mjs";
 import { Arrow } from "../components";
-export default function Enquiry({ initialInterest, submitRequest = fetch }) {
+export default function Enquiry({ initialInterest, referral = null, submitRequest = fetch }) {
   const [status, setStatus] = useState(""),
     [busy, setBusy] = useState(false),
     [saved, setSaved] = useState(null);
@@ -51,6 +51,7 @@ export default function Enquiry({ initialInterest, submitRequest = fetch }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           request_id: requestId.current,
+          ...(referral && d.get("interest") === initialInterest ? referral : {}),
           name: d.get("name"),
           organisation: d.get("organisation"),
           email: d.get("email"),

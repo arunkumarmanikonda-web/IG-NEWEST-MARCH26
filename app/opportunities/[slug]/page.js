@@ -1,4 +1,5 @@
 import { anonymousServerClient } from "../../../lib/runtime-config";
+import { featureId } from "../../../lib/feature-referral.mjs";
 import { opportunityContexts } from "../../../lib/taxonomy.mjs";
 import { propertyEditorial } from "../../../lib/property-editorial.mjs";
 import { pageMeta } from "../../../lib/seo.mjs";
@@ -20,16 +21,24 @@ export async function generateMetadata({ params }) {
     ? pageMeta("/opportunities/" + slug)
     : cmsMetadata(records.find((x) => x.slug === slug));
 }
-export default async function Opportunity({ params }) {
+export default async function Opportunity({ params, searchParams }) {
   const { slug } = await params;
   const records = await published("opportunity");
   if (records !== null) {
     const item = records.find((x) => x.slug === slug);
     if (!item) notFound();
-    const room = await anonymousServerClient().rpc("ig_room_listing_slugs");
+    const incomingFeature = featureId((await searchParams)?.feature);
+    const client = anonymousServerClient();
+    const [room, active] = await Promise.all([
+      client.rpc("ig_room_listing_slugs"),
+      incomingFeature ? client.rpc("ig_live_listing_features") : null,
+    ]);
+    const feature = active?.data?.some(row => row.id === incomingFeature && row.content_id === item.id)
+      ? incomingFeature : null;
     return (
       <PropertyDetail
         item={item}
+        feature={feature}
         hasRoom={room.data?.includes(slug) === true}
         related={records
           .filter((x) => x.slug !== slug && x.public_data.image)
