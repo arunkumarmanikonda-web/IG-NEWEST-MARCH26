@@ -1,0 +1,76 @@
+import Link from "next/link";
+import { accountContext } from "../../../lib/supabase/server";
+import Schedule from "./schedule";
+import "./workspace.css";
+
+export const metadata = { title: "Perspectives & Gullu" };
+const dates = new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" });
+function formatDate(value, withTime = true) {
+  const date = new Date(value);
+  if (!value || !Number.isFinite(date.getTime())) return "Pending";
+  return withTime ? dates.format(date) + " IST" : date.toLocaleDateString("en-IN", { dateStyle: "medium", timeZone: "Asia/Kolkata" });
+}
+
+function ConversationHistory({ turns }) {
+  const sessions = new Map();
+  for (const turn of turns) {
+    if (!sessions.has(turn.session_id)) sessions.set(turn.session_id, []);
+    sessions.get(turn.session_id).push(turn);
+  }
+  return <section className="workspace-card">
+    <h3>Gullu conversations</h3>
+    <p>Gullu is the India Gully guide. Visitors can consent to saving a conversation and request a follow-up from the team.</p>
+    <Link className="module-link" href="/admin/enquiries">Open enquiries &amp; leads</Link>
+    {!sessions.size && <p>No saved conversations yet.</p>}
+    {[...sessions].map(([id, messages]) => {
+      const ordered = messages.slice().sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+      const last = ordered.at(-1);
+      return <details key={id} className="intelligence-log">
+        <summary>{formatDate(last.created_at)} · {last.practice_interest || "Website enquiry"}
+          {ordered.some(turn => turn.follow_up) && " · Follow-up requested"}</summary>
+        {ordered.map((turn, index) => <div key={turn.turn_id || index}>
+          <p><strong>Visitor</strong><br/>{turn.question}</p><p><strong>Gullu</strong><br/>{turn.answer}</p>
+        </div>)}
+      </details>;
+    })}
+  </section>;
+}
+
+export default async function IntelligencePage() {
+  const { client, staffVerified, policiesAccepted } = await accountContext();
+  const { data, error } = staffVerified && policiesAccepted ?
+    await client.rpc("ig_intelligence_admin", { p: { action: "status" } }) : { error: { code: "42501" } };
+  if (error || !data?.settings) return <section className="workspace-card">
+    <h2>Perspectives &amp; Gullu</h2>
+    <p>{error?.code === "42501" ? "Your account needs permission to open this workspace." : "The workspace is temporarily unavailable. Reload the page to try again."}</p>
+  </section>;
+
+  const { settings, runs = [], reports = [], conversations = [] } = data;
+  const topics = [...new Set(runs.flatMap(run => (run.candidates || []).map(item => item.topic)).filter(Boolean))];
+  return <div className="intelligence-workspace">
+    <header className="module-heading"><div><h2>Perspectives &amp; Gullu</h2>
+      <p>Manage publication, review the research behind each article and track client follow-up.</p></div>
+      <Link className="module-link" href="/insights">View published Perspectives ↗</Link></header>
+    <Schedule key={[settings.enabled, settings.cadence_days, settings.preferred_topic].join("|")}
+      settings={settings} nextRun={formatDate(settings.next_at)} topics={topics} />
+    <section className="workspace-card"><h3>Editorial runs</h3>
+      {!runs.length && <p>The first research run will appear here.</p>}
+      {runs.map((run, index) => <details className="intelligence-log" key={run.id || index}>
+        <summary>{formatDate(run.started_at)} · {run.title || "Perspective research"} · {run.status}</summary>
+        {run.selection_reason && <p>{run.selection_reason}</p>}
+        {run.error && <p>{run.error}</p>}
+        {Boolean(run.candidates?.length) && <><h4>Topics considered</h4><ul>{run.candidates.map((item, i) =>
+          <li key={i}><strong>{item.topic}</strong>{item.reason && <p>{item.reason}</p>}</li>)}</ul></>}
+      </details>)}
+    </section>
+    <ConversationHistory turns={conversations} />
+    <section className="workspace-card"><h3>Gullu report delivery</h3>
+      <p>Delivery history for the reports to Arun, Amit and Pavan.</p>
+      {reports.length ? <div className="table-scroll"><table className="workspace-table">
+        <thead><tr><th>Period starting</th><th>Recipient</th><th>Status</th></tr></thead>
+        <tbody>{reports.map((report, i) => <tr key={i}><td>{formatDate(report.period_start, false)}</td>
+          <td>{report.recipient}</td><td>{report.status}</td></tr>)}</tbody>
+      </table></div> : <p>No report deliveries yet.</p>}
+    </section>
+  </div>;
+}

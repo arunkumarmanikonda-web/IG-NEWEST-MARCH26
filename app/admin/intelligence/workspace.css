@@ -1,0 +1,10 @@
+.intelligence-workspace .intelligence-log {
+  border-top: 1px solid #e0dcd2;
+  padding: 14px 0;
+  overflow-wrap: anywhere;
+}
+.intelligence-workspace .intelligence-log:first-of-type { margin-top: 1rem; }
+.intelligence-log summary { cursor: pointer; font-weight: 600; }
+.intelligence-log p { white-space: pre-line; }
+.intelligence-workspace .workspace-card > h3:first-child { margin-top: 0; }
+.intelligence-workspace [role="status"]:empty { margin: 0; }

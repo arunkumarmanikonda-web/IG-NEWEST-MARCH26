@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Arrow } from "./components";
 import PracticeStrip from "./practice-strip";
+import Gullu from "./gullu/widget";
 
 export default function Navigation({ groups, practices }) {
   const path = usePathname();
@@ -129,6 +130,7 @@ export default function Navigation({ groups, practices }) {
       </nav>
     </header>
     {showPractices && <PracticeStrip practices={practices} />}
+    {path && !/^\/(admin|account|login|auth|register|unsubscribe|pay|checkout)(\/|$)/.test(path) && !path.endsWith("/teaser") && <Gullu />}
     </>
   );
 }
