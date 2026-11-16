@@ -1,6 +1,6 @@
 import { isStaff } from "../../../../lib/sign-in.mjs";
+import { after } from "next/server";
 import { expandIntakeMap } from "../../../../lib/map-links.mjs";
-import { createHash } from "node:crypto";
 import { accountContext } from "../../../../lib/supabase/server";
 import { runtimeConfigs, integrationRpc } from "../../../../lib/runtime-config";
 import {
@@ -15,7 +15,7 @@ import {
   resolveIntakeSources,
 } from "../../../../lib/intake-storage.mjs";
 import {
-  intakeBriefHash,
+  intakeBriefHash, savedReceipt, sectionJobsHash,
   describeSourceSections,
   readSourceSection,
   reviewCompletedSections,
@@ -40,6 +40,11 @@ export async function POST(request) {
       throw new HttpError("Staff sign-in required", 403);
     if (p.approved !== true)
       throw new HttpError("Confirm permission to process these sources.");
+    const background = p.background === true && ["section", "merge"].includes(p.action);
+    if ((background || p.read_only || p.action === "images") && !p.workspace_id)
+      throw new HttpError("A saved content workspace is required.", 400);
+    if (p.read_only && !background) throw new HttpError("Invalid progress request.");
+    let workspaceSources;
     if (p.workspace_id) {
       const { data: workspace } = await client
         .from("ig_content_intakes")
@@ -60,19 +65,23 @@ export async function POST(request) {
         record?.practice !== p.practice
       )
         throw new HttpError("Use your authorised content workspace.", 403);
-      const ids = p.source_id ? [p.source_id] : p.source_ids || [];
+      const ids = p.action === "merge" ? p.source_ids || [] : p.source_id ? [p.source_id] : p.source_ids || [];
       if (ids.length) {
-        const sources = await resolveIntakeSources(client, ids, p.practice);
+        workspaceSources = await resolveIntakeSources(client, ids, p.practice);
         const { data: files } = await client
           .from("ig_room_files")
           .select("id")
           .eq("room_id", workspace.room_id)
           .eq("status", "ready");
-        if (sources.some((s) => !files?.some((f) => f.id === s.room_file_id)))
+        if (workspaceSources.some((s) => !files?.some((f) => f.id === s.room_file_id)))
           throw new HttpError("Choose source files from this data room.", 403);
       }
     }
-    const staged = ["plan", "section", "merge"].includes(p.action);
+    if (background) {
+      const receipt = await savedReceipt(client, user, p, workspaceSources || [], (maxDuration + 30) * 1000);
+      if (p.read_only || ["ready", "processing"].includes(receipt.status)) return privateJson(receipt);
+    }
+    const staged = ["plan", "section", "merge", "images"].includes(p.action);
     if (p.action && !staged) throw new HttpError("Unsupported intake action");
     if (p.source_ids !== undefined && !staged)
       throw new HttpError(
@@ -82,8 +91,8 @@ export async function POST(request) {
       metadata,
       mergeGroups,
       media = { candidates: [], notes: [] };
-    if (p.action === "plan" || p.action === "section") {
-      const [source] = await resolveIntakeSources(client, [p.source_id], p.practice);
+    if (["plan", "section", "images"].includes(p.action)) {
+      const [source] = workspaceSources || await resolveIntakeSources(client, [p.source_id], p.practice);
       const largePdf = source.mime === "application/pdf" && source.size > 20 * 1024 * 1024;
       const file = largePdf
         ? {name:source.name, source_id:source.id, remotePdf:{
@@ -95,6 +104,12 @@ export async function POST(request) {
       }
       const part = await readSourceSection(file, p.section);
       context = validateIntake({ ...p, files: [] }, [part.file]);
+      if (p.action === "images") {
+        const images = await gatherImages(context.files, 1);
+        return privateJson({ candidate: images.candidates[0] || null });
+      }
+      if (background && p.section_count !== part.count)
+        throw new HttpError("The source plan changed. Reopen the saved draft.", 409);
       metadata = {
         kind: "intake_section",
         ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
@@ -107,27 +122,29 @@ export async function POST(request) {
       };
       // Digest refers to the unchanged original, not the provider-sized processing copy.
       metadata.source_sha256 = source.sha256;
-      const { data: cached } = await client
-        .from("ig_ai_jobs")
-        .select("id,draft")
-        .eq("actor_id", user.id)
-        .eq("practice", p.practice)
-        .eq("status", "ready")
-        .contains("context", metadata)
-        .order("created_at", { ascending: false })
-        .limit(1);
-      media = await gatherImages(context.files);
-      media.notes.push(...part.notes);
-      if (cached?.[0])
-        return privateJson({
-          id: cached[0].id,
-          draft: cached[0].draft,
-          section_count: part.count,
-          ...media,
-          reused: true,
-        });
+      if (!background) {
+        const { data: cached } = await client
+          .from("ig_ai_jobs")
+          .select("id,draft")
+          .eq("actor_id", user.id)
+          .eq("practice", p.practice)
+          .eq("status", "ready")
+          .contains("context", metadata)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        media = await gatherImages(context.files);
+        media.notes.push(...part.notes);
+        if (cached?.[0])
+          return privateJson({
+            id: cached[0].id,
+            draft: cached[0].draft,
+            section_count: part.count,
+            ...media,
+            reused: true,
+          });
+      }
     } else if (p.action === "merge") {
-      const sources = await resolveIntakeSources(
+      const sources = workspaceSources || await resolveIntakeSources(
         client,
         p.source_ids,
         p.practice,
@@ -170,9 +187,7 @@ export async function POST(request) {
         operation_kind: context.operation_kind,
         brief: context.brief,
         text: context.text,
-        section_jobs_hash: createHash("sha256")
-          .update(JSON.stringify([...p.jobs].sort()))
-          .digest("hex"),
+        section_jobs_hash: sectionJobsHash(p.jobs),
         section_count: p.jobs.length,
         sources: sources.map(({ id, name, mime, size, sha256 }) => ({
           source_id: id,
@@ -182,31 +197,31 @@ export async function POST(request) {
           sha256,
         })),
       };
-      const { data: cached } = await client
-        .from("ig_ai_jobs")
-        .select("id,draft")
-        .eq("actor_id", user.id)
-        .eq("practice", p.practice)
-        .eq("status", "ready")
-        .contains("context", {
-          kind: "intake",
-          ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
-          brief_hash: intakeBriefHash(p),
-          section_jobs_hash: createHash("sha256")
-            .update(JSON.stringify([...p.jobs].sort()))
-            .digest("hex"),
-          section_count: p.jobs.length,
-        })
-        .order("created_at", { ascending: false })
-        .limit(1);
       metadata.brief_hash = intakeBriefHash(p);
-      if (cached?.[0])
-        return privateJson({
-          id: cached[0].id,
-          draft: cached[0].draft,
-          ...media,
-          reused: true,
-        });
+      if (!background) {
+        const { data: cached } = await client
+          .from("ig_ai_jobs")
+          .select("id,draft")
+          .eq("actor_id", user.id)
+          .eq("practice", p.practice)
+          .eq("status", "ready")
+          .contains("context", {
+            kind: "intake",
+            ...(p.workspace_id ? { workspace_id: p.workspace_id } : {}),
+            brief_hash: intakeBriefHash(p),
+            section_jobs_hash: metadata.section_jobs_hash,
+            section_count: p.jobs.length,
+          })
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (cached?.[0])
+          return privateJson({
+            id: cached[0].id,
+            draft: cached[0].draft,
+            ...media,
+            reused: true,
+          });
+      }
     } else {
       context = validateIntake(p);
       metadata = {
@@ -237,16 +252,30 @@ export async function POST(request) {
         prepared.error.code === "42501" ? 403 : 429,
       );
     job = prepared.data;
-    const expanded = await expandIntakeMap(context);
-    media.notes.push(...expanded.notes);
-    const result = await generateIntake(config, expanded.context);
-    if (mergeGroups)
-      result.draft = reconcileMergedFacts(result.draft, mergeGroups);
-    await integrationRpc("ig_ai_finish", {
-      id: job.id,
-      status: "ready",
-      ...result,
-    });
+    async function generateAndSave() {
+      const expanded = await expandIntakeMap(context);
+      media.notes.push(...expanded.notes);
+      const result = await generateIntake(config, expanded.context);
+      if (mergeGroups)
+        result.draft = reconcileMergedFacts(result.draft, mergeGroups);
+      await integrationRpc("ig_ai_finish", {
+        id: job.id,
+        status: "ready",
+        ...result,
+      });
+      return result;
+    }
+    if (background) {
+      after(async () => {
+        try { await generateAndSave(); }
+        catch (error) {
+          await integrationRpc("ig_ai_finish", { id: job.id, status: "failed",
+            draft: { error: String(error.message || "Draft generation failed.").slice(0, 500) } });
+        }
+      });
+      return privateJson({ id: job.id, status: "processing" }, 202);
+    }
+    const result = await generateAndSave();
     if (!staged) {
       const extracted = await gatherImages(context.files);
       media = { ...extracted, notes: [...media.notes, ...extracted.notes] };

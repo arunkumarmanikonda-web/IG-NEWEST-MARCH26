@@ -13,8 +13,10 @@ import {
   readSourceSection,
   reviewCompletedSections,
   reconcileMergedFacts,
+  intakeBriefHash, savedReceipt,
 } from "../lib/intake-sections.mjs";
-import { processIntakeDraft } from "../lib/intake-process.mjs";
+import { processIntakeDraft, firstIntakeImage } from "../lib/intake-process.mjs";
+import { intakeWorkspace } from "../lib/content-intake-upload.mjs";
 import { validateIntake } from "../lib/intake.mjs";
 const id = "11111111-1111-4111-8111-111111111111",
   actor = "22222222-2222-4222-8222-222222222222";
@@ -246,6 +248,70 @@ test("Pausing does not submit another paid section", async () => {
     /paused/,
   );
   assert.equal(calls, 1);
+});
+
+test("a lost HTTP 200 response recovers the saved section and finishes both sections only once", async () => {
+  const actions = [];
+  let polls = 0;
+  const result = await processIntakeDraft({
+    sourceIds: [id], input: { ...input, workspace_id: "workspace" }, wait: async () => {},
+    fetcher: async (_, opts) => {
+      const p = JSON.parse(opts.body);
+      actions.push([p.action, p.section, Boolean(p.read_only)]);
+      if (p.action === "plan") return Response.json({ count: 2 });
+      if (p.action === "section" && p.section === 0) {
+        if (!p.read_only || polls++ === 0) return new Response('{"partial":', { status: 200 });
+        return Response.json({ status: "ready", id: "one" });
+      }
+      if (!p.read_only) return Response.json({ id: p.action, status: "processing" }, { status: 202 });
+      assert.equal(p.job_id, p.action);
+      if (p.action === "merge") assert.deepEqual(p.jobs, ["one", "section"]);
+      return Response.json({ id: p.action, status: "ready", draft: { title: "Test hotel" } });
+    },
+  });
+  assert.equal(result.id, "merge");
+  assert.equal(actions.filter(([a, , read]) => a === "section" && !read).length, 2);
+  assert.equal(actions.filter(([a, , read]) => a === "merge" && !read).length, 1);
+  assert.equal(actions.some(([a]) => a === "images"), false);
+  const photo = await firstIntakeImage(input, result.sections, async (_, opts) =>
+    Response.json({ candidate: JSON.parse(opts.body).section === 1 ? { name: "frame" } : null }));
+  assert.deepEqual(photo, { name: "frame" });
+});
+
+test("a legacy saved section matches the workspace, staff member, source digest, brief and plan", async () => {
+  const p = { ...input, workspace_id: "workspace", action: "section", section: 0, section_count: 2 };
+  let row = { status: "ready", id: "job", title: "Private title" };
+  const source = { id, sha256: "document-digest" };
+  const query = {
+    select() { return this; },
+    eq(key, value) {
+      assert.equal(value, { actor_id: actor, practice: input.practice }[key]);
+      return this;
+    },
+    contains(key, value) {
+      assert.equal(key, "context");
+      assert.deepEqual(value, { kind: "intake_section", record_kind: input.kind, workspace_id: "workspace",
+        source_id: id, source_sha256: source.sha256, section: 0, section_count: 2, brief_hash: intakeBriefHash(input) });
+      return this;
+    },
+    order() { return this; }, limit() { return { data: [row] }; },
+  };
+  const lookup = () => savedReceipt({ from: () => query }, { id: actor }, p, [source], 210000);
+  assert.equal((await lookup()).id, "job");
+  row = { ...row, status: "processing", created_at: new Date().toISOString() };
+  assert.equal((await lookup()).status, "processing");
+  row.created_at = new Date(0).toISOString();
+  assert.equal((await lookup()).status, "failed");
+});
+
+test("an interrupted save retries the identical job and version", async () => {
+  const sent = [], payload = { action: "finish", id: "workspace", version: 1, job_id: "merged", receipt: true };
+  const saved = await intakeWorkspace(payload, async (_, opts) => {
+    sent.push(JSON.parse(opts.body));
+    return sent.length === 1 ? new Response("") : Response.json({ version: 2 });
+  });
+  assert.deepEqual(sent, [payload, payload]);
+  assert.equal(saved.version, 2);
 });
 
 test("Merged facts retain original evidence and flag unsupported or conflicting specifications", () => {

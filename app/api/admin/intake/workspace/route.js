@@ -61,6 +61,10 @@ export async function POST(request) {
     const { data, error } = await client.rpc("ig_content_intake", { p });
     if (error)
       throw new HttpError(error.message, error.code === "42501" ? 403 : 409);
+    if (p.action === "finish" && p.receipt === true) {
+      const { id, content_id, room_id, version, media_id } = data;
+      return privateJson({ id, content_id, room_id, version, media_id });
+    }
     return privateJson(data);
   } catch (e) {
     return errorJson(e);
