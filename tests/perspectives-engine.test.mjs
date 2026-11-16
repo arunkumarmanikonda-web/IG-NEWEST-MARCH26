@@ -131,3 +131,24 @@ test("missing sources are a distinct evidence hold and cannot be repaired by rew
   await assert.rejects(insufficient.promise, /Evidence hold/);
   assert.equal(insufficient.requests.length, 2);
 });
+
+test("removes a whole unsupported sentence while leaving the original evidence and independent check intact", async () => {
+  const supported = "The survey covers 3 districts. Operators can compare their own catchment with the survey coverage before adjusting a budget.";
+  const draft = changed(d => { d.sections[0].text = "There are 43 eligible cities. " + supported; });
+  const { promise, requests } = run({ draft });
+  const article = await promise;
+  assert.equal(article.sections[0].text, supported);
+  assert.equal(article.verification.evidence[0].note, mockDraft.sources[0].evidence);
+  assert.equal(JSON.parse(requests[2].input).sections[0].text, supported);
+  assert.doesNotMatch(article.body, /43/);
+  await assert.rejects(run({ draft, verdict: "HOLD" }).promise, /held the article/);
+});
+test("holds if removal leaves no substantive text, a dangling inference, or a heading based on the figure", async () => {
+  for (const [value, message] of [
+    ["The survey covers 43 districts. Check it.", /Too little independent prose/],
+    ["The survey covers 43 districts. This comparison would make a sizeable difference to budget decisions for the operations team.", /depends on the omitted claim/],
+  ]) {
+    await assert.rejects(run({ draft: changed(d => { d.sections[0].text = value; }) }).promise, message);
+  }
+  await assert.rejects(run({ draft: changed(d => { d.sections[0].heading = "Coverage of 43 districts"; }) }).promise, /heading requires a rewrite/);
+});
