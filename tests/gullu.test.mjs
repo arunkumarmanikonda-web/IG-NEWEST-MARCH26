@@ -36,7 +36,7 @@ test("grounded multilingual paragraphs reject unsupported numbers",async()=>{
   const candidates=rankPassages(docs,"Jaisalkot keys",[],"/");
   const ask=(text,ids)=>answerFromPassages({question:"Jaisalkot rooms?",history:[],language:"Hinglish",candidates,config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
     fetcher:async (url,req)=>{const body=JSON.parse(req.body);assert.equal(body.store,false);assert.equal(JSON.parse(body.input).language,"Hinglish");
-      return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({paragraphs:[{text,ids}]})}]}]});}});
+      return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"grounded",paragraphs:[{text,ids}]})}]}]});}});
   const i=candidates.findIndex(x=>x.text==="Keys · 50");
   assert.match((await ask("Is resort mein 50 keys hain.",[i])).answer,/50 keys/);
   assert.doesNotMatch((await ask("There are 75 rooms.",[i])).answer,/75/);
@@ -76,4 +76,10 @@ test("Arun’s Hinglish greeting, assent, unfinished message and pause stay conv
  assert.equal(conversationLanguage("who is your managing director",history,"Hinglish"),"Hinglish");
  const md=directAnswer("WHO IS YOU MANAGING DIRECTOR",[{kind:"person",title:"Arun Manikonda",href:"/leadership/arun-manikonda",chunks:["Founder and Managing Director."]}],history,"Hinglish");
  assert.equal(md.answer,"Arun Manikonda India Gully ke Managing Director hain.");
+});
+
+test("unrecognised conversational phrasing can be answered without fabricating a public source",async()=>{
+ const reply=await answerFromPassages({question:"Just popped in to say hello, dost!",history:[],language:"Hinglish",candidates:[],config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
+ fetcher:async()=>Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"conversation",paragraphs:[{text:"Arre, achha laga! Aaj ka din kaisa ja raha hai?",ids:[]}]})}]}]})});
+ assert.match(reply.answer,/achha laga/);assert.deepEqual(reply.sources,[]);
 });
