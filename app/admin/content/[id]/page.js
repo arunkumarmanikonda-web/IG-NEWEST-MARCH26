@@ -39,7 +39,7 @@ export default async function EditPage({ params, searchParams }) {
   }
   const { data: mediaAssets } = await client
     .from("ig_source_media")
-    .select("id,alt,source_name,path,preset,state,published,practice")
+    .select("id,alt,source_name,rights_reference,path,preset,state,published,practice")
     .order("created_at", { ascending: false })
     .limit(100);
   const { data: creativeJobs } = await client
@@ -127,13 +127,13 @@ export default async function EditPage({ params, searchParams }) {
   ) {
     const { data: source } = await client
       .from("ig_source_media")
-      .select("id,alt,source_name,path,preset,state,published,practice")
+      .select("id,alt,source_name,rights_reference,path,preset,state,published,practice")
       .eq("id", catalogueSource.media_id)
       .maybeSingle();
     if (source) mediaAssets?.unshift(source);
   }
   if (item?.kind === "product" && !catalogueSource?.media_id) {
-    const {data:matched} = await client.from("ig_source_media").select("id,alt,source_name,path,preset,state,published,practice")
+    const {data:matched} = await client.from("ig_source_media").select("id,alt,source_name,rights_reference,path,preset,state,published,practice")
       .eq("practice","horeca").eq("state","ready").like("source_name","catalogue-photo-"+item.id+"-%")
       .order("created_at",{ascending:false}).limit(1).maybeSingle();
     if (matched) {

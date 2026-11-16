@@ -1,4 +1,5 @@
 "use client";
+import {propertyPhotoURL} from "../lib/listing-images.mjs";
 import { useRef } from "react";
 import Image from "next/image";
 import BrandLogo from "./brand-logo";
@@ -18,11 +19,11 @@ export default function PropertyPhotograph({ image, alt, title }) {
     <>
       <div className="property-photograph">
         <Image
-          src={image}
+          src={propertyPhotoURL(image)}
           alt={alt || title}
           fill
           sizes="(max-width:760px) 90vw, 60vw"
-          unoptimized={generated}
+          unoptimized={generated || image.startsWith("/images/library/")}
           preload
         />
         {generated && (
@@ -49,11 +50,11 @@ export default function PropertyPhotograph({ image, alt, title }) {
         </form>
         <div className="property-lightbox-image">
           <Image
-            src={image}
+            src={propertyPhotoURL(image)}
             alt={alt || title}
             fill
             sizes="100vw"
-            unoptimized={generated}
+            unoptimized={generated || image.startsWith("/images/library/")}
           />
         </div>
         <p>
