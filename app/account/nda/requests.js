@@ -1,4 +1,5 @@
 "use client";
+import AgreementText from "../../agreement-text";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../profile";
@@ -114,7 +115,7 @@ export default function NdaAccount({
                 Version {template.version}. Read the complete agreement before
                 accepting.
               </p>
-              <div className="agreement-text">{template.body}</div>
+              <AgreementText text={template.body}/>
               <label>
                 Full legal name
                 <input
@@ -168,7 +169,7 @@ export default function NdaAccount({
                 <dt>Text SHA-256</dt>
                 <dd>{r.agreement_snapshot?.sha256}</dd>
               </dl>
-              <div className="agreement-text">{r.agreement_snapshot?.body}</div>
+              <AgreementText text={r.agreement_snapshot?.body}/>
               <p>{r.agreement_snapshot?.disclaimer || "Accepted by typed name and explicit electronic acceptance."}</p>
             </details>
           )}

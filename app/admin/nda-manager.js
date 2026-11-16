@@ -1,11 +1,20 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AgreementText from "../agreement-text";
+import { projectNdaDraft } from "../../lib/project-nda.mjs";
 import { portalAction } from "../account/profile";
 export default function NdaManager({ requests, templates, isOwner, projects }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   const router = useRouter();
+  const [projectId, setProjectId] = useState(projects.length === 1 ? projects[0].id : "");
+  const [editedId, setEditedId] = useState({});
+  const project = projects.find(entry => entry.id === projectId);
+  const draft = project && projectNdaDraft(project);
+  let number = 1;
+  while (project && templates.some(t => t.version === `project-${project.id}-v${number}`)) number++;
+  const nextVersion = project ? `project-${project.id}-v${number}` : "";
   async function run(p) {
     setBusy(true);
     setMessage("");
@@ -48,7 +57,7 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
                 Version {r.agreement_snapshot?.version} ·{" "}
                 {r.agreement_snapshot?.recipient_email}
               </p>
-              <div className="agreement-text">{r.agreement_snapshot?.body}</div>
+              <AgreementText text={r.agreement_snapshot?.body}/>
               {r.agreement_snapshot?.disclaimer && <p>{r.agreement_snapshot.disclaimer}</p>}
               <p className="workspace-note">
                 SHA-256: {r.agreement_snapshot?.sha256}
@@ -98,12 +107,16 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
       {!requests.length && <p>No requests received.</p>}
       <h2>Agreement versions</h2>
       {templates.map((t) => (
-        <details key={t.id}>
+        <details key={JSON.stringify([t.id,t.title,t.body])} id={"agreement-"+t.id}>
           <summary>
             {t.version} · {t.status} · {t.title} · {projects.find(x=>x.id===t.content_id)?.title||"General agreement"}
           </summary>
-          <div className="agreement-text">{t.body}</div>
-          {isOwner && t.status==="draft" && t.content_id && <form className="workspace-form" onSubmit={event=>{
+          <AgreementText text={t.body}/>
+          {isOwner && t.status==="draft" && t.content_id && <form className="workspace-form" onChange={event => {
+            const form = new FormData(event.currentTarget);
+            const dirty = form.get("title") !== t.title || form.get("body") !== t.body;
+            setEditedId(prev => ({...prev, [t.id]: dirty ? JSON.stringify([t.title, t.body]) : undefined}));
+          }} onSubmit={event=>{
             event.preventDefault();const f=new FormData(event.currentTarget);run({action:"edit_project",id:t.id,title:f.get("title"),body:f.get("body"),original_title:t.title,original_body:t.body});
           }}>
             <label className="wide">Agreement title<input name="title" defaultValue={t.title} maxLength={180} required/></label>
@@ -121,12 +134,16 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
                 });
               }}
             >
+              {t.content_id && <p>Before activation, check the parties, project scope, confidentiality period, jurisdiction and applicable stamp duty with your legal adviser.
+                {projects.find(p => p.id === t.content_id)?.cirp && " For a CIRP data room, confirm the resolution professional’s prescribed undertaking and permitted disclosure stage."}
+              </p>}
+              {editedId[t.id] === JSON.stringify([t.title, t.body]) && <p>Save your wording before activating this agreement.</p>}
               <label className="check">
                 <input required type="checkbox" />
                 The legal wording and scope have been reviewed and approved for
                 this website’s disclosure process.
               </label>
-              <button className="primary" disabled={busy}>
+              <button className="primary" disabled={busy || editedId[t.id] === JSON.stringify([t.title, t.body])}>
                 Activate this version
               </button>
             </form>
@@ -160,19 +177,21 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
           }}
         >
           <h3 className="wide">Create a Project NDA</h3>
-          <label className="wide">Project data room<select name="content_id" required defaultValue=""><option value="">Choose the project</option>{projects.map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>
+          <label className="wide">Project data room<select name="content_id" required value={projectId} onChange={e => setProjectId(e.target.value)}><option value="">Choose the project</option>{projects.map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>
+          {draft && <div className="wide workspace-form" key={nextVersion}>
           <label>
             Version reference
-            <input name="version" maxLength={60} required />
+            <input name="version" defaultValue={nextVersion} maxLength={60} required />
           </label>
           <label>
             Title
-            <input name="title" maxLength={180} required />
+            <input name="title" defaultValue={draft.title} maxLength={180} required />
           </label>
           <label className="wide">
             Complete agreement text
             <textarea
               name="body"
+              defaultValue={draft.body}
               minLength={100}
               maxLength={30000}
               required
@@ -187,6 +206,7 @@ export default function NdaManager({ requests, templates, isOwner, projects }) {
           <button className="primary" disabled={busy}>
             Save draft agreement
           </button>
+          </div>}
         </form>
       )}
     </section>
