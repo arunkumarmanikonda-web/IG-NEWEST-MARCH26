@@ -1,4 +1,5 @@
 "use client";
+import {listingHeading} from "../../lib/listing-heading.mjs";
 import { useState } from "react";
 import Link from "next/link";
 export default function AuthForm({ register = false, returnTo=null, projectTitle="" }) {
@@ -48,7 +49,7 @@ export default function AuthForm({ register = false, returnTo=null, projectTitle
             ? (projectTitle?"Request Data Room Access":"Create your account")
             : "Welcome back."}
       </h1>
-      {projectTitle && <><h2>{projectTitle}</h2><p><Link className="text-link" href={"/login?next="+encodeURIComponent(returnTo)}>Already registered? Sign in</Link></p></>}
+      {projectTitle && <><h2>{listingHeading(projectTitle)}</h2><p><Link className="text-link" href={"/login?next="+encodeURIComponent(returnTo)}>Already registered? Sign in</Link></p></>}
       <p>
         {register
           ? (projectTitle?"Register and verify your email to request documents for this property. India Gully reviews each request before sharing access.":"Register to manage your interests and request controlled information.")

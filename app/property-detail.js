@@ -26,7 +26,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [] }) 
           <Eyebrow>
             {x.location} · {x.sector}
           </Eyebrow>
-          <h1>{x.title}</h1>
+          <h1>{listingHeading(x.title)}</h1>
           <p>{x.assetClass || x.type}</p>
           <PropertyTags tags={x.tags} contexts={x.contexts} />
         </div>
@@ -42,7 +42,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [] }) 
         <PropertyPhotograph image={x.image} alt={d.image_alt} title={x.title} />
         <div className="property-overview-panel">
           <Eyebrow>PROPERTY AT A GLANCE</Eyebrow>
-          <h2>{x.assetClass || x.type}</h2>
+          <h2>{listingHeading(x.assetClass || x.type)}</h2>
           <dl>
             <div><dt>Location</dt><dd>{x.location}</dd></div>
             <div><dt>Status</dt><dd>{propertyStatus(x)}</dd></div>
