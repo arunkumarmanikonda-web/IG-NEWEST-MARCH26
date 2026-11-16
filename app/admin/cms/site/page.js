@@ -1,5 +1,6 @@
 import { accountContext } from "../../../../lib/supabase/server";
 import { readSiteRecords } from "../../../../lib/site-cms-records.mjs";
+import {siteDefaults} from "../../../../lib/site-editorial.mjs";
 import WebsiteEditor from "./website-editor";
 export default async function Page({searchParams}) {
   const { client } = await accountContext();
@@ -8,6 +9,7 @@ export default async function Page({searchParams}) {
     draft.live_version=live[key]?.version;
     draft.scheduled_at=live[key]?.scheduled_at || null;
   }
-  const section = (await searchParams)?.section === "disciplines" ? "disciplines" : "home";
+  const choice=(await searchParams)?.section;
+  const section=typeof choice==="string" && Object.hasOwn(siteDefaults,choice)?choice:"home";
   return <WebsiteEditor key={section} records={records} initialSection={section} />;
 }

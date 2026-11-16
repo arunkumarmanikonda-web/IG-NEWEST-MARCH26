@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Taj",
+    "site": "https://www.tajhotels.com/en-in",
+    "logo": "/partners/hospitality/taj.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Oberoi Hotels & Resorts",
+    "site": "https://www.oberoihotels.com/",
+    "logo": "/partners/hospitality/oberoi-hotels-resorts.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "ITC Hotels",
+    "site": "https://www.itchotels.com/in/en",
+    "logo": "/partners/hospitality/itc-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Lemon Tree Hotels",
+    "site": "https://www.lemontreehotels.com/",
+    "logo": "/partners/hospitality/lemon-tree-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "The Leela",
+    "site": "https://www.theleela.com/",
+    "logo": "/partners/hospitality/the-leela.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Sarovar Hotels",
+    "site": "https://www.sarovarhotels.com/",
+    "logo": "/partners/hospitality/sarovar-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Welcomhotel by ITC Hotels",
+    "site": "https://www.itchotels.com/in/en",
+    "logo": "/partners/hospitality/welcomhotel-by-itc-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Fortune Hotels",
+    "site": "https://www.itchotels.com/in/en",
+    "logo": "/partners/hospitality/fortune-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Storii by ITC Hotels",
+    "site": "https://www.itchotels.com/in/en",
+    "logo": "/partners/hospitality/storii-by-itc-hotels.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "Hilton",
+    "site": "https://www.hilton.com/en/locations/india/",
+    "logo": "/partners/hospitality/hilton.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "Accor",
+    "site": "https://group.accor.com/",
+    "logo": "/partners/hospitality/accor.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "Radisson Hotels",
+    "site": "https://www.radissonhotels.com/en-us/destination/india",
+    "logo": "/partners/hospitality/radisson-hotels.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "IHG Hotels & Resorts",
+    "site": "https://www.ihgplc.com/",
+    "logo": "/partners/hospitality/ihg-hotels-resorts.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "Wyndham Hotels & Resorts",
+    "site": "https://corporate.wyndhamhotels.com/",
+    "logo": "/partners/hospitality/wyndham-hotels-resorts.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "Marriott International",
+    "site": "https://marriott.gcs-web.com/",
+    "logo": "/partners/hospitality/marriott-international.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "Four Seasons Hotels and Resorts",
+    "site": "https://www.fourseasons.com/mumbai/",
+    "logo": "/partners/hospitality/four-seasons-hotels-and-resorts.webp",
+    "category": "International hospitality"
+  },
+  {
+    "name": "The LaLiT",
+    "site": "https://www.thelalit.com/",
+    "logo": "/partners/hospitality/the-lalit.webp",
+    "category": "Indian hospitality"
+  },
+  {
+    "name": "THE Park Hotels",
+    "site": "https://www.theparkhotels.com/",
+    "logo": "/partners/hospitality/the-park-hotels.webp",
+    "category": "Indian hospitality"
+  }
+]

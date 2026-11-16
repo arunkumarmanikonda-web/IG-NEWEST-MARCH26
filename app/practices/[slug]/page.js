@@ -1,6 +1,7 @@
 import { siteSection } from "../../../lib/website";
 import { pageMeta } from "../../../lib/seo.mjs";
 import { cmsMetadata } from "../../../lib/cms";
+import PracticeShowcase from "../practice-showcase";
 import Seo from "../../seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -60,6 +61,7 @@ export default async function Practice({ params }) {
           ))}
         </div>
       </section>
+      {p.showcase && <PracticeShowcase profile={p} detail={p.showcase}/>}
       <section className="scope-section">
         <div>
           <Eyebrow>{copy["a-clear-scope"]}</Eyebrow>

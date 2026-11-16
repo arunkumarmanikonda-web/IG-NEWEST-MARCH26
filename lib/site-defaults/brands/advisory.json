@@ -1,0 +1,38 @@
+[
+  {
+    "name": "EY",
+    "site": "https://www.ey.com/en_in",
+    "logo": "/partners/advisory/ey.webp",
+    "category": "Professional and transaction advisory"
+  },
+  {
+    "name": "Pipara & Co LLP",
+    "site": "https://www.pipara.com/en",
+    "logo": "/partners/advisory/pipara.webp",
+    "category": "Professional and transaction advisory"
+  },
+  {
+    "name": "Resurgent India Limited",
+    "site": "https://resurgentindia.com/",
+    "logo": "/partners/advisory/resurgent.webp",
+    "category": "Professional and transaction advisory"
+  },
+  {
+    "name": "CBRE",
+    "site": "https://www.cbre.co.in/",
+    "logo": "/partners/advisory/cbre.webp",
+    "category": "Property advisory"
+  },
+  {
+    "name": "ANAROCK",
+    "site": "https://www.anarock.com/",
+    "logo": "/partners/advisory/anarock.webp",
+    "category": "Property advisory"
+  },
+  {
+    "name": "Sammaan Capital (formerly Indiabulls Housing Finance)",
+    "site": "https://www.sammaancapital.com/about-us",
+    "logo": "/partners/advisory/sammaan.webp",
+    "category": "Capital providers"
+  }
+]
