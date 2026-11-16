@@ -52,7 +52,7 @@ export default function AuthForm({ register = false, returnTo=null, projectTitle
       {projectTitle && <><h2>{listingHeading(projectTitle)}</h2><p><Link className="text-link" href={"/login?next="+encodeURIComponent(returnTo)}>Already registered? Sign in</Link></p></>}
       <p>
         {register
-          ? (projectTitle?"Register and verify your email to request documents for this property. India Gully reviews each request before sharing access.":"Register to manage your interests and request controlled information.")
+          ? (projectTitle?"Verify your email, choose the legal name you represent and sign the project agreement. India Gully reviews your request before sharing documents.":"Register to manage your interests and request controlled information.")
           : "Receive a one-time sign-in code by email. Your registered account opens its assigned workspace."}
       </p>
       {register && (

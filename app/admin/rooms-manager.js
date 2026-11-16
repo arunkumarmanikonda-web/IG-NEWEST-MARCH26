@@ -356,12 +356,12 @@ export default function RoomsManager({
               >
                 Copy secure room link
               </button>
-              {content?.kind === "opportunity" && (
+              {["opportunity","project"].includes(content?.kind) && (
                 <button
                   type="button"
                   onClick={() =>
                     copyLink(
-                      "/account/nda?opportunity=" +
+                      "/account/nda?"+content.kind+"=" +
                         encodeURIComponent(content.slug),
                     )
                   }
@@ -378,7 +378,7 @@ export default function RoomsManager({
               permitted downloads, set an expiry and revoke access here at any
               time.
             </p>
-            {content && content.kind !== "opportunity" && (
+            {content && !["opportunity","project"].includes(content.kind) && (
               <p>
                 This is a private source room for {content.kind} content. Client
                 report circulation is managed through{" "}

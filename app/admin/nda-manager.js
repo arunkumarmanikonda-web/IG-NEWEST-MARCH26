@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../account/profile";
-export default function NdaManager({ requests, templates, isOwner }) {
+export default function NdaManager({ requests, templates, isOwner, projects }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function NdaManager({ requests, templates, isOwner }) {
     setBusy(true);
     setMessage("");
     try {
-      await portalAction("nda_admin", p);
+      await portalAction(p.action==="edit_project"?"nda_draft":"nda_admin", p);
       setMessage("Saved.");
       router.refresh();
     } catch (e) {
@@ -99,9 +99,16 @@ export default function NdaManager({ requests, templates, isOwner }) {
       {templates.map((t) => (
         <details key={t.id}>
           <summary>
-            {t.version} · {t.status} · {t.title}
+            {t.version} · {t.status} · {t.title} · {projects.find(x=>x.id===t.content_id)?.title||"General agreement"}
           </summary>
           <div className="agreement-text">{t.body}</div>
+          {isOwner && t.status==="draft" && t.content_id && <form className="workspace-form" onSubmit={event=>{
+            event.preventDefault();const f=new FormData(event.currentTarget);run({action:"edit_project",id:t.id,title:f.get("title"),body:f.get("body"),original_title:t.title,original_body:t.body});
+          }}>
+            <label className="wide">Agreement title<input name="title" defaultValue={t.title} maxLength={180} required/></label>
+            <label className="wide">Project-specific terms<textarea className="body-editor" name="body" defaultValue={t.body} minLength={100} maxLength={30000} required/></label>
+            <button disabled={busy}>Save draft wording</button>
+          </form>}
           {isOwner && t.status === "draft" && (
             <form
               onSubmit={(e) => {
@@ -144,13 +151,15 @@ export default function NdaManager({ requests, templates, isOwner }) {
             const f = new FormData(e.currentTarget);
             run({
               action: "template_create",
+              content_id:f.get("content_id"),
               version: f.get("version"),
               title: f.get("title"),
               body: f.get("body"),
             });
           }}
         >
-          <h3 className="wide">Create a new draft version</h3>
+          <h3 className="wide">Create a Project NDA</h3>
+          <label className="wide">Project data room<select name="content_id" required defaultValue=""><option value="">Choose the project</option>{projects.map(x=><option key={x.id} value={x.id}>{x.title}</option>)}</select></label>
           <label>
             Version reference
             <input name="version" maxLength={60} required />

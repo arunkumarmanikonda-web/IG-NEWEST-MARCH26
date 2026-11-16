@@ -105,7 +105,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [] }) 
           </Link>
           {hasRoom && <>
             <Link className="button" href={roomLink}>Request Data Room Access <Arrow /></Link>
-            <p className="fine-note">Register or sign in to request confidential documents for this property.</p>
+            <p className="fine-note">Register or sign in to select a legal name and request confidential documents for this property.</p>
           </>}
         </aside>
       </div>

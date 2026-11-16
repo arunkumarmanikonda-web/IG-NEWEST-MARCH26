@@ -1,3 +1,4 @@
+import {anonymousServerClient} from "../../../lib/runtime-config";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { companyContent } from "../../../lib/editorial";
@@ -14,6 +15,8 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const x = await engagement(await params);
   if (!x) notFound();
+  const rooms=x.id?await anonymousServerClient().rpc("ig_room_listing_slugs",{content_kind:"project"}):{data:[]};
+  if(rooms.error) throw new Error("Project documents are temporarily unavailable");
   return (
     <main id="main">
       <PageHero
@@ -24,6 +27,7 @@ export default async function Page({ params }) {
         <Link href="/our-work" className="text-link">
           ← Selected work
         </Link>
+        {rooms.data.includes(x.slug)&&<Link className="button" href={"/account/nda?project="+x.slug}>Request Data Room Access</Link>}
       </PageHero>
       <section className="profile-content section-pad">
         <aside>
