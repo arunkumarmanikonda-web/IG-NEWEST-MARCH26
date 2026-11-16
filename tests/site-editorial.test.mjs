@@ -4,8 +4,8 @@ import {siteDefaults,validateSection} from "../lib/site-editorial.mjs";
 import {parseSiteRecords,sitePrefix} from "../lib/site-cms-records.mjs";
 import {practiceUpdate} from "../lib/practice-updates.mjs";
 
-test("all nineteen original website sections survive a stored JSON round trip", () => {
-  assert.equal(Object.keys(siteDefaults).length,19);
+test("original website sections and three practice showcases survive a stored JSON round trip", () => {
+  assert.equal(Object.keys(siteDefaults).length,22);
   for (const [key,value] of Object.entries(siteDefaults)) {
     const records=parseSiteRecords([{slug:sitePrefix+key,body:JSON.stringify(value),version:2,published_version:1}]);
     assert.deepEqual(records[key],{content:value,version:2,live_version:1});
@@ -49,4 +49,15 @@ test("future text stays encrypted in the public snapshot and appears only when d
   assert.deepEqual(effectiveSnapshot("home",4,sealed,{draft:true,time:due-1,secret}).content,next);
   assert.throws(()=>effectiveSnapshot("about",4,sealed,{time:due,secret}));
   assert.throws(()=>effectiveSnapshot("home",4,{...sealed,at:"2000-01-01"},{secret}));
+});
+
+import {leasingListings,showcasePassages} from "../lib/practice-showcases.mjs";
+test("practice edits, empty logo galleries, public brand references and leasing eligibility",()=>{
+ const detail=structuredClone(siteDefaults["retail-showcase"]);detail.brands=[{name:"Example",category:"Apparel",logo:"/partners/retail/example.webp",site:"https://example.com"}];
+ assert.equal(validateSection("retail-showcase",detail),detail);
+ assert.ok(showcasePassages(detail).some(s=>s.includes("Apparel")&&s.includes("Example")));
+ assert.throws(()=>validateSection("retail-showcase",{...detail,brands:[{...detail.brands[0],site:"javascript:alert(1)"}]}));
+ assert.equal(validateSection("retail-showcase",{...detail,brands:[]}).brands.length,0);
+ const lease={slug:"lease",public_data:{transaction_type:"Office leasing"}},tagged={slug:"tag",tags:[{slug:"lease",dimension:"transaction-type"}]};
+ assert.deepEqual(leasingListings([lease,tagged,{public_data:{transaction_type:"Sale"}},{public_data:{reference:"Portfolio reference",transaction_type:"Lease"}}]),[lease,tagged]);
 });

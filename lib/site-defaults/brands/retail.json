@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Haldiram’s",
+    "site": "https://www.haldirams.com",
+    "logo": "/partners/retail/haldirams.webp",
+    "category": "Food & beverage"
+  },
+  {
+    "name": "McDonald’s",
+    "site": "https://mcdindia.com",
+    "logo": "/partners/retail/mcdonalds.webp",
+    "category": "Food & beverage"
+  },
+  {
+    "name": "PVR INOX",
+    "site": "https://www.pvrcinemas.com",
+    "logo": "/partners/retail/pvr-inox.webp",
+    "category": "Cinemas"
+  },
+  {
+    "name": "Miraj Cinemas",
+    "site": "https://www.mirajcinemas.com",
+    "logo": "/partners/retail/miraj.webp",
+    "category": "Cinemas"
+  },
+  {
+    "name": "Westside",
+    "site": "https://www.westside.com",
+    "logo": "/partners/retail/westside.webp",
+    "category": "Anchors"
+  },
+  {
+    "name": "Reliance SMART",
+    "site": "https://relianceretail.com/reliance-smart.html",
+    "logo": "/partners/retail/smart.webp",
+    "category": "Anchors"
+  },
+  {
+    "name": "Pantaloons",
+    "site": "https://www.pantaloons.com",
+    "logo": "/partners/retail/pantaloons.webp",
+    "category": "Apparel"
+  },
+  {
+    "name": "Trends",
+    "site": "https://relianceretail.com/reliance-trends.html",
+    "logo": "/partners/retail/trends.webp",
+    "category": "Apparel"
+  },
+  {
+    "name": "Sabyasachi",
+    "site": "https://sabyasachi.com",
+    "logo": "/partners/retail/sabyasachi.webp",
+    "category": "Luxury"
+  },
+  {
+    "name": "Good Earth",
+    "site": "https://www.goodearth.in",
+    "logo": "/partners/retail/good-earth.webp",
+    "category": "Luxury"
+  }
+]
