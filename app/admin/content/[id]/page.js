@@ -194,6 +194,11 @@ export default async function EditPage({ params, searchParams }) {
     if (!error) promotion = <FeatureManager contentId={id} card={publication ? opportunityCard({...publication,tags:[]}) : null} initial={history || []}/>;
     else if (error.code !== "42501") promotion = <p role="alert">Featured placements could not be loaded. Refresh to try again.</p>;
   }
+  if (item?.kind === "product" && item.published_version != null) {
+    promotion = <div className="workspace-actions">
+      <Link className="button" href={"/admin/featured?kind=product&record="+id+"#placement-editor"}>Manage HORECA priority placement</Link>
+    </div>;
+  }
   return (<>
     {promotion}
     <Editor

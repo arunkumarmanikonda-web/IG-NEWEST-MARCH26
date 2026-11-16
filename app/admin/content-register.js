@@ -126,6 +126,7 @@ export default function ContentRegister({ module, items }) {
           <p>{description}</p>
         </div>
         <div className="workspace-actions">
+          {(module === "listings" || module === "catalogue") && <Link className="module-link" href={"/admin/featured?kind="+kind}>{module === "listings" ? "Manage property carousel" : "Manage priority products"}</Link>}
           {module === "cms" && <Link className="primary" href="/admin/cms/site">Edit website pages & menus</Link>}
           {module === "catalogue" && (
             <Link className="primary" href="/admin/catalogue/import">

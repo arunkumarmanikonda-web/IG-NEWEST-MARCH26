@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LiveListings({ revision }) {
+export default function LiveListings({ revision, endpoint = "/api/listings/revision" }) {
   const router = useRouter();
   useEffect(() => {
     const controller = new AbortController();
@@ -12,7 +12,7 @@ export default function LiveListings({ revision }) {
       if (document.visibilityState !== "visible" || checking) return;
       checking = true;
       try {
-        const response = await fetch("/api/listings/revision", {
+        const response = await fetch(endpoint, {
           cache: "no-store", signal: controller.signal,
         });
         if (response.ok) {
@@ -37,6 +37,6 @@ export default function LiveListings({ revision }) {
       window.removeEventListener("focus", check);
       window.removeEventListener("pageshow", check);
     };
-  }, [revision, router]);
+  }, [revision, router, endpoint]);
   return null;
 }

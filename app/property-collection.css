@@ -282,3 +282,29 @@
 @media(prefers-reduced-motion:reduce){.property-card,.property-card-image img{transition:none}.property-card-image:hover img{transform:none}}
 .footer-bottom > span:last-child {flex-wrap:wrap;max-width:100%;gap:10px 20px;}
 @media(max-width:760px){.footer-bottom > span{min-width:0}.footer-bottom > span:last-child{justify-content:flex-start}}
+
+.home-property-collection .opportunity-browse-cta,
+.two-paths .catalogue-browse-cta {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 13px 23px;
+  font-weight: 650;
+  background: var(--ink);
+  color: white;
+  border: 1px solid var(--ink);
+}
+.home-property-collection .opportunity-browse-cta:hover,
+.home-property-collection .opportunity-browse-cta:focus-visible,
+.two-paths .catalogue-browse-cta:hover,
+.two-paths .catalogue-browse-cta:focus-visible {
+  background: var(--gold);
+  color: var(--ink);
+}
+@media (max-width: 640px) {
+  .home-property-collection .collection-heading-copy,
+  .home-property-collection .opportunity-browse-cta,
+  .two-paths .catalogue-browse-cta { width: 100%; }
+}
