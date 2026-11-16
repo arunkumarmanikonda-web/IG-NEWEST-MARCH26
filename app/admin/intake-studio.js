@@ -168,10 +168,10 @@ export default function IntakeStudio({
           }
         } catch { imageState = "&image=review"; }
       }
-      if (!hasImage && !imageState && ["product","opportunity"].includes(kind) && form.get("auto_image")) {
-        setMessage("Draft saved. Preparing its illustrative image…");
+      if ((kind==="opportunity" || (kind==="product" && !hasImage && !imageState)) && form.get("auto_image")) {
+        setMessage("Draft saved. Preparing the listing or product image…");
         try {
-          const hero = await intakeWorkspace({action:"hero",id:current.id,approved:true});
+          const hero = await intakeWorkspace({action:"hero",id:current.id,approved:true,style:form.get("visual_style"),direction:String(form.get("brief") || "").slice(0,2000)});
           imageState = hero.status === "existing" ? "" : "&image=" + (["failed","cancelled"].includes(hero.status) ? "review" : "queued");
         } catch { imageState = "&image=review"; }
       }
@@ -370,7 +370,14 @@ export default function IntakeStudio({
             am authorised to process these sources with OpenAI and prepare
             public-facing drafts.
           </label>
-          {["product","opportunity"].includes(kind) && <label className="check wide"><input name="auto_image" type="checkbox" defaultChecked disabled={busy} />When no source photo is available, use the draft description to generate an illustrative image with Runway for review (estimated 5 credits).</label>}
+          {["product","opportunity"].includes(kind) && <label className="check wide"><input name="auto_image" type="checkbox" defaultChecked disabled={busy} />{kind==="opportunity" ? "Use a source photograph, search Wikimedia Commons by property name if needed, or prepare a Runway illustration for review (estimated 5 credits per generation)." : "When no source photo is available, generate an illustrative product image with Runway for review (estimated 5 credits)."}</label>}
+          {kind==="opportunity" && <label className="wide">Property image style
+            <select name="visual_style" defaultValue="auto" disabled={busy}>
+              <option value="auto">Automatic · follow the writing direction</option>
+              <option value="photo">Photograph preferred</option>
+              <option value="sketch">Architectural sketch</option>
+            </select>
+          </label>}
           <div className="workspace-actions wide">
             <button className="primary" disabled={busy}>
               {busy

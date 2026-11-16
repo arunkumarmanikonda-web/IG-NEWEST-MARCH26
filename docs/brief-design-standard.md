@@ -32,6 +32,8 @@ draft, sends it to a client or grants data-room access.
 - Property briefs flow the complete approved narrative onto additional editorial pages as needed. Product briefs retain the three-page format.
 - Overview: photographic masthead, prominent supplied facts, clear summary,
   aligned editorial sections, readable spacing and a quiet enquiry callout.
+  Justify property summaries and narrative paragraphs to each text frame.
+  Leave the last line of each paragraph at its natural width.
 - Closing page: photographic hero, clear invitation, named advisers,
   clickable phone/email links, a discussion or quotation link and a scannable
   record-specific enquiry QR.
@@ -44,6 +46,12 @@ draft, sends it to a client or grants data-room access.
   or invent facts to fill space. When no approved photo is supplied, the current
   renderer uses a typographic cover; an approved image is needed for a photo hero.
   Existing illustrative-image labelling must remain accurate.
+- Property intake first uses source material. If it needs another photograph,
+  search by property identity for a matching public-domain or CC0 photograph
+  and retain its source and licence for review. For an architectural sketch,
+  use the available property photograph as the reference. With no match,
+  generate a labelled illustrative concept. The approved image feeds both the
+  public listing and the brief.
 
 ## Maintenance and checks
 

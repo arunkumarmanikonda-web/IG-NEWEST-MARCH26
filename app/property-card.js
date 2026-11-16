@@ -1,3 +1,4 @@
+import {propertyPhotoURL} from '../lib/listing-images.mjs';
 import {listingHeading} from "../lib/listing-heading.mjs";
 import Image from "next/image";
 import PropertyTags from "./property-tags";
@@ -12,7 +13,7 @@ export default function PropertyCard({ item: x }) {
   return (
     <article className="property-card">
       <Link className="property-card-image" href={href} aria-label={"View " + x.title}>
-        {x.image ? <Image src={x.image} unoptimized={x.image.startsWith("/images/generated/")} alt={x.imageAlt || x.title} fill sizes="(max-width:640px) 90vw, (max-width:1000px) 44vw, 29vw" /> : (
+        {x.image ? <Image src={propertyPhotoURL(x.image)} unoptimized={/^\/images\/(generated|library)\//.test(x.image)} alt={x.imageAlt || x.title} fill sizes="(max-width:640px) 90vw, (max-width:1000px) 44vw, 29vw" /> : (
           <div className="property-no-photo"><BrandLogo light /><span>Photography on request</span></div>
         )}
         <span className="property-image-label">{x.sector}</span>

@@ -97,3 +97,17 @@ test('A temporary failure loading an assigned photograph can be retried',async t
  assert.equal((await createTeaserPDF(record,businessDefaults)).pages,3);
  assert.equal(fetch.mock.callCount(),2);
 });
+
+test('Justified property summary reaches the right margin and its last line stays natural',async()=>{
+ const summary='The investment brief describes the location and the existing hotel building. '.repeat(4)+'Final point.';
+ const result=await createTeaserPDF({...item,summary},businessDefaults);
+ const loading=getDocument({data:result.bytes.slice()}),doc=await loading.promise;
+ const parts=(await(await doc.getPage(2)).getTextContent()).items.filter(p=>p.str.trim() && Math.abs(p.height-14.5)<.05);
+ const endpoints=new Map();
+ for(const part of parts)endpoints.set(part.transform[5],Math.max(endpoints.get(part.transform[5])||0,part.transform[4]+part.width));
+ const lines=[...endpoints.values()];
+ assert.ok(lines.length>=3);
+ for(const end of lines.slice(0,-1))assert.ok(Math.abs(end-555.28)<1,'Unjustified summary line ending at '+end);
+ assert.ok(lines.at(-1)<545);
+ await loading.destroy();
+});

@@ -18,6 +18,7 @@ export default function ListingImages({
     [source, setSource] = useState(""),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState("");
+  const selectedPhoto = /^\/images\/library\/([a-f0-9-]{36})\.jpg$/i.exec(image || "")?.[1];
   const sources = assets.filter(
       (x) => x.practice === practice && x.state === "ready",
     ),
@@ -47,6 +48,16 @@ export default function ListingImages({
     if (!r.ok) throw new Error(d.error);
     return d;
   }
+  async function findPhoto() {
+    setBusy(true);
+    try {
+      const response=await fetch("/api/admin/listing-photograph",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:contentId})});
+      const result=await response.json();
+      if(!response.ok)throw Error(result.error);
+      if(result.id){setSource(result.id);router.refresh();}
+      setMessage(result.id?"Source photograph ready. Select it below or choose Architectural sketch to use it as the reference.":"No matching open-use property photograph was found. You can upload a photograph or generate an illustration.");
+    }catch(error){setMessage(error.message);}finally{setBusy(false);}
+  }
   return (
     <section className="product-image-studio" id="listing-images">
       <h3>Listing hero image</h3>
@@ -54,6 +65,7 @@ export default function ListingImages({
         Upload property photographs, professionally enhance a source image, or
         generate an illustrative hero from this listing’s description.
       </p>
+      {contentId && <button type="button" disabled={busy} onClick={findPhoto}>Find a source photograph</button>}
       {image && (
         <div className="product-current-image">
           <img src={image} alt="Selected listing hero" />
@@ -70,6 +82,7 @@ export default function ListingImages({
         {[
           ["upload", "Upload a photograph"],
           ["enhance", "Enhance with AI"],
+          ["sketch", "Architectural sketch"],
           ["generate", "Generate from description"],
         ].map(([v, l]) => (
           <button
@@ -78,6 +91,7 @@ export default function ListingImages({
             aria-pressed={mode === v}
             onClick={() => {
               setMode(v);
+              if(v !== "generate" && !source && sources.some(photo=>photo.id===selectedPhoto))setSource(selectedPhoto);
               request.current = null;
             }}
           >
@@ -104,6 +118,7 @@ export default function ListingImages({
               const f = new FormData(e.currentTarget),
                 prompt = listingImageBrief(getListing(), {
                   mode,
+                  reference: Boolean(source) && mode !== "generate",
                   direction: f.get("direction"),
                 });
               request.current ??= crypto.randomUUID();
@@ -115,7 +130,7 @@ export default function ListingImages({
                 prompt,
                 content_id: contentId,
                 request_id: request.current,
-                reference_media_id: mode === "enhance" ? source : undefined,
+                reference_media_id: mode !== "generate" && source ? source : undefined,
                 public_approved: f.get("approved") === "on",
               });
               request.current = null;
@@ -130,15 +145,15 @@ export default function ListingImages({
             }
           }}
         >
-          {mode === "enhance" && (
+          {(mode === "enhance" || mode === "sketch") && (
             <label className="wide">
               Source photograph
               <select
                 value={source}
-                required
+                required={mode === "enhance"}
                 onChange={(e) => setSource(e.target.value)}
               >
-                <option value="">Select an uploaded photograph</option>
+                <option value="">{mode === "sketch" ? "Illustrative sketch from the description" : "Select an uploaded photograph"}</option>
                 {sources.map((s) => (
                   <option value={s.id} key={s.id}>
                     {s.alt}
@@ -163,13 +178,13 @@ export default function ListingImages({
           <label className="check wide">
             <input name="approved" type="checkbox" required />I approve sending
             the current description
-            {mode === "enhance" ? " and selected photograph" : ""} to Runway,
+            {source && mode !== "generate" ? " and selected photograph" : ""} to Runway,
             have the required rights and will review the result.
           </label>
           <button className="primary" disabled={busy}>
             {mode === "enhance"
               ? "Enhance photograph"
-              : "Generate hero from listing"}{" "}
+              : mode === "sketch" ? "Generate architectural sketch" : "Generate hero from listing"}{" "}
             · estimated 5 credits
           </button>
           <p className="workspace-small wide">

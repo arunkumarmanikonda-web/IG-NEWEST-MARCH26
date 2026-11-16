@@ -3,7 +3,7 @@
 .home-property-collection .section-heading {align-items:start;margin-bottom:32px;}
 .home-property-collection h2 {font-size:clamp(36px,3.7vw,54px);}
 .collection-heading-copy {max-width:450px;}
-.collection-heading-copy p {font-size:15px;line-height:1.8;text-align:justify;}
+.collection-heading-copy p {font-size:15px;line-height:1.8;}
 .collection-heading-copy .text-link {margin-top:12px;}
 .home-property-grid,.property-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;align-items:stretch;}
 .property-card {min-width:0;display:flex;flex-direction:column;border:1px solid #deded9;background:#fff;transition:border-color .2s,box-shadow .2s;}
@@ -73,7 +73,7 @@
 .collection-service-band {padding:50px 6%;background:#f5f5f2;display:grid;grid-template-columns:1fr 1fr;gap:14px 8%;}
 .collection-service-band > .eyebrow {grid-column:1/-1;}
 .collection-service-band h2 {font-size:42px;}
-.collection-service-band p {font-size:15px;line-height:1.85;text-align:justify;}
+.collection-service-band p {font-size:15px;line-height:1.85;}
 .collection-service-band .text-link {margin-top:18px;}
 .property-breadcrumb {padding:25px 6% 0;display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#73736c;}
 .property-breadcrumb a {text-decoration:underline;text-underline-offset:4px;}
@@ -102,10 +102,21 @@
 .property-detail-layout {display:grid;grid-template-columns:minmax(0,72ch) minmax(250px,340px);justify-content:space-between;gap:clamp(32px,6vw,110px);padding:clamp(36px,5vw,76px) 6%;align-items:start;}
 @media(min-width:761px){.property-detail-page .property-detail-layout{max-width:1280px;margin-inline:auto;padding-inline:clamp(32px,5vw,68px)}.property-detail-layout .property-adviser{position:sticky;top:96px}}
 .property-narrative {min-width:0;}
+.property-card .property-card-description,
+.property-card .property-card-type,
+.property-title p,
+.collection-heading-copy p,
+.collection-masthead p,
+.collection-browser > .fine-note,
+.collection-closing p,
+.collection-service-band p,
+.collection-page .contact-band p,
 .property-detail-page .property-narrative > p,
 .property-adviser > p {
   text-align: justify;
   text-align-last: start;
+  text-justify: inter-word;
+  text-wrap: wrap;
   hyphens: auto;
 }
 .property-narrative h2 {font-size:clamp(30px,3vw,44px);line-height:1.13;letter-spacing:-.03em;margin:10px 0 18px;}
@@ -245,7 +256,6 @@
  .home-property-collection {padding-block:44px;}
  .home-property-grid,.property-grid {grid-template-columns:1fr;gap:24px;}
  .collection-heading-copy {margin-top:20px;}
- .collection-heading-copy p,.collection-service-band p {text-align:left;}
  .property-card-image {aspect-ratio:1.5;}
  .property-card-copy {padding:22px 22px 0;}
  .property-card h3 {font-size:29px;}

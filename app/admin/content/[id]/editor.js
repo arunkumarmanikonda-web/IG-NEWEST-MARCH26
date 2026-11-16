@@ -40,6 +40,7 @@ export default function Editor({
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [dirty, setDirty] = useState(false);
+  const intakePhoto = intake?.media_id && mediaAssets.find(asset => asset.id === intake.media_id);
   const initial = item || seed || {};
   const [kind, setKind] = useState(
     initial.kind || (kinds.includes(initialKind) ? initialKind : "page"),
@@ -94,65 +95,66 @@ export default function Editor({
   async function save(e) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    await run(async () => {
-      const public_data = {};
-      [
-        "city",
-        "region",
-        "sector",
-        "asset_class",
-        "transaction_type",
-        "image",
-        "image_alt",
-        "price_label",
-        "reference",
-        "seo_keywords",
-        "job_title",
-        "expertise",
-        "sort_order",
-        "sku",
-        "brand",
-        "category",
-        "uom",
-        "hsn",
-        "gst_pct",
-        "moq",
-        "pack_size",
-        "lead_days",
-        "latitude",
-        "longitude",
-        "location_source",
-        "area",
-        "area_unit",
-        "keys",
-        "tenure",
-        "availability",
-      ].forEach((k) => {
-        if (f.get(k)) public_data[k] = f.get(k);
-      });
-      public_data.location_reviewed = f.get("location_reviewed") === "on";
-      public_data.confidential = f.get("confidential") === "on";
-      public_data.image_identity_reviewed =
-        f.get("image_identity_reviewed") === "on";
-      const saved = await portalAction("content", {
-        id: item?.id,
-        version: item?.version,
-        kind: item?.kind || f.get("kind"),
-        practice: f.get("practice"),
-        slug: f.get("slug"),
-        title: f.get("title"),
-        summary: f.get("summary"),
-        body: f.get("body"),
-        seo_title: f.get("seo_title"),
-        seo_description: f.get("seo_description"),
-        public_data,
-        term_ids: f.getAll("terms"),
-      });
-      setDirty(false);
-      setMessage("Draft revision " + saved.version + " saved.");
-      router.replace("/admin/content/" + saved.id);
-      router.refresh();
+    await run(() => saveDraft(f));
+  }
+  async function saveDraft(f) {
+    const public_data = {};
+    [
+      "city",
+      "region",
+      "sector",
+      "asset_class",
+      "transaction_type",
+      "image",
+      "image_alt",
+      "price_label",
+      "reference",
+      "seo_keywords",
+      "job_title",
+      "expertise",
+      "sort_order",
+      "sku",
+      "brand",
+      "category",
+      "uom",
+      "hsn",
+      "gst_pct",
+      "moq",
+      "pack_size",
+      "lead_days",
+      "latitude",
+      "longitude",
+      "location_source",
+      "area",
+      "area_unit",
+      "keys",
+      "tenure",
+      "availability",
+    ].forEach((k) => {
+      if (f.get(k)) public_data[k] = f.get(k);
     });
+    public_data.location_reviewed = f.get("location_reviewed") === "on";
+    public_data.confidential = f.get("confidential") === "on";
+    public_data.image_identity_reviewed =
+      f.get("image_identity_reviewed") === "on";
+    const saved = await portalAction("content", {
+      id: item?.id,
+      version: item?.version,
+      kind: item?.kind || f.get("kind"),
+      practice: f.get("practice"),
+      slug: f.get("slug"),
+      title: f.get("title"),
+      summary: f.get("summary"),
+      body: f.get("body"),
+      seo_title: f.get("seo_title"),
+      seo_description: f.get("seo_description"),
+      public_data,
+      term_ids: f.getAll("terms"),
+    });
+    setDirty(false);
+    setMessage("Draft revision " + saved.version + " saved.");
+    router.replace("/admin/content/" + saved.id);
+    router.refresh();
   }
   async function action(a, p = {}) {
     if (dirty) {
@@ -285,28 +287,34 @@ export default function Editor({
             <div className="ai-source-image">
               <img
                 src={"/api/admin/source-media/" + intake.media_id}
-                alt="Extracted source image awaiting review"
+                alt={intakePhoto?.alt || "Source photograph awaiting review"}
               />
+              {intakePhoto?.rights_reference && <small>{intakePhoto.rights_reference}</small>}
               <button
                 type="button"
                 disabled={busy}
                 onClick={() =>
                   run(async () => {
-                    if (!["product_crop","isolated_asset"].includes(catalogueSource.photo_source)) await portalAction("source_media", {
-                      action: "publish",
-                      id: intake.media_id,
-                      reviewed: true,
+                    const form = editorForm.current;
+                    if (!form?.reportValidity()) return;
+                    const selected = "/images/library/" + intake.media_id + ".jpg";
+                    const values = new FormData(form);
+                    const alt = String(values.get("title") || item.title).slice(0, 250);
+                    const isCatalogueCrop = catalogueSource?.media_id === intake.media_id &&
+                      ["product_crop", "isolated_asset"].includes(catalogueSource.photo_source);
+                    if (!isCatalogueCrop) await portalAction("source_media", {
+                      action: "publish", id: intake.media_id, reviewed: true,
                     });
-                    setImage("/images/library/" + intake.media_id + ".jpg");
-                    setImageAlt(item.title);
+                    values.set("image", selected);
+                    values.set("image_alt", alt);
+                    setImage(selected);
+                    setImageAlt(alt);
                     setDirty(true);
-                    setMessage(
-                      "Reviewed source image selected. Save the draft to retain it.",
-                    );
+                    await saveDraft(values);
                   })
                 }
               >
-                Approve this source image for the listing
+                Approve photo and save draft
               </button>
               <small>
                 Approve only after checking the image depicts this property or
