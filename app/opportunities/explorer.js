@@ -11,7 +11,7 @@ const empty = {
   city: "",
   type: "",
   context: "",
-  sort: "featured",
+  sort: "newest",
   view: "grid",
 };
 export default function Explorer({
@@ -28,7 +28,7 @@ export default function Explorer({
     setCopied("");
     const params = new URLSearchParams();
     Object.entries(next).forEach(([k, v]) => {
-      if (v && v !== "featured" && !(k === "view" && v === "grid")) params.set(k, v);
+      if (v && !(k === "sort" && v === "newest") && !(k === "view" && v === "grid")) params.set(k, v);
     });
     window.history.replaceState(
       null,
@@ -158,9 +158,10 @@ export default function Explorer({
           <label>
             Sort by
             <select
-              value={filters.sort || "featured"}
+              value={filters.sort || "newest"}
               onChange={(e) => update({ sort: e.target.value })}
             >
+              <option value="newest">Newest published</option>
               <option value="featured">Featured</option>
               <option value="location">Location</option>
               <option value="title">Property name</option>

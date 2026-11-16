@@ -1,3 +1,5 @@
+import LiveListings from "../live-listings";
+import { listingRevision } from "../../lib/listing-revision.mjs";
 import AdvertisingEvent from "../advertising-event";
 import { siteSection } from "../../lib/website";
 import Link from "next/link";
@@ -47,6 +49,7 @@ export default async function Opportunities({ searchParams }) {
         </Link>
       </header>
       <section className="collection-browser" aria-label="Browse properties">
+        {records && <LiveListings revision={listingRevision(records)} />}
         <Explorer items={items} contexts={contexts} initialFilters={filters} />
         <p className="fine-note">{copy["portfolio-references-are-not-current-offers-availability"]}</p>
       </section>
