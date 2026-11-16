@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {findPropertyPhoto,propertySearchTerms} from '../lib/property-photo-search.mjs';
 import {listingImageBrief,listingVisualStyle} from '../lib/listing-images.mjs';
 const record={title:'Examplefort Heritage Resort Investment in Jaisalmer',summary:'A completed heritage resort in Rajasthan.',public_data:{city:'Jaisalmer',region:'Rajasthan'}};
-const info={width:1600,height:1000,mime:'image/jpeg',thumburl:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/example.jpg',extmetadata:{LicenseShortName:{value:'CC0'}}};
+const info={width:1600,height:1000,mime:'image/jpeg',thumburl:'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/example.jpg',extmetadata:{LicenseShortName:{value:'CC0'}}};
 test('Property search downloads a matching reusable file and retains its source',async()=>{
  assert.deepEqual(propertySearchTerms(record),['examplefort']);
  const files=[
