@@ -50,11 +50,15 @@ export default function IdentityReviews({ records }) {
                   disabled={busy}
                   onClick={() =>
                     perform(async () => {
+                      const permission = await portalAction("identity", {
+                        action: "review_document",
+                        id: e.id,
+                        revision: e.revision,
+                        slot,
+                      });
                       const { data, error } = await browserClient()
                         .storage.from("client-kyc")
-                        .download(
-                          [e.user_id, e.id, e.revision, slot].join("/"),
-                        );
+                        .download(permission.path);
                       if (error)
                         throw new Error("Evidence could not be retrieved.");
                       const url = URL.createObjectURL(data),

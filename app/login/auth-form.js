@@ -55,6 +55,7 @@ export default function AuthForm({ register = false, returnTo=null, projectTitle
           ? (projectTitle?"Verify your email, choose the legal name you represent and sign the project agreement. India Gully reviews your request before sharing documents.":"Register to manage your interests and request controlled information.")
           : "Receive a one-time sign-in code by email. Your registered account opens its assigned workspace."}
       </p>
+      {register && projectTitle && <p>Your identity documents are encrypted during upload and in storage. <Link href="/privacy#identity-documents">How we protect your documents</Link></p>}
       {register && (
         <label>
           Your name

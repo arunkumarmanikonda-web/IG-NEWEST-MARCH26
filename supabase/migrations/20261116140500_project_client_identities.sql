@@ -28,11 +28,18 @@ create policy identity_read on public.ig_legal_entities for select to authentica
 create function ig_private.kyc_slots(e public.ig_legal_entities) returns text[] language sql immutable set search_path='' as $$
  select case when e.kind='company' then array['incorporation','gst','resolution'] else array['pan',e.id_method] end
 $$;
+-- A review authorisation records who requested the file. No document contents or identity numbers enter the audit log.
+create index ig_kyc_document_audit on public.ig_audit(actor_id,entity_id,created_at desc) where action='kyc.review_document';
 insert into storage.buckets(id,name,public,allowed_mime_types) values('client-kyc','client-kyc',false,array['application/pdf','image/png','image/jpeg']);
 create function ig_private.kyc_object(object_name text,writing boolean) returns boolean language sql stable security definer set search_path='' as $$
  select exists(select from public.ig_legal_entities e,unnest(ig_private.kyc_slots(e)) slot where slot<>'aadhaar_offline'
  and object_name=concat_ws('/',e.user_id,e.id,e.revision,slot) and (
- (e.user_id=auth.uid() and ig_private.allowed('account') and (not writing or e.status='draft' and not e.checks ? slot)) or (not writing and ig_private.kyc_reviewer())))
+ (e.user_id=auth.uid() and ig_private.allowed('account') and (not writing or e.status='draft' and not e.checks ? slot)) or
+ (not writing and e.status='submitted' and e.user_id<>auth.uid() and ig_private.kyc_reviewer() and exists(
+   select from public.ig_audit audit where audit.action='kyc.review_document'
+   and audit.actor_id=auth.uid() and audit.entity_id=e.id::text and audit.created_at>now()-interval '2 minutes'
+   and audit.detail->>'slot'=slot and audit.detail->>'revision'=e.revision::text
+ ))))
 $$;
 revoke all on function ig_private.kyc_reviewer(),ig_private.kyc_object(text,boolean),ig_private.kyc_slots(public.ig_legal_entities) from public,anon;
 grant execute on function ig_private.kyc_reviewer(),ig_private.kyc_object(text,boolean) to authenticated;
@@ -63,6 +70,16 @@ begin
    if slot='aadhaar_offline' and e.checks->slot->>'status'<>'matched' then raise exception 'Verify the offline identity document or select passport';end if;
   end loop;
   update public.ig_legal_entities set status='submitted' where id=e.id;
+ elsif a='review_document' then
+  if not ig_private.kyc_reviewer() then raise exception 'Identity review permission required' using errcode='42501';end if;
+  slot=p->>'slot';
+  select * into e from public.ig_legal_entities where id=(p->>'id')::uuid and status='submitted'
+    and revision=(p->>'revision')::int and user_id<>auth.uid();
+  if e.id is null or slot is null or slot='aadhaar_offline' or not slot=any(ig_private.kyc_slots(e)) or not e.checks ? slot then
+   raise exception 'Document unavailable for review' using errcode='42501';
+  end if;
+  perform ig_private.record_audit('kyc.review_document',e.id::text,jsonb_build_object('revision',e.revision,'slot',slot));
+  return jsonb_build_object('path',concat_ws('/',e.user_id,e.id,e.revision,slot));
  elsif a in ('verify','return') then
   if not ig_private.kyc_reviewer() then raise exception 'Identity review permission required' using errcode='42501';end if;
   if length(coalesce(p->>'note',''))>1000 or (a='return' and length(trim(coalesce(p->>'note','')))<3) or (a='verify' and p->>'reviewed' is distinct from 'true') then raise exception 'Confirm your review or explain the correction';end if;

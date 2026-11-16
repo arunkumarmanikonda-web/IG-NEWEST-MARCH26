@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../profile";
 import { browserClient } from "../../../lib/supabase/browser";
+import IdentityPrivacy from "../../identity-privacy";
 import { slotLabels, evidenceSlots } from "../../../lib/identity-evidence.mjs";
 
 function IdentityFields({ entity, offline, busy, run, finish }) {
@@ -185,7 +186,7 @@ function Evidence({ entity, slot, busy, run }) {
                   ].join("/");
                   const { error } = await browserClient()
                     .storage.from("client-kyc")
-                    .upload(key, file, { upsert: false });
+                    .upload(key, file, { upsert: false, cacheControl: "0" });
                   // A saved immutable upload may already exist if the earlier check was interrupted.
                   if (
                     error &&
@@ -254,6 +255,7 @@ export default function Identities({ entities, offline = false }) {
         Add the individual or company that will sign. Each verified legal name
         is available for future projects and HORECA requests.
       </p>
+      <IdentityPrivacy />
       {entities.map((e) => (
         <article className="workspace-card" key={e.id}>
           <h3>{e.legal_name}</h3>

@@ -40,7 +40,12 @@ begin
  perform public.ig_client_identity(jsonb_build_object('action','submit','id',entity,'revision',1));
  blocked=false;begin perform public.ig_client_identity(jsonb_build_object('action','verify','id',entity,'revision',1,'reviewed',true));exception when others then blocked=true;end;assert blocked,'Self approval accepted';
  perform set_config('request.jwt.claims',own_jwt,true);
+ assert not ig_private.kyc_object(concat_ws('/',buyer,entity,1,'resolution'),false),'Unaudited staff read';
+ assert public.ig_client_identity(jsonb_build_object('action','review_document','id',entity,'revision',1,'slot','resolution'))->>'path'=concat_ws('/',buyer,entity,1,'resolution');
+ assert ig_private.kyc_object(concat_ws('/',buyer,entity,1,'resolution'),false),'Reviewed document unavailable';
+ assert not ig_private.kyc_object(concat_ws('/',buyer,entity,1,'gst'),false),'Review authorisation leaked to another document';
  perform public.ig_client_identity(jsonb_build_object('action','verify','id',entity,'revision',1,'reviewed',true));
+ assert not ig_private.kyc_object(concat_ws('/',buyer,entity,1,'resolution'),false),'Staff read outside pending review';
  blocked=false;begin perform public.ig_project_signature(signature);exception when others then blocked=true;end;assert blocked,'Different account could sign';
  perform set_config('request.jwt.claims',buyer_jwt,true);
  blocked=false;begin perform public.ig_project_signature(signature||jsonb_build_object('template_id',other_t->>'id'));exception when others then blocked=true;end;assert blocked,'Different project terms accepted';
