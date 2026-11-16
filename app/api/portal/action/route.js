@@ -1,3 +1,5 @@
+import { after } from "next/server";
+import { dispatchEmailQueue } from "../../../../lib/delivery";
 import { anonymousServerClient } from "../../../../lib/runtime-config";
 import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
@@ -7,6 +9,7 @@ import {
   HttpError,
   errorJson,
 } from "../../../../lib/http.mjs";
+export const maxDuration = 120;
 const methods = {
   procurement: "ig_procurement",
   vendor_portal: "ig_vendor_portal",
@@ -34,6 +37,7 @@ const methods = {
   policies: "ig_policy_publish",
   payments: "ig_payment_admin",
   clients: "ig_client_manage",
+  room_share: "ig_room_share",
   room_notify: "ig_room_notify",
   ai_save: "ig_ai_save",
 };
@@ -95,6 +99,12 @@ export async function POST(request) {
         : "The invitation is saved, but the verification email could not be sent. Use Resend verification email to retry.",
         sendError.status === 429 ? 429 : 503);
       return privateJson({ok: true, data: {notice: "Verification email requested for " + email + "."}});
+    }
+    if (body.module === "room_share" && body.payload?.action === "share" && data?.queued > 0) {
+      after(async () => {
+        try { await dispatchEmailQueue(undefined, data.batch_id); }
+        catch { /* The scheduled worker retries queued notices. */ }
+      });
     }
     return privateJson({ ok: true, data });
   } catch (e) {

@@ -63,5 +63,17 @@ begin
  assert (select count(*) from public.ig_room_grants)=before_count,'Signing granted access';
  ordinary=public.ig_procurement(jsonb_build_object('action','submit','request_id',gen_random_uuid(),'entity_id',entity,'title','Fixture RFQ','destination','Synthetic hotel site','lines','[{"description":"Test plate","quantity":1,"uom":"nos"}]'::jsonb));
  assert ordinary->>'legal_entity_id'=entity::text and ordinary->'requirement'->>'legal_name'='Sample Hospitality Limited','RFQ lost legal name';
+ -- The same signed recipient cannot be emailed until staff approve the project-specific NDA.
+ perform set_config('request.jwt.claims',own_jwt,true);
+ select jsonb_build_object('action','share','room_id',r.id,'batch_id',gen_random_uuid(),'recipient_ids',jsonb_build_array(request->'id'),'download_mode','none','expires_at',now()+interval '20 days')
+   into signature from public.ig_data_rooms r where r.content_id=app.id;
+ assert signature is not null;
+ blocked=false;begin perform public.ig_room_share(signature);exception when raise_exception then blocked=true;end;assert blocked;
+ update public.ig_nda_requests set status='approved',reviewed_at=now() where id=(request->>'id')::uuid;
+ ordinary=public.ig_room_share(signature);
+ assert ordinary->>'queued'='1' and ordinary->>'added'='1','Approved NDA room not shared';
+ assert ig_private.room_notice_eligible((signature->>'room_id')::uuid,null,(request->>'id')::uuid,'buyer@example.invalid');
+ update public.ig_room_grants set active=false where nda_request_id=(request->>'id')::uuid;
+ assert not ig_private.room_notice_eligible((signature->>'room_id')::uuid,null,(request->>'id')::uuid,'buyer@example.invalid'),'Revocation did not stop the queued NDA notice';
 end $$;
 rollback;

@@ -77,7 +77,7 @@ export default function ClientsManager({clients,contacts,engagements,rooms,roomA
   <label className="check wide"><input type="checkbox" name="confirmed" defaultChecked={record?.confidentiality_confirmed}/>I have verified the executed engagement and confidentiality terms authorising disclosure to this client's approved contacts.</label>
   {record&&<label className="check"><input type="checkbox" name="active" defaultChecked={record.active}/>Engagement access active</label>}
   <button disabled={busy}>{record?'Save engagement':'Create engagement & private room'}</button>
-  {room&&<Link href={'/admin/data-rooms?room='+room.id}>Manage reports & access →</Link>}
+  {room&&<div className="workspace-actions wide"><Link className="button primary" href={'/admin/data-rooms?room='+room.id+'#room-permissions'}>Share room</Link><Link href={'/admin/data-rooms?room='+room.id+'#room-files'}>Manage reports &amp; files →</Link></div>}
  </form>;}
  return <section className="workspace-card"><div className="eyebrow">RELATIONSHIPS / DELIVERY</div><h2>Clients & engagements</h2>
   <p>Create a client, add its named contacts and open a private engagement for each assignment. Sales records stay internal. Administrators control report access separately from circulation preferences.</p>
