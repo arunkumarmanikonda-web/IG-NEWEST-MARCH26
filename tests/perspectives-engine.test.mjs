@@ -26,10 +26,11 @@ function result(text, addresses, citations = addresses || []) {
   const calls = addresses ? [{ type: "web_search_call", status: "completed", action: { type: "search", sources: addresses.map(url => ({ url })) } }] : [];
   return Response.json({ status: "completed", id: "resp_test", output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
 }
-function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [] } = {}) {
+function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair } = {}) {
   const steps = [
     result("3 districts, released November 15; sample note from August 1.", addresses),
     result(JSON.stringify(draft)),
+    ...(repair ? [result(JSON.stringify(repair))] : []),
     result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations),
   ];
   const requests = [];
@@ -66,7 +67,7 @@ test("tracks the configured research window, staff topic preference and previous
   await promise;
   assert.equal(JSON.parse(requests[0].input).preferredTopic, "Tourism");
   assert.equal(JSON.parse(requests[2].input).since, "2026-11-04");
-  await assert.rejects(run({ settings: { recentTitles: [draft.title.toUpperCase()] } }).promise, /new title/);
+  await assert.rejects(run({ settings: { recentTitles: [draft.title.toUpperCase()] } }).promise, /Duplicate title/);
 });
 test("refuses invented references, unverified figures and invalid calendar dates", async () => {
   const cases = [
@@ -107,4 +108,26 @@ test("only one transient provider failure is retried, and client errors fail imm
   const invalid = run({ failures: [400] });
   await assert.rejects(invalid.promise, /HTTP 400/);
   assert.equal(invalid.requests.length, 1);
+});
+
+test("repairs publication metadata without truncating a sentence or changing supporting evidence", async () => {
+  const first = "Current survey definitions deserve attention.";
+  const long = changed(d => { d.summary = first + " Consider " + "word ".repeat(105) + "."; });
+  const normalized = run({ draft: long });
+  assert.equal((await normalized.promise).summary, first);
+  assert.equal(normalized.requests.length, 3);
+  const bad = changed(d => { d.title = "title ".repeat(40); d.summary = "sentence ".repeat(100); });
+  const corrected = run({ draft: bad, repair: { title: "Fresh survey guidance", summary: first } });
+  const article = await corrected.promise;
+  assert.equal(article.title, "Fresh survey guidance");
+  assert.equal(corrected.requests.length, 4);
+  assert.equal(corrected.requests[2].text.format.name, "perspective_metadata");
+  assert.equal(JSON.parse(corrected.requests[3].input).title, article.title);
+  const stillBad = run({ draft: bad, repair: { title: "", summary: "x".repeat(700) } });
+  await assert.rejects(stillBad.promise, /title 0\/160 characters, summary 700\/500/);
+});
+test("missing sources are a distinct evidence hold and cannot be repaired by rewriting a headline", async () => {
+  const insufficient = run({ draft: changed(d => { d.sources = []; d.title = ""; d.summary = ""; }) });
+  await assert.rejects(insufficient.promise, /Evidence hold/);
+  assert.equal(insufficient.requests.length, 2);
 });
