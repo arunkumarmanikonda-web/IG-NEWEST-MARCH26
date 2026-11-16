@@ -672,3 +672,31 @@
 .verification-card select{width:100%;padding:12px;background:white;color:#292928;border:1px solid #d4d4d0;font:inherit;}
 .verification-note{padding:18px;background:#f4f4f1;}
 .verification-card .button{width:100%;justify-content:center;}
+
+.agreement-document {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 80ch;
+  padding: clamp(16px, 3vw, 32px);
+  border: 1px solid #deddd8;
+  background: white;
+  color: #292926;
+  overflow-wrap: anywhere;
+}
+.agreement-document p {
+  margin: 0 0 1em;
+  white-space: pre-line;
+  font-size: 1rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+.agreement-document h4 {
+  margin: 1.25em 0 .35em;
+  font-size: 1.06rem;
+  line-height: 1.35;
+  text-align: start;
+}
+.agreement-document > :first-child h4 { margin-top: 0; }
+.agreement-document > :last-child, .agreement-document > section:last-child p { margin-bottom: 0; }

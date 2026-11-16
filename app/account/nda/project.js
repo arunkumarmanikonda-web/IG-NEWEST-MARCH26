@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import AgreementText from "../../agreement-text";
 import { portalAction } from "../profile";
 import Identities from "../legal-names/identities";
 
@@ -59,9 +60,7 @@ export default function ProjectRequest({
               Receipt {request.id} · Version{" "}
               {request.agreement_snapshot?.version}
             </p>
-            <div className="agreement-text">
-              {request.agreement_snapshot?.body}
-            </div>
+            <AgreementText text={request.agreement_snapshot?.body}/>
             {request.agreement_snapshot?.disclaimer && <p>{request.agreement_snapshot.disclaimer}</p>}
           </details>
         )}
@@ -140,8 +139,7 @@ export default function ProjectRequest({
             <>
               <h3 className="wide">{template.title}</h3>
               <p>Version {template.version}</p>
-              <div className="wide agreement-text">
-                {[
+              <AgreementText wide text={[
                   item.title,
                   "Recipient: " + (entity?.legal_name || "Select a legal name"),
                   "Authorised signatory: " +
@@ -149,8 +147,7 @@ export default function ProjectRequest({
                   "Purpose: " + purpose.trim(),
                   "",
                   template.body,
-                ].join("\n")}
-              </div>
+                ].join("\n")}/>
             </>
           ) : (
             <p className="wide">

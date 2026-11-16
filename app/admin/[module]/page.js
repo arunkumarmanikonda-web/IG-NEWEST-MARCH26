@@ -18,6 +18,7 @@ import { currentPolicies } from "../../../lib/policies";
 import Link from "next/link";
 import RoomsManager from "../rooms-manager";
 import NdaManager from "../nda-manager";
+import { isCirpProject } from "../../../lib/project-nda.mjs";
 import { notFound, redirect } from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
 import { TaxonomyManager, UserManager, EnquiryManager } from "../managers";
@@ -268,7 +269,7 @@ export default async function Module({ params, searchParams }) {
         readRegister(()=>client.from("ig_legal_entities").select("*").eq("status","submitted"),"consent_at"),
       ]);
     if (error || te || projects.error || showcases.error || identities.error) return <p role="alert">NDA records unavailable.</p>;
-    const roomListings=[...(await published("opportunity") || []).filter(x=>projects.data.includes(x.slug)),...(await published("project")||[]).filter(x=>showcases.data.includes(x.slug))].map(x=>({id:x.id,title:x.title}));
+    const roomListings=[...(await published("opportunity") || []).filter(x=>projects.data.includes(x.slug)),...(await published("project")||[]).filter(x=>showcases.data.includes(x.slug))].map(x=>({id:x.id,title:x.title,cirp:isCirpProject(x.tags)}));
     return (
       <><IdentityReviews records={identities.data||[]}/><NdaManager projects={roomListings}
         requests={requests || []}
