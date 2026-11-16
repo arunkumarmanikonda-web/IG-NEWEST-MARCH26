@@ -2,6 +2,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import RoomSharing from "./room-sharing";
 import { intakeWorkspace } from "../../lib/content-intake-upload.mjs";
 import { portalAction } from "../account/profile";
 import { resumableSourceUpload } from "../../lib/intake-upload.mjs";
@@ -38,11 +39,9 @@ export default function RoomsManager({
     [busy, setBusy] = useState(false),
     [destination, setDestination] = useState(""),
     [allowDownloads, setAllowDownloads] = useState(false),
-    [selectedContacts, setSelectedContacts] = useState([]),
     [jobs, setJobs] = useState([]),
     [progress, setProgress] = useState({});
   const prepared = useRef(new Map());
-  const circulationKey = useRef(null);
   const room = rooms.find((x) => x.id === selected),
     roomFiles = files.filter((x) => x.room_id === selected && !x.preview_for),
     roomGrants = grants.filter((x) => x.room_id === selected),
@@ -50,10 +49,6 @@ export default function RoomsManager({
   const engagement = engagements.find((e) => e.id === room?.engagement_id);
   const content = opportunities.find((o) => o.id === room?.content_id);
   const pendingContent = opportunities.find((o) => o.id === initialContent);
-  const eligibleContacts = contacts.filter(
-    (c) =>
-      c.client_id === engagement?.client_id && c.active && c.portal_enabled,
-  );
   async function copyLink(path) {
     try {
       await navigator.clipboard.writeText(window.location.origin + path);
@@ -62,27 +57,6 @@ export default function RoomsManager({
       );
     } catch {
       setMessage("Copy this secure link: " + window.location.origin + path);
-    }
-  }
-  async function notifyContacts() {
-    setBusy(true);
-    setMessage("");
-    try {
-      if (!circulationKey.current || circulationKey.current.room !== room.id)
-        circulationKey.current = { room: room.id, id: crypto.randomUUID() };
-      const result = await portalAction("room_notify", {
-        room_id: room.id,
-        batch_id: circulationKey.current.id,
-      });
-      setMessage(
-        result.queued +
-          " separate secure-portal notices queued. Delivery is processed automatically.",
-      );
-      circulationKey.current = null;
-    } catch (e) {
-      setMessage(e.message);
-    } finally {
-      setBusy(false);
     }
   }
   async function run(p) {
@@ -310,7 +284,7 @@ export default function RoomsManager({
           disabled={busy}
           onChange={(e) => {
             setSelected(e.target.value);
-            setSelectedContacts([]);
+            setMessage("");
             setDestination("");
             setJobs([]);
             setProgress({});
@@ -347,9 +321,7 @@ export default function RoomsManager({
               <a className="module-link" href="#room-files">
                 Files & uploads ↓
               </a>
-              <a className="button primary" href="#room-permissions">
-                Share access & permissions ↓
-              </a>
+              {(engagement || ["opportunity","project"].includes(content?.kind)) && <a className="button primary" href="#room-permissions">Share room ↓</a>}
               <button
                 type="button"
                 onClick={() => copyLink("/account/data-rooms/" + room.id)}
@@ -371,13 +343,9 @@ export default function RoomsManager({
               )}
               <Link href="/admin/nda">Review NDA requests ↗</Link>
             </div>
-            <p>
-              For a property: share the NDA request link, approve the signed
-              request, then activate the client’s access below. The secure room
-              link works only for authorised recipients. Choose view-only or
-              permitted downloads, set an expiry and revoke access here at any
-              time.
-            </p>
+            {engagement ? null : ["opportunity", "project"].includes(content?.kind) && (
+              <p>Recipients need an approved NDA for this project before you can share the room.</p>
+            )}
             {content && !["opportunity","project"].includes(content.kind) && (
               <p>
                 This is a private source room for {content.kind} content. Client
@@ -387,6 +355,10 @@ export default function RoomsManager({
               </p>
             )}
           </section>
+          {(engagement || ["opportunity","project"].includes(content?.kind)) && (
+            <RoomSharing key={room.id} room={room} engagement={engagement} grants={roomGrants}
+              contacts={contacts} requests={requests} />
+          )}
           <form
             key={room.id + "-" + room.version}
             className="workspace-form"
@@ -687,157 +659,7 @@ export default function RoomsManager({
               </tbody>
             </table>
           </div>
-          <h3 id="room-permissions">
-            {engagement
-              ? "Share with authorised client contacts"
-              : "Share access after NDA approval"}
-          </h3>
-          {engagement && (
-            <p>
-              Engagement: {engagement.reference}.{" "}
-              {engagement.confidentiality_confirmed
-                ? "Confidentiality authority recorded."
-                : "Confirm the executed confidentiality terms in Clients & engagements before granting access."}{" "}
-              Each contact signs in with its own verified email.
-            </p>
-          )}
-          <form
-            className="workspace-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const f = new FormData(e.currentTarget);
-              run({
-                action: engagement ? "contact_grant_bulk" : "grant",
-                room_id: room.id,
-                ...(engagement
-                  ? { contact_ids: f.getAll("contact_id") }
-                  : { nda_request_id: f.get("nda") }),
-                download_mode: f.get("mode"),
-                expires_at: new Date(
-                  f.get("expiry") + "T23:59:59+05:30",
-                ).toISOString(),
-              });
-            }}
-          >
-            {engagement ? (
-              <fieldset className="wide contact-picker">
-                <legend>Share once with multiple client contacts</legend>
-                <button
-                  type="button"
-                  className="text-button"
-                  onClick={() =>
-                    setSelectedContacts(
-                      eligibleContacts
-                        .filter(
-                          (c) => !roomGrants.some((g) => g.contact_id === c.id),
-                        )
-                        .map((c) => c.id),
-                    )
-                  }
-                >
-                  Select all available contacts
-                </button>
-                <button
-                  type="button"
-                  className="text-button"
-                  onClick={() => setSelectedContacts([])}
-                >
-                  Clear selection
-                </button>
-                <div className="contact-picker-list">
-                  {eligibleContacts
-                    .filter(
-                      (c) => !roomGrants.some((g) => g.contact_id === c.id),
-                    )
-                    .map((c) => (
-                      <label className="check" key={c.id}>
-                        <input
-                          type="checkbox"
-                          name="contact_id"
-                          value={c.id}
-                          checked={selectedContacts.includes(c.id)}
-                          onChange={(event) =>
-                            setSelectedContacts((ids) =>
-                              event.target.checked
-                                ? [...ids, c.id]
-                                : ids.filter((id) => id !== c.id),
-                            )
-                          }
-                        />
-                        <span>
-                          <strong>{c.name}</strong>
-                          <span>{c.email}</span>
-                        </span>
-                      </label>
-                    ))}
-                </div>
-                <p>
-                  One action activates this room separately for every selected
-                  email. Existing grants and individual file overrides are
-                  preserved.
-                </p>
-              </fieldset>
-            ) : (
-              <label>
-                Client and project-specific NDA
-                <select name="nda" required>
-                  <option value="">Select an approved request</option>
-                  {requests
-                    .filter(
-                      (n) =>
-                        n.content_id === room.content_id &&
-                        n.status === "approved" &&
-                        !roomGrants.some((g) => g.user_id === n.user_id),
-                    )
-                    .map((n) => (
-                      <option key={n.id} value={n.id}>
-                        {n.signed_name} ·{" "}
-                        {n.agreement_snapshot?.recipient_email}
-                      </option>
-                    ))}
-                </select>
-              </label>
-            )}
-            <label>
-              Download mode
-              <select name="mode">
-                <option value="none">View only: no original downloads</option>
-                <option value="all">
-                  All files permitted by file settings
-                </option>
-                <option value="selected">Only selected files</option>
-              </select>
-            </label>
-            <label>
-              Expires at end of day · IST
-              <input
-                name="expiry"
-                type="date"
-                required
-                defaultValue={expiry(Date.now() + 30 * 86400000)}
-              />
-            </label>
-            <button className="primary" disabled={busy || !room.active}>
-              Activate in client dashboard
-            </button>
-          </form>
-          {engagement && (
-            <div className="workspace-note">
-              <p>
-                Circulation sends separate notices only to active contacts with
-                circulation enabled and unexpired room access. Reports remain
-                inside the portal. Changing a circulation preference never
-                changes download rights.
-              </p>
-              <button
-                type="button"
-                disabled={busy || !room.active}
-                onClick={notifyContacts}
-              >
-                Notify authorised circulation contacts
-              </button>
-            </div>
-          )}
+          <h3>Existing grants &amp; file permissions</h3>
           {roomGrants.map((g) => {
             const n = requests.find((x) => x.id === g.nda_request_id);
             const contact = contacts.find((c) => c.id === g.contact_id);
