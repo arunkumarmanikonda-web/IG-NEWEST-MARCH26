@@ -11,7 +11,7 @@ export default function VerifyForm({ purpose }) {
     try {
       const response = await fetch('/api/portal/auth', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, purpose, email, ...(action === 'verify' ? { token } : {}) }),
+        body: JSON.stringify({ action: action === "resend" && purpose === "login" ? "email_code" : action, purpose, email, ...(action === 'verify' ? { token } : {}) }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
@@ -28,11 +28,10 @@ export default function VerifyForm({ purpose }) {
     <label>Email address<input type="email" name="email" autoComplete="email" maxLength={254} required value={email} onChange={event => setEmail(event.target.value)} /></label>
     <label>Verification code<input name="token" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" minLength={6} maxLength={10} required value={token} onChange={event => setToken(event.target.value)} /></label>
     <button className="button" disabled={busy}>{busy ? 'Please wait…' : purpose === 'recovery' ? 'Verify and reset password' : 'Verify email'}</button>
-    {purpose !== 'login' && <button type="button" className="text-button" disabled={busy || !email.trim()} onClick={event => {
+    <button type="button" className="text-button" disabled={busy || !email.trim()} onClick={event => {
       const input = event.currentTarget.form.elements.namedItem('email');
       if (input.reportValidity()) submit(purpose === 'recovery' ? 'recover' : 'resend');
-    }}>Send a new code</button>}
-    {purpose === 'login' && <p>If a code does not arrive, return to sign in and request another. Use the exact email authorised by your India Gully contact.</p>}
+    }}>Send a new code</button>
     <p role="status" className="portal-message">{message}</p>
     <p><Link href="/login">Return to sign in</Link></p>
   </form>;

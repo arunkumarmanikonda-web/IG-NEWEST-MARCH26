@@ -33,6 +33,7 @@ function useAction() {
         return true;
       } catch (e) {
         setMessage(e.message);
+        if (module === "users" && payload.action === "invite") router.refresh();
         return false;
       } finally {
         setBusy(false);
@@ -286,7 +287,7 @@ export function UserManager({ users, invitations, isOwner }) {
         {isOwner&&<fieldset className="wide"><legend>Practice permissions</legend><p>Each practice requires View access. Roles still limit the actions below.</p><div className="table-scroll"><table className="workspace-table"><thead><tr><th>Practice</th>{scopeRights.map(([key,label])=><th key={key}>{label}</th>)}</tr></thead><tbody>{practiceOptions.map(([key,label])=><tr key={key}><th>{label}</th>{scopeRights.map(([right,rightLabel])=><td key={right}><input aria-label={label+': '+rightLabel} type="checkbox" name={'scope_'+key} value={right} defaultChecked={selected?.practice_grants?.[key]?.includes(right)||false}/></td>)}</tr>)}</tbody></table></div></fieldset>}
         <div className="workspace-actions wide">
           <button className="primary" disabled={state.busy}>
-            {selected ? "Save and revoke sessions" : "Create invitation"}
+            {selected ? "Save and revoke sessions" : "Create invitation and email code"}
           </button>
           {selected && (
             <button type="button" onClick={() => setSelected(null)}>
@@ -364,6 +365,12 @@ export function UserManager({ users, invitations, isOwner }) {
           <li key={x.id}>
             {x.email} · {x.roles.join(", ")} ·{" "}
             {x.revoked ? "Revoked" : x.accepted_by ? "Accepted" : "Pending"}{" "}
+            {!x.revoked && !x.accepted_by && isOwner && (
+              <button type="button" className="text-button" disabled={state.busy}
+                onClick={() => state.run("invitation_resend", { id: x.id })}>
+                Resend verification email
+              </button>
+            )}{" "}
             {!x.revoked && !x.accepted_by && (
               <button
                 className="text-button"
@@ -377,8 +384,7 @@ export function UserManager({ users, invitations, isOwner }) {
       </ul>
       <p className="workspace-small">
         Closing an account retains business and audit records. Erasure requests
-        need a retention review. Invitation emails are not sent until the mail
-        service is activated.
+        need a retention review. Each invitee verifies their own work email before activating access.
       </p>
     </section>
   );

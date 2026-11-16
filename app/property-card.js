@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PropertyTags from "./property-tags";
 import Link from "next/link";
 import { Arrow } from "./components";
 import BrandLogo from "./brand-logo";
@@ -20,6 +21,7 @@ export default function PropertyCard({ item: x }) {
         <div className="property-kicker"><span>{x.location}</span><span>{propertyStatus(x)}</span></div>
         <h3><Link href={href}>{x.title}</Link></h3>
         <p className="property-card-type">{x.assetClass || x.type}</p>
+        <PropertyTags tags={x.tags} contexts={x.contexts} />
         {x.description && <p className="property-card-description">{x.description}</p>}
         {!!facts.length && <dl className="property-card-facts">{facts.map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl>}
         <div className="property-card-foot">

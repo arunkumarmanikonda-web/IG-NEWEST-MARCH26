@@ -110,8 +110,8 @@
 .property-adviser .button {width:100%;background:#2b2a29;color:#fff;border-color:#2b2a29;justify-content:space-between;font-size:12px;gap:15px;padding:16px 18px;margin:24px 0 10px;}
 .property-adviser .text-link {width:100%;font-size:11px;margin-top:10px;gap:16px;}
 .property-adviser p.fine-note {font-size:11px;margin-top:20px;}
-.property-tags {display:flex;flex-wrap:wrap;gap:9px;margin-top:24px;}
-.property-tags > span {background:#f3f3ef;padding:8px 12px;font-size:11px;}
+.property-tags {display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:12px 0;}
+.property-tags > li {max-width:100%;overflow-wrap:anywhere;background:#f4f3ef;color:#363530;border:1px solid #deddd7;border-radius:3px;padding:4px 9px;font-size:12px;line-height:1.45;font-weight:600;}
 .property-related {border-top:1px solid #deded8;background:#f8f8f6;}
 .property-related h2 {font-size:40px;}
 .property-lightbox {border:0;width:96vw;max-width:1800px;height:94dvh;max-height:96dvh;background:#20211f;color:#fff;padding:24px;overflow:hidden;}

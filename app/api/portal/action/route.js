@@ -1,3 +1,4 @@
+import { anonymousServerClient } from "../../../../lib/runtime-config";
 import { isStaff } from "../../../../lib/sign-in.mjs";
 import { accountContext } from "../../../../lib/supabase/server";
 import {
@@ -15,6 +16,7 @@ const methods = {
   operations_action: "ig_ops_action",
   account: "ig_account_update",
   invitation: "ig_accept_invitation",
+  invitation_resend: "ig_invitation_recipient",
   invitation_revoke: "ig_revoke_invitation",
   content: "ig_save_content",
   publication: "ig_content_action",
@@ -76,6 +78,20 @@ export async function POST(request) {
             : error.message,
         status,
       );
+    }
+    if (body.module === "invitation_resend" || (body.module === "users" && body.payload?.action === "invite")) {
+      const email = body.module === "invitation_resend" ? data.email : body.payload.email.trim().toLowerCase();
+      const authClient = anonymousServerClient();
+      const {data: eligible, error: lookupError} = await authClient.rpc("ig_client_login_eligible", {
+        secret: process.env.INTEGRATION_MASTER_KEY, email_address: email,
+      });
+      if (lookupError || !eligible) throw new HttpError("The invitation was saved. Refresh the invitations list before sending a verification email.", 409);
+      const {error: sendError} = await authClient.auth.signInWithOtp({email, options: {shouldCreateUser: true}});
+      if (sendError) throw new HttpError(sendError.status === 429
+        ? "The invitation is saved. Please wait before sending another verification code."
+        : "The invitation is saved, but the verification email could not be sent. Use Resend verification email to retry.",
+        sendError.status === 429 ? 429 : 503);
+      return privateJson({ok: true, data: {notice: "Verification email requested for " + email + "."}});
     }
     return privateJson({ ok: true, data });
   } catch (e) {

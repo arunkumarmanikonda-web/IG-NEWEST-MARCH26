@@ -1,3 +1,4 @@
+import { opportunityContexts } from "../../../lib/taxonomy.mjs";
 import { propertyEditorial } from "../../../lib/property-editorial.mjs";
 import { pageMeta } from "../../../lib/seo.mjs";
 import Seo from "../../seo";
@@ -39,7 +40,7 @@ export default async function Opportunity({ params }) {
     summary: propertyEditorial[x.slug]?.summary || x.description,
     body: propertyEditorial[x.slug]?.body || x.description,
     kind: "opportunity",
-    tags: [],
+    tags: opportunityContexts.filter(term => x.contexts?.includes(term.id)).map(term => ({...term, slug: term.id, dimension: "opportunity-context"})),
     public_data: {
       city: x.city,
       region: x.region,

@@ -1,3 +1,4 @@
+import PropertyTags from "./property-tags";
 import Link from "next/link";
 import { opportunityCard } from "../lib/cms";
 import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
@@ -25,6 +26,7 @@ export default function PropertyDetail({ item, related = [] }) {
           </Eyebrow>
           <h1>{x.title}</h1>
           <p>{x.assetClass || x.type}</p>
+          <PropertyTags tags={x.tags} contexts={x.contexts} />
         </div>
         <div className="property-title-terms">
           <span>{propertyStatus(x)}</span>
@@ -63,13 +65,6 @@ export default function PropertyDetail({ item, related = [] }) {
                 </p>
               ),
             )}
-          {!!item.tags?.length && (
-            <div className="property-tags">
-              {item.tags.map((t) => (
-                <span key={t.slug}>{t.label}</span>
-              ))}
-            </div>
-          )}
           {!d.confidential &&
             d.location_reviewed === true &&
             d.latitude &&

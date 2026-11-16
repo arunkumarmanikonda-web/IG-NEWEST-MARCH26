@@ -55,7 +55,7 @@ export async function POST(request) {
         secret: process.env.INTEGRATION_MASTER_KEY, email_address: email,
       });
       if (eligibility.error) throw new HttpError("Email sign-in is temporarily unavailable", 503);
-      // Only approved CRM contacts may create an account through this endpoint.
+      // First-time email sign-in is available to approved CRM contacts and pending invitees.
       // Returning users are not asked to accept registration policies again.
       const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: eligibility.data === true } });
       if (error?.status === 429) throw new HttpError("Please wait a minute before requesting another code.", 429);
