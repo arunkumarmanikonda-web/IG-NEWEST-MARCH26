@@ -19,7 +19,7 @@ function ConversationHistory({ turns }) {
   }
   return <section className="workspace-card">
     <h3>Gullu conversations</h3>
-    <p>Gullu is the India Gully guide. Visitors can consent to saving a conversation and request a follow-up from the team.</p>
+    <p>Gullu is your India Gully buddy. Recent exchanges appear below. Open a daily workbook for guest details, summaries and complete conversations.</p>
     <Link className="module-link" href="/admin/enquiries">Open enquiries &amp; leads</Link>
     {!sessions.size && <p>No saved conversations yet.</p>}
     {[...sessions].map(([id, messages]) => {
@@ -36,7 +36,10 @@ function ConversationHistory({ turns }) {
   </section>;
 }
 
-export default async function IntelligencePage() {
+export default async function IntelligencePage({searchParams}) {
+  const selected=(await searchParams)?.day;
+  const defaultDay=new Date(Date.now()+19800000).toISOString().slice(0,10);
+  const day=/^\d{4}-\d{2}-\d{2}$/.test(selected||"")?selected:defaultDay;
   const { client, staffVerified, policiesAccepted } = await accountContext();
   const { data, error } = staffVerified && policiesAccepted ?
     await client.rpc("ig_intelligence_admin", { p: { action: "status" } }) : { error: { code: "42501" } };
@@ -63,6 +66,7 @@ export default async function IntelligencePage() {
           <li key={i}><strong>{item.topic}</strong>{item.reason && <p>{item.reason}</p>}</li>)}</ul></>}
       </details>)}
     </section>
+    <section className="workspace-card"><h3>Daily guest workbook</h3><p>Guest summaries and full transcripts for conversations active on the selected date in India. The daily report is scheduled for 9:00 a.m. IST the next morning.</p><form action="/api/admin/intelligence/report" method="get"><label>Conversation date <input type="date" name="day" defaultValue={day} required/></label> <button type="submit">Download Excel report</button></form></section>
     <ConversationHistory turns={conversations} />
     <section className="workspace-card"><h3>Gullu report delivery</h3>
       <p>Delivery history for the reports to Arun, Amit and Pavan.</p>

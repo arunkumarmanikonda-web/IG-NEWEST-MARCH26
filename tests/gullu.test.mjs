@@ -32,19 +32,23 @@ test("current published policy, context and topic ordering come from live record
   assert.deepEqual(directAnswer("What practices do you offer?",docs).sources.map(x=>x.title),["Hospitality"]);
 });
 
-test("only current approved passages can appear in an AI answer",async()=>{
-  const config={mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}};
+test("grounded multilingual paragraphs reject unsupported numbers",async()=>{
   const candidates=rankPassages(docs,"Jaisalkot keys",[],"/");
-  const ask=ids=>answerFromPassages({question:"Jaisalkot keys",history:[],candidates,config,
-    fetcher:async (url,req)=>{
-      const body=JSON.parse(req.body);
-      assert.equal(body.store,false);
-      assert.equal(body.tools,undefined);
-      return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({ids,answer:"malicious invention"})}]}]});
-    }});
-  assert.match((await ask([0])).answer,/Keys · 50/);
-  assert.doesNotMatch((await ask([99])).answer,/malicious/);
-  assert.match((await ask([])).answer,/couldn’t confirm/);
+  const ask=(text,ids)=>answerFromPassages({question:"Jaisalkot rooms?",history:[],language:"Hinglish",candidates,config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
+    fetcher:async (url,req)=>{const body=JSON.parse(req.body);assert.equal(body.store,false);assert.equal(JSON.parse(body.input).language,"Hinglish");
+      return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({paragraphs:[{text,ids}]})}]}]});}});
+  const i=candidates.findIndex(x=>x.text==="Keys · 50");
+  assert.match((await ask("Is resort mein 50 keys hain.",[i])).answer,/50 keys/);
+  assert.doesNotMatch((await ask("There are 75 rooms.",[i])).answer,/75/);
+  assert.doesNotMatch((await ask("Made up",[999])).answer,/Made up/);
+});
+test("guest examples switch scope and retain shortlist context",()=>{
+  const properties=["One","Two","Three","Four"].map(n=>({kind:"opportunity",title:n,href:"/opportunities/"+n.toLowerCase(),tags:["cirp"],chunks:["Published brief."]}));
+  const q="hey gullu tell me a good real estate opportunity a disress one";
+  const short=directAnswer(q,properties);assert.equal(short.sources.length,3);
+  const h=[{question:q,sources:short.sources.map(s=>s.href)}];
+  assert.deepEqual(directAnswer("is that all you have",properties,h).sources.map(s=>s.title),["Four"]);
+  assert.deepEqual(directAnswer("i want to all that india gully does",docs,h).sources.map(s=>s.title),["Hospitality"]);
 });
 
 test("callbacks reject altered or expired answers and changed conversation ids",()=>{
