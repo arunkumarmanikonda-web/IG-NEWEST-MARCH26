@@ -1,3 +1,5 @@
+import LiveListings from "./live-listings";
+import { listingRevision } from "../lib/listing-revision.mjs";
 import { siteSection, renderSections } from "../lib/website";
 import PracticeExplorer from "./practice-explorer";
 import Image from "next/image";
@@ -104,6 +106,7 @@ export default async function Home() {
         className="section-pad home-property-collection"
         id="real-estate-listings"
       >
+        {assets && <LiveListings revision={listingRevision(assets)} />}
         <div className="section-heading">
           <div>
             <Eyebrow>{copy["real-estate-is-at-our-core"]}</Eyebrow>

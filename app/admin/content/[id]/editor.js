@@ -169,7 +169,9 @@ export default function Editor({
         ...p,
       });
       setMessage(
-        a === "publish" ? "Published this revision." : "Content updated.",
+        a === "publish"
+          ? kind === "opportunity" ? "Published and verified in the public listings." : "Published this revision."
+          : "Content updated.",
       );
       if (a === "delete" || a === "trash" || a === "restore") router.replace("/admin/" + section);
       router.refresh();

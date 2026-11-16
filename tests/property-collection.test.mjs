@@ -9,7 +9,11 @@ test('Collection combines words across fields and applies all filters',()=>{
 });
 test('Sorting does not mutate the CMS source ordering',()=>{
  assert.deepEqual(collectionItems(items,{sort:'title'}).map(x=>x.title),['A hotel','Hill retreat','Prism Tower']);
- assert.deepEqual(collectionItems(items).map(x=>x.title),['Prism Tower','Hill retreat','A hotel']);
+ assert.deepEqual(collectionItems(items),items);
+ assert.deepEqual(collectionItems(items,{sort:'featured'}).map(x=>x.title),['Prism Tower','Hill retreat','A hotel']);
+ const newestFirst=[items[1],items[0],items[2]];
+ assert.deepEqual(collectionItems(newestFirst,{sort:''}),newestFirst);
+ assert.equal(collectionItems(newestFirst,{sector:'Hospitality'})[0],items[1]);
  assert.equal(items[1].title,'A hotel');
 });
 test('Historical reference never implies current availability and unknown facts stay absent',()=>{
