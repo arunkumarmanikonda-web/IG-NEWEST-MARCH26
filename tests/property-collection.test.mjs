@@ -7,6 +7,17 @@ test('Collection combines words across fields and applies all filters',()=>{
  assert.deepEqual(collectionItems(items,{sector:'Hospitality',context:'strategic',city:'Jaipur'}).map(x=>x.title),['A hotel']);
  assert.equal(collectionItems(items,{query:'unmatched'}).length,0);
 });
+test('Keyword search matches every public tag dimension and legacy context labels',()=>{
+ const tagged={...items[0],tags:[
+   {label:'Joint venture',dimension:'transaction-type'},
+   {label:'Leisure destination',dimension:'sector'},
+   {label:'Mature holding',dimension:'lifecycle'},
+ ]};
+ const legacy={...items[1],contexts:['distressed']};
+ const cleared={...items[2],tags:[],contexts:['distressed']};
+ assert.deepEqual(collectionItems([tagged,legacy,cleared],{query:'tower venture leisure holding'}),[tagged]);
+ assert.deepEqual(collectionItems([tagged,legacy,cleared],{query:'distressed asset'}),[legacy]);
+});
 test('Sorting does not mutate the CMS source ordering',()=>{
  assert.deepEqual(collectionItems(items,{sort:'title'}).map(x=>x.title),['A hotel','Hill retreat','Prism Tower']);
  assert.deepEqual(collectionItems(items),items);

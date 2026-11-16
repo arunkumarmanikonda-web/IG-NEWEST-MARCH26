@@ -26,8 +26,8 @@ function HomeOrder({value,onChange}) {
     <button type="button" disabled={value.length===1} onClick={()=>onChange(value.filter(x=>x!==id))}>Hide section</button></li>)}</ol>
     {value.length<siteDefaults["home-layout"].length&&<label>Show a section<select value={selected} onChange={e=>{if(e.target.value)onChange([...value,e.target.value]);setSelected("");}}><option value="">Choose section</option>{siteDefaults["home-layout"].filter(x=>!value.includes(x)).map(x=><option key={x} value={x}>{label(x)}</option>)}</select></label>}</>;
 }
-export default function WebsiteEditor({records,scheduling=true}) {
-  const [saved,setSaved]=useState(records),[section,setSection]=useState("home"),[value,setValue]=useState(records.home?.content||siteDefaults.home);
+export default function WebsiteEditor({records,scheduling=true,initialSection="home"}) {
+  const [saved,setSaved]=useState(records),[section,setSection]=useState(initialSection),[value,setValue]=useState(records[initialSection]?.content||siteDefaults[initialSection]);
   const [reviewed,setReviewed]=useState(false);
   const [when,setWhen]=useState(""),[busy,setBusy]=useState(false),[message,setMessage]=useState(""),[edits,setEdits]=useState({});
   function edit(next){setReviewed(false);setValue(next);setEdits({...edits,[section]:next});setMessage("");}
@@ -46,6 +46,7 @@ export default function WebsiteEditor({records,scheduling=true}) {
     }catch(e){setMessage(e.message);}finally{setBusy(false);}
   }
   return <section className="workspace-card"><Link href="/admin/cms">Website CMS</Link><h2>Website pages & menus</h2>
+    {section==="disciplines" && <p>Publish practice profiles here to update their order and destinations in the <Link href="/#practice-strip">public practice banner</Link>.</p>}
     <label>Choose a page or section<select disabled={busy} value={section} onChange={e=>choose(e.target.value)}>{Object.keys(siteDefaults).map(k=><option key={k} value={k}>{sectionLabel(k)}</option>)}</select></label>
     <h3>{sectionLabel(section)}</h3><p>Draft revision {saved[section]?.version||0} · Live revision {saved[section]?.live_version||"original"}{saved[section]?.scheduled_at?" · Scheduled "+new Date(saved[section].scheduled_at).toLocaleString():""}</p>
     <form onSubmit={submit} className="site-editor-form"><fieldset disabled={busy}>{section==="home-layout"?<HomeOrder value={value} onChange={edit}/>:<Field key={section} name={section} value={value} template={siteDefaults[section]} fixed={section==="navigation"} onChange={edit}/>}</fieldset>

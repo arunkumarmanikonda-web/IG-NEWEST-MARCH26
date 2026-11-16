@@ -96,6 +96,10 @@ a.opportunity-feature-link:focus-visible {
 .opportunity-feature-facts div { display: flex; flex-direction: column; }
 .opportunity-feature-facts dt { font: 400 11px/1.5 var(--sans, sans-serif); color: #68665e; }
 .opportunity-feature-facts dd { margin: 0; font: 500 15px/1.4 var(--sans, sans-serif); color: #292923; }
+.opportunity-feature-copy .property-tags {
+  align-self: stretch;
+  margin: 14px 0 0;
+}
 .opportunity-feature-cta {
   display: inline-flex;
   align-items: center;

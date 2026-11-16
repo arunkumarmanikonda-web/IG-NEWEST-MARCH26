@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import BrandLogo from "../brand-logo";
+import PropertyTags from "../property-tags";
 import { Arrow } from "../components";
 import { propertyPhotoURL } from "../../lib/listing-images.mjs";
 import "./featured-banner.css";
@@ -100,6 +101,7 @@ function FeaturedCard({ item, lead, preview }) {
         {facts.length > 0 && <dl className="opportunity-feature-facts">
           {facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
         </dl>}
+        <PropertyTags tags={item.tags} contexts={item.contexts} />
         <span className="opportunity-feature-cta">View opportunity <Arrow /></span>
       </div>
     </Wrapper>

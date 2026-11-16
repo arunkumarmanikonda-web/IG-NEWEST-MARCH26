@@ -67,7 +67,7 @@ export default async function Layout({ children }) {
             <AccountLink />
           </nav>
         </div>
-        <Navigation groups={groups} />
+        <Navigation groups={groups} practices={practices.map(({ slug, title, href }) => ({ slug, title, href }))} />
         {children}
         <footer className="site-footer">
           <div className="footer-top">

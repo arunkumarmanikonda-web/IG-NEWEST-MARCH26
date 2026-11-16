@@ -3,8 +3,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { Arrow } from "./components";
-export default function Navigation({ groups }) {
+import PracticeStrip from "./practice-strip";
+
+export default function Navigation({ groups, practices }) {
   const path = usePathname();
+  const showPractices = path === "/" || /^\/(practices|horeca|opportunities)(\/|$)/.test(path) && !path.endsWith("/teaser");
   const [open, setOpen] = useState(false);
   const root = useRef(null);
   function close() {
@@ -17,6 +20,7 @@ export default function Navigation({ groups }) {
     close();
   }, [path]);
   return (
+    <>
     <header
       ref={root}
       className="site-header"
@@ -124,5 +128,7 @@ export default function Navigation({ groups }) {
         </Link>
       </nav>
     </header>
+    {showPractices && <PracticeStrip practices={practices} />}
+    </>
   );
 }

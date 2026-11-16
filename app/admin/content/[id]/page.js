@@ -1,5 +1,5 @@
 import FeatureManager from "./feature-manager";
-import { opportunityCard } from "../../../../lib/cms";
+import { publishedOpportunityCard } from "../../../../lib/cms";
 import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -187,12 +187,12 @@ export default async function EditPage({ params, searchParams }) {
   }
   let promotion = null;
   if (item?.kind === "opportunity") {
-    const [{data:history,error},{data:publication}] = await Promise.all([
+    const [{data:history,error},publication] = await Promise.all([
       client.rpc("ig_manage_listing_feature",{p:{action:"report",content_id:id}}),
-      client.from("ig_public_content").select("id,slug,title,summary,public_data").eq("id",id).maybeSingle(),
+      publishedOpportunityCard(client,id),
     ]);
-    if (!error) promotion = <FeatureManager contentId={id} card={publication ? opportunityCard({...publication,tags:[]}) : null} initial={history || []}/>;
-    else if (error.code !== "42501") promotion = <p role="alert">Featured placements could not be loaded. Refresh to try again.</p>;
+    if (!error && !publication.error) promotion = <FeatureManager contentId={id} card={publication.data} initial={history || []}/>;
+    else if (error?.code !== "42501") promotion = <p role="alert">Featured placements could not be loaded. Refresh to try again.</p>;
   }
   if (item?.kind === "product" && item.published_version != null) {
     promotion = <div className="workspace-actions">
