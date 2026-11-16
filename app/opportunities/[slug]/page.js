@@ -1,3 +1,4 @@
+import { anonymousServerClient } from "../../../lib/runtime-config";
 import { opportunityContexts } from "../../../lib/taxonomy.mjs";
 import { propertyEditorial } from "../../../lib/property-editorial.mjs";
 import { pageMeta } from "../../../lib/seo.mjs";
@@ -25,9 +26,11 @@ export default async function Opportunity({ params }) {
   if (records !== null) {
     const item = records.find((x) => x.slug === slug);
     if (!item) notFound();
+    const room = await anonymousServerClient().rpc("ig_room_listing_slugs");
     return (
       <PropertyDetail
         item={item}
+        hasRoom={room.data?.includes(slug) === true}
         related={records
           .filter((x) => x.slug !== slug && x.public_data.image)
           .slice(0, 2)}

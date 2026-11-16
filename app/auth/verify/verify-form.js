@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import Link from 'next/link';
-export default function VerifyForm({ purpose }) {
+export default function VerifyForm({ purpose,returnTo }) {
   const [email, setEmail] = useState('');
+  useEffect(()=>{try{setEmail(sessionStorage.getItem("ig-verification-email")||"");}catch{}},[]);
   const [token, setToken] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -15,7 +16,7 @@ export default function VerifyForm({ purpose }) {
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
-      if (action === 'verify') { setToken(''); location.replace(result.next); }
+      if (action === 'verify') { setToken(''); try{sessionStorage.removeItem('ig-verification-email');}catch{} location.replace(returnTo && result.next==='/account'?'/account?next='+encodeURIComponent(returnTo):result.next); }
       else setMessage(result.message);
     } catch (error) { setMessage(error.message || 'Please try again.'); }
     finally { setBusy(false); }

@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
 import { published } from "../../../lib/cms";
+import AuthForm from "../../login/auth-form";
+import PolicyUnavailable from "../../policy-unavailable";
+import { currentPolicies } from "../../../lib/policies";
 import NdaAccount from "./requests";
 import "../../portal.css";
 export const dynamic = "force-dynamic";
@@ -12,14 +15,15 @@ export const metadata = {
 export default async function Page({ searchParams }) {
   const query = await searchParams;
   const { client, user, profile, policiesAccepted } = await accountContext();
-  if (!user || !profile)
-    redirect(
-      "/login?next=" +
-        encodeURIComponent(
-          "/account/nda?opportunity=" + (query.opportunity || ""),
-        ),
-    );
-  if (profile.status !== "active" || !policiesAccepted) redirect("/account");
+  const slug=typeof query.opportunity === "string" ? query.opportunity : "";
+  const destination="/account/nda?opportunity="+encodeURIComponent(slug);
+  if(!user && slug) {
+    const item=(await published("opportunity"))?.find(x=>x.slug===slug);
+    if(!item || !await currentPolicies()) return <PolicyUnavailable/>;
+    return <main id="main" className="auth-page"><AuthForm register returnTo={destination} projectTitle={item.title}/></main>;
+  }
+  if(!user || !profile) redirect("/login");
+  if(profile.status!=="active" || !policiesAccepted) redirect("/account"+(slug?"?next="+encodeURIComponent(destination):""));
   const [{ data: requests, error }, { data: templates, error: te }, items] =
     await Promise.all([
       client

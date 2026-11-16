@@ -158,7 +158,7 @@ export default function SignInForm({ returnTo = null }) {
       )}
       <p className="workspace-small">
         Use the email registered with India Gully. Need an account?{" "}
-        <Link href="/register">Register here</Link>.
+        <Link href={returnTo?"/register?next="+encodeURIComponent(returnTo):"/register"}>Register here</Link>.
       </p>
     </form>
   );

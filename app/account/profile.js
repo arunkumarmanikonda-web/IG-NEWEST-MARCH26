@@ -14,7 +14,7 @@ export async function portalAction(module, payload) {
   if (!res.ok) throw new Error(result.error);
   return result.data;
 }
-export default function Account({ profile, email, policyVersion, policiesAccepted = false, pendingInvitation = false }) {
+export default function Account({ profile, email, policyVersion, returnTo, policiesAccepted = false, pendingInvitation = false }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [accepted, setAccepted] = useState(policiesAccepted);
@@ -58,7 +58,8 @@ export default function Account({ profile, email, policyVersion, policiesAccepte
               const response = await fetch("/api/portal/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "continue" }) });
               const result = await adminResponse(response);
               if (!response.ok) throw new Error(result.error);
-              if (result.next && result.next !== "/account") location.replace(result.next);
+              if (returnTo && result.next === "/account") location.replace(returnTo);
+              else if (result.next && result.next !== "/account") location.replace(result.next);
               else setMessage("Your policy acceptance has been recorded.");
             });
           }}

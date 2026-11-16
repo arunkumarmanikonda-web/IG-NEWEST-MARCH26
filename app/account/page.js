@@ -1,3 +1,4 @@
+import {portalReturn} from "../../lib/portal-return.mjs";
 import { recentUpdates } from "../../lib/practice-updates.mjs";
 import PolicyUnavailable from '../policy-unavailable';
 import {currentPolicies} from "../../lib/policies";
@@ -15,11 +16,13 @@ export const metadata = {
 export default async function AccountPage({ searchParams }) {
   const { client, user, profile, signInStatus, policiesAccepted } = await accountContext();
   if (!user || !profile) redirect("/login");
+  const returnTo=portalReturn((await searchParams)?.next);
   const release=await currentPolicies();
   if (!release && !policiesAccepted) return <PolicyUnavailable/>;
   const policyVersion=release?.version;
   const destination = accountDestination(profile, signInStatus);
   if ((await searchParams)?.profile !== "1" && ["/admin", "/login/verify", "/account/security"].includes(destination)) redirect(destination);
+  if (returnTo && policiesAccepted && destination==="/account" && profile.status==="active") redirect(returnTo);
   if (profile.status !== "active")
     return (
       <main id="main" className="auth-page">
@@ -39,7 +42,7 @@ export default async function AccountPage({ searchParams }) {
   return (
     <main id="main" className="auth-page account-dashboard">
       <div>
-        <Account profile={profile} email={user.email} policyVersion={policyVersion} policiesAccepted={policiesAccepted} pendingInvitation={signInStatus?.pending_invitation} />
+        <Account returnTo={returnTo} profile={profile} email={user.email} policyVersion={policyVersion} policiesAccepted={policiesAccepted} pendingInvitation={signInStatus?.pending_invitation} />
         {updates.length > 0 && <section className="shared-rooms">
           <h2>Latest from your selected practices</h2>
           {updates.slice(0,6).map(item=><Link key={item.id} className="workspace-card" href={item.path}><strong>{item.title}</strong><p>{item.summary}</p></Link>)}

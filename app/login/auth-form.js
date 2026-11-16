@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-export default function AuthForm({ register = false }) {
+export default function AuthForm({ register = false, returnTo=null, projectTitle="" }) {
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
     [emailCode, setEmailCode] = useState(!register),
@@ -27,7 +27,10 @@ export default function AuthForm({ register = false }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      if (data.next) location.assign(data.next);
+      if (data.next) {
+        if(register && data.confirmEmail) {try{sessionStorage.setItem("ig-verification-email",form.get("email"));}catch{}}
+        location.assign(returnTo && ["/account","/auth/verify"].includes(data.next) ? data.next+"?next="+encodeURIComponent(returnTo) : data.next);
+      }
       else setMessage(data.message);
     } catch (e) {
       setMessage(e.message || "Please try again.");
@@ -42,12 +45,13 @@ export default function AuthForm({ register = false }) {
         {recovery
           ? "Recover access"
           : register
-            ? "Create your account"
+            ? (projectTitle?"Request Data Room Access":"Create your account")
             : "Welcome back."}
       </h1>
+      {projectTitle && <><h2>{projectTitle}</h2><p><Link className="text-link" href={"/login?next="+encodeURIComponent(returnTo)}>Already registered? Sign in</Link></p></>}
       <p>
         {register
-          ? "Register to manage your interests and request controlled information."
+          ? (projectTitle?"Register and verify your email to request documents for this property. India Gully reviews each request before sharing access.":"Register to manage your interests and request controlled information.")
           : "Receive a one-time sign-in code by email. Your registered account opens its assigned workspace."}
       </p>
       {register && (
@@ -142,13 +146,13 @@ export default function AuthForm({ register = false }) {
           {recovery ? "Return to sign in" : "Forgot password?"}
         </button>
       )}
-      <p>
+      {!projectTitle && <p>
         {register ? (
-          <Link href="/login">Already registered? Sign in</Link>
+          <Link href={returnTo?"/login?next="+encodeURIComponent(returnTo):"/login"}>Already registered? Sign in</Link>
         ) : (
           <Link href="/register">Create an account</Link>
         )}
-      </p>
+      </p>}
     </form>
   );
 }

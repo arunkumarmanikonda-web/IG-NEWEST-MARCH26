@@ -1,3 +1,4 @@
+import { listingHeading } from "../lib/listing-heading.mjs";
 import PropertyTags from "./property-tags";
 import Link from "next/link";
 import { opportunityCard } from "../lib/cms";
@@ -7,10 +8,11 @@ import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
 import { Arrow, Eyebrow } from "./components";
 
-export default function PropertyDetail({ item, related = [] }) {
+export default function PropertyDetail({ item, hasRoom = false, related = [] }) {
   const x = opportunityCard(item),
     d = item.public_data;
   const contact = "/contact?interest=" + encodeURIComponent(item.title);
+  const roomLink = "/account/nda?opportunity=" + encodeURIComponent(item.slug);
   return (
     <main id="main" className="property-detail-page">
       <nav className="property-breadcrumb" aria-label="Breadcrumb">
@@ -46,7 +48,7 @@ export default function PropertyDetail({ item, related = [] }) {
             <div><dt>Status</dt><dd>{propertyStatus(x)}</dd></div>
             {propertyFacts(x).filter(([key]) => key !== "Property type").map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}
           </dl>
-          <Link className="button" href={contact}>Request property details <Arrow /></Link>
+          <Link className="button" href={hasRoom ? roomLink : contact}>{hasRoom ? "Request Data Room Access" : "Request Property Details"} <Arrow /></Link>
           <Link className="text-link" href={"/opportunities/" + item.slug + "/brief.pdf"} prefetch={false} target="_blank">Download property brief <Arrow /></Link>
         </div>
       </section>
@@ -58,9 +60,9 @@ export default function PropertyDetail({ item, related = [] }) {
           {narrativeParagraphs(item.body,item.summary)
             .map((text, i) =>
               text.startsWith("## ") ? (
-                <h3 key={i}>{text.slice(3)}</h3>
+                <h3 key={i}>{listingHeading(text.slice(3))}</h3>
               ) : (
-                <p className="preserve-lines" key={i}>
+                <p key={i}>
                   {text}
                 </p>
               ),
@@ -92,7 +94,7 @@ export default function PropertyDetail({ item, related = [] }) {
         </article>
         <aside className="property-adviser">
           <Eyebrow>INDIA GULLY · REAL ESTATE</Eyebrow>
-          <h2>Property documents</h2>
+          <h2>Property Documents</h2>
           <Link
             className="text-link"
             target="_blank"
@@ -101,17 +103,10 @@ export default function PropertyDetail({ item, related = [] }) {
           >
             Download property brief <Arrow />
           </Link>
-          <Link
-            className="text-link"
-            href={"/account/nda?opportunity=" + encodeURIComponent(item.slug)}
-          >
-            Request confidential information <Arrow />
-          </Link>
-          <p className="fine-note">
-            Availability, mandate status and commercial terms require
-            confirmation. Exact addresses and restricted documents are shared
-            through an authorised process.
-          </p>
+          {hasRoom && <>
+            <Link className="button" href={roomLink}>Request Data Room Access <Arrow /></Link>
+            <p className="fine-note">Register or sign in to request confidential documents for this property.</p>
+          </>}
         </aside>
       </div>
       {!!related.length && (
@@ -119,7 +114,7 @@ export default function PropertyDetail({ item, related = [] }) {
           <div className="section-heading">
             <div>
               <Eyebrow>FURTHER OPPORTUNITIES</Eyebrow>
-              <h2>Other properties</h2>
+              <h2>Other Properties</h2>
             </div>
             <Link className="text-link" href="/opportunities">
               View all properties <Arrow />
