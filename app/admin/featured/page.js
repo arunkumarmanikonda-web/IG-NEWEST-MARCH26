@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
-import { opportunityCard } from "../../../lib/cms";
+import { publishedOpportunityCard } from "../../../lib/cms";
 import FeatureManager from "../content/[id]/feature-manager";
 import SwapPositions from "./swap-positions";
 import { effectiveEnd, formatIst, placementStatus, positionLabels, studioHref } from "./placements.mjs";
@@ -39,11 +39,14 @@ export default async function PlacementStudio({searchParams}) {
   const selectionSlot = requestedSlot || (firstOpen>0 ? firstOpen : 1);
   let selected = null, history = [], selectionFailed = false;
   if (canManage && record && data.selected) {
-    const result = await client.rpc(isProduct ? "ig_manage_product_priority" : "ig_manage_listing_feature", {p:{content_id:record,action:"report"}});
-    selectionFailed = Boolean(result.error);
+    const [report, publication] = await Promise.all([
+      client.rpc(isProduct ? "ig_manage_product_priority" : "ig_manage_listing_feature", {p:{content_id:record,action:"report"}}),
+      isProduct ? {data:data.selected} : publishedOpportunityCard(client,record),
+    ]);
+    selectionFailed = Boolean(report.error || publication.error);
     if (!selectionFailed) {
-      selected = isProduct ? data.selected : opportunityCard({...data.selected,tags:[]});
-      history = result.data || [];
+      selected = publication.data;
+      history = report.data || [];
     }
   }
   function editLink(row) {
@@ -55,7 +58,8 @@ export default async function PlacementStudio({searchParams}) {
       <Link className="module-link" href={isProduct ? "/horeca#catalogue" : "/#real-estate-listings"}>View on website ↗</Link>
     </header>
     <nav className="priority-tabs" aria-label="Priority listing areas">{sections.map(([id,label])=>
-      <Link href={studioHref({kind:id})} aria-current={kind===id?"page":undefined} key={id}>{label}</Link>)}</nav>
+      <Link href={studioHref({kind:id})} aria-current={kind===id?"page":undefined} key={id}>{label}</Link>)}
+      <Link href="/admin/cms/site?section=disciplines">Practice banner</Link></nav>
     {error ? <section className="workspace-card" role="alert"><h3>Unable to load placements</h3><p>Refresh the page to try again.</p></section> :
      !canManage ? <p className="workspace-card">Your account needs publication access for this area.</p> : <>
       <section className="workspace-card" aria-labelledby="current-placements">

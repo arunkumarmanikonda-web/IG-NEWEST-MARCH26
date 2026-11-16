@@ -10,3 +10,13 @@ test("Publications, revisions, republications and withdrawals change the public 
     assert.notEqual(listingRevision([first]), listingRevision(rows));
   }
 });
+
+test("Reordering terms leaves the revision stable while public taxonomy edits refresh listings", () => {
+  const record = { id: "property", version: 1 };
+  const term = { id: "c", slug: "cirp", label: "CIRP", dimension: "opportunity-context" };
+  const other = { ...term, id: "s", slug: "strategic", label: "Strategic investment" };
+  const revision = tags => listingRevision([{ ...record, tags }]);
+  assert.equal(revision([term, other]), revision([other, term]));
+  assert.notEqual(revision([term, other]), revision([term]));
+  assert.notEqual(revision([term]), revision([{ ...term, label: "Restructuring" }]));
+});
