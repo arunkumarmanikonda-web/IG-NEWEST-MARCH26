@@ -47,6 +47,42 @@ h2 em {
 .utility-bar a {
   color: #fff;
 }
+.utility-bar:has(.utility-links) {
+  min-height: 44px;
+}
+.utility-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  margin-inline-start: auto;
+}
+.utility-links a {
+  min-height: 44px;
+}
+.utility-links .utility-account {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-inline-start: clamp(12px, 2vw, 24px);
+}
+.utility-account::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 30%;
+  bottom: 30%;
+  border-inline-start: 1px solid #777;
+}
+.utility-links a:hover,
+.utility-links a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.utility-links a:focus-visible {
+  outline: 2px solid #d4b012;
+  outline-offset: -2px;
+}
 .site-header {
   height: 112px;
   padding: 0 6%;
