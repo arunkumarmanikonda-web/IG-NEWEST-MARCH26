@@ -1,4 +1,6 @@
 import {businessDetails} from "../lib/runtime-config";
+import { serverClient } from "../lib/supabase/server";
+import { cmsConfigured } from "../lib/cms";
 import { siteConfig } from "../lib/seo.mjs";
 import "./globals.css";
 import "./editorial.css";
@@ -30,6 +32,24 @@ export const metadata = {
   },
   manifest: "/manifest.webmanifest",
 };
+async function AccountLink() {
+  let signedIn = false;
+  if (cmsConfigured()) {
+    try {
+      const client = await serverClient();
+      const { data } = await client.auth.getClaims();
+      signedIn = Boolean(data?.claims?.sub);
+    } catch {
+      // Keep the public sign-in entry available if session verification is unavailable.
+    }
+  }
+  return (
+    <Link className="utility-account" href={signedIn ? "/account" : "/login"} prefetch={false}>
+      {signedIn ? "My account" : "Sign in"}
+    </Link>
+  );
+}
+
 export default async function Layout({ children }) {
   const [business, groups, practices] = await Promise.all([businessDetails(), siteSection("navigation"), livePractices()]);
   return (
@@ -42,9 +62,10 @@ export default async function Layout({ children }) {
           <span>
             ADVISORY · TRANSACTIONS · DELIVERY
           </span>
-          <Link href="/valuation">
-            Explore the valuation studio <Arrow />
-          </Link>
+          <nav className="utility-links" aria-label="Quick links">
+            <Link href="/valuation">Explore the valuation studio <Arrow /></Link>
+            <AccountLink />
+          </nav>
         </div>
         <Navigation groups={groups} />
         {children}
