@@ -1,7 +1,7 @@
 import RetailClients from "../../retail-clients";
 import {isRetail} from "../../../../lib/retail-mandates.mjs";
 import FeatureManager from "./feature-manager";
-import { publishedOpportunityCard } from "../../../../lib/cms";
+import { publishedListingCard } from "../../../../lib/cms";
 import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -188,10 +188,10 @@ export default async function EditPage({ params, searchParams }) {
       };
   }
   let promotion = null;
-  if (item?.kind === "opportunity") {
+  if (item?.kind === "opportunity" || isRetail(item?.kind)) {
     const [{data:history,error},publication] = await Promise.all([
       client.rpc("ig_manage_listing_feature",{p:{action:"report",content_id:id}}),
-      publishedOpportunityCard(client,id),
+      publishedListingCard(client,id),
     ]);
     if (!error && !publication.error) promotion = <FeatureManager contentId={id} card={publication.data} initial={history || []}/>;
     else if (error?.code !== "42501") promotion = <p role="alert">Featured placements could not be loaded. Refresh to try again.</p>;

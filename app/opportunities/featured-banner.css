@@ -169,3 +169,5 @@ a.opportunity-feature-link:hover .opportunity-feature-cta { text-decoration: und
   max-width: 100%;
 }
 .opportunity-features.opportunity-preview-narrow { width: min(390px, 100%) !important; }
+
+.opportunity-feature-type{display:inline-block;align-self:start;margin:0 0 8px;padding:5px 10px;background:#eee6cd;color:#65511e;font:600 11px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.08em}

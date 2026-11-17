@@ -3,9 +3,21 @@ import assert from "node:assert/strict";
 import {contentPath} from "../lib/content-routes.mjs";
 import {intakeContent} from "../lib/content-intake.mjs";
 import {intakeSchema,checkIntakeResult} from "../lib/intake.mjs";
-import {combineUnitEvidence,enquiryMessage,retailCard} from "../lib/retail-mandates.mjs";
+import {combineUnitEvidence,enquiryMessage,retailCard,retailPromotionCard} from "../lib/retail-mandates.mjs";
 import {reconcileMergedFacts} from "../lib/intake-sections.mjs";
 const unit={unit:"G07",floor:"Ground",area:"800 sq ft",basis:"Carpet",zone:"F&B",status:"Available",source:"TEXT",excerpt:"G07: 800 sq ft carpet, available for F&B."};
+test("leasing promotions link to their own mandate side and retain approved terms",()=>{
+ const feature={id:"campaign",slot:2};
+ for(const kind of ["retail_space","retail_requirement"]){
+  const c=retailPromotionCard({id:"mandate",kind,slug:"sample",title:"Approved mandate",summary:"Approved brief",public_data:{image:"/images/library/example.jpg",image_alt:"Approved image",formats:"Office",area_range:"1000 sq ft",price_label:"Approved terms"}},feature);
+  assert.equal(c.href,contentPath({kind,slug:"sample"}));
+  assert.equal(c.feature,feature);assert.equal(c.description,"Approved brief");
+  assert.equal(c.price,"Approved terms");assert.equal(c.image,"/images/library/example.jpg");
+  assert.equal(c.listingLabel,kind==="retail_space"?"For lease":"Brand requirement");
+  assert.equal(c.transaction,kind==="retail_space"?"Lease":"Brand expansion");
+  assert.equal(c.area,kind==="retail_space"?"":"1000 sq ft");
+ }
+});
 test("public leasing cards retain the approved image and descriptive alt text",()=>{
  for(const kind of ["retail_space","retail_requirement"]){
   const record={id:"example",kind,slug:"example",title:"Cyber Park",summary:"Approved brief",public_data:{image:"/images/library/956969b2-8b65-4b3b-8145-4e3ea43828a0.jpg",image_alt:"Cyber Park architectural sketch",city:"Gurugram",region:"Haryana",units:[unit],plans:[{file_id:"private-original"} ]},private_data:{client_email:"private@example.invalid"}};

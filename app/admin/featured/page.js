@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {redirect} from "next/navigation";
 import { accountContext } from "../../../lib/supabase/server";
-import { publishedOpportunityCard } from "../../../lib/cms";
+import { publishedListingCard } from "../../../lib/cms";
 import FeatureManager from "../content/[id]/feature-manager";
 import SwapPositions from "./swap-positions";
 import { effectiveEnd, formatIst, placementStatus, positionLabels, studioHref } from "./placements.mjs";
@@ -27,7 +27,7 @@ export default async function PlacementStudio({searchParams}) {
     const productAccess = await client.rpc("ig_priority_workspace",{p:{kind:"product",q:"",offset:0}});
     if (productAccess.data?.can_manage) redirect(studioHref({kind:"product"}));
   }
-  const sections = [["opportunity","Property carousel"],["product","HORECA priority listings"]];
+  const sections = [["opportunity","Property & leasing carousel"],["product","HORECA priority listings"]];
   const scope = {kind,q,offset,slot:requestedSlot};
   const canManage = data?.can_manage === true;
   const labels = positionLabels[kind];
@@ -41,7 +41,7 @@ export default async function PlacementStudio({searchParams}) {
   if (canManage && record && data.selected) {
     const [report, publication] = await Promise.all([
       client.rpc(isProduct ? "ig_manage_product_priority" : "ig_manage_listing_feature", {p:{content_id:record,action:"report"}}),
-      isProduct ? {data:data.selected} : publishedOpportunityCard(client,record),
+      isProduct ? {data:data.selected} : publishedListingCard(client,record),
     ]);
     selectionFailed = Boolean(report.error || publication.error);
     if (!selectionFailed) {
@@ -54,7 +54,7 @@ export default async function PlacementStudio({searchParams}) {
   }
   return <div className="priority-studio">
     <header className="module-heading"><div><h2>Carousel &amp; priority listings</h2>
-      <p>Choose which properties and HORECA products appear first on the website.</p></div>
+      <p>Promote sale opportunities, spaces for lease, brand requirements and HORECA products. Choose the position and schedule here.</p></div>
       <Link className="module-link" href={isProduct ? "/horeca#catalogue" : "/#real-estate-listings"}>View on website ↗</Link>
     </header>
     <nav className="priority-tabs" aria-label="Priority listing areas">{sections.map(([id,label])=>
@@ -69,7 +69,7 @@ export default async function PlacementStudio({searchParams}) {
           return <li key={slot}>
             <h4>{label}</h4>
             {row ? <><strong>{row.headline || row.title}</strong><small>Until {formatIst(effectiveEnd(row))} IST</small>{editLink(row)}</>
-                 : <><span>Available</span><Link className="priority-action" href={studioHref({kind,slot},"published-selector")}>Choose {isProduct ? "product" : "property"}</Link></>}
+                 : <><span>Available</span><Link className="priority-action" href={studioHref({kind,slot},"published-selector")}>Choose {isProduct ? "product" : "listing"}</Link></>}
           </li>;
         })}</ol>
         {current.length>1 && <SwapPositions key={current.map(p=>p.id).sort().join(":")} kind={kind} placements={current}/>}
@@ -78,14 +78,14 @@ export default async function PlacementStudio({searchParams}) {
           <tbody>{scheduled.map(row=><tr key={row.id}><td>{labels[row.slot]}</td><td>{row.headline || row.title}</td><td>{formatIst(row.starts_at)}</td>
             <td>{formatIst(effectiveEnd(row))}</td><td>{editLink(row)}</td></tr>)}</tbody></table></div></>}
       </section>
-      <section className="workspace-card" id="published-selector"><h3>{isProduct ? "Choose a published product" : "Choose a published property"}</h3>
+      <section className="workspace-card" id="published-selector"><h3>{isProduct ? "Choose a published product" : "Choose a published property or leasing mandate"}</h3>
         <form action="/admin/featured#published-selector" method="get" className="priority-search"><input type="hidden" name="kind" value={kind}/>
           {requestedSlot && <input type="hidden" name="slot" value={requestedSlot}/>}
-          <label>{isProduct?"Product, brand or SKU":"Property or location"}<input key={q} name="q" defaultValue={q} maxLength={100} type="search"/></label>
+          <label>{isProduct?"Product, brand or SKU":"Property, brand or location"}<input key={q} name="q" defaultValue={q} maxLength={100} type="search"/></label>
           <button type="submit">Search</button>{q && <Link href={studioHref({kind,slot:requestedSlot},"published-selector")}>Clear search</Link>}
         </form>
         {items.length>0 ? <ul className="priority-results">{items.map(item=><li key={item.id}><div><strong>{item.title}</strong>
-          <small>{(isProduct?[item.public_data?.brand,item.public_data?.sku]:[item.public_data?.city,item.public_data?.region]).filter(Boolean).join(" · ")}</small></div>
+          <small>{(isProduct?[item.public_data?.brand,item.public_data?.sku]:[{retail_space:"For lease",retail_requirement:"Brand requirement",opportunity:"Opportunity"}[item.kind],item.public_data?.markets || item.public_data?.city,item.public_data?.region]).filter(Boolean).join(" · ")}</small></div>
           <Link className="priority-action" href={studioHref({...scope,record:item.id},"placement-editor")}>Configure<span className="visually-hidden"> {item.title}</span></Link></li>)}</ul> :
           <p>{q ? "No published records match this search." : "No published records are available on this page."}</p>}
         {(offset>0 || data.has_more) && <nav className="priority-pager" aria-label="Search result pages">
