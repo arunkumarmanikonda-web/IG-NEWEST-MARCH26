@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import MediaLibrary from "./media-library";
 import { listingImageBrief } from "../../lib/listing-images.mjs";
+import {staffPhoto} from "../../lib/staff-photo.mjs";
 export default function ListingImages({
   contentId,
   assets,
@@ -68,7 +69,7 @@ export default function ListingImages({
       {contentId && <button type="button" disabled={busy} onClick={findPhoto}>Find a source photograph</button>}
       {image && (
         <div className="product-current-image">
-          <img src={image} alt="Selected listing hero" />
+          <img src={staffPhoto(image)} alt="Selected listing hero" />
           <button type="button" onClick={() => onChoose("", "")}>
             Remove selection
           </button>

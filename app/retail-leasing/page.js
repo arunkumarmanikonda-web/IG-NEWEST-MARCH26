@@ -2,12 +2,13 @@ import Link from "next/link";
 import {published} from "../../lib/cms";
 import {PageHero,LinkButton} from "../components";
 import MandateBoard from "./board";
+import {retailCard} from "../../lib/retail-mandates.mjs";
 import "./retail.css";
 export const metadata={title:"Retail leasing mandates",description:"Explore promoter spaces, unit availability and published brand expansion requirements."};
 export const dynamic="force-dynamic";
 export default async function RetailLeasing({searchParams}){
  const side=(await searchParams)?.side==="requirements"?"retail_requirement":"retail_space";
- const lists=await Promise.all(["retail_space","retail_requirement"].map(async k=>(await published(k)||[]).map(({id,kind,slug,title,summary,public_data:d})=>({id,kind,slug,title,summary,location:d.markets || [d.city,d.region].filter(Boolean).join(", "),formats:d.formats || "",floors:d.floors || "",size:d.area_range || "",units:d.units?.length || 0}))));
+ const lists=await Promise.all(["retail_space","retail_requirement"].map(async k=>(await published(k)||[]).map(retailCard)));
  return <main id="main"><PageHero eyebrow="Retail & leasing" title="The retail leasing desk" description="Find a space for your next store, or a brand looking for a site like yours. Explore mandates from both sides of our retail leasing practice." image="/images/dining.jpg">
  <LinkButton href="/practices/retail-leasing">Our leasing practice</LinkButton></PageHero>
  <MandateBoard key={side} lists={lists} initial={side}/>

@@ -138,7 +138,7 @@ export default function IntakeStudio({
       // Extracted imagery remains private until an administrator reviews its identity and rights.
       let hasImage = Boolean(saved.media_id);
       let imageState = "";
-      if (!isRetail(kind) && !hasImage && (result.candidates?.length || result.sections?.length)) {
+      if (kind!=="retail_requirement" && !hasImage && (result.candidates?.length || result.sections?.length)) {
         setMessage("Draft saved. Checking the source for a photograph…");
         try {
           const candidate = result.candidates?.[0] || await firstIntakeImage(input, result.sections);
@@ -170,7 +170,7 @@ export default function IntakeStudio({
           }
         } catch { imageState = "&image=review"; }
       }
-      if ((kind==="opportunity" || (kind==="product" && !hasImage && !imageState)) && form.get("auto_image")) {
+      if ((["opportunity","retail_space"].includes(kind) || (kind==="product" && !hasImage && !imageState)) && form.get("auto_image")) {
         setMessage("Draft saved. Preparing the listing or product image…");
         try {
           const hero = await intakeWorkspace({action:"hero",id:current.id,approved:true,style:form.get("visual_style"),direction:String(form.get("brief") || "").slice(0,2000)});
@@ -372,8 +372,8 @@ export default function IntakeStudio({
             am authorised to process these sources with OpenAI and prepare
             public-facing drafts.
           </label>
-          {["product","opportunity"].includes(kind) && <label className="check wide"><input name="auto_image" type="checkbox" defaultChecked disabled={busy} />{kind==="opportunity" ? "Use a source photograph, search Wikimedia Commons by property name if needed, or prepare a Runway illustration for review (estimated 5 credits per generation)." : "When no source photo is available, generate an illustrative product image with Runway for review (estimated 5 credits)."}</label>}
-          {kind==="opportunity" && <label className="wide">Property image style
+          {["product","opportunity","retail_space"].includes(kind) && <label className="check wide"><input name="auto_image" type="checkbox" defaultChecked disabled={busy} />{kind!=="product" ? "Use a source photograph, search Wikimedia Commons by property name if needed, or prepare a Runway illustration for review (estimated 5 credits per generation)." : "When no source photo is available, generate an illustrative product image with Runway for review (estimated 5 credits)."}</label>}
+          {["opportunity","retail_space"].includes(kind) && <label className="wide">Property image style
             <select name="visual_style" defaultValue="auto" disabled={busy}>
               <option value="auto">Automatic · follow the writing direction</option>
               <option value="photo">Photograph preferred</option>

@@ -1,6 +1,7 @@
 "use client";
 import { suggestedClassifications } from "../../../../lib/classification.mjs";
 import ListingImages from "../../listing-images";
+import {staffPhoto} from "../../../../lib/staff-photo.mjs";
 import ProductImages from "../../product-images";
 import MediaLibrary from "../../media-library";
 import { coordinatesFromText } from "../../../../lib/coordinates.mjs";
@@ -809,7 +810,7 @@ export default function Editor({
             setMessage("Image selected. Save the product draft to retain it.");
           }}
         />
-      ) : ["opportunity", "project"].includes(kind) ? (
+      ) : ["opportunity", "project", "retail_space"].includes(kind) ? (
         <ListingImages
           contentId={item?.id}
           assets={mediaAssets}
@@ -832,13 +833,17 @@ export default function Editor({
           }}
         />
       ) : (
-        <details className="editor-media">
+        <section className="editor-media">
+          {image && <div className="product-current-image">
+            <img src={staffPhoto(image)} alt={imageAlt || "Selected listing image"} />
+            <button type="button" onClick={() => { setImage(""); setImageAlt(""); setDirty(true); }}>Remove selection</button>
+          </div>}
+        <details open={isRetail(kind)}>
           <summary>Choose or upload a source image</summary>
           <MediaLibrary
             assets={mediaAssets}
             defaultPractice={
-              initial.practice ||
-              (kind === "product" ? "horeca" : "real-estate")
+              selectedPractice
             }
             onChoose={(path, alt) => {
               setImage(path);
@@ -848,6 +853,7 @@ export default function Editor({
             }}
           />
         </details>
+        </section>
       )}
       <p role="status" className="portal-message">
         {message}

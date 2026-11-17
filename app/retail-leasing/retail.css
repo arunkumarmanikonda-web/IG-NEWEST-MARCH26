@@ -1,1 +1,12 @@
 .rl-board,.rl-detail,.rl-appoint{max-width:1240px;padding:clamp(28px,5vw,72px) 5vw;margin:auto}.rl-tabs{border-bottom:1px solid #cec9bb;display:flex;gap:clamp(16px,4vw,48px)}.rl-tabs a{padding:.8em 0;text-decoration:none;color:#5e5b51;font-weight:600}.rl-tabs a[aria-current]{border-bottom:3px solid #a78b37;color:#29271f}.rl-board-head,.rl-appoint,.rl-appoint>div{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.rl-board h2,.rl-detail h2,.rl-appoint h2{font:normal clamp(28px,3.5vw,44px)/1.15 var(--serif,Georgia,serif);margin:.85em 0 .4em}.rl-board label,.rl-plans small{display:grid;gap:6px;font-size:.88rem}.rl-board input{padding:.7em;border:1px solid #b9b3a5}.rl-empty,.rl-list article{padding:24px;background:#f6f4ee;margin-top:22px}.rl-empty a,.rl-list a,.rl-detail a,.rl-appoint a{color:#65511e;text-underline-offset:4px}.rl-list,.rl-detail dl,.rl-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:18px}.rl-list article{display:grid;align-content:start;gap:12px}.rl-list h3,.rl-list p,.rl-list small,.rl-detail dd{margin:0}.rl-detail dl{margin:32px 0;padding:24px;background:#f6f4ee}.rl-detail dt,.rl-plans small{color:#686253}.rl-detail dd{margin-top:4px;font-weight:600}.rl-copy{max-width:82ch}.rl-copy p,.rl-list p{text-align:justify;line-height:1.65}.rl-plans a{display:grid;gap:6px;border:1px solid #c8c0ac;padding:18px}.rl-scroll{overflow-x:auto}.rl-scroll table{width:100%;border-collapse:collapse}.rl-scroll th,.rl-scroll td{text-align:left;padding:12px;border-bottom:1px solid #d7d2c5}.rl-appoint{border-top:1px solid #bfb69a}.rl-appoint h2{margin:.3em 0}
+
+/* Keep the full architectural image visible beside the approved mandate brief. */
+.rl-list{grid-template-columns:minmax(0,1fr);gap:0}
+.rl-list article.rl-card-with-image{grid-template-columns:minmax(0,32%) minmax(0,1fr);gap:clamp(20px,3vw,36px);align-items:start}
+.rl-card-image{display:flex;align-items:center;justify-content:center;background:#eeebe1;overflow:hidden;aspect-ratio:4/3;border:1px solid #ded8c8}
+.rl-card-image img{display:block;width:100%;height:100%;object-fit:contain}
+.rl-card-copy{display:grid;gap:14px;min-width:0}
+.rl-card-copy h3{font:normal clamp(25px,2.6vw,34px)/1.2 var(--serif,Georgia,serif)}
+.rl-card-copy h3 a{text-decoration:none}
+.rl-list .eyebrow{text-align:left}
+@media(max-width:700px){.rl-list article.rl-card-with-image{grid-template-columns:minmax(0,1fr)}.rl-list article{padding:18px}.rl-card-image{aspect-ratio:16/10}.rl-card-copy{gap:12px}}
