@@ -31,7 +31,7 @@ export async function POST(request) {
       const {data: record}=await client.from("ig_content").select("id,kind,practice,title,body,summary,public_data").eq("id",workspace.content_id).single();
       if (!record) throw new HttpError("Saved draft unavailable.",409);
       try {
-        if(record.kind!=="opportunity")return privateJson({status:workspace.media_id?"existing":await queueDraftHero(client,record)});
+        if(!["opportunity","retail_space"].includes(record.kind))return privateJson({status:workspace.media_id?"existing":await queueDraftHero(client,record)});
         const style=listingVisualStyle(p.style,p.direction,workspace.creative);
         if(style==="photo" && (workspace.media_id || record.public_data?.image))return privateJson({status:"existing"});
         const reference=workspace.media_id || await propertyReference(client,record);
