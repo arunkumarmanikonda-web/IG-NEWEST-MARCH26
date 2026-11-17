@@ -9,7 +9,9 @@ test('public pages hydrate under CSP and legal pages have canonicals',async({pag
     const nonce=policy.match(/'nonce-([^']+)'/)[1];
     const inline=await page.locator('script:not([src])').evaluateAll(s=>s.map(x=>x.nonce));
     expect(inline.every(n=>n===nonce)).toBe(true);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',new RegExp(path==='/'?'/$':path+'$'));
+    const canonical=new URL(await page.locator('link[rel="canonical"]').getAttribute('href'));
+    expect(canonical.pathname).toBe(path);
+    expect(canonical.protocol).toBe('https:');
   }
   expect(violations).toEqual([]);
 });
