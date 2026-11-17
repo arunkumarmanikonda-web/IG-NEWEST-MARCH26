@@ -22,9 +22,12 @@ for(const path of ['/','/opportunities','/retail-leasing','/horeca','/insights',
   assert.equal(new URL(canonical).origin,base.origin,path+' canonical origin');
   checks.push({path,status:response.status,nonce:true,canonical});
 }
-const page1=await (await get('/api/horeca/catalogue?offset=0')).json();
-const page2=await (await get('/api/horeca/catalogue?offset=24')).json();
-assert.ok(Array.isArray(page1.items)&&page1.items.length<=24);
+const catalogue=await (await get('/api/horeca/catalogue?offset=0')).json();
+const category=Object.entries(catalogue.counts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+assert.ok(category,'Published catalogue category');
+const page1=await (await get('/api/horeca/catalogue?category='+encodeURIComponent(category)+'&offset=0')).json();
+const page2=await (await get('/api/horeca/catalogue?category='+encodeURIComponent(category)+'&offset=24')).json();
+assert.ok(Array.isArray(page1.items)&&page1.items.length>0&&page1.items.length<=24);
 assert.ok(Array.isArray(page2.items)&&page2.items.length<=24);
 assert.equal(page1.total,page2.total);
 assert.ok(page2.items.every(p=>!page1.items.some(q=>q.id===p.id)),'No duplicate pagination');

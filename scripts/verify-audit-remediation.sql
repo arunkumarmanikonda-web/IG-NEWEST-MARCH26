@@ -9,6 +9,12 @@ begin
  assert (select last_success is null from ig_private.worker_health where component='email'),'Wrong worker completed lease';
  perform public.ig_worker_health(secret,jsonb_build_object('action','finish','component','email','lease',lease,'ok',false));
  assert (select failures=1 and ok=false from ig_private.worker_health where component='email');
+ lease=public.ig_worker_health(secret,'{"action":"start","component":"email"}');
+ perform public.ig_worker_health(secret,jsonb_build_object('action','finish','component','email','lease',lease,'ok',true,'idle',true));
+ assert (select failures=1 and ok=false and last_success is null from ig_private.worker_health where component='email'),'Idle queue hid a failure';
+ lease=public.ig_worker_health(secret,'{"action":"start","component":"email"}');
+ perform public.ig_worker_health(secret,jsonb_build_object('action','finish','component','email','lease',lease,'ok',true));
+ assert (select failures=0 and ok=true and last_success is not null from ig_private.worker_health where component='email');
  perform public.ig_gullu_guest(secret,jsonb_build_object('action','start','session_id',sid,'name','Guest Example','email','synthetic@example.invalid','mobile','+919999000000','consent',true));
  perform public.ig_gullu_guest(secret,jsonb_build_object('action','record','session_id',sid,'turn_id',tid,'question','Hi','answer','Hello','sources','[]'::jsonb,'practice_interest','General enquiry','follow_up',false));
  result=public.ig_gullu_session(secret,jsonb_build_object('action','resume','session_id',sid));

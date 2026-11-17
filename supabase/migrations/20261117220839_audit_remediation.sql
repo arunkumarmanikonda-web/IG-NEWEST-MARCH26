@@ -65,9 +65,10 @@ begin
   update ig_private.worker_health set lease=token,started_at=now(),detail='Processing' where component=w.component;
   return token;
  elsif p->>'action'='finish' then
-  update ig_private.worker_health set lease=null,finished_at=now(),ok=(p->>'ok')='true',
-   last_success=case when p->>'ok'='true' then now() else last_success end,
-   failures=case when p->>'ok'='true' then 0 else failures+1 end,detail=left(coalesce(p->>'detail',''),200)
+  update ig_private.worker_health set lease=null,finished_at=now(),ok=case when p->>'idle'='true' then coalesce(ok,true) else (p->>'ok')='true' end,
+   last_success=case when p->>'ok'='true' and coalesce(p->>'idle','false')<>'true' then now() else last_success end,
+   failures=case when p->>'idle'='true' then failures when p->>'ok'='true' then 0 else failures+1 end,
+   detail=case when p->>'idle'='true' then case when ok=false then 'Previous processing failure needs review. No new work due.' else 'Ready. No work due.' end else left(coalesce(p->>'detail',''),200) end
    where component=w.component and lease=(p->>'lease')::uuid;
   return null;
  end if;
@@ -262,3 +263,13 @@ begin
  execute spec;
 end $$;
 notify pgrst,'reload schema';
+
+-- Poll once every ten minutes even when queues are idle so stale monitoring is meaningful.
+do $$
+declare spec text=pg_get_functiondef('ig_private.run_email_worker()'::regprocedure);
+begin
+ if position('if not exists(select 1 from ig_private.intelligence_settings' in spec)=0 then raise exception 'Worker schedule changed';end if;
+ spec=replace(spec,'if not exists(select 1 from ig_private.intelligence_settings',
+ 'if not exists(select 1 from ig_private.worker_health where started_at is null or started_at<now()-interval ''10 minutes'') and not exists(select 1 from ig_private.intelligence_settings');
+ execute spec;
+end $$;
