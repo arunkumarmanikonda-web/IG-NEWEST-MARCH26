@@ -1,5 +1,6 @@
 "use client";
 import { suggestedClassifications } from "../../../../lib/classification.mjs";
+import {horecaCategories,horecaCategory} from "../../../../lib/horeca-categories.mjs";
 import ListingImages from "../../listing-images";
 import {staffPhoto} from "../../../../lib/staff-photo.mjs";
 import ProductImages from "../../product-images";
@@ -606,6 +607,15 @@ export default function Editor({
         ].map(([k, label]) =>
           kind === "product" && k === "image" ? (
             <input key={k} type="hidden" name="image" value={image} />
+          ) : kind === 'product' && k === 'category' ? (
+            <label key={k}>Catalogue category
+              <select name="category" defaultValue={data.category || ''} required>
+                <option value="">Choose a product category</option>
+                {data.category && !horecaCategories.some(c=>c.label===data.category) && <option value={data.category}>{data.category} (filed under {horecaCategory(initial).label})</option>}
+                {horecaCategories.map(c=><option key={c.id} value={c.label}>{c.label}</option>)}
+              </select>
+              <small>The public catalogue groups supplier subcategories automatically. Choose a category here to change the grouping.</small>
+            </label>
           ) : (
             <label key={k}>
               {label}

@@ -34,7 +34,7 @@ export default function TeaserSheet({ item, business, draft = false }) {
           <h1>{t.title}</h1>
         </div>
       </section>
-      {t.illustrative && (
+      {t.illustrative && !product && (
         <p className="teaser-illustration">
           Illustrative AI-generated concept; not documentary evidence of the
           asset or product.
