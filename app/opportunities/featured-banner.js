@@ -81,7 +81,7 @@ function FeaturedCard({ item, lead, preview }) {
   const feature = item.feature;
   const ref = useFeatureImpression(feature.id, !preview);
   const Wrapper = preview ? "div" : Link;
-  const href = "/opportunities/" + item.slug + (feature.id ? "?feature=" + encodeURIComponent(feature.id) : "");
+  const href = (item.href || "/opportunities/" + item.slug) + (feature.id ? "?feature=" + encodeURIComponent(feature.id) : "");
   const image = item.image;
   const imageLabel = image?.startsWith("/images/generated/") ? "AI illustration"
     : /\b(?:sketch|illustration)\b/i.test(item.imageAlt || "") ? "Illustration" : "";
@@ -96,13 +96,14 @@ function FeaturedCard({ item, lead, preview }) {
         {imageLabel && <span className="opportunity-feature-disclosure">{imageLabel}</span>}
       </div>
       <div className="opportunity-feature-copy">
+        {item.listingLabel && <p className="opportunity-feature-type">{item.listingLabel}</p>}
         {item.location && <p className="opportunity-feature-locality">{item.location}</p>}
         <h3>{feature.headline || item.title}</h3>
         {facts.length > 0 && <dl className="opportunity-feature-facts">
           {facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
         </dl>}
         <PropertyTags tags={item.tags} contexts={item.contexts} />
-        <span className="opportunity-feature-cta">View opportunity <Arrow /></span>
+        <span className="opportunity-feature-cta">{item.cta || "View opportunity"} <Arrow /></span>
       </div>
     </Wrapper>
   </article>;

@@ -12,7 +12,7 @@ import { propertyFacts, propertyStatus } from "../lib/property-collection.mjs";
 export default function PropertyCard({ item: x }) {
   const featureId = x.feature?.id;
   const cardRef = useFeatureImpression(featureId);
-  const href = "/opportunities/" + x.slug + (featureId ? "?feature=" + encodeURIComponent(featureId) : "");
+  const href = (x.href || "/opportunities/" + x.slug) + (featureId ? "?feature=" + encodeURIComponent(featureId) : "");
   const facts = propertyFacts(x).filter(([key]) => ["Area", "Keys", "Tenure"].includes(key));
   return (
     <article className="property-card" ref={cardRef}>
@@ -20,7 +20,7 @@ export default function PropertyCard({ item: x }) {
         {x.image ? <Image src={propertyPhotoURL(x.image)} unoptimized={/^\/images\/(generated|library)\//.test(x.image)} alt={x.imageAlt || x.title} fill sizes="(max-width:640px) 90vw, (max-width:1000px) 44vw, 29vw" /> : (
           <div className="property-no-photo"><BrandLogo light /><span>Photography on request</span></div>
         )}
-        <span className="property-image-label">{featureId ? "Featured opportunity" : x.sector}</span>
+        <span className="property-image-label">{x.listingLabel || (featureId ? "Featured opportunity" : x.sector)}</span>
         {x.image?.startsWith("/images/generated/") && <span className="generated-badge">Illustrative AI-generated concept</span>}
       </Link>
       <div className="property-card-copy">
@@ -31,7 +31,7 @@ export default function PropertyCard({ item: x }) {
         {x.description && <p className="property-card-description">{x.description}</p>}
         {!!facts.length && <dl className="property-card-facts">{facts.map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl>}
         <div className="property-card-foot">
-          <div><span>{x.price ? "Indicative price" : "Commercial details"}</span><strong>{x.price || "On request"}</strong></div>
+          <div><span>{x.priceCaption || (x.price ? "Indicative price" : "Commercial details")}</span><strong>{x.price || "On request"}</strong></div>
           <Link href={href} aria-label={"View details for " + x.title}>View details <Arrow /></Link>
         </div>
       </div>

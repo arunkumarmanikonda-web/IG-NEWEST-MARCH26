@@ -1,5 +1,5 @@
 export const positionLabels = {
-  opportunity: ["", "Lead property", "Supporting property 1", "Supporting property 2"],
+  opportunity: ["", "Lead listing", "Supporting listing 1", "Supporting listing 2"],
   product: ["", "First product", "Second product", "Third product"],
 };
 

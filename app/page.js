@@ -13,6 +13,7 @@ import { pageMeta } from "../lib/seo.mjs";
 import { livePractices } from "../lib/website";
 import { insights, opportunities } from "../lib/content.mjs";
 import { published, opportunityCard } from "../lib/cms";
+import {retailPromotionCard} from "../lib/retail-mandates.mjs";
 import { companyContent } from "../lib/editorial";
 import {
   Arrow,
@@ -32,12 +33,13 @@ export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/");
 export default async function Home() {
   const [copy, layout] = await Promise.all([siteSection("home"), siteSection("home-layout")]);
-  const [articles, assets, { people, work }, features, priority] = await Promise.all([
+  const [articles, assets, { people, work }, features, priority, leasing] = await Promise.all([
     published("article"),
     published("opportunity"),
     companyContent(),
     liveFeatures(),
     featuredProducts(),
+    published(["retail_space","retail_requirement"]),
   ]);
   const posts =
     articles === null
@@ -48,7 +50,8 @@ export default async function Home() {
           category: x.public_data.sector || "INDIA GULLY PERSPECTIVES",
         }));
   const cards = assets === null ? opportunities : assets.map(row => opportunityCard(row, features.find(f => f.content_id === row.id)));
-  const selected = cards.filter(card => card.feature);
+  const leaseCards=(leasing || []).map(row=>retailPromotionCard(row,features.find(f=>f.content_id===row.id)));
+  const selected = [...cards,...leaseCards].filter(card => card.feature);
   const listings = cards.slice(0, 3);
   return (
     <main id="main">
@@ -111,16 +114,17 @@ export default async function Home() {
         className="section-pad home-property-collection"
         id="real-estate-listings"
       >
-        {assets && <LiveListings revision={listingRevision(assets, features)} />}
+        {assets && <LiveListings revision={listingRevision([...assets,...(leasing || [])], features)} endpoint="/api/listings/revision?scope=home" />}
         <div className="section-heading">
           <div>
             <Eyebrow>{copy["real-estate-is-at-our-core"]}</Eyebrow>
-            <h2>{selected.length ? "Featured Opportunities" : copy["real-estate-listings-3"]}</h2>
+            <h2>{selected.length ? "Featured Opportunities & Leasing" : copy["real-estate-listings-3"]}</h2>
           </div>
           <div className="collection-heading-copy">
             {!selected.length && <p>{copy["explore-commercial-properties-hospitality-assets-and-development"]}</p>}
             <Link className="button opportunity-browse-cta" href="/opportunities">{copy["view-all-properties"] === "View all properties" ? "View all opportunities" : copy["view-all-properties"]} <Arrow />
             </Link>
+            <Link className="text-link" href="/retail-leasing">View all leasing mandates <Arrow /></Link>
           </div>
         </div>
         {selected.length ? <FeaturedBanner items={selected} /> : <div className="home-property-grid">
@@ -128,7 +132,7 @@ export default async function Home() {
             <PropertyCard key={x.slug} item={x} />
           ))}
         </div>}
-        {!listings.length && (
+        {!listings.length && !selected.length && (
           <div className="listing-enquiry">
             <h3>{copy["your-next-property-starts-with-a-brief"]}</h3>
             <p>{copy["tell-us-your-location-asset-class-and"]}</p>
@@ -139,6 +143,14 @@ export default async function Home() {
             </Link>
           </div>
         )}
+        {!!leaseCards.length && <div className={"home-leasing-collection home-leasing-count-"+Math.min(leaseCards.length,3)} id="leasing-mandates">
+          <div className="section-heading"><div><Eyebrow>Retail &amp; leasing</Eyebrow><h2>Spaces to lease. Brands to grow.</h2></div>
+            <div className="collection-heading-copy"><p>Explore promoter spaces and brand expansion briefs managed by India Gully.</p>
+              <Link className="button opportunity-browse-cta" href="/retail-leasing">View all leasing mandates <Arrow /></Link></div></div>
+          <div className="home-property-grid">{leaseCards.slice(0,3).map(item=><PropertyCard key={item.slug} item={{...item,feature:null}} />)}</div>
+          <div className="collection-closing"><Link className="text-link" href="/retail-leasing?side=spaces#mandates">Explore spaces for lease <Arrow /></Link>
+            <Link className="text-link" href="/retail-leasing?side=requirements#mandates">Explore brand requirements <Arrow /></Link></div>
+        </div>}
         <div className="collection-closing">
           <p>{copy["portfolio-references-are-clearly-identified-current-availability"]}</p>
           <Link

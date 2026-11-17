@@ -6,12 +6,12 @@ import { publishedWithTags } from "../../../../lib/cms";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request) {
   const headers = { "Cache-Control": "no-store" };
   try {
     const client = anonymousServerClient();
     const [{ data, error }, features] = await Promise.all([
-      readRegister(() => publishedWithTags(client, "opportunity", "id,version,published_at")),
+      readRegister(() => publishedWithTags(client, new URL(request.url).searchParams.get("scope")==="home"?["opportunity","retail_space","retail_requirement"]:"opportunity", "id,version,published_at")),
       liveFeatures(),
     ]);
     if (!error) return Response.json({ revision: listingRevision(data, features) }, { headers });

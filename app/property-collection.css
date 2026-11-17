@@ -308,3 +308,8 @@
   .home-property-collection .opportunity-browse-cta,
   .two-paths .catalogue-browse-cta { width: 100%; }
 }
+
+.home-leasing-collection{margin-top:64px;padding-top:48px;border-top:1px solid #d7d4c8}
+.home-leasing-collection .home-property-grid{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));max-width:100%}
+.home-leasing-collection .property-card{max-width:480px}
+@media(min-width:761px){.home-leasing-count-1 .property-card{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);max-width:none}.home-leasing-count-1 .property-card-image{aspect-ratio:auto;min-height:360px}.home-leasing-count-1 .property-card-copy{padding:30px 32px 0}}
