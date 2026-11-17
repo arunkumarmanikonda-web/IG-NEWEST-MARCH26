@@ -38,3 +38,11 @@ Manufacturer codes are separate from internal SKUs. An existing product with the
 133 Node tests and the Next.js production build pass. Regression tests include actual PDF rendering, complete image extraction, correction of swapped vision image proposals using printed codes, and ambiguous-layout preservation. Browser/database checks confirmed automatic SKUs, manual override, case-insensitive duplicate rejection, retention of an existing SKU when cleared, blank-page exclusion, completed-page retry without duplicate products, and private draft/source storage.
 
 The final live two-page fixture produced two products with the correct complete plate and lamp images and no products on the blank page. All eight synthetic products created while checking earlier and final revisions are archived. Source catalogues and images remain private test evidence; none was published. The separate rollback-only SQL suite at scripts/verify-brand-catalogue.sql is prepared but did not run because its confirmation expired; it is not counted as passed acceptance.
+
+18 November 2026 image restoration: the original supplier crops for Ankur XR Track,
+Deep Micro, Pinhole and the Ariane Juliet saucer were restored using the built-in
+image editor. The prompt preserved the source product shape, construction, colour
+and arrangement while cleaning scan blur and the background. The existing `-hd`
+web assets were replaced; original supplier `.webp` files remain unchanged. These
+are restored illustrations, not new manufacturer photographs. Other legacy assets
+still require better source photographs or individual visual restoration.
