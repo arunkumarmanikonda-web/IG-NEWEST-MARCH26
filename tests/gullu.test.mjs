@@ -75,11 +75,25 @@ test("Arun’s Hinglish greeting, assent, unfinished message and pause stay conv
  assert.equal(acceptsFollowup("yes",{answer:"Would you like to see hotels?"}),false);
  assert.equal(conversationLanguage("who is your managing director",history,"Hinglish"),"Hinglish");
  const md=directAnswer("WHO IS YOU MANAGING DIRECTOR",[{kind:"person",title:"Arun Manikonda",href:"/leadership/arun-manikonda",chunks:["Founder and Managing Director."]}],history,"Hinglish");
- assert.equal(md.answer,"Arun Manikonda India Gully ke Managing Director hain.");
+ assert.equal(md.answer,"Arun Manikonda hamare Managing Director hain.");
 });
 
 test("unrecognised conversational phrasing can be answered without fabricating a public source",async()=>{
  const reply=await answerFromPassages({question:"Just popped in to say hello, dost!",history:[],language:"Hinglish",candidates:[],config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
  fetcher:async()=>Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"conversation",paragraphs:[{text:"Arre, achha laga! Aaj ka din kaisa ja raha hai?",ids:[]}]})}]}]})});
  assert.match(reply.answer,/achha laga/);assert.deepEqual(reply.sources,[]);
+});
+
+test("fundraising enquiries use the firm's voice and preserve the lender's role",async()=>{
+ const question="i am looking to raise funds debt / equity can india gully help me";
+ const documents=publicDocuments({practices:[{slug:"debt-special-situations",title:"Debt & Special Situations",
+   intro:"India Gully helps clients assess debt and equity options. The lender decides whether to approve funding."}]});
+ const candidates=rankPassages(documents,question,[],"/");
+ assert.equal(candidates[0].interest,"Debt & Special Situations");
+ const answer="Yes, we can help you assess debt and equity options. The lender makes its own approval decision.";
+ const reply=await answerFromPassages({question,history:[],candidates,config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
+  fetcher:async(_,req)=>{const body=JSON.parse(req.body);assert.equal(JSON.parse(body.input).question,question);
+    assert.match(body.instructions,/we, us and our for India Gully/);assert.match(body.instructions,/attributing its decisions and services to it/);
+    return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"grounded",paragraphs:[{text:answer,ids:[0]}]})}]}]});}});
+ assert.equal(reply.answer,answer);assert.equal(reply.sources[0].href,"/practices/debt-special-situations");
 });
