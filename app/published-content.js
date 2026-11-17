@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHero, ContactBand, LinkButton } from "./components";
-import {catalogueImageCredit,catalogueSourcePhoto} from "../lib/product-images.mjs";
+import {productImageAlt} from "../lib/product-images.mjs";
+import {horecaCategory,categoryHref} from "../lib/horeca-categories.mjs";
 import AdviserContacts from "./adviser-contacts";
 import SourcedArticle from "./insights/sourced-article";
 import { PerspectiveDate } from "./insights/perspective-date";
@@ -10,19 +11,19 @@ export default function PublishedContent({ item }) {
   const sourcedArticle = item.kind === "article" && d.engine === "perspectives" && Array.isArray(d.sources)
     && Array.isArray(d.sections) && d.sections.length > 0 && d.sections.every(section =>
       typeof section?.heading === "string" && typeof section?.text === "string" && Array.isArray(section.sourceIndexes));
-  const credit=item.kind==="product" ? catalogueImageCredit(d) : "";
-  const source=credit && catalogueSourcePhoto(d);
+  const category=item.kind==='product'?horecaCategory(item):null;
   return (
     <main id="main" className={item.kind === "product" ? "catalogue-product-detail" : undefined}>
       <PageHero
-        eyebrow={[d.sector || item.kind, d.city, d.region]
+        eyebrow={[category ? 'HORECA / '+category.label : d.sector || item.kind, d.city, d.region]
           .filter(Boolean)
           .join(" / ")}
         title={item.title}
         description={item.summary}
         image={d.image || undefined}
-        alt={d.image_alt || item.title}
+        alt={category ? productImageAlt(item) : d.image_alt || item.title}
       >
+        {category&&<LinkButton href={categoryHref(category.id)}>Explore {category.label.toLowerCase()}</LinkButton>}
         {item.kind === "opportunity" && (
           <LinkButton
             href={"/account/nda?opportunity=" + encodeURIComponent(item.slug)}
@@ -37,7 +38,6 @@ export default function PublishedContent({ item }) {
           <PerspectiveDate value={item.published_at} />
           {sourcedArticle && <span>AI-assisted research</span>}
         </div>}
-        {credit && <p className="fine-note">{credit}. {source && <a className="text-link" href={source}>View the original supplier photograph</a>}</p>}
         {item.kind!=="product" && d.image?.startsWith("/images/generated/") && <p className="fine-note">Illustrative AI-generated concept. This is not a photograph of the listed property, product or completed project.</p>}
         {item.kind==="opportunity"&&<p><Link className="text-link" href={"/opportunities/"+item.slug+"/brief.pdf"} prefetch={false} target="_blank">Download property brief →</Link></p>}
         {!!item.tags?.length && (

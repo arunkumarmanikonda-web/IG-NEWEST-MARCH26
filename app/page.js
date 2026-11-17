@@ -244,7 +244,7 @@ export default async function Home() {
             <h2>{copy["every-detail-contributes"]}<br />{copy["to-the-experience"]}</h2>
             <p>{copy["tableware-linen-equipment-housekeeping-and-operating-supplies"]}</p>
           </>}
-          <Link className="button catalogue-browse-cta" href="/horeca#catalogue">View all HORECA products <Arrow /></Link>
+          <Link className="button catalogue-browse-cta" href="/horeca#catalogue">Browse HORECA categories <Arrow /></Link>
         </article>
         <article>
           <Eyebrow>{copy["complimentary-valuation-studio"]}</Eyebrow>

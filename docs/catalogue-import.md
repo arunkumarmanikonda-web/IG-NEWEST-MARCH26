@@ -1,5 +1,25 @@
 # Brand catalogue import
 
+## Public browsing standard
+
+HORECA opens with the category directory, not a mixed product feed. Each published
+SKU is assigned to one category by `lib/horeca-categories.mjs`; recognised supplier
+subcategories (such as downlights and track lights) resolve to the same top-level
+category. An explicit category selected in the product editor takes precedence.
+Category selection is linkable with `?category=lighting#catalogue`. Search supports
+the India Gully SKU and manufacturer reference, with brand and product-type filters.
+Featured positions apply within the selected category and filters. Categories with
+no published products offer procurement enquiries, without invented inventory.
+
+Customer-facing catalogue cards, featured products, product pages and product
+briefs do not show AI-generation or image-enhancement captions. Accessible image
+descriptions describe the product. Keep the original source and processing history
+in the staff image studio. Photos must still match the actual model and finish;
+do not replace a poor photograph with an unrelated product. Product cards contain
+the entire image at its natural aspect ratio and do not enlarge small source files.
+Prefer a sharp matching supplier photograph; missing images have a neutral enquiry
+placeholder. Image cleanup must preserve the physical product's features.
+
 ## Admin workflow
 1. Open HORECA catalogue, then Upload brand catalogue.
 2. Select a brand PDF and enter the brand name and the source/image permission reference. Confirm authority to process the document and use its imagery.

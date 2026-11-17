@@ -45,7 +45,10 @@ draft, sends it to a client or grants data-room access.
 - Drafts remain visibly marked. Never substitute an unrelated asset photograph
   or invent facts to fill space. When no approved photo is supplied, the current
   renderer uses a typographic cover; an approved image is needed for a photo hero.
-  Existing illustrative-image labelling must remain accurate.
+  Property illustrative-image labelling must remain accurate. Per the owner's
+  18 November 2026 direction, HORECA product briefs omit image-processing captions;
+  source and generation history remain available to staff. Product identity checks
+  and preservation of actual specifications still apply.
 - Property intake first uses source material. If it needs another photograph,
   search by property identity for a matching public-domain or CC0 photograph
   and retain its source and licence for review. For an architectural sketch,
