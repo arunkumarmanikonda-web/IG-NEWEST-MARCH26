@@ -3,7 +3,7 @@ import {published} from "../../lib/cms";
 import {PageHero,LinkButton} from "../components";
 import MandateBoard from "./board";
 import "./retail.css";
-export const metadata={title:"Retail leasing mandates | India Gully",description:"Explore promoter spaces, unit availability and published brand expansion requirements."};
+export const metadata={title:"Retail leasing mandates",description:"Explore promoter spaces, unit availability and published brand expansion requirements."};
 export const dynamic="force-dynamic";
 export default async function RetailLeasing({searchParams}){
  const side=(await searchParams)?.side==="requirements"?"retail_requirement":"retail_space";
