@@ -36,6 +36,7 @@ export default async function AccountPage({ searchParams }) {
     policiesAccepted && !profile.must_change_password
       ? await client.rpc("ig_room_dashboard", { p: {} })
       : { data: [] };
+  const {data:mandates,error:mandateError}=policiesAccepted && !profile.must_change_password ? await client.rpc("ig_retail_dashboard") : {};
   const preferences = policiesAccepted ? await client.from("ig_consents").select("granted,practices")
     .eq("user_id",user.id).eq("purpose","personalisation").order("created_at",{ascending:false}).order("id",{ascending:false}).limit(1).maybeSingle() : {};
   const updates = preferences.data?.granted ? await recentUpdates(client,preferences.data.practices || []) : [];
@@ -43,6 +44,8 @@ export default async function AccountPage({ searchParams }) {
     <main id="main" className="auth-page account-dashboard">
       <div>
         <Account returnTo={returnTo} profile={profile} email={user.email} policyVersion={policyVersion} policiesAccepted={policiesAccepted} pendingInvitation={signInStatus?.pending_invitation} />
+        {mandateError && <p role="alert">Your retail mandates could not be loaded. Refresh to retry.</p>}
+        {!!mandates?.length && <section className="shared-rooms"><h2>Your retail mandates</h2>{mandates.map(m=><article className="workspace-card" key={m.room_id}><h3>{m.title}</h3><p>{m.side}</p>{m.room_open?<Link href={"/account/data-rooms/"+m.room_id}>Open mandate room →</Link>:<p>Your mandate is on your dashboard. The team controls document access.</p>}</article>)}</section>}
         {updates.length > 0 && <section className="shared-rooms">
           <h2>Latest from your selected practices</h2>
           {updates.slice(0,6).map(item=><Link key={item.id} className="workspace-card" href={item.path}><strong>{item.title}</strong><p>{item.summary}</p></Link>)}

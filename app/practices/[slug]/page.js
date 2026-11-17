@@ -32,6 +32,7 @@ export default async function Practice({ params }) {
         description={p.intro}
         image={p.image}
       >
+        {p.slug==="retail-leasing" && <LinkButton href="/retail-leasing">Explore retail mandates</LinkButton>}
         {p.slug === "real-estate" && (
           <LinkButton href="/opportunities">{copy["browse-real-estate-listings"]}</LinkButton>
         )}

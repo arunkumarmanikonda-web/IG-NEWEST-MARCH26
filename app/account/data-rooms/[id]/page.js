@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { accountContext } from "../../../../lib/supabase/server";
+import ClientUpload from "./client-upload";
 import RoomViewer from "./viewer";
 import "../../../portal.css";
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export default async function Page({ params }) {
   if (profile.must_change_password) redirect("/account/security");
   const { data, error } = await client.rpc("ig_room_dashboard", { p: { id } });
   if (error || !data?.length) notFound();
+  const {data:canUpload}=await client.rpc("ig_retail_can_upload",{room:id});
   return (
     <main id="main" className="auth-page">
       <div className="data-room">
@@ -30,6 +32,7 @@ export default async function Page({ params }) {
             : "your project NDA"}
           . Original downloads are available only where explicitly permitted.
         </p>
+        {canUpload && <ClientUpload roomId={id}/>}
         <RoomViewer room={data[0]} email={user.email} />
       </div>
     </main>

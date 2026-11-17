@@ -18,9 +18,9 @@ export async function POST(request) {
       !profile ||
       profile.status !== "active" ||
       profile.must_change_password ||
-      (!isStaff(profile) || !staffVerified)
+      (isStaff(profile) && !staffVerified)
     )
-      throw new HttpError("Administrator sign-in required", 403);
+      throw new HttpError("Verified sign-in required", 403);
     const res = await roomBroker(client, p);
     return privateJson(await res.json());
   } catch (e) {

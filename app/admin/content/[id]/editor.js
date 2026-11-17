@@ -10,7 +10,10 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../../../account/profile";
+import RetailFields from "../../retail-fields";
+import {isRetail,retailKinds,retailFields} from "../../../../lib/retail-mandates.mjs";
 const kinds = [
+  ...Object.keys(retailKinds),
   "page",
   "practice",
   "opportunity",
@@ -48,7 +51,7 @@ export default function Editor({
   const data = initial.public_data || {};
   const [selectedPractice, setSelectedPractice] = useState(
     initial.practice ||
-      (kind === "product"
+      (isRetail(kind) ? "retail-leasing" : kind === "product"
         ? "horeca"
         : kind === "opportunity"
           ? "real-estate"
@@ -73,7 +76,7 @@ export default function Editor({
           ? t.dimension !== "product-category"
           : t.dimension === "practice"),
   );
-  const section =
+  const section = isRetail(kind) ? "retail" :
     kind === "opportunity"
       ? "listings"
       : kind === "product"
@@ -133,6 +136,10 @@ export default function Editor({
     ].forEach((k) => {
       if (f.get(k)) public_data[k] = f.get(k);
     });
+    if (isRetail(kind)) {
+      for (const k of Object.keys(retailFields[kind])) if(f.get(k)) public_data[k]=f.get(k);
+      if(kind==="retail_space"){public_data.units=JSON.parse(f.get("units") || "[]");public_data.plans=JSON.parse(f.get("plans") || "[]");}
+    }
     public_data.location_reviewed = f.get("location_reviewed") === "on";
     public_data.confidential = f.get("confidential") === "on";
     public_data.image_identity_reviewed =
@@ -141,7 +148,7 @@ export default function Editor({
       id: item?.id,
       version: item?.version,
       kind: item?.kind || f.get("kind"),
-      practice: f.get("practice"),
+      practice: isRetail(kind) ? "retail-leasing" : f.get("practice"),
       slug: f.get("slug"),
       title: f.get("title"),
       summary: f.get("summary"),
@@ -207,15 +214,15 @@ export default function Editor({
       {imageState === "review" && <p role="status">Draft saved. Automatic image generation needs attention. Open the image studio below to retry.</p>}
       {item && (
         <div className="workspace-actions">
-          <Link
+          {!isRetail(kind) && <Link
             className="module-link"
             href={"/admin/content/" + item.id + "/teaser"}
           >
             Generate branded PDF brief ↗
-          </Link>
+          </Link>}
           <Link
             className="module-link"
-            href={"/admin/data-rooms?content=" + item.id + "#room-access"}
+            href={isRetail(kind) ? "#mandate-clients" : "/admin/data-rooms?content=" + item.id + "#room-access"}
           >
             Data room & access ↗
           </Link>
@@ -447,7 +454,8 @@ export default function Editor({
           Responsible practice
           <select
             name="practice"
-            value={selectedPractice}
+            value={isRetail(kind) ? "retail-leasing" : selectedPractice}
+            disabled={isRetail(kind)}
             onChange={(e) => setSelectedPractice(e.target.value)}
           >
             {practiceOptions.map(([key, label]) => (
@@ -466,7 +474,7 @@ export default function Editor({
             disabled={!!item}
           >
             {kinds.map((x) => (
-              <option key={x}>{x}</option>
+              <option key={x} value={x}>{retailKinds[x] || x}</option>
             ))}
           </select>
         </label>
@@ -523,6 +531,7 @@ export default function Editor({
             ? "Product details become public only after publication. Verify the brand, manufacturer code, specifications and image match against your source."
             : "These fields are public when published. Do not enter exact addresses, personal contacts or restricted financial documents. Confidential listings need an opaque reference, a non-identifying title and approved imagery."}
         </p>
+        {isRetail(kind) && <RetailFields key={kind} kind={kind} record={item} data={data} sources={roomFiles || []} dirty={()=>setDirty(true)}/>}
         {kind === "product" && (
           <div className="sku-control wide">
             <label className="check">

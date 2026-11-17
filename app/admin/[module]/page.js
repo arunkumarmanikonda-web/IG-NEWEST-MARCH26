@@ -80,10 +80,10 @@ export default async function Module({ params, searchParams }) {
   }
   if (module === "intake") return <IntakeStudio />;
   if (
-    ["cms", "listings", "catalogue", "projects", "content"].includes(module)
+    ["cms", "listings", "retail", "catalogue", "projects", "content"].includes(module)
   ) {
     const kinds = {
-      listings: ["opportunity"], catalogue: ["product"], projects: ["project"],
+      retail: ["retail_space","retail_requirement"], listings: ["opportunity"], catalogue: ["product"], projects: ["project"],
       cms: ["page", "practice", "article", "person", "faq"],
     };
     const register = module === "content" ? "cms" : module;
@@ -230,14 +230,18 @@ export default async function Module({ params, searchParams }) {
         ? readRegister(() => client.from(t).select("*"), null, ["grant_id", "file_id"])
         : readRegister(() => client.from(t).select("*"))),
     );
-    const { data: opportunities, error } = await readRegister(() => client.from("ig_content").select("id,title,kind,slug").is("deleted_at",null));
-    if (error || results.some((r) => r.error))
+    const [{data:opportunities,error},{data:retailRooms,error:retailError}]=await Promise.all([
+      readRegister(()=>client.from("ig_content").select("id,title,kind,slug").is("deleted_at",null)),
+      readRegister(()=>client.from("ig_retail_accounts").select("content_id,engagement_id"),null,["content_id"])
+    ]);
+    if (error || retailError || results.some((r) => r.error))
       return (
         <p role="alert">Data room administration is temporarily unavailable.</p>
       );
     return (
       <RoomsManager
         key={roomSearch?.content || roomSearch?.room || "rooms"}
+        retailAccounts={retailRooms || []}
         rooms={results[0].data}
         files={results[1].data}
         folders={results[2].data}

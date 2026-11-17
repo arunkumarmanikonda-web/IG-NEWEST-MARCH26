@@ -4,7 +4,7 @@ import AdvertisingEvent from "../advertising-event";
 import Link from "next/link";
 import { contact } from "../../lib/content.mjs";
 import { Arrow } from "../components";
-export default function Enquiry({ initialInterest, referral = null, submitRequest = fetch }) {
+export default function Enquiry({ initialInterest, initialMessage="", referral = null, submitRequest = fetch }) {
   const [status, setStatus] = useState(""),
     [busy, setBusy] = useState(false),
     [saved, setSaved] = useState(null);
@@ -190,7 +190,7 @@ export default function Enquiry({ initialInterest, referral = null, submitReques
         <label className="full">
           A short brief
           <textarea
-            name="message"
+            name="message" defaultValue={initialMessage}
             required
             minLength={10}
             maxLength={1500}
