@@ -23,8 +23,8 @@
 .sku-results-summary p{margin:0}.sku-results-summary span{font-size:11px;letter-spacing:.04em}
 .sku-grid{gap:24px;grid-template-columns:repeat(3,minmax(0,1fr))}
 .sku-grid article{display:flex;flex-direction:column;overflow:hidden}
-.sku-grid .sku-photo{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden;background:#fff;border-bottom:1px solid #ecece7;padding:24px;box-sizing:border-box}
-.sku-grid .sku-photo img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;padding:0;background:white;mix-blend-mode:multiply}
+.sku-grid .sku-photo{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden;background:#fff;border-bottom:1px solid #ecece7;padding:24px;box-sizing:border-box}
+.sku-grid .sku-photo img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:block;max-width:calc(100% - 48px);max-height:calc(100% - 48px);width:auto;height:auto;object-fit:contain;padding:0;background:white;mix-blend-mode:multiply}
 .sku-photo-empty{display:flex;flex-direction:column;align-items:center;gap:20px;color:#8c856a;font-size:12px}
 .sku-grid .sku-card-content{padding:24px;display:flex;flex-direction:column;flex:1}
 .sku-grid .sku-brand{display:flex;justify-content:space-between;gap:10px;margin:0 0 9px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#766b44}
@@ -38,6 +38,8 @@
 .sku-grid .catalogue-links{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:20px;border-top:1px solid #e3e3dc;font-size:11px}
 .sku-grid .catalogue-links button{cursor:pointer;padding:11px 12px;min-height:42px;font-size:11px}
 .sku-grid .catalogue-links a{text-decoration:none}
+.horeca-catalogue .catalogue-links a,.horeca-practice-note a{display:inline-flex;align-items:center;gap:8px}
+.horeca-category-nav svg,.catalogue-links svg,.horeca-practice-note svg{width:14px;height:14px;flex-shrink:0;vertical-align:middle}
 .sku-basket-notice{padding:16px 20px;border-left:3px solid #8f8355;background:#efeee5;font-size:13px}
 .sku-basket-notice a{margin-left:12px}
 .sku-empty{padding:50px 24px;text-align:center;border:1px solid #deded5;background:white}

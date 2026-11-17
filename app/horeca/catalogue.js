@@ -5,6 +5,7 @@ import {basketKey,normaliseBasket,addProduct} from '../../lib/procurement.mjs';
 import {catalogueResults} from '../../lib/catalogue-results.mjs';
 import {categoryDirectory,categoryHref,horecaCategories,horecaCategory,productType} from '../../lib/horeca-categories.mjs';
 import CategoryIcon from './category-icon';
+import {Arrow} from '../components';
 import './priority-products.css';
 import './catalogue.css';
 
@@ -39,9 +40,9 @@ export default function Catalogue({products,priorities,initialCategory=''}){
       <label className="catalogue-search">{selected?'Search '+selected.label.toLowerCase():'Find a specific SKU or product'}<input type="search" value={query} onChange={e=>{setQuery(e.target.value);setBrand('');setType('');setLimit(pageSize);}} placeholder="Product, SKU, brand or manufacturer code"/></label>
     </div>
     {!browsing?<div className="horeca-category-directory" aria-label="HORECA product categories">{directory.map(c=><Link className="horeca-category-tile" key={c.id} href={categoryHref(c.id)}>
-      <div className="category-tile-top"><CategoryIcon id={c.id}/><span className="category-arrow" aria-hidden="true">↗</span></div><h3>{c.label}</h3><p>{c.description}</p><span className="category-count">{c.count?c.count+' published SKUs':'Sourcing on request'}</span>
+      <div className="category-tile-top"><CategoryIcon id={c.id}/><span className="category-arrow" aria-hidden="true"><Arrow/></span></div><h3>{c.label}</h3><p>{c.description}</p><span className="category-count">{c.count?c.count+' published SKUs':'Sourcing on request'}</span>
     </Link>)}</div>:<>
-      <nav className="horeca-category-nav" aria-label="Filter product category">{directory.map(c=><Link key={c.id} href={categoryHref(c.id)} aria-current={c.id===category?'page':undefined}>{c.label}<span>{c.count||'↗'}</span></Link>)}</nav>
+      <nav className="horeca-category-nav" aria-label="Filter product category">{directory.map(c=><Link key={c.id} href={categoryHref(c.id)} aria-current={c.id===category?'page':undefined}>{c.label}<span>{c.count||<Arrow/>}</span></Link>)}</nav>
       <div className="sku-filter-bar"><label>Brand<select value={brand} onChange={e=>{setBrand(e.target.value);setType('');setLimit(pageSize);}}><option value="">All brands</option>{brands.map(b=><option key={b}>{b}</option>)}</select></label>
         <label>Product type<select value={type} onChange={e=>{setType(e.target.value);setLimit(pageSize);}}><option value="">All types</option>{types.map(t=><option key={t}>{t}</option>)}</select></label>
         <label>Sort SKUs<select value={sort} onChange={e=>{setSort(e.target.value);setLimit(pageSize);}}><option value="name">Product name A–Z</option><option value="priority">Featured first</option><option value="newest">Newest published</option></select></label>
@@ -53,11 +54,11 @@ export default function Catalogue({products,priorities,initialCategory=''}){
         <ProductPhoto key={d.image} product={p}/><div className="sku-card-content"><p className="sku-brand">{d.brand||horecaCategory(p).label}{featuredIds.has(p.id)&&<span>Featured</span>}</p><h3><Link href={href}>{p.title}</Link></h3>
           <dl className="sku-card-facts">{[['SKU',d.sku],['Model',d.reference],['Unit',d.uom],['Pack',d.pack_size]].filter(([,v])=>v).map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
           <p className="sku-description">{p.summary}</p>{d.price_label&&<p className="sku-price">{d.price_label}</p>}
-          <div className="catalogue-links"><Link href={href}>View specification ↗</Link><button type="button" onClick={()=>add(p)}>Add to quotation</button></div>
+          <div className="catalogue-links"><Link href={href}>View specification <Arrow/></Link><button type="button" onClick={()=>add(p)}>Add to quotation</button></div>
         </div></article>;})}</div>
       {limit<results.length&&<button type="button" className="button catalogue-more" onClick={()=>setLimit(limit+pageSize)}>Show more SKUs ({results.length-limit})</button>}
       {!results.length&&<div className="sku-empty"><CategoryIcon id={category}/><h3>{!query&&!brand&&!type?'Let’s source your '+(selected?.label.toLowerCase()||'requirement')+'.':'No matching SKUs.'}</h3><p>{!query&&!brand&&!type?'Share the specification, quantities and delivery location. Our HORECA team will prepare the options.':'Try another product name or clear your filters.'}</p><Link className="button" href={'/contact?interest='+encodeURIComponent('HORECA: '+(selected?.label||query||'Procurement'))}>Discuss this requirement ↗</Link></div>}
     </>}
-    <div className="horeca-practice-note"><div className="eyebrow">MORE THAN A PRODUCT CATALOGUE</div><p>India Gully’s HORECA practice connects specification planning, sourcing, vendor comparison and delivery coordination.</p><Link href="/contact?interest=HORECA%20procurement">Plan a complete procurement brief ↗</Link></div>
+    <div className="horeca-practice-note"><div className="eyebrow">MORE THAN A PRODUCT CATALOGUE</div><p>India Gully’s HORECA practice connects specification planning, sourcing, vendor comparison and delivery coordination.</p><Link href="/contact?interest=HORECA%20procurement">Plan a complete procurement brief <Arrow/></Link></div>
   </section>;
 }
