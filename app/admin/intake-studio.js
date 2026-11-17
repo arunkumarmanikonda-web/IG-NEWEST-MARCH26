@@ -10,7 +10,9 @@ import {
 } from "../../lib/content-intake-upload.mjs";
 import { firstIntakeImage, processIntakeDraft } from "../../lib/intake-process.mjs";
 import { validateSourceSelection } from "../../lib/intake-source-spec.mjs";
+import {retailKinds,isRetail} from "../../lib/retail-mandates.mjs";
 const kinds = [
+  ...Object.entries(retailKinds),
   ["opportunity", "Real estate opportunity"],
   ["product", "HORECA product"],
   ["project", "Project showcase"],
@@ -21,7 +23,7 @@ const kinds = [
   ["faq", "FAQ"],
 ];
 const defaultPractice = (kind) =>
-  kind === "product"
+  isRetail(kind) ? "retail-leasing" : kind === "product"
     ? "horeca"
     : kind === "opportunity"
       ? "real-estate"
@@ -136,7 +138,7 @@ export default function IntakeStudio({
       // Extracted imagery remains private until an administrator reviews its identity and rights.
       let hasImage = Boolean(saved.media_id);
       let imageState = "";
-      if (!hasImage && (result.candidates?.length || result.sections?.length)) {
+      if (!isRetail(kind) && !hasImage && (result.candidates?.length || result.sections?.length)) {
         setMessage("Draft saved. Checking the source for a photograph…");
         try {
           const candidate = result.candidates?.[0] || await firstIntakeImage(input, result.sections);
@@ -252,7 +254,7 @@ export default function IntakeStudio({
             Responsible practice
             <select
               value={practice}
-              disabled={busy || !!workspace}
+              disabled={busy || !!workspace || isRetail(kind)}
               onChange={(e) => setPractice(e.target.value)}
             >
               {practiceOptions.map(([id, label]) => (

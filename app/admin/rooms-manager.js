@@ -24,6 +24,7 @@ export default function RoomsManager({
   opportunities,
   engagements = [],
   contacts = [],
+  retailAccounts = [],
   initialRoom,
   initialContent,
 }) {
@@ -46,6 +47,7 @@ export default function RoomsManager({
     roomFiles = files.filter((x) => x.room_id === selected && !x.preview_for),
     roomGrants = grants.filter((x) => x.room_id === selected),
     roomFolders = folders.filter((x) => x.room_id === selected);
+  const retailAccount = retailAccounts.find(a=>a.engagement_id===room?.engagement_id);
   const engagement = engagements.find((e) => e.id === room?.engagement_id);
   const content = opportunities.find((o) => o.id === room?.content_id);
   const pendingContent = opportunities.find((o) => o.id === initialContent);
@@ -355,6 +357,7 @@ export default function RoomsManager({
               </p>
             )}
           </section>
+            {retailAccount && <section className="workspace-card"><h3>Retail mandate access</h3><p>Manage dashboard access, shared-room access and upload rights for both parties.</p><a className="button" href={"/admin/content/"+retailAccount.content_id+"#mandate-clients"}>Manage mandate contacts →</a></section>}
           {(engagement || ["opportunity","project"].includes(content?.kind)) && (
             <RoomSharing key={room.id} room={room} engagement={engagement} grants={roomGrants}
               contacts={contacts} requests={requests} />

@@ -58,5 +58,125 @@
     "site": "https://www.goodearth.in",
     "logo": "/partners/retail/good-earth.webp",
     "category": "Luxury"
+  },
+  {
+    "name": "Third Wave Coffee",
+    "site": "https://thirdwavecoffee.in/",
+    "logo": "/partners/retail/third-wave.webp",
+    "category": "Food & beverage"
+  },
+  {
+    "name": "Blue Tokai Coffee Roasters",
+    "site": "https://bluetokaicoffee.com",
+    "logo": "/partners/retail/blue-tokai.webp",
+    "category": "Food & beverage"
+  },
+  {
+    "name": "Timezone",
+    "site": "https://www.timezonegames.com/en-in/",
+    "logo": "/partners/retail/timezone.webp",
+    "category": "Family entertainment"
+  },
+  {
+    "name": "Fun City",
+    "site": "https://funcity.in",
+    "logo": "/partners/retail/fun-city.webp",
+    "category": "Family entertainment"
+  },
+  {
+    "name": "Decathlon",
+    "site": "https://www.decathlon.in",
+    "logo": "/partners/retail/decathlon.webp",
+    "category": "Anchors"
+  },
+  {
+    "name": "Galeries Lafayette",
+    "site": "https://www.galerieslafayette.in/",
+    "logo": "/partners/retail/galeries-lafayette.webp",
+    "category": "Anchors"
+  },
+  {
+    "name": "Manyavar & Mohey",
+    "site": "https://www.manyavar.com",
+    "logo": "/partners/retail/manyavar-mohey.webp",
+    "category": "Apparel"
+  },
+  {
+    "name": "Tasva",
+    "site": "https://www.tasva.com",
+    "logo": "/partners/retail/tasva.webp",
+    "category": "Apparel"
+  },
+  {
+    "name": "The Collective",
+    "site": "https://www.thecollective.in",
+    "logo": "/partners/retail/the-collective.webp",
+    "category": "Luxury"
+  },
+  {
+    "name": "Tarun Tahiliani",
+    "site": "https://taruntahiliani.com/",
+    "logo": "/partners/retail/tarun-tahiliani.webp",
+    "category": "Luxury"
+  },
+  {
+    "name": "Tanishq",
+    "site": "https://www.tanishq.co.in",
+    "logo": "/partners/retail/tanishq.webp",
+    "category": "Jewellery"
+  },
+  {
+    "name": "Reliance Jewels",
+    "site": "https://relianceretail.com/reliance-jewels.html",
+    "logo": "/partners/retail/reliance-jewels.webp",
+    "category": "Jewellery"
+  },
+  {
+    "name": "Lakmé Salon",
+    "site": "https://www.lakmesalon.in",
+    "logo": "/partners/retail/lakme-salon.webp",
+    "category": "Beauty & wellness"
+  },
+  {
+    "name": "Nykaa",
+    "site": "https://stores.nykaa.com",
+    "logo": "/partners/retail/nykaa.webp",
+    "category": "Beauty & wellness"
+  },
+  {
+    "name": "Reliance Digital",
+    "site": "https://relianceretail.com/reliance-digital.html",
+    "logo": "/partners/retail/reliance-digital.webp",
+    "category": "Electronics"
+  },
+  {
+    "name": "Croma",
+    "site": "https://www.croma.com",
+    "logo": "/partners/retail/croma.webp",
+    "category": "Electronics"
+  },
+  {
+    "name": "Chumbak",
+    "site": "https://www.chumbak.com",
+    "logo": "/partners/retail/chumbak.webp",
+    "category": "Home & lifestyle"
+  },
+  {
+    "name": "Nicobar",
+    "site": "https://www.nicobar.com",
+    "logo": "/partners/retail/nicobar.webp",
+    "category": "Home & lifestyle"
+  },
+  {
+    "name": "SUGAR Cosmetics",
+    "site": "https://www.sugarcosmetics.com",
+    "logo": "/partners/retail/sugar.webp",
+    "category": "Beauty & wellness"
+  },
+  {
+    "name": "Jaypore",
+    "site": "https://www.jaypore.com",
+    "logo": "/partners/retail/jaypore.webp",
+    "category": "Apparel"
   }
 ]

@@ -21,6 +21,7 @@ const methods = {
   invitation: "ig_accept_invitation",
   invitation_resend: "ig_invitation_recipient",
   invitation_revoke: "ig_revoke_invitation",
+  retail_mandate: "ig_retail_manage",
   content: "ig_save_content",
   publication: "ig_content_action",
   bulk_publication: "ig_bulk_publication",

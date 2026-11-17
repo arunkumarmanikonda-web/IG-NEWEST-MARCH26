@@ -10,6 +10,7 @@ export default async function sitemap() {
       ? pages
       : pages.filter((p) => !/^\/(opportunities|insights)\//.test(p.path));
   const entries = [
+    {url:new URL("/retail-leasing",origin).href},
     ...baseline.map((p) => ({ url: new URL(p.path, origin).href })),
     ...(records || []).map((x) => ({
       url: new URL(contentPath(x), origin).href,

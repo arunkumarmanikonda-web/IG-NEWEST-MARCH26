@@ -1,3 +1,5 @@
+import RetailClients from "../../retail-clients";
+import {isRetail} from "../../../../lib/retail-mandates.mjs";
 import FeatureManager from "./feature-manager";
 import { publishedOpportunityCard } from "../../../../lib/cms";
 import { prepareIntakeDraft } from "../../../../lib/intake.mjs";
@@ -34,7 +36,7 @@ export default async function EditPage({ params, searchParams }) {
   if (id !== "new" && !item) notFound();
   if (termError || tagError) return <p role="alert">The classifications could not be loaded. Refresh before editing this record.</p>;
   if (item?.deleted_at) {
-    const register = { opportunity: "listings", product: "catalogue", project: "projects" }[item.kind] || "cms";
+    const register = { retail_space:"retail", retail_requirement:"retail", opportunity: "listings", product: "catalogue", project: "projects" }[item.kind] || "cms";
     return <section className="workspace-card"><h2>This record is in Deleted.</h2>
       <p>To edit it, open the register, choose Deleted and restore it as a private draft.</p>
       <Link href={"/admin/" + register}>Open register →</Link></section>;
@@ -201,6 +203,7 @@ export default async function EditPage({ params, searchParams }) {
   }
   return (<>
     {promotion}
+    {item && isRetail(item.kind) && <RetailClients record={item}/>}
     <Editor
       key={item?.id + "-" + item?.version + "-" + item?.status}
       item={item}

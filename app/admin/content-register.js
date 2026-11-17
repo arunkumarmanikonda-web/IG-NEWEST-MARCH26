@@ -13,7 +13,9 @@ import {
 } from "../../lib/bulk-publication.mjs";
 import { portalAction } from "../account/profile";
 import CatalogueImport from "./catalogue-import";
+import {retailKinds} from "../../lib/retail-mandates.mjs";
 const labels = {
+  retail:["Retail leasing mandates","Publish promoter inventory and brand expansion requirements. Manage signed client mandates and room access from each record.","retail_space"],
   cms: [
     "Website CMS",
     "Pages, leadership, practice content, perspectives and FAQs.",
@@ -40,6 +42,7 @@ export default function ContentRegister({ module, items }) {
     [search, setSearch] = useState(""),
     [state, setState] = useState("active"),
     [practice, setPractice] = useState(""),
+    [side,setSide] = useState(""),
     [selected, setSelected] = useState([]),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
@@ -48,7 +51,7 @@ export default function ContentRegister({ module, items }) {
   const [title, description, kind] = labels[module];
   const rows = items.filter(
     (r) =>
-      visibleInRegister(r, state) &&
+      visibleInRegister(r, state) && (!side || r.kind===side) &&
       (!practice || r.practice === practice) &&
       [
         r.title,
@@ -133,10 +136,11 @@ export default function ContentRegister({ module, items }) {
               Upload brand catalogue
             </Link>
           )}
+          {module==="retail" && <Link className="primary" href="/admin/intake?kind=retail_requirement">Create brand requirement with AI</Link>}
           <Link className="module-link" href={"/admin/intake?kind=" + kind}>
             {module === "listings"
               ? "Upload property files + create with AI"
-              : "Create with AI"}{" "}
+              : module==="retail" ? "Create promoter space with AI" : "Create with AI"}{" "}
             →
           </Link>
         </div>
@@ -157,6 +161,7 @@ export default function ContentRegister({ module, items }) {
       </div>
       <section className="workspace-card">
         <div className="register-toolbar">
+          {module==="retail" && <label>Mandate side<select value={side} onChange={e=>{setSide(e.target.value);setSelected([])}}><option value="">Both sides</option>{Object.entries(retailKinds).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>}
           <label>
             Search
             <input
@@ -204,7 +209,7 @@ export default function ContentRegister({ module, items }) {
               ))}
             </select>
           </label>
-          <Link
+          {module!=="retail" && <Link
             className="button primary"
             href={"/admin/content/new?kind=" + kind}
           >
@@ -214,7 +219,7 @@ export default function ContentRegister({ module, items }) {
               : module === "catalogue"
                 ? "product"
                 : "content"}
-          </Link>
+          </Link>}
         </div>
         <div className="bulk-toolbar">
           <p id="publish-review" className="publish-review">Make selected live publishes the checked revisions immediately. By publishing, you confirm the facts, availability, media rights and approval for public release.</p>
@@ -313,7 +318,7 @@ export default function ContentRegister({ module, items }) {
                       : <Link href={"/admin/content/" + r.id + "#product-images"}>Add product photo</Link>)}
                     <strong>{r.title}</strong>
                     <small>
-                      {r.public_data.sku || r.public_data.city || r.kind}
+                      {retailKinds[r.kind] || r.public_data.sku || r.public_data.city || r.kind}
                     </small>
                   </td>
                   <td>
@@ -338,13 +343,13 @@ export default function ContentRegister({ module, items }) {
                   <td>
                     {!r.deleted_at && <Link href={"/admin/content/" + r.id}>Manage →</Link>}
                     <br />
-                    <Link href={"/admin/content/" + r.id + "/teaser"}>
+                    {module!=="retail" && <Link href={"/admin/content/" + r.id + "/teaser"}>
                       Branded PDF brief ↗
-                    </Link>
+                    </Link>}
                     <br />
                     <Link
                       href={
-                        "/admin/data-rooms?content=" + r.id + "#room-access"
+                        module==="retail" ? "/admin/content/"+r.id+"#mandate-clients" : "/admin/data-rooms?content=" + r.id + "#room-access"
                       }
                     >
                       Data room & access ↗
