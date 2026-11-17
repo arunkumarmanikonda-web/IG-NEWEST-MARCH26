@@ -46,3 +46,21 @@ and arrangement while cleaning scan blur and the background. The existing `-hd`
 web assets were replaced; original supplier `.webp` files remain unchanged. These
 are restored illustrations, not new manufacturer photographs. Other legacy assets
 still require better source photographs or individual visual restoration.
+
+## Category collection design
+
+The HORECA directory uses twelve photographic category tiles and matching category
+hero banners. Edit their titles, straplines, descriptions, local image paths, alt
+text and order in Website CMS → HORECA category imagery & titles
+(`/admin/cms/site?section=horeca-collections`). Standard category identifiers are
+fixed and validated; live SKU counts remain derived from the published register.
+The optional Other Supplies category appears only when it has published SKUs.
+
+Category images under `public/images/horeca-collections/` were generated as
+unbranded editorial illustrations of hospitality environments and product groups.
+The image brief specifies warm limestone, walnut, muted charcoal and restrained
+brass, realistic products and no lettering. These images belong to category tiles
+and banners only; individual product records retain their own SKU photographs.
+Cards keep exact SKU/model search, category/brand/type filters and quotation basket
+actions. Product descriptions are abbreviated visually on cards, with the complete
+specification available through the product link.

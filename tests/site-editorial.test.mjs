@@ -4,8 +4,8 @@ import {siteDefaults,validateSection} from "../lib/site-editorial.mjs";
 import {parseSiteRecords,sitePrefix} from "../lib/site-cms-records.mjs";
 import {practiceUpdate} from "../lib/practice-updates.mjs";
 
-test("original website sections and three practice showcases survive a stored JSON round trip", () => {
-  assert.equal(Object.keys(siteDefaults).length,22);
+test("website sections, practice showcases and HORECA collections survive a stored JSON round trip", () => {
+  assert.equal(Object.keys(siteDefaults).length,23);
   for (const [key,value] of Object.entries(siteDefaults)) {
     const records=parseSiteRecords([{slug:sitePrefix+key,body:JSON.stringify(value),version:2,published_version:1}]);
     assert.deepEqual(records[key],{content:value,version:2,live_version:1});
