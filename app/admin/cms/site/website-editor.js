@@ -5,12 +5,14 @@ import { useState } from "react";
 import { siteDefaults, sectionLabel, validateSection } from "../../../../lib/site-editorial.mjs";
 const label = key => String(key).replaceAll("-", " ").replace(/^./, c=>c.toUpperCase());
 function Field({name, value, onChange, template=value, fixed=false}) {
+  if(name==='image'&&typeof value==='string')return <label>Hero image path<div style={{margin:'12px 0'}}><img src={value} alt="Selected category or page image" style={{width:260,maxWidth:'100%',aspectRatio:'3/2',objectFit:'cover'}}/></div><input value={value} onChange={e=>onChange(e.target.value)} required/><small>Use a website image path under /images/.</small></label>;
   if(name==="logo" && typeof value==="string")return <BrandLogoField value={value} onChange={onChange}/>;
   if (typeof value === "string") return <label>{label(name)}
-    <textarea rows={value.length > 90 ? 3 : 1} value={value} onChange={e=>onChange(e.target.value)} required={name!=="logo"} />
+    <textarea rows={value.length > 90 ? 3 : 1} value={value} readOnly={name==='id'} onChange={e=>onChange(e.target.value)} required={name!=="logo"} />
   </label>;
   if (!Array.isArray(value)) return <div className="site-editor-fields">{Object.entries(value).map(([k,v]) =>
     <Field name={k} key={k} value={v} template={template[k]} onChange={next=>onChange({...value,[k]:next})} />)}</div>;
+  fixed=fixed||name==='collections';
   const names={journey:["Year","Heading","Description","Discipline"],principles:["Principle","Description"],links:["Destination","Link text"],services:["Service","Description"],stages:["Stage","Description"],faqs:["Question","Answer"],steps:["Step","Description"],categories:["Category","Description"]};
   const set=(i,v)=>onChange(value.map((row,index)=>index===i?v:row));
   function move(i, j) { const next=[...value]; [next[i],next[j]]=[next[j],next[i]]; onChange(next); }
@@ -49,6 +51,7 @@ export default function WebsiteEditor({records,scheduling=true,initialSection="h
   }
   return <section className="workspace-card"><Link href="/admin/cms">Website CMS</Link><h2>Website pages & menus</h2>
     {section==="disciplines" && <p>Publish practice profiles here to update their order and destinations in the <Link href="/#practice-strip">public practice banner</Link>.</p>}
+    {section==='horeca-collections'&&<p>Edit each category’s title, strapline, description and hero image. The same image appears on the category tile and its collection page. Move entries to change their order. Published SKU counts remain automatic. <Link href="/horeca#catalogue">View HORECA collections</Link></p>}
     <label>Choose a page or section<select disabled={busy} value={section} onChange={e=>choose(e.target.value)}>{Object.keys(siteDefaults).map(k=><option key={k} value={k}>{sectionLabel(k)}</option>)}</select></label>
     <h3>{sectionLabel(section)}</h3><p>Draft revision {saved[section]?.version||0} · Live revision {saved[section]?.live_version||"original"}{saved[section]?.scheduled_at?" · Scheduled "+new Date(saved[section].scheduled_at).toLocaleString():""}</p>
     <form onSubmit={submit} className="site-editor-form"><fieldset disabled={busy}>{section==="home-layout"?<HomeOrder value={value} onChange={edit}/>:<Field key={section} name={section} value={value} template={siteDefaults[section]} fixed={section==="navigation"} onChange={edit}/>}</fieldset>

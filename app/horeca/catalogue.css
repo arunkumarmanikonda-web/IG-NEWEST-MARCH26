@@ -1,51 +1,80 @@
-.horeca-catalogue{background:#f8f8f5;scroll-margin-top:100px}
-.horeca-catalogue .section-heading h2{max-width:720px}
-.horeca-directory-tools{display:flex;gap:24px;align-items:center;justify-content:space-between;margin-bottom:30px}
-.horeca-directory-tools .catalogue-search{flex:1;margin:0;max-width:620px}
-.horeca-category-directory{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#dcdcd4;border:1px solid #dcdcd4}
-.horeca-category-tile{background:white;padding:28px;display:flex;flex-direction:column;color:var(--ink);text-decoration:none;min-width:0;transition:background .2s}
-.horeca-category-tile:hover,.horeca-category-tile:focus-visible{background:#efeee6;outline-offset:-3px}
-.category-tile-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;color:#807243}
-.horeca-category-icon{width:56px;height:56px;flex-shrink:0}
-.category-arrow{font-size:24px;color:var(--ink)}
-.horeca-category-tile h3{font-size:clamp(23px,2vw,30px);margin:0 0 12px;line-height:1.15}
-.horeca-category-tile p{font-size:13px;line-height:1.65;color:#66675f;margin:0 0 25px;text-align:left}
-.category-count{margin-top:auto;padding-top:15px;border-top:1px solid #e5e5dd;font-size:11px;letter-spacing:.04em;color:#6b623f}
-.horeca-category-nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 28px;border-bottom:1px solid #ddded7;margin-bottom:24px}
-.horeca-category-nav a{display:flex;align-items:center;gap:18px;padding:10px 14px;border:1px solid #d9d9d0;text-decoration:none;font-size:13px;background:white;color:var(--ink)}
-.horeca-category-nav a[aria-current=page]{background:#2c2c28;border-color:#2c2c28;color:white}
-.horeca-category-nav a span{font-size:11px;opacity:.7}
+.horeca-catalogue{background:#fbfaf7;scroll-margin-top:90px}
+.horeca-catalogue .collection-heading{align-items:end;margin-bottom:44px}
+.collection-heading h2{font-size:clamp(38px,4.1vw,64px);line-height:1.06;letter-spacing:-.025em;max-width:760px}
+.collection-heading>p{max-width:345px;font-size:15px;line-height:1.85}
+.horeca-directory-tools{display:flex;gap:32px;align-items:center;justify-content:space-between;margin:0 0 38px;padding:22px 0;border-top:1px solid #dedbd1;border-bottom:1px solid #dedbd1}
+.collection-browse-note{font-size:14px;line-height:1.6;color:#6a685e;margin:0;max-width:320px}
+.horeca-directory-tools .catalogue-search{flex:1;margin:0;max-width:480px;font-size:11px;letter-spacing:.05em}
+.horeca-directory-tools .catalogue-search input{padding:14px 16px;background:#fff;border:1px solid #d5d1c6;font-size:14px;margin-top:8px;min-height:48px}
+.horeca-category-directory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px;row-gap:52px}
+.horeca-category-tile{display:flex;flex-direction:column;color:var(--ink);text-decoration:none;min-width:0;outline-offset:7px}
+.collection-image{position:relative;aspect-ratio:3/2;overflow:hidden;background:#d5c5ad}
+.collection-image>img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .55s ease}
+.collection-image:after{content:'';position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(24,23,19,.64));pointer-events:none}
+.collection-number{position:absolute;top:17px;left:18px;color:white;font-size:11px;letter-spacing:.14em;border-bottom:1px solid rgba(255,255,255,.6);padding-bottom:6px;text-shadow:0 1px 8px #1b1a15}
+.collection-image-label{position:absolute;left:22px;right:22px;bottom:20px;z-index:1;font-size:12px;letter-spacing:.035em;color:#fff}
+.collection-caption{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:23px}
+.collection-overline{font-size:9px;letter-spacing:.18em;color:#85744e}
+.horeca-category-tile h3{font-size:clamp(27px,2.35vw,36px);margin:7px 0 12px;line-height:1.12;letter-spacing:-.02em}
+.category-arrow{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex-shrink:0;border:1px solid #c9c3b2;border-radius:50%;color:#685b39;transition:background .2s,color .2s,border-color .2s}
+.category-arrow svg{width:17px;height:17px}
+.horeca-category-tile:hover .collection-image>img,.horeca-category-tile:focus-visible .collection-image>img{transform:scale(1.035)}
+.horeca-category-tile:hover .category-arrow,.horeca-category-tile:focus-visible .category-arrow{background:#70613c;color:white;border-color:#70613c}
+.horeca-category-tile>p{font-size:13px;line-height:1.8;color:#737064;margin:0 0 17px;max-width:95%;text-align:justify;hyphens:auto}
+.category-count{margin-top:auto;padding-top:15px;border-top:1px solid #dcd8cd;font-size:11px;letter-spacing:.015em;color:#6b5d3b}
+.horeca-catalogue.is-collection{padding-top:30px}
+.collection-back{display:inline-block;margin:0 0 23px;color:#766744;text-decoration:none;font-size:12px;line-height:1.7}
+.collection-back:hover{text-decoration:underline;text-underline-offset:4px}
+.horeca-collection-hero{position:relative;min-height:430px;display:flex;align-items:center;overflow:hidden;background:#292820;margin-bottom:38px;color:white}
+.horeca-collection-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.horeca-collection-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(19,20,17,.84),rgba(19,20,17,.43) 50%,rgba(19,20,17,.04))}
+.collection-hero-copy{position:relative;z-index:1;padding:50px;max-width:650px}
+.collection-hero-copy .eyebrow{font-size:10px;letter-spacing:.19em;color:#ddd2ad;margin-bottom:35px}
+.collection-hero-copy .collection-kicker{font-size:12px;letter-spacing:.03em;margin:0 0 12px;color:#e7dfca}
+.collection-hero-copy h1{font-size:clamp(45px,5.3vw,78px);font-weight:400;line-height:1;letter-spacing:-.03em;color:white;margin:0 0 22px}
+.collection-hero-copy>p:not(.collection-kicker){font-size:15px;line-height:1.8;color:#efede5;max-width:420px;margin:0}
+.collection-hero-rule{display:block;width:56px;height:1px;background:#c6b67c;margin:27px 0 20px}
+.collection-hero-count{font-size:11px;letter-spacing:.08em;color:#eee7d2}
+.horeca-category-nav{display:flex;flex-wrap:wrap;gap:0 24px;padding:0 0 16px;border-bottom:1px solid #dedbd1;margin-bottom:24px}
+.horeca-category-nav a{display:flex;align-items:center;gap:8px;padding:11px 0;text-decoration:none;font-size:12px;color:#767467;border-bottom:2px solid transparent}
+.horeca-category-nav a[aria-current=page]{border-bottom-color:#837142;color:#302e25}
+.horeca-category-nav a span{font-size:10px;opacity:.6}.horeca-category-nav a:hover{color:#302e25}
 .sku-filter-bar{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:20px;align-items:end}
-.sku-filter-bar label{font-size:12px;color:#56574e;letter-spacing:.03em}
-.sku-filter-bar select{display:block;width:100%;border:1px solid #d2d3ca;background:#fff;border-radius:0;padding:14px 12px;margin-top:9px;font:inherit;font-size:14px;color:var(--ink);min-height:46px}
-.sku-clear{border:0;border-bottom:1px solid #99998b;padding:13px 0;font-size:12px;background:transparent;color:var(--ink);cursor:pointer}
-.sku-results-summary{display:flex;align-items:center;justify-content:space-between;margin:25px 0 18px;color:#68695f;font-size:12px}
-.sku-results-summary p{margin:0}.sku-results-summary span{font-size:11px;letter-spacing:.04em}
-.sku-grid{gap:24px;grid-template-columns:repeat(3,minmax(0,1fr))}
-.sku-grid article{display:flex;flex-direction:column;overflow:hidden}
-.sku-grid .sku-photo{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden;background:#fff;border-bottom:1px solid #ecece7;padding:24px;box-sizing:border-box}
-.sku-grid .sku-photo img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:block;max-width:calc(100% - 48px);max-height:calc(100% - 48px);width:auto;height:auto;object-fit:contain;padding:0;background:white;mix-blend-mode:multiply}
-.sku-photo-empty{display:flex;flex-direction:column;align-items:center;gap:20px;color:#8c856a;font-size:12px}
-.sku-grid .sku-card-content{padding:24px;display:flex;flex-direction:column;flex:1}
-.sku-grid .sku-brand{display:flex;justify-content:space-between;gap:10px;margin:0 0 9px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#766b44}
-.sku-brand span{letter-spacing:0;font-size:10px;background:#f1efe5;padding:2px 7px}
-.sku-grid h3{font-size:clamp(22px,1.8vw,27px);line-height:1.25;margin:0 0 20px;overflow-wrap:anywhere}
+.sku-filter-bar label{font-size:11px;color:#686458;letter-spacing:.04em}
+.sku-filter-bar select{display:block;width:100%;border:1px solid #d8d3c7;background:#fff;border-radius:0;padding:13px 12px;margin-top:9px;font:inherit;font-size:13px;color:var(--ink);min-height:46px}
+.sku-clear{border:0;border-bottom:1px solid #a79c81;padding:13px 0;font-size:11px;background:transparent;color:#5d5542;cursor:pointer}
+.sku-results-summary{display:flex;align-items:center;justify-content:space-between;margin:28px 0 23px;color:#746f60;font-size:12px}
+.sku-results-summary p{margin:0}.sku-results-summary span{font-size:11px;letter-spacing:.03em}
+.sku-grid{gap:42px 28px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sku-grid article{display:flex;flex-direction:column;border:0;background:transparent;min-width:0;overflow:visible}
+.sku-grid .sku-photo{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;overflow:hidden;background:#f0eee7;padding:30px;box-sizing:border-box}
+.sku-grid .sku-photo img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:block;max-width:calc(100% - 60px);max-height:calc(100% - 60px);width:auto;height:auto;object-fit:contain;padding:0;background:transparent;mix-blend-mode:multiply;transition:transform .3s}
+.sku-grid .sku-photo:hover img{transform:translate(-50%,-50%) scale(1.025)}
+.sku-photo-empty{display:flex;flex-direction:column;align-items:center;gap:18px;color:#8c856a;font-size:12px}
+.horeca-category-icon{width:48px;height:48px;flex-shrink:0}
+.sku-grid .sku-card-content{padding:23px 0 0;display:flex;flex-direction:column;flex:1}
+.sku-grid .sku-brand{display:flex;justify-content:space-between;gap:10px;margin:0 0 10px;font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:#85734c}
+.sku-brand span{letter-spacing:.03em;font-size:9px;background:#eae4d2;padding:3px 8px}
+.sku-grid h3{font-size:clamp(23px,2vw,29px);line-height:1.2;letter-spacing:-.015em;margin:0 0 17px;overflow-wrap:anywhere}
 .sku-grid h3 a{text-decoration:none}.sku-grid h3 a:hover{text-decoration:underline;text-underline-offset:4px}
-.sku-card-facts{margin:0 0 16px;display:grid;gap:6px;font-size:11px}
-.sku-card-facts div{display:grid;grid-template-columns:50px minmax(0,1fr);gap:8px}
-.sku-card-facts dt{color:#85857a}.sku-card-facts dd{margin:0;color:#45463e;overflow-wrap:anywhere}
-.sku-grid .sku-description{font-size:12px;line-height:1.8;margin:0 0 22px;color:#6a6b62;text-align:justify;hyphens:auto}
-.sku-grid .catalogue-links{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:20px;border-top:1px solid #e3e3dc;font-size:11px}
-.sku-grid .catalogue-links button{cursor:pointer;padding:11px 12px;min-height:42px;font-size:11px}
-.sku-grid .catalogue-links a{text-decoration:none}
+.sku-card-facts{margin:0 0 14px;display:grid;gap:6px;font-size:10px;line-height:1.5}
+.sku-card-facts div{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px}
+.sku-card-facts dt{color:#8c8778}.sku-card-facts dd{margin:0;color:#5c584b;overflow-wrap:anywhere}
+.sku-grid .sku-description{font-size:12px;line-height:1.85;margin:0 0 20px;color:#777263;text-align:justify;hyphens:auto;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sku-grid .sku-price{font-size:12px;color:#6b5d3b;margin:0 0 17px}
+.sku-grid .catalogue-links{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;margin-top:auto;padding-top:18px;border-top:1px solid #dcd7c9;font-size:11px}
+.sku-grid .catalogue-links button{cursor:pointer;padding:12px 14px;min-height:44px;font-size:11px;background:#302e27;color:white;border:1px solid #302e27;border-radius:0;white-space:nowrap}
+.sku-grid .catalogue-links button:hover{background:#756440;border-color:#756440}
+.sku-grid .catalogue-links a{text-decoration:none;color:#70603b}
 .horeca-catalogue .catalogue-links a,.horeca-practice-note a{display:inline-flex;align-items:center;gap:8px}
 .horeca-category-nav svg,.catalogue-links svg,.horeca-practice-note svg{width:14px;height:14px;flex-shrink:0;vertical-align:middle}
 .sku-basket-notice{padding:16px 20px;border-left:3px solid #8f8355;background:#efeee5;font-size:13px}
 .sku-basket-notice a{margin-left:12px}
-.sku-empty{padding:50px 24px;text-align:center;border:1px solid #deded5;background:white}
-.sku-empty h3{font-size:30px}.sku-empty p{margin-bottom:28px;color:var(--muted)}
-.horeca-practice-note{margin-top:48px;border-top:1px solid #d6d7ce;padding:28px 0 0;display:grid;grid-template-columns:1fr 2fr 1fr;gap:28px;align-items:start}
+.sku-empty{padding:56px 24px;text-align:center;background:#f0ede3}
+.sku-empty h3{font-size:clamp(31px,3vw,44px);margin:17px 0}.sku-empty p{font-size:14px;line-height:1.8;margin:0 auto 28px;color:#747060;max-width:530px}
+.horeca-practice-note{margin-top:64px;border-top:1px solid #d6d1c2;padding:30px 0 0;display:grid;grid-template-columns:1fr 2fr 1fr;gap:28px;align-items:start}
 .horeca-practice-note p{margin:0;font-size:14px;line-height:1.8}.horeca-practice-note a{font-size:12px;line-height:1.8}
-@media(min-width:1440px){.sku-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:1000px){.horeca-category-directory{grid-template-columns:repeat(3,minmax(0,1fr))}.sku-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sku-filter-bar{grid-template-columns:1fr 1fr}.horeca-practice-note{grid-template-columns:1fr 2fr}.horeca-practice-note a{grid-column:2}}
-@media(max-width:600px){.horeca-category-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.horeca-category-tile{padding:20px 16px}.horeca-category-tile h3{font-size:23px}.horeca-category-tile p{font-size:12px}.horeca-category-icon{width:44px;height:44px}.category-tile-top{margin-bottom:20px}.horeca-directory-tools{display:block}.horeca-directory-tools .text-link{display:inline-block;margin-bottom:20px}.sku-grid{grid-template-columns:1fr}.sku-filter-bar{gap:16px}.sku-results-summary span{display:none}.horeca-category-nav{flex-wrap:nowrap;overflow:auto;padding-bottom:15px}.horeca-category-nav a{white-space:nowrap}.horeca-practice-note{display:block}.horeca-practice-note p{margin:16px 0}.sku-grid .sku-photo{aspect-ratio:4/3}.horeca-catalogue{scroll-margin-top:80px}}
+@media(min-width:1600px){.sku-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1050px){.horeca-category-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.sku-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sku-filter-bar{grid-template-columns:1fr 1fr}.horeca-practice-note{grid-template-columns:1fr 2fr}.horeca-practice-note a{grid-column:2}.collection-hero-copy{padding:40px;max-width:590px}.horeca-collection-hero{min-height:390px}}
+@media(max-width:640px){.horeca-category-directory{grid-template-columns:1fr;gap:38px}.collection-heading h2{font-size:40px}.collection-heading>p{max-width:none}.collection-image{aspect-ratio:3/2}.horeca-category-tile h3{font-size:32px}.collection-caption{padding-top:20px}.horeca-directory-tools{display:block;margin-bottom:28px;padding:22px 0}.collection-browse-note{margin-bottom:18px;max-width:none}.horeca-directory-tools .catalogue-search{max-width:none}.sku-grid{grid-template-columns:1fr;row-gap:36px}.sku-filter-bar{gap:16px}.sku-results-summary span{display:none}.horeca-category-nav{flex-wrap:nowrap;overflow:auto;gap:20px;padding-bottom:8px}.horeca-category-nav a{white-space:nowrap}.horeca-practice-note{display:block;margin-top:44px}.horeca-practice-note p{margin:16px 0}.horeca-catalogue{scroll-margin-top:74px}.horeca-catalogue.is-collection{padding-top:20px}.horeca-collection-hero{min-height:370px;margin-bottom:27px}.collection-hero-copy{padding:29px 25px}.collection-hero-copy .eyebrow{font-size:9px;margin-bottom:32px}.collection-hero-copy h1{font-size:46px}.collection-hero-copy>p:not(.collection-kicker){font-size:14px}.horeca-collection-hero:after{background:linear-gradient(90deg,rgba(19,20,17,.86),rgba(19,20,17,.34))}}
+@media(prefers-reduced-motion:reduce){.collection-image>img,.category-arrow,.sku-grid .sku-photo img{transition:none}.horeca-category-tile:hover .collection-image>img,.horeca-category-tile:focus-visible .collection-image>img{transform:none}}
