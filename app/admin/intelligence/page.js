@@ -1,3 +1,5 @@
+import {horecaCatalogue} from "../../../lib/horeca-catalogue";
+import {horecaCategories} from "../../../lib/horeca-categories.mjs";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
 import Schedule from "./schedule";
@@ -49,6 +51,8 @@ export default async function IntelligencePage({searchParams}) {
   </section>;
 
   const { settings, runs = [], reports = [], conversations = [] } = data;
+  const health=await client.rpc("ig_worker_status");
+  const catalogue=await horecaCatalogue().catch(()=>null);
   const topics = [...new Set(runs.flatMap(run => (run.candidates || []).map(item => item.topic)).filter(Boolean))];
   return <div className="intelligence-workspace">
     <header className="module-heading"><div><h2>Perspectives &amp; Gullu</h2>
@@ -56,6 +60,13 @@ export default async function IntelligencePage({searchParams}) {
       <Link className="module-link" href="/insights">View published Perspectives ↗</Link></header>
     <Schedule key={[settings.enabled, settings.cadence_days, settings.preferred_topic].join("|")}
       settings={settings} nextRun={formatDate(settings.next_at)} topics={topics} />
+    <section className="workspace-card"><h3>Background processing health</h3>
+      {health.error?<p role="alert">Worker monitoring is unavailable. A scheduler response alone does not confirm completion.</p>:<div className="table-scroll"><table className="workspace-table"><thead><tr><th>Component</th><th>Status</th><th>Last completed</th><th>Details</th></tr></thead><tbody>{(health.data||[]).map(w=><tr key={w.component}><td>{w.component.replaceAll('_',' ')}</td><td>{w.status}</td><td>{formatDate(w.last_success)}</td><td>{w.detail}</td></tr>)}</tbody></table></div>}
+    </section>
+    <section className="workspace-card"><h3>Catalogue coverage</h3><p>Publish only verified supplier SKUs and signed mandates. Empty categories remain available for sourcing enquiries.</p>
+      {catalogue?<ul>{horecaCategories.filter(c=>c.id!=='other'||catalogue.counts.other).map(c=><li key={c.id}>{c.label}: {catalogue.counts[c.id]||0} published SKUs{!catalogue.counts[c.id]?' · approved supplier data needed':''}</li>)}</ul>:<p>Catalogue coverage is temporarily unavailable.</p>}
+      <Link href="/admin/catalogue/import">Import approved supplier catalogue →</Link> <Link href="/admin/retail">Manage leasing mandates →</Link>
+    </section>
     <section className="workspace-card"><h3>Editorial runs</h3>
       {!runs.length && <p>The first research run will appear here.</p>}
       {runs.map((run, index) => <details className="intelligence-log" key={run.id || index}>

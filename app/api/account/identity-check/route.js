@@ -6,10 +6,10 @@ import {
   HttpError,
 } from "../../../../lib/http.mjs";
 import { evidenceSlots } from "../../../../lib/identity-evidence.mjs";
-import { checkEvidence } from "../../../../lib/identity-ocr.mjs";
+import { isolatedTask } from "../../../../lib/isolated-task.mjs";
 import { offlineProof } from "../../../../lib/offline-identity.mjs";
 export const runtime = "nodejs";
-export const maxDuration = 300;
+export const maxDuration = 90;
 export async function POST(request) {
   try {
     const { id, revision, slot, xml } = await readJson(
@@ -37,7 +37,10 @@ export async function POST(request) {
       (slot !== "aadhaar_offline" || e.checks[slot].status === "matched")
     )
       return privateJson(e.checks[slot]);
+    const admission=await client.rpc("ig_kyc_admit",{p:{id,revision,slot}});
+    if(admission.error || !admission.data) throw new HttpError("A document check is already running, or the hourly limit has been reached. Your documents remain saved. Try again later.",429);
     let result;
+    try {
     if (slot === "aadhaar_offline") {
       if (!process.env.UIDAI_OFFLINE_SIGNING_CERT)
         throw new HttpError(
@@ -52,13 +55,18 @@ export async function POST(request) {
         );
       }
     } else {
+      const objectPath=[user.id,id,revision,slot].join("/");
+      const {data:info,error:infoError}=await client.storage.from("client-kyc").info(objectPath);
+      if(infoError || !info) throw new HttpError("Upload this document before checking it.",409);
+      const size=Number(info.size ?? info.metadata?.size);
+      if(!Number.isSafeInteger(size) || size<1 || size>10_000_000) throw new HttpError("Use a PDF, JPEG or PNG up to 10 MB for automated checking. Contact the team for manual review of a larger document.",413);
       const { data: blob, error: downloadError } = await client.storage
         .from("client-kyc")
         .download([user.id, id, revision, slot].join("/"));
       if (downloadError || !blob)
         throw new HttpError("Upload this document before checking it.", 409);
       try {
-        result = await checkEvidence(e, slot, blob);
+        result = await isolatedTask("identity-ocr.mjs","checkBytes",[e,slot,new Uint8Array(await blob.arrayBuffer()),blob.type],{timeout:45000,memory:256});
       } catch {
         result = { status: "review", fields: { "Automated reading": false } };
       }
@@ -73,6 +81,9 @@ export async function POST(request) {
         409,
       );
     return privateJson(result);
+    } finally {
+      await client.rpc("ig_kyc_admit",{p:{action:"release",lease:admission.data}});
+    }
   } catch (error) {
     return errorJson(error);
   }

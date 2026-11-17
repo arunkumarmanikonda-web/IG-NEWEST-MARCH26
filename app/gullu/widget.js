@@ -16,7 +16,7 @@ export default function Gullu(){
   const [open,setOpen]=useState(false),[guest,setGuest]=useState(null),[messages,setMessages]=useState([]),
     [question,setQuestion]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),
     [language,setLanguage]=useState("auto"),[confirm,setConfirm]=useState(false),[receipt,setReceipt]=useState("");
-  const [expression,setExpression]=useState("idle");
+  const [expression,setExpression]=useState("idle"),[restored,setRestored]=useState(false),[hasMore,setHasMore]=useState(false);
   const timer=useRef(null);
   function animate(mood){clearTimeout(timer.current);setExpression(mood);timer.current=setTimeout(()=>setExpression("idle"),1800);}
   useEffect(()=>{return ()=>clearTimeout(timer.current);},[]);
@@ -24,7 +24,23 @@ export default function Gullu(){
   useEffect(()=>{if(open)(guest?input:first).current?.focus();},[open,guest]);
   useEffect(()=>{const el=scroll.current;if(open&&el)el.scrollTop=el.scrollHeight;},[messages.length,busy,receipt,open]);
   function close(){setOpen(false);launcher.current?.focus();}
-  function reset(){setGuest(null);setMessages([]);setQuestion("");setError("");setReceipt("");setConfirm(false);pending.current=null;}
+  useEffect(()=>{
+    if(!open||restored)return;
+    let cancelled=false;setBusy(true);
+    fetch('/api/gullu',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{
+      if(cancelled||!data?.session)return;
+      setGuest({session_id:data.session.session_id,firstName:data.session.firstName});
+      setMessages(data.session.messages);setHasMore(data.session.hasMore);
+    }).catch(()=>{}).finally(()=>{if(!cancelled){setRestored(true);setBusy(false);}});
+    return ()=>{cancelled=true;};
+  },[open,restored]);
+  async function older(){if(busy||!messages.length)return;setBusy(true);try{
+    const r=await fetch('/api/gullu?before='+messages[0].turn_id,{cache:'no-store'});const d=await r.json();
+    if(!d.session)throw new Error('This chat session expired. Start a new chat.');
+    setMessages(items=>[...d.session.messages,...items]);setHasMore(d.session.hasMore);
+  }catch(e){setError(e.message);}finally{setBusy(false);}}
+  async function end(){if(busy)return;setBusy(true);try{await post({action:'end'});reset();}catch(e){setError(e.message);}finally{setBusy(false);}}
+  function reset(){setHasMore(false);setGuest(null);setMessages([]);setQuestion("");setError("");setReceipt("");setConfirm(false);pending.current=null;}
   async function start(e){
     e.preventDefault();if(busy)return;const data=new FormData(e.currentTarget);setBusy(true);setError("");
     try{const result=await post({action:"start",name:data.get("name"),mobile:data.get("mobile"),email:data.get("email"),consent:data.has("consent")});
@@ -62,6 +78,7 @@ export default function Gullu(){
         <div className="g-scroll" ref={scroll}>
           {!messages.length&&<p className="g-greeting">Namaste, {guest.firstName}! What’s on your mind?</p>}
           {!messages.length&&!busy&&<div className="g-starters">{starters.map(t=><button key={t} onClick={()=>ask(t)}>{t} <span>↗</span></button>)}</div>}
+          {hasMore&&<button disabled={busy} onClick={older}>Read earlier messages</button>}
           <div className="g-log" role="log" aria-live="polite">{messages.map(m=><article key={m.turn_id}>
             <div className="g-question"><small>You</small><p>{m.question}</p></div>
             <div className="g-author"><strong>Gullu</strong></div>
@@ -76,7 +93,7 @@ export default function Gullu(){
           <form onSubmit={e=>{e.preventDefault();ask(question);}}>
             <textarea ref={input} aria-label="Message Gullu" placeholder="Message Gullu…" maxLength={700} rows={1} value={question} onChange={e=>setQuestion(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();ask(question);}}}/>
             <button aria-label="Send message" disabled={busy||!question.trim()}>↑</button></form>
-          <div className="g-tools"><select aria-label="Reply language" value={language} onChange={e=>setLanguage(e.target.value)}><option value="auto">Match my language</option><option>English</option><option>Hinglish</option><option value="Hindi">हिन्दी</option></select><button disabled={busy} onClick={reset}>End chat</button></div>
+          <div className="g-tools"><select aria-label="Reply language" value={language} onChange={e=>setLanguage(e.target.value)}><option value="auto">Match my language</option><option>English</option><option>Hinglish</option><option value="Hindi">हिन्दी</option></select><button disabled={busy} onClick={end}>End chat</button></div>
         </div></>}
     </section>}
   </div>;

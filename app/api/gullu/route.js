@@ -1,3 +1,5 @@
+import {cookies} from "next/headers";
+import {gulluCookie,sessionCookie,readSession} from "../../../lib/gullu-session.mjs";
 import { after } from "next/server";
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { dispatchEmailQueue } from "../../../lib/delivery";
@@ -18,6 +20,13 @@ export async function POST(request) {
     if(!secret)throw new Error("Unavailable");
     const visitor=(request.headers.get("x-vercel-forwarded-for") || "local").split(",")[0].trim();
     const visitor_hash=createHmac("sha256",secret).update("gullu|"+new Date().toISOString().slice(0,10)+"|"+visitor).digest("hex");
+    const jar=await cookies();
+    const savedSession=readSession(jar.get(gulluCookie)?.value,secret);
+    if(body.action==='end'){
+      if(savedSession)await integrationRpc('ig_gullu_session',{action:'end',session_id:savedSession});
+      jar.set(gulluCookie,'',{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:0});
+      return privateJson({ended:true});
+    }
     if(!["start","ask","followup"].includes(body.action))throw new HttpError("Reload Gullu to start a chat.");
     const allowed=await integrationRpc("ig_gullu_admit",{visitor_hash});
     if(allowed!==true && allowed?.allowed!==true)throw new HttpError("Please give me a moment and try again.",429);
@@ -26,10 +35,16 @@ export async function POST(request) {
       if(name.length<2||name.length>100||email.length>254||!/^\S+@[^\s@]+\.[^\s@]+$/.test(email)||!/^\+?\d{7,15}$/.test(mobile)||body.consent!==true)throw new HttpError("Please enter your name, a valid mobile number and email, and accept the chat notice.");
       const session_id=randomUUID();
       await integrationRpc("ig_gullu_guest",{action:"start",session_id,name,email,mobile,consent:true});
-      return privateJson({session_id,token:token(secret,session_id)});
+      if(savedSession)await integrationRpc('ig_gullu_session',{action:'end',session_id:savedSession});
+      jar.set(gulluCookie,sessionCookie(session_id,secret),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:86400});
+      return privateJson({session_id});
     }
-    if(!uuid.test(body.session_id)||!uuid.test(body.turn_id)||!/^[a-f0-9]{64}$/.test(body.token||"")||
+    if(savedSession){
+      if(body.session_id&&body.session_id!==savedSession)throw new HttpError("Please reopen this chat.",401);
+      body.session_id=savedSession;
+    } else if(!uuid.test(body.session_id)||!/^[a-f0-9]{64}$/.test(body.token||"")||
       !timingSafeEqual(Buffer.from(body.token,"hex"),Buffer.from(token(secret,body.session_id),"hex")))throw new HttpError("Please start a new chat to continue.",401);
+    if(!uuid.test(body.turn_id))throw new HttpError("Please send this as a new question.");
     const ids={session_id:body.session_id,turn_id:body.turn_id};
     const context=await integrationRpc("ig_gullu_guest",{action:"context",...ids});
     const stored=context.existing;
@@ -67,4 +82,16 @@ export async function POST(request) {
     await integrationRpc("ig_gullu_guest",{...turn,action:"record",follow_up:false});
     return privateJson(publicTurn(turn));
   }catch(error){return errorJson(error instanceof HttpError?error:new HttpError("I couldn’t complete that exchange. Please try again.",503));}
+}
+
+export async function GET(request){
+  try{
+    const secret=process.env.INTEGRATION_MASTER_KEY;
+    const sid=readSession((await cookies()).get(gulluCookie)?.value,secret);
+    if(!sid)return privateJson({session:null});
+    const before=new URL(request.url).searchParams.get('before');
+    if(before&&!uuid.test(before))throw new HttpError('Invalid conversation cursor');
+    const session=await integrationRpc('ig_gullu_session',{action:'resume',session_id:sid,before});
+    return privateJson({session});
+  }catch{return privateJson({session:null});}
 }

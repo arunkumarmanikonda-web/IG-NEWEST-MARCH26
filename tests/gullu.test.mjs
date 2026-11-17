@@ -35,7 +35,9 @@ test("current published policy, context and topic ordering come from live record
 test("grounded multilingual paragraphs reject unsupported numbers",async()=>{
   const candidates=rankPassages(docs,"Jaisalkot keys",[],"/");
   const ask=(text,ids)=>answerFromPassages({question:"Jaisalkot rooms?",history:[],language:"Hinglish",candidates,config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
-    fetcher:async (url,req)=>{const body=JSON.parse(req.body);assert.equal(body.store,false);assert.equal(JSON.parse(body.input).language,"Hinglish");
+    fetcher:async (url,req)=>{const body=JSON.parse(req.body);
+      if(body.text?.format?.name==='gullu_claim_check')return Response.json({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({checks:[{index:0,supported:true,evidence:ids.map(id=>({id,quote:candidates[id].text}))}]})}]}]});
+      assert.equal(body.store,false);assert.equal(JSON.parse(body.input).language,"Hinglish");
       return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"grounded",paragraphs:[{text,ids}]})}]}]});}});
   const i=candidates.findIndex(x=>x.text==="Keys · 50");
   assert.match((await ask("Is resort mein 50 keys hain.",[i])).answer,/50 keys/);
@@ -92,7 +94,9 @@ test("fundraising enquiries use the firm's voice and preserve the lender's role"
  assert.equal(candidates[0].interest,"Debt & Special Situations");
  const answer="Yes, we can help you assess debt and equity options. The lender makes its own approval decision.";
  const reply=await answerFromPassages({question,history:[],candidates,config:{mode:"enabled",settings:{model:"model"},secrets:{api_key:"test"}},
-  fetcher:async(_,req)=>{const body=JSON.parse(req.body);assert.equal(JSON.parse(body.input).question,question);
+  fetcher:async(_,req)=>{const body=JSON.parse(req.body);
+    if(body.text?.format?.name==='gullu_claim_check')return Response.json({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({checks:[{index:0,supported:true,evidence:[{id:0,quote:candidates[0].text}]}]})}]}]});
+    assert.equal(JSON.parse(body.input).question,question);
     assert.match(body.instructions,/we, us and our for India Gully/);assert.match(body.instructions,/attributing its decisions and services to it/);
     return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"grounded",paragraphs:[{text:answer,ids:[0]}]})}]}]});}});
  assert.equal(reply.answer,answer);assert.equal(reply.sources[0].href,"/practices/debt-special-situations");
