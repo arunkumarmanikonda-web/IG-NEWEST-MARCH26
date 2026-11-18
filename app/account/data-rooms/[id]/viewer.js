@@ -93,7 +93,7 @@ export default function RoomViewer({ room, email }) {
                   </p>
                 </div>
                 <div className="workspace-actions">
-                  {f.has_preview ? (
+                  {f.security_pending ? (<span className="workspace-small">{f.processing_status === "infected" || f.processing_status === "held" ? "File needs administrator review" : "Private security check in progress"}</span>) : f.has_preview ? (
                     <button onClick={() => setFile(f)}>Open preview</button>
                   ) : (
                     <span className="workspace-small">
@@ -102,7 +102,7 @@ export default function RoomViewer({ room, email }) {
                         : "Preview is being prepared"}
                     </span>
                   )}
-                  {f.can_download && (
+                  {f.can_download && !f.security_pending && (
                     <a
                       className="primary"
                       href={"/api/data-room/file?id=" + f.id + "&mode=download"}

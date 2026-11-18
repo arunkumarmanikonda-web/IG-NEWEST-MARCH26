@@ -36,3 +36,13 @@ Existing room originals still require faithful previews; download restrictions h
 | F15 Database hygiene | Missing FK indexes, RLS on private processing tables, consolidated outbox policy and cached auth identity | Workflow authorization regressions |
 | F16 Entity onboarding | LLP/partnership/trust/overseas organisation and overseas individual paths; GST optional where absent | Human review retained; synthetic registration tests |
 | F17 Release checks | Dependency audit, SQL workflows and browser gates in CI | Read-only production smoke and migration parity passed |
+
+## Completion release prepared 18 November
+
+- PR39 isolates the Perspectives research model from ordinary drafting and retains private research/fact-check diagnostics. PR40 fixes false rejection of independent companies whose original filings share the NSE archive host. Both are deployed.
+- Private processing now uses disposable Vercel VMs with ClamAV and LibreOffice. Originals remain private. Downloads use per-file expiring URLs; network access is denied before parsing. Macros and document link updates are disabled. Only a clean software/definition image may be snapshotted; client-file VMs are stopped without persistence.
+- New completed uploads queue automatically, remain inaccessible until a clean scan, and receive PDF companions where required. Scan leases, bounded retries, staff retry, preview checksums and invitation readiness checks preserve existing room and download permissions. Existing files are backfilled in the controlled activation phase; infected files are blocked regardless of earlier grants.
+- Synthetic live sandbox checks passed for clean/infected antivirus signatures, CSV, DOCX and XLSX conversion. CSV references retain leading zeros and formula-like text is literal. No client records were used in those tests. SQL checks cover secret/lease rejection, queued access blocks, preview permissions, malware blocks and lease exhaustion.
+- A factual editorial HOLD may trigger one sourced revision followed by a fresh independent web audit. Both reviews are retained. Unchanged text, unsupported revisions or another HOLD still prevent publication.
+- The Sandbox SDK's transitive configuration package pinned an affected Zod version. A scoped override to Zod 4.6.7 retains the same major version and clears the dependency audit.
+- Limits: automated originals up to 1 GiB, generated previews up to 20 MiB/500 pages, bounded VM processing. Encrypted/oversized/unreadable documents require review rather than being declared safe. Antivirus reduces risk; it cannot establish the absence of every possible threat.

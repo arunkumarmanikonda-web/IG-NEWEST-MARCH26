@@ -26,12 +26,13 @@ function result(text, addresses, citations = addresses || [], id = "resp_test") 
   const calls = addresses ? [{ type: "web_search_call", status: "completed", action: { type: "search", sources: addresses.map(url => ({ url })) } }] : [];
   return Response.json({ status: "completed", id, output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
 }
-function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair } = {}) {
+function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair, factualRevision, revisionVerdict="VERIFIED" } = {}) {
   const steps = [
     result("3 districts, released November 15; sample note from August 1.", addresses),
     result(JSON.stringify(draft)),
     ...(repair ? [result(JSON.stringify(repair))] : []),
     result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations, "resp_audit"),
+    ...(factualRevision ? [result(JSON.stringify(factualRevision)), result(revisionVerdict + "\nEvery objection checked again.",auditAddresses,auditCitations,"resp_recheck")] : []),
     result((verificationRepair?.verdict || verdict) + "\nSource-by-source review.",
       verificationRepair?.addresses || auditAddresses, verificationRepair?.citations || auditCitations, "resp_audit_retry"),
   ];
@@ -107,7 +108,7 @@ test("missing citations remain a hold after one retry and factual objections can
   assert.equal(missing.requests.length, 4);
   const negative = run({ verdict: "HOLD", verificationRepair: { verdict: "VERIFIED", citations: urls } });
   await assert.rejects(negative.promise, /held the article/);
-  assert.equal(negative.requests.length, 3);
+  assert.equal(negative.requests.length, 4);
   const newObjection = run({ auditCitations: [urls[0]], verificationRepair: { verdict: "HOLD", citations: urls } });
   await assert.rejects(newObjection.promise, /held the article/);
   assert.equal(newObjection.requests.length, 4);
@@ -125,11 +126,11 @@ test("only public practice titles can be sent as ranked audience interests", asy
 test("held runs retain the independent review and public research, never provider credentials", async () => {
   const held = run({verdict:'HOLD'});
   await assert.rejects(held.promise, error => {
-    assert.equal(error.perspectiveDiagnostics.stage, 'independent verification');
+    assert.equal(error.perspectiveDiagnostics.stage, 'factual revision');
     assert.match(error.perspectiveDiagnostics.verificationReport, /^HOLD/);
     assert.ok(error.perspectiveDiagnostics.researchReport);
     assert.equal(error.perspectiveDiagnostics.draft.title, mockDraft.title);
-    assert.equal(error.perspectiveDiagnostics.providerResponseIds.length, 3);
+    assert.equal(error.perspectiveDiagnostics.providerResponseIds.length, 4);
     assert.doesNotMatch(JSON.stringify(error.perspectiveDiagnostics), /api_key|secrets|Authorization/);
     return true;
   });
@@ -206,4 +207,17 @@ test('independent exchange-hosted issuer filings are not mistaken for one publis
   await assert.rejects(run({addresses:[addresses[0],addresses[0].replace('Release','Results')]}).promise,/independent publishers/);
   await assert.rejects(run({addresses:addresses.map(url=>url.replace('nsearchives.nseindia.com','publisher.example.org'))}).promise,/independent publishers/);
   await assert.rejects(run({addresses,auditAddresses:addresses,verdict:'HOLD'}).promise,/held the article/);
+});
+
+
+test('a factual hold requires a changed sourced draft and a fresh independent VERIFIED verdict',async()=>{
+ const corrected=changed(d=>{d.summary='The local survey supports a scoped comparison, subject to its sampling limits.';});
+ const {promise,requests}=run({verdict:'HOLD',factualRevision:corrected});
+ const article=await promise;assert.equal(requests.length,5);assert.equal(article.summary,corrected.summary);
+ assert.match(article.verification.initialReview,/^HOLD/);assert.match(article.verification.report,/^VERIFIED/);
+ assert.equal(requests[4].tools[0].type,'web_search');
+ assert.equal(JSON.parse(requests[4].input).summary,corrected.summary);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:mockDraft}).promise,/no factual revision/);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:corrected,revisionVerdict:'HOLD'}).promise,/held the article/);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:changed(d=>{d.summary='A 99% increase.';})}).promise,/research report/);
 });

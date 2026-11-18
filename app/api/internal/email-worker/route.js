@@ -1,3 +1,4 @@
+import {dispatchPrivateFiles} from '../../../../lib/private-file-worker';
 import {monitoredWorker} from '../../../../lib/worker-health';
 import {after} from 'next/server';
 import {dispatchPerspective} from '../../../../lib/perspectives-worker';
@@ -17,7 +18,7 @@ export async function POST(request) {
       !timingSafeEqual(suppliedBytes, expectedBytes))
     return new Response('Unauthorised', {status: 401});
   after(async () => {
-    const result=await Promise.allSettled([monitoredWorker('catalogue',dispatchCataloguePage),monitoredWorker('artwork',dispatchCatalogueArtwork),monitoredWorker('perspectives',dispatchPerspective),monitoredWorker('gullu_reports',dispatchGulluDigest)]);
+    const result=await Promise.allSettled([monitoredWorker('catalogue',dispatchCataloguePage),monitoredWorker('artwork',dispatchCatalogueArtwork),monitoredWorker('perspectives',dispatchPerspective),monitoredWorker('gullu_reports',dispatchGulluDigest),monitoredWorker('private_files',dispatchPrivateFiles)]);
     for(const outcome of result)if(outcome.status==='rejected')console.error('A scheduled background operation did not complete.');
   });
   try { const outcomes=await Promise.allSettled([monitoredWorker('email',dispatchEmailQueue),monitoredWorker('providers',dispatchProviderJobs),monitoredWorker('campaigns',dispatchCampaignQueue),monitoredWorker('collections',reconcileCollections)]); return Response.json({email:outcomes[0].status==='fulfilled'?outcomes[0].value:{error:'Email worker unavailable'},campaigns:outcomes[2].status==='fulfilled'?outcomes[2].value:{error:'Campaign worker unavailable'},providers:outcomes[1].status==='fulfilled'?outcomes[1].value:{error:'Provider worker unavailable'},collections:outcomes[3].status==='fulfilled'?outcomes[3].value:{error:'Collection checks unavailable'}}, {status:outcomes.some(x=>x.status==='rejected')?503:202,headers: {'Cache-Control':'no-store'}}); }

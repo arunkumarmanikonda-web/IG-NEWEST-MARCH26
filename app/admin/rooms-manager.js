@@ -592,7 +592,11 @@ export default function RoomsManager({
                       {f.name}
                       <small>{size(f.bytes)}</small>
                     </td>
-                    <td>{f.status}</td>
+                    <td>{f.status}<small>{f.processing_status && f.processing_status !== 'unscanned' ? f.processing_status : ''}</small>
+                      {f.processing_detail && <small>{f.processing_detail}</small>}
+                      {f.status === 'ready' && (f.processing_status === 'held' || (f.processing_status === 'clean' && f.processing_detail?.startsWith('Automatic preview'))) &&
+                        <button disabled={busy} onClick={() => run({action:'processing_retry',id:f.id})}>Retry processing</button>}
+                    </td>
                     <td>
                       {nativeRoomPreview(f.mime) && f.bytes <= MAX_PREVIEW_BYTES
                         ? "Built-in"

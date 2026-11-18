@@ -9,7 +9,7 @@ export default {
     "/admin/content/*/brief.pdf": ["./public/logo-dark.png", "./public/logo-white.png", "./public/images/**", "./assets/fonts/briefs/**", "./node_modules/@napi-rs/canvas*/**"],
     "/api/admin/collections": ["./public/logo-dark.png", "./assets/fonts/IG-Card.ttf", "./node_modules/@napi-rs/canvas*/**"],
     "/api/admin/brand-catalogue": ["./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/standard_fonts/**", "./node_modules/pdfjs-dist/cmaps/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
-    "/api/internal/email-worker": ["./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/standard_fonts/**", "./node_modules/pdfjs-dist/cmaps/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
+    "/api/internal/email-worker": ["./scripts/private-file-tools.py","./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/standard_fonts/**", "./node_modules/pdfjs-dist/cmaps/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
     "/api/admin/intake": ["./node_modules/pdfjs-dist/legacy/build/**", "./node_modules/pdfjs-dist/wasm/**", "./node_modules/@napi-rs/canvas*/**"],
     "/api/data-room/file": [
       "./node_modules/pdfjs-dist/legacy/build/**",
