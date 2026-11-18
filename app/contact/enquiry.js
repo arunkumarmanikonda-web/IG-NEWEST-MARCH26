@@ -4,7 +4,7 @@ import AdvertisingEvent from "../advertising-event";
 import Link from "next/link";
 import { contact } from "../../lib/content.mjs";
 import { Arrow } from "../components";
-export default function Enquiry({ initialInterest, initialMessage="", referral = null, submitRequest = fetch }) {
+export default function Enquiry({ initialInterest, initialMessage="", listingSlug="", referral = null, submitRequest = fetch }) {
   const [status, setStatus] = useState(""),
     [busy, setBusy] = useState(false),
     [saved, setSaved] = useState(null);
@@ -51,11 +51,13 @@ export default function Enquiry({ initialInterest, initialMessage="", referral =
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           request_id: requestId.current,
+          listing_slug:listingSlug,
           ...(referral && d.get("interest") === initialInterest ? referral : {}),
           name: d.get("name"),
           organisation: d.get("organisation"),
           email: d.get("email"),
           phone: d.get("phone"),
+          preferred_contact:d.get("preferred_contact"),
           practice: d.get("interest"),
           message: d.get("message"),
           privacy: d.get("privacy") === "on",
@@ -117,6 +119,7 @@ export default function Enquiry({ initialInterest, initialMessage="", referral =
           or email <a href={"mailto:" + contact.email}>{contact.email}</a>.
         </p>
         <div className="form-buttons">
+          <Link className="button" href="/account/enquiries">Track your enquiry</Link>
           <Link className="button" href="/practices">
             Explore our practices <Arrow />
           </Link>
@@ -141,6 +144,7 @@ export default function Enquiry({ initialInterest, initialMessage="", referral =
         Send a short brief to our advisory team. Please keep confidential
         documents for the agreed disclosure process.
       </p>
+      <aside className="service-expectation"><strong>What happens next</strong><p>Our advisory team reviews your brief and routes it to the relevant practice. You receive a reference after submission; we confirm the next step using your preferred contact method. For a time-sensitive request, call {contact.phone}.</p></aside>
       <div className="form-grid">
         <label>
           Your name
@@ -174,6 +178,7 @@ export default function Enquiry({ initialInterest, initialMessage="", referral =
           Phone number
           <input type="tel" name="phone" autoComplete="tel" maxLength={30} />
         </label>
+        <label>Preferred follow-up<select name="preferred_contact" defaultValue="email"><option value="email">Email</option><option value="phone">Phone, if supplied</option><option value="either">Either email or phone</option></select></label>
         <label className="full">
           Area of interest
           <select name="interest" defaultValue={initialInterest || ""} required>
@@ -193,7 +198,7 @@ export default function Enquiry({ initialInterest, initialMessage="", referral =
             name="message" defaultValue={initialMessage}
             required
             minLength={10}
-            maxLength={1500}
+            maxLength={1350}
             placeholder="Your objective, location, project stage and preferred next step."
           />
         </label>

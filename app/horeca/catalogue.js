@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState} from 'react';
+import SourcingBrief from "../sourcing-brief";
 import Link from 'next/link';
 import {basketKey,normaliseBasket,addProduct} from '../../lib/procurement.mjs';
 import {catalogueResults} from '../../lib/catalogue-results.mjs';
@@ -56,9 +57,9 @@ export default function Catalogue({initial,priorities,initialCategory='',collect
       <p className="collection-browse-note">{selected?'Find the right specification for your space.':'Explore by collection, or find a specific product.'}</p>
       <label className="catalogue-search">{selected?'Search '+selected.title.toLowerCase():'Find a specific SKU or product'}<input type="search" value={query} onChange={e=>{setQuery(e.target.value);setBrand('');setType('');setOffset(0);}} placeholder="Product, SKU, brand or manufacturer code"/></label>
     </div>
-    {!browsing?<div className="horeca-category-directory" aria-label="HORECA product categories">{directory.map((c,i)=><Link className="horeca-category-tile" key={c.id} href={categoryHref(c.id)}>
+    {!browsing?<div className="horeca-category-directory" aria-label="HORECA product categories">{directory.map((c,i)=><Link className={"horeca-category-tile"+(c.count?"":" sku-category--sourcing")} key={c.id} href={categoryHref(c.id)}>
       <div className="collection-image"><img src={c.image} alt={c.alt} width="1440" height="960" loading="lazy" decoding="async"/><span className="collection-number" aria-hidden="true">{String(i+1).padStart(2,'0')}</span><span className="collection-image-label">{c.kicker}</span></div>
-      <div className="collection-caption"><div><span className="collection-overline">HORECA COLLECTION</span><h3>{c.title}</h3></div><span className="category-arrow" aria-hidden="true"><Arrow/></span></div><p>{c.description}</p><span className="category-count">{c.count?c.count+' SKUs · Explore collection':'Source for your project'}</span>
+      <div className="collection-caption"><div><span className="collection-overline">{c.count?"BROWSE PRODUCTS":"PROJECT SOURCING"}</span><h3>{c.title}</h3></div><span className="category-arrow" aria-hidden="true"><Arrow/></span></div><p>{c.description}</p><span className="category-count">{c.count?c.count+' SKUs · Browse products':'Request sourcing'}</span>
     </Link>)}</div>:<>
       <nav className="horeca-category-nav" aria-label="Filter product category">{directory.map(c=><Link key={c.id} href={categoryHref(c.id)} aria-current={c.id===category?'page':undefined}>{c.title}<span>{c.count||<Arrow/>}</span></Link>)}</nav>
       <div className="sku-filter-bar"><label>Brand<select value={brand} onChange={e=>{setBrand(e.target.value);setType('');setOffset(0);}}><option value="">All brands</option>{brands.map(b=><option key={b}>{b}</option>)}</select></label>
@@ -76,7 +77,7 @@ export default function Catalogue({initial,priorities,initialCategory='',collect
           <div className="catalogue-links"><Link href={href}>View specification <Arrow/></Link><button type="button" onClick={()=>add(p)}>Add to quotation</button></div>
         </div></article>;})}</div>
       {results.length<data.total&&!failure&&<button type="button" disabled={loading} className="button catalogue-more" onClick={()=>setOffset(results.length)}>Show more SKUs ({data.total-results.length})</button>}
-      {!results.length&&!loading&&!failure&&<div className="sku-empty"><div className="eyebrow">SOURCING WITH INDIA GULLY</div><h3>{!query&&!brand&&!type?'Selected for your project.':'No matching SKUs.'}</h3><p>{!query&&!brand&&!type?'Share your '+(selected?.title.toLowerCase()||'procurement')+' requirements, quantities and delivery location. Our HORECA team will prepare the options.':'Try another product name or clear your filters.'}</p><Link className="button" href={'/contact?interest='+encodeURIComponent('HORECA: '+(selected?.title||query||'Procurement'))}>Discuss this requirement <Arrow/></Link></div>}
+      {!results.length&&!loading&&!failure&&<div className="sku-empty"><div className="eyebrow">SOURCING WITH INDIA GULLY</div><h3>{!query&&!brand&&!type?'Selected for your project.':'No matching SKUs.'}</h3><p>{!query&&!brand&&!type?'Share your '+(selected?.title.toLowerCase()||'procurement')+' requirements, quantities and delivery location. Our HORECA team will prepare the options.':'Try another product name or clear your filters.'}</p><SourcingBrief category={selected?.title||query||"Procurement"}/></div>}
     </>}
     <div className="horeca-practice-note"><div className="eyebrow">MORE THAN A PRODUCT CATALOGUE</div><p>India Gully’s HORECA practice connects specification planning, sourcing, vendor comparison and delivery coordination.</p><Link href="/contact?interest=HORECA%20procurement">Plan a complete procurement brief <Arrow/></Link></div>
   </section>;

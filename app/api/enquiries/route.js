@@ -43,7 +43,9 @@ export async function POST(request) {
         throw new HttpError("Invalid enquiry field");
       payload[k] = p[k] || "";
     }
+    if(p.preferred_contact!==undefined){if(!["email","phone","either"].includes(p.preferred_contact))throw new HttpError("Choose a valid contact preference");if(payload.message.length>1350)throw new HttpError("Keep your brief within 1,350 characters");payload.message += "\n\nPreferred follow-up: "+p.preferred_contact;}
     Object.assign(payload, listingReferral(p.feature_id, p.listing_slug));
+    if(typeof p.listing_slug==="string"&&p.listing_slug.length<=120&&/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(p.listing_slug))payload.listing_slug=p.listing_slug;
     payload.privacy = p.privacy === true;
     const ip = process.env.VERCEL
       ? request.headers.get("x-vercel-forwarded-for") || "unknown"

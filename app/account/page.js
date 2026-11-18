@@ -43,6 +43,7 @@ export default async function AccountPage({ searchParams }) {
   return (
     <main id="main" className="auth-page account-dashboard">
       <div>
+        <nav className="journey-dashboard-nav" aria-label="Your work"><Link href="/shortlist">Saved listings & comparison</Link><Link href="/account/enquiries">Enquiries & follow-up</Link><Link href="/account/nda">NDAs & access requests</Link><Link href="/account/procurement">Procurement requests</Link></nav>
         <Account returnTo={returnTo} profile={profile} email={user.email} policyVersion={policyVersion} policiesAccepted={policiesAccepted} pendingInvitation={signInStatus?.pending_invitation} />
         {mandateError && <p role="alert">Your retail mandates could not be loaded. Refresh to retry.</p>}
         {!!mandates?.length && <section className="shared-rooms"><h2>Your retail mandates</h2>{mandates.map(m=><article className="workspace-card" key={m.room_id}><h3>{m.title}</h3><p>{m.side}</p>{m.room_open?<Link href={"/account/data-rooms/"+m.room_id}>Open mandate room →</Link>:<p>Your mandate is on your dashboard. The team controls document access.</p>}</article>)}</section>}

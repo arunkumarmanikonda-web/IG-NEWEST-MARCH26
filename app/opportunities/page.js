@@ -32,7 +32,7 @@ export default async function Opportunities({ searchParams }) {
           ).values(),
         ];
   const filters = Object.fromEntries(
-    ["q", "sector", "city", "type", "context", "sort", "view"].map((k) => [
+    ["q", "sector", "city", "type", "context", "sort", "view", "inventory", "transaction"].map((k) => [
       k,
       typeof params?.[k] === "string" ? params[k].slice(0, 200) : "",
     ]),

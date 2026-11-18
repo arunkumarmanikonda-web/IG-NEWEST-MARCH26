@@ -1,3 +1,4 @@
+import AccessSteps from "../../access-steps";
 import { featureId } from "../../../lib/feature-referral.mjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -27,7 +28,7 @@ export default async function Page({ searchParams }) {
   if(!user && slug) {
     const item=(await published(kind))?.find(x=>x.slug===slug);
     if(!item || !await currentPolicies()) return <PolicyUnavailable/>;
-    return <main id="main" className="auth-page"><AuthForm register returnTo={destination} projectTitle={item.title}/></main>;
+    return <main id="main" className="auth-page"><AccessSteps current={1}/><AuthForm register returnTo={destination} projectTitle={item.title}/></main>;
   }
   if(!user || !profile) redirect("/login");
   if(profile.status!=="active" || !policiesAccepted) redirect("/account"+(slug?"?next="+encodeURIComponent(destination):""));
@@ -48,7 +49,7 @@ export default async function Page({ searchParams }) {
       client.from("ig_legal_entities").select("*").eq("user_id",user.id).order("consent_at"),
       client.rpc("ig_project_disclaimer"),
     ]);
-    return <main id="main" className="auth-page"><div className="nda-account">
+    return <main id="main" className="auth-page"><div className="nda-account"><AccessSteps current={requests?.find(r=>r.content_id===item?.id)?.status==="approved"?4:requests?.some(r=>r.content_id===item?.id)?3:2}/>
       <Link href={(kind==="project"?"/our-work/":"/opportunities/")+slug}>← Back to listing</Link>
       {error||te||identities.error||disclaimer.error||!disclaimer.data||!item?<p role="alert">This request could not be loaded. Try again.</p>:
         <ProjectRequest feature={referral} disclaimer={disclaimer.data} item={{title:item.title,slug,kind}} template={templates.find(t=>t.content_id===item.id)||null}

@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState} from "react";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
+import {contextualQuestions} from "../../lib/customer-experience.mjs";
 import Avatar from "./animated-avatar";
 import "./widget.css";
 
@@ -10,20 +11,21 @@ async function post(payload){
   const data=await res.json().catch(()=>({}));
   if(!res.ok)throw new Error(data.error||"I couldn’t connect. Please try again.");return data;
 }
-const starters=["Find a distressed property","What does India Gully do?","Hotel supplies chahiye"];
+
 export default function Gullu(){
-  const page=usePathname(),launcher=useRef(null),first=useRef(null),input=useRef(null),scroll=useRef(null),pending=useRef(null);
+  const page=usePathname(),starters=contextualQuestions(page),launcher=useRef(null),first=useRef(null),input=useRef(null),scroll=useRef(null),pending=useRef(null);
   const [open,setOpen]=useState(false),[guest,setGuest]=useState(null),[messages,setMessages]=useState([]),
     [question,setQuestion]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),
     [language,setLanguage]=useState("auto"),[confirm,setConfirm]=useState(false),[receipt,setReceipt]=useState("");
   const [expression,setExpression]=useState("idle"),[restored,setRestored]=useState(false),[hasMore,setHasMore]=useState(false);
-  const timer=useRef(null);
+  const timer=useRef(null),returnFocus=useRef(false);
   function animate(mood){clearTimeout(timer.current);setExpression(mood);timer.current=setTimeout(()=>setExpression("idle"),1800);}
   useEffect(()=>{return ()=>clearTimeout(timer.current);},[]);
   const mood=busy?"thinking":expression!=="idle"?expression:question?"listening":"idle";
   useEffect(()=>{if(open)(guest?input:first).current?.focus();},[open,guest]);
   useEffect(()=>{const el=scroll.current;if(open&&el)el.scrollTop=el.scrollHeight;},[messages.length,busy,receipt,open]);
-  function close(){setOpen(false);launcher.current?.focus();}
+  function close(){returnFocus.current=true;setOpen(false);}
+  useEffect(()=>{if(!open&&returnFocus.current){launcher.current?.focus();returnFocus.current=false;}},[open]);
   useEffect(()=>{
     if(!open||restored)return;
     let cancelled=false;setBusy(true);
@@ -63,10 +65,11 @@ export default function Gullu(){
   }
   return <div className={"gullu"+(open?" g-open":"")}>
     <button className="g-launch" aria-label={open?"Close Gullu":"Ask Gullu"} aria-controls="gullu-chat" aria-expanded={open} onClick={()=>{if(open)close();else{setOpen(true);animate("welcome");}}} ref={launcher}><Avatar size={38} mood={open?mood:"idle"}/>Ask Gullu</button>
-    {open&&<section id="gullu-chat" className="g-panel" role="dialog" aria-labelledby="g-title" onKeyDown={e=>{if(e.key==="Escape")close();}}>
+    {open&&<section id="gullu-chat" className="g-panel" role="dialog" aria-labelledby="g-title" onKeyDown={e=>{if(e.key==="Escape"){e.stopPropagation();close();}}}>
       <header className="g-head"><button className="g-avatar-button" type="button" aria-label="Wave to Gullu" title="Wave to Gullu" onClick={()=>animate("wave")}><Avatar size={51} mood={mood}/></button><div><h2 id="g-title">Gullu</h2><p>Your India Gully buddy</p></div><button className="g-close" type="button" aria-label="Close chat" onClick={close}>×</button></header>
       {!guest?<div className="g-scroll g-welcome">
         <div className="g-hello"><Avatar size={72} mood={mood}/><h3>Namaste! I’m Gullu.</h3><p>Properties, hotel supplies, or a project on your mind? Let’s talk. English, Hindi or Hinglish works.</p></div>
+        <div className="g-entry-context"><p>A few details help us keep your conversation together and connect you with the right India Gully colleague.</p><details><summary>Things we can explore together</summary><ul>{starters.map(t=><li key={t}>{t}</li>)}</ul></details></div>
         <form className="g-start" onSubmit={start}>
           <label>Your name<input name="name" autoComplete="name" ref={first} placeholder="First and last name" minLength={2} maxLength={100} required/></label>
           <label>Mobile number<input name="mobile" type="tel" autoComplete="tel" placeholder="With country code" maxLength={25} required/></label>

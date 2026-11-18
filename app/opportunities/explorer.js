@@ -13,13 +13,14 @@ const empty = {
   context: "",
   sort: "featured",
   view: "grid",
+  inventory:"current", transaction:"",
 };
 export default function Explorer({
   items,
   contexts = opportunityContexts,
   initialFilters = {},
 }) {
-  const [filters, setFilters] = useState({ ...empty, ...initialFilters, sort: initialFilters.sort || "featured" });
+  const [filters, setFilters] = useState({ ...empty, ...initialFilters, sort: initialFilters.sort || "featured", inventory:initialFilters.inventory || "current" });
   const [copied, setCopied] = useState("");
   const availableContexts = contexts.filter(context => items.some(item => item.contexts?.includes(context.id)));
   function update(patch) {
@@ -36,14 +37,16 @@ export default function Explorer({
       "/opportunities" + (params.size ? "?" + params.toString() : ""),
     );
   }
+  const inventoryItems=items.filter(x=>filters.inventory==="portfolio"?/portfolio reference/i.test(x.reference||""):!/portfolio reference/i.test(x.reference||""));
   const filtered = collectionItems(items, { ...filters, query: filters.q });
-  const active = Object.entries(filters).filter(([k, v]) => !["sort", "view"].includes(k) && v);
+  const active = Object.entries(filters).filter(([k, v]) => !["sort", "view", "inventory"].includes(k) && v);
   return (
     <>
+      <div className="inventory-switch" role="group" aria-label="Listing availability"><button aria-pressed={filters.inventory==="current"} onClick={()=>update({inventory:"current"})}>Current opportunities ({items.filter(x=>!/portfolio reference/i.test(x.reference||"")).length})</button><button aria-pressed={filters.inventory==="portfolio"} onClick={()=>update({inventory:"portfolio"})}>Portfolio references ({items.filter(x=>/portfolio reference/i.test(x.reference||"")).length})</button><Link href="/shortlist">My shortlist &amp; comparison →</Link></div>
       <div className="listing-category-tabs" role="group" aria-label="Property sectors">
-        {["", ...new Set(items.map(x => x.sector).filter(Boolean))].map(sector => (
+        {["", ...new Set(inventoryItems.map(x => x.sector).filter(Boolean))].map(sector => (
           <button key={sector} type="button" aria-pressed={filters.sector === sector} onClick={() => update({sector})}>
-            {sector || "All properties"}<span>{sector ? items.filter(x => x.sector === sector).length : items.length}</span>
+            {sector || "All properties"}<span>{sector ? inventoryItems.filter(x => x.sector === sector).length : inventoryItems.length}</span>
           </button>
         ))}
       </div>
@@ -71,8 +74,8 @@ export default function Explorer({
           ],
           [
             "sector",
-            "Asset class",
-            "All asset classes",
+            "Asset sector",
+            "All sectors",
             [...new Set(items.map((x) => x.sector))].sort(),
           ],
           [
@@ -81,6 +84,7 @@ export default function Explorer({
             "All property types",
             [...new Set(items.map((x) => x.type))].sort(),
           ],
+          ["transaction","Transaction route","All routes",[...new Set(items.map(x=>x.transaction).filter(Boolean))].sort()],
         ].map(([k, label, all, values]) => (
           <label key={k}>
             {label}

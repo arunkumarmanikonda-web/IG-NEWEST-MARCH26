@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {articlePractice,readingMinutes} from "../../lib/customer-experience.mjs";
 import Image from "next/image";
 import { siteSection } from "../../lib/website";
 import { pageMeta } from "../../lib/seo.mjs";
@@ -17,10 +18,10 @@ const parameter = value => typeof value === "string" ? value.slice(0, 200).trim(
 export default async function Insights({ searchParams }) {
   const [copy, records, params] = await Promise.all([siteSection("insights"), published("article"), searchParams]);
   const query = parameter(params?.q);
-  const selectedPractice = parameter(params?.practice);
+  const selectedPractice = params?.practice ? articlePractice({category:parameter(params.practice)}).label : "";
   // The public register arrives newest first. Undated originals keep their editorial order.
-  const items = records === null ? insights : records.map(row => ({
-    ...row, category: row.public_data.sector || "General", image: row.public_data.image,
+  const items = records === null ? insights.map(row=>({...row,category:articlePractice(row).label})) : records.map(row => ({
+    ...row, category: articlePractice(row).label, image: row.public_data.image,
   }));
   const practices = [...new Set(items.map(row => row.category))].sort((a,b) => a.localeCompare(b));
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
@@ -61,7 +62,7 @@ export default async function Insights({ searchParams }) {
             <div className="archive-meta">
               {item.image && <Image className="archive-cover" src={item.image} alt="" width={200} height={102}
                 unoptimized={item.image.startsWith("/images/generated/")} sizes="(max-width: 680px) 130px, 200px" />}
-              <PerspectiveDate value={item.published_at} /><span>{item.category}</span>
+              <PerspectiveDate value={item.published_at} /><span>{item.category}</span><span>{readingMinutes(item)} min read</span>
             </div>
             <div><h3><Link href={"/insights/" + item.slug}>{item.title}</Link></h3><p>{item.summary}</p></div>
             <Link className="archive-arrow" href={"/insights/" + item.slug} aria-label={"Read " + item.title}><Arrow /></Link>

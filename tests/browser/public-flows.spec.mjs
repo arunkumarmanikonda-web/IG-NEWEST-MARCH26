@@ -52,3 +52,39 @@ test('Gullu resumes after a page reload and ends the session explicitly',async({
   await expect(page.getByLabel('Your name',{exact:true})).toBeVisible();
   expect(ended).toBe(true);
 });
+
+test('a complete procurement draft survives reload and points sign-in back to its basket',async({page})=>{
+ await page.route('**/api/portal/action',route=>route.fulfill({status:401,json:{error:'Sign in required'}}));
+ await page.goto('/horeca#quotation-basket');
+ const form=page.locator('#quotation-basket');
+ await form.getByRole('button',{name:'+ Add a custom requirement'}).click();
+ await form.getByLabel('Requirement 1',{exact:true}).fill('Opening linen, specification to follow');
+ await form.getByLabel('Quantity 1',{exact:true}).fill('25');
+ await form.getByLabel('Request title',{exact:true}).fill('Kochi hotel opening');
+ await form.getByLabel('Required delivery',{exact:true}).fill('2026-12-20');
+ await form.getByLabel('Delivery destination',{exact:true}).fill('Kochi, 682001');
+ await form.getByLabel('Specifications and notes',{exact:true}).fill('Samples before final approval');
+ await page.reload();
+ await expect(form.getByLabel('Request title',{exact:true})).toHaveValue('Kochi hotel opening');
+ await expect(form.getByLabel('Delivery destination',{exact:true})).toHaveValue('Kochi, 682001');
+ await expect(form.getByLabel('Required delivery',{exact:true})).toHaveValue('2026-12-20');
+ await expect(form.getByLabel('Specifications and notes',{exact:true})).toHaveValue('Samples before final approval');
+ await expect(form.getByLabel('Quantity 1',{exact:true})).toHaveValue('25');
+ await expect(form.getByRole('link',{name:'Sign in and continue →'})).toHaveAttribute('href','/login?next=%2Fhoreca%23quotation-basket');
+ await expect(form.getByRole('button',{name:'Submit quotation request',exact:true})).toHaveCount(0);
+});
+
+test('public journeys reflow at 320 CSS pixels and Gullu remains keyboard dismissible',async({page})=>{
+ await page.setViewportSize({width:320,height:800});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ for(const path of ['/','/horeca','/retail-leasing','/shortlist','/contact']){
+  await page.goto(path);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),path).toBe(true);
+ }
+ await page.route('**/api/gullu',route=>route.fulfill({json:{session:null}}));
+ await page.getByRole('button',{name:'Ask Gullu',exact:true}).click();
+ await expect(page.getByRole('dialog',{name:'Gullu'})).toBeVisible();
+ await page.keyboard.press('Escape');
+ await expect(page.getByRole('dialog',{name:'Gullu'})).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'Ask Gullu',exact:true})).toBeFocused();
+});
