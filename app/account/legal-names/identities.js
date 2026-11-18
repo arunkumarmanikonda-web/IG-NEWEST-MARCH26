@@ -33,8 +33,8 @@ function IdentityFields({ entity, offline, busy, run, finish }) {
           value={kind}
           onChange={(e) => setKind(e.target.value)}
         >
-          <option value="company">Company</option>
-          <option value="individual">Individual</option>
+          <option value="company">Indian company</option>
+          <option value="individual">Indian individual</option><option value="organisation">LLP, partnership, trust or overseas organisation</option><option value="international_individual">Overseas individual</option>
         </select>
       </label>
       <label>
@@ -48,7 +48,7 @@ function IdentityFields({ entity, offline, busy, run, finish }) {
         />
       </label>
       <label>
-        {kind === "company" ? "Date of incorporation" : "Date of birth"}
+        {["company","organisation"].includes(kind) ? "Date of incorporation / formation" : "Date of birth"}
         <input
           type="date"
           name="vital_date"
@@ -68,12 +68,11 @@ function IdentityFields({ entity, offline, busy, run, finish }) {
             />
           </label>
           <label>
-            GSTIN
+            GSTIN (if registered)
             <input
               name="gstin"
               pattern="[0-9]{2}[A-Za-z]{5}[0-9]{4}[A-Za-z][1-9A-Za-z][Zz][0-9A-Za-z]"
               defaultValue={entity?.gstin}
-              required
             />
           </label>
           <label>
@@ -87,7 +86,16 @@ function IdentityFields({ entity, offline, busy, run, finish }) {
             />
           </label>
         </>
-      ) : (
+      ) : kind==='organisation' ? <>
+        <label>Entity type<select name="entity_type" defaultValue={entity?.entity_type||'llp'}><option value="llp">LLP</option><option value="partnership">Partnership</option><option value="trust">Trust</option><option value="foreign_company">Overseas company</option><option value="other">Other registered organisation</option></select></label>
+        <label>Country of registration (two-letter code)<input name="country" pattern="[A-Za-z]{2}" maxLength={2} defaultValue={entity?.country||'IN'} required/></label>
+        <label>Registration / constitution reference<input name="registration_id" minLength={2} maxLength={80} defaultValue={entity?.registration_id} required/></label>
+        <label>Authorised signatory<input name="signer" minLength={2} maxLength={120} defaultValue={entity?.signer} required/></label>
+        <p>Upload your registration and signing-authority documents for review by India Gully.</p>
+      </> : kind==='international_individual' ? <>
+        <label>Country of identity document (two-letter code)<input name="country" pattern="[A-Za-z]{2}" maxLength={2} defaultValue={entity?.country==='IN'?'':entity?.country} required/></label>
+        <input name="id_method" type="hidden" value="passport"/><p>Your passport identity page will be reviewed by India Gully.</p>
+      </> : (
         <>
           <label>
             Permanent Account Number (PAN)
@@ -157,7 +165,7 @@ function Evidence({ entity, slot, busy, run }) {
           <label>
             {offline
               ? "Select the extracted XML. Only the check result is retained."
-              : "Upload a PDF, JPEG or PNG"}
+              : "Upload a PDF, JPEG or PNG up to 10 MB (up to six PDF pages)"}
             <input
               type="file"
               accept={offline ? ".xml" : "application/pdf,image/png,image/jpeg"}
@@ -178,6 +186,7 @@ function Evidence({ entity, slot, busy, run }) {
             onClick={() =>
               run(async () => {
                 if (file && !offline) {
+                  if(file.size>10000000)throw new Error("Use an evidence document up to 10 MB, with no more than six PDF pages for automated checking.");
                   const key = [
                     entity.user_id,
                     entity.id,

@@ -19,10 +19,16 @@ test('encoded-backslash requests are intercepted and return a non-cacheable 404'
   }
 });
 
-test('normal public routes, assets and query strings still skip the auth proxy', () => {
-  for (const path of ['/', '/about', '/insights', '/valuation', '/horeca', '/robots.txt', '/sitemap.xml', '/favicon.ico', '/_next/static/app.js', '/?q=%5C']) {
-    assert.equal(matches(path), false, path);
+test('public HTML receives fresh nonces without being marked private to search engines', async () => {
+  for(const path of ['/', '/about', '/insights', '/valuation', '/horeca', '/?q=%5C']) {
+    assert.equal(matches(path),true,path);
+    const first=await proxy(new NextRequest('https://indiagully.com'+path));
+    const second=await proxy(new NextRequest('https://indiagully.com'+path));
+    assert.match(first.headers.get('Content-Security-Policy'),/nonce-/);
+    assert.notEqual(first.headers.get('Content-Security-Policy'),second.headers.get('Content-Security-Policy'));
+    assert.equal(first.headers.get('X-Robots-Tag'),null);
   }
+  for(const path of ['/robots.txt','/sitemap.xml','/favicon.ico','/_next/static/app.js','/images/city.jpg'])assert.equal(matches(path),false,path);
 });
 
 test('existing private routes still match the authentication proxy', () => {

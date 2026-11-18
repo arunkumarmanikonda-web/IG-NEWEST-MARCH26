@@ -1,3 +1,4 @@
+import {inspectArchive,inspectCompound} from './archive-check.mjs';
 import { validFileSignature } from './formats.mjs';
 // Validate metadata and a bounded prefix; never buffer the entire original.
 export async function inspectStoredRoomFile(storage, file, fetcher = fetch) {
@@ -21,5 +22,17 @@ export async function inspectStoredRoomFile(storage, file, fetcher = fetch) {
   } finally {await reader.cancel();}
   if (used !== prefix.length || !validFileSignature(file.name,prefix))
     throw new Error('File contents do not match the declared format. Upload a valid original.');
+  async function readRange(start,end){
+    const r=await fetcher(signed.signedUrl,{headers:{Range:'bytes='+start+'-'+end},signal:AbortSignal.timeout(20000)});
+    if(!r.ok||!r.body||(start>0&&r.status!==206))throw new Error('File structure could not be verified. Retry validation.');
+    if(r.status===206&&!String(r.headers.get('content-range')).startsWith('bytes '+start+'-'))throw new Error('File range was not verified.');
+    const data=new Uint8Array(end-start+1);const stream=r.body.getReader();let n=0;
+    try{while(n<data.length){const chunk=await stream.read();if(chunk.done)break;const size=Math.min(chunk.value.length,data.length-n);data.set(chunk.value.subarray(0,size),n);n+=size;}}
+    finally{await stream.cancel();}
+    if(n!==data.length)throw new Error('The uploaded file is incomplete.');return data;
+  }
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(['zip','docx','xlsx','pptx','ods','odt','odp'].includes(ext))await inspectArchive(file.name,Number(file.bytes),readRange);
+  if(['doc','xls','ppt'].includes(ext))await inspectCompound(file.name,prefix,readRange,Number(file.bytes));
   return true;
 }

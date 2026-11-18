@@ -16,6 +16,8 @@ function expiryDate() {
 export default function RoomSharing({ room, engagement, contacts, requests, grants }) {
   const router = useRouter();
   const [selected, setSelected] = useState([]);
+  const [readiness,setReadiness]=useState(null);
+  const [mode,setMode]=useState('none');
   const [receipts, setReceipts] = useState(null);
   const [refresh, setRefresh] = useState(0);
   const [statusError, setStatusError] = useState(false);
@@ -39,7 +41,8 @@ export default function RoomSharing({ room, engagement, contacts, requests, gran
       if (document.visibilityState === "hidden" || checking) return;
       checking = true;
       try {
-        const result = await portalAction("room_share", { action: "status", room_id: room.id });
+        const [result,ready]=await Promise.all([portalAction("room_share",{action:"status",room_id:room.id}),portalAction("room_share",{action:"readiness",room_id:room.id,download_mode:mode})]);
+        if(mounted)setReadiness(ready);
         if (mounted) { setReceipts(result); setStatusError(false); }
       } catch {
         if (mounted) setStatusError(true);
@@ -49,7 +52,7 @@ export default function RoomSharing({ room, engagement, contacts, requests, gran
     const interval = window.setInterval(readStatus, 30000);
     document.addEventListener("visibilitychange", readStatus);
     return () => { mounted = false; clearInterval(interval); document.removeEventListener("visibilitychange", readStatus); };
-  }, [room.id, refresh]);
+  }, [room.id, room.version, refresh, mode]);
   async function share(event) {
     event.preventDefault();
     const action = event.nativeEvent.submitter?.value || "share";
@@ -77,6 +80,7 @@ export default function RoomSharing({ room, engagement, contacts, requests, gran
   }
   return <section id="room-permissions" className="room-share-panel workspace-card" aria-labelledby="room-share-title">
     <h3 id="room-share-title">Share this room</h3>
+    {readiness&&!readiness.ready&&<div role="status"><strong>{readiness.issues.length} files need attention before sharing</strong><ul>{readiness.issues.map(f=><li key={f.id}>{f.name}: {f.reason}</li>)}</ul><p>Existing permissions remain in place. Review each original and preview below.</p></div>}
     {!roomAvailable && <p>This room or its engagement is paused. Reactivate it before sharing.</p>}
     {recipients.length === 0 ? <p>{engagement
       ? <Link href="/admin/clients">Add an active contact with portal access to this client.</Link>
@@ -102,7 +106,7 @@ export default function RoomSharing({ room, engagement, contacts, requests, gran
         <label className="check wide"><input required type="checkbox" name="terms" />
           I have verified that the executed engagement and confidentiality terms authorise disclosure to these contacts.</label>
       </>}
-      <label>Download permissions<select name="mode" defaultValue="none">
+      <label>Download permissions<select value={mode} onChange={e=>setMode(e.target.value)} name="mode">
         <option value="none">View only</option><option value="all">Allow downloads where file settings permit</option>
         <option value="selected">Only files individually approved for download</option></select></label>
       <label>Access expires at end of day, IST<input name="expiry" required type="date" defaultValue={expiryDate()} /></label>

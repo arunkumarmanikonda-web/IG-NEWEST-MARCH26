@@ -1,7 +1,7 @@
 name: Rebuild quality
 on:
   push:
-    branches: ['main', 'rebuild/**', 'backend/**']
+    branches: ['main', 'rebuild/**', 'backend/**', 'fix/**']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -17,6 +17,9 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - run: npm audit --audit-level=moderate
       - run: npm test
       - run: npm run test:workflows
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
