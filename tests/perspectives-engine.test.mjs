@@ -26,13 +26,13 @@ function result(text, addresses, citations = addresses || [], id = "resp_test") 
   const calls = addresses ? [{ type: "web_search_call", status: "completed", action: { type: "search", sources: addresses.map(url => ({ url })) } }] : [];
   return Response.json({ status: "completed", id, output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
 }
-function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair, factualRevision, revisionVerdict="VERIFIED" } = {}) {
+function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair, factualRevision, revisionVerdict="VERIFIED", revisionAddresses=auditAddresses } = {}) {
   const steps = [
     result("3 districts, released November 15; sample note from August 1.", addresses),
     result(JSON.stringify(draft)),
     ...(repair ? [result(JSON.stringify(repair))] : []),
     result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations, "resp_audit"),
-    ...(factualRevision ? [result(JSON.stringify(factualRevision)), result(revisionVerdict + "\nEvery objection checked again.",auditAddresses,auditCitations,"resp_recheck")] : []),
+    ...(factualRevision ? [result(JSON.stringify(factualRevision)), result(revisionVerdict + "\nEvery objection checked again.",revisionAddresses,revisionAddresses,"resp_recheck")] : []),
     result((verificationRepair?.verdict || verdict) + "\nSource-by-source review.",
       verificationRepair?.addresses || auditAddresses, verificationRepair?.citations || auditCitations, "resp_audit_retry"),
   ];
@@ -220,4 +220,13 @@ test('a factual hold requires a changed sourced draft and a fresh independent VE
  await assert.rejects(run({verdict:'HOLD',factualRevision:mockDraft}).promise,/no factual revision/);
  await assert.rejects(run({verdict:'HOLD',factualRevision:corrected,revisionVerdict:'HOLD'}).promise,/held the article/);
  await assert.rejects(run({verdict:'HOLD',factualRevision:changed(d=>{d.summary='A 99% increase.';})}).promise,/research report/);
+});
+
+
+test('a corrected original discovered by the live auditor must be independently checked after revision',async()=>{
+ const correctedURL='https://www.mospi.gov.in/corrected-survey';
+ const correction=changed(d=>{d.summary='The revised source clarifies the catchment comparison.';d.sources[1].researchId=3;});
+ const {promise}=run({verdict:'HOLD',auditAddresses:[...urls,correctedURL],factualRevision:correction,revisionAddresses:[urls[0],correctedURL]});
+ assert.equal((await promise).sources[1].url,correctedURL);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:correction}).promise,/traced/);
 });
