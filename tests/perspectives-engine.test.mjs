@@ -22,16 +22,18 @@ const mockDraft = {
     { heading: "Questions for operators", text: "Compare the two catchments before budgeting.", sourceIndexes: [1, 2] },
   ],
 };
-function result(text, addresses, citations = addresses || []) {
+function result(text, addresses, citations = addresses || [], id = "resp_test") {
   const calls = addresses ? [{ type: "web_search_call", status: "completed", action: { type: "search", sources: addresses.map(url => ({ url })) } }] : [];
-  return Response.json({ status: "completed", id: "resp_test", output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
+  return Response.json({ status: "completed", id, output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
 }
-function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair } = {}) {
+function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair } = {}) {
   const steps = [
     result("3 districts, released November 15; sample note from August 1.", addresses),
     result(JSON.stringify(draft)),
     ...(repair ? [result(JSON.stringify(repair))] : []),
-    result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations),
+    result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations, "resp_audit"),
+    result((verificationRepair?.verdict || verdict) + "\nSource-by-source review.",
+      verificationRepair?.addresses || auditAddresses, verificationRepair?.citations || auditCitations, "resp_audit_retry"),
   ];
   const requests = [];
   const promise = generatePerspective({ ...base, ...settings, fetcher: async (_url, init) => {
@@ -87,6 +89,28 @@ test("review holds the article on missing verification, unsupported URLs or a fa
   await assert.rejects(run({ auditAddresses: urls.slice(0, 1) }).promise, /corroborate/);
   await assert.rejects(run({ auditCitations: [urls[0]] }).promise, /corroborate/);
   await assert.rejects(run({ addresses: [urls[0], urls[0] + "?utm_source=news"] }).promise, /fewer than two/);
+});
+
+test("rechecks every source once when a positive audit omits source citations", async () => {
+  const { promise, requests } = run({ auditCitations: [urls[0]], verificationRepair: { citations: urls } });
+  const article = await promise;
+  assert.equal(requests.length, 4);
+  assert.deepEqual(JSON.parse(requests[3].input).missingSourceURLs, [urls[1]]);
+  assert.deepEqual(JSON.parse(requests[3].input).sections, article.sections);
+  assert.deepEqual(JSON.parse(requests[3].input).sources, article.sources);
+  assert.equal(requests[3].tool_choice, "required");
+  assert.deepEqual(article.verification.providerResponseIds.slice(-2), ["resp_audit", "resp_audit_retry"]);
+});
+test("missing citations remain a hold after one retry and factual objections cannot be overruled", async () => {
+  const missing = run({ auditCitations: [urls[0]] });
+  await assert.rejects(missing.promise, /could not corroborate.*mospi/);
+  assert.equal(missing.requests.length, 4);
+  const negative = run({ verdict: "HOLD", verificationRepair: { verdict: "VERIFIED", citations: urls } });
+  await assert.rejects(negative.promise, /held the article/);
+  assert.equal(negative.requests.length, 3);
+  const newObjection = run({ auditCitations: [urls[0]], verificationRepair: { verdict: "HOLD", citations: urls } });
+  await assert.rejects(newObjection.promise, /held the article/);
+  assert.equal(newObjection.requests.length, 4);
 });
 
 test("only public practice titles can be sent as ranked audience interests", async () => {
