@@ -22,4 +22,22 @@ begin
  x=public.ig_perspective_worker(secret,claim||jsonb_build_object('action','publish','article',a))->>'slug';
  if not exists(select 1 from public.ig_public_content where slug=x and kind='article') or public.ig_perspective_worker(secret,claim||jsonb_build_object('action','publish','article',a)) is not null then raise exception 'Publication or idempotency failed';end if;
 end $$;
+-- Exercise the real PostgREST caller role through transaction-end constraint checks.
+update ig_private.intelligence_settings set next_at=now();
+set local role anon;
+do $$
+declare claim jsonb; a jsonb;
+begin
+ claim=public.ig_perspective_worker(repeat('q',64),'{"action":"claim"}');
+ a=jsonb_build_object('title','Anonymous transport verified fixture','summary','Verified fixture',
+  'body',repeat('Verified fixture ',20),'sources','[{},{}]'::jsonb,'sections','[{},{}]'::jsonb,
+  'practice','Real estate','verification','{"report":"VERIFIED in a fixture"}'::jsonb);
+ perform public.ig_perspective_worker(repeat('q',64),claim||jsonb_build_object('action','publish','article',a));
+end $$;
+set constraints all immediate;
+reset role;
+do $$ begin
+ assert not has_table_privilege('anon','public.ig_content','SELECT'),'Public content table read widened';
+ assert exists(select 1 from public.ig_public_content where title='Anonymous transport verified fixture'),'Verified RPC did not publish';
+end $$;
 rollback;
