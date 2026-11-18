@@ -40,3 +40,9 @@ Automated regression cases cover explicit and ambiguous subjects, ordinal refere
 Live model quality and end-to-end latency should be evaluated through the authenticated rehearsal; local provider mocks prove routing/guards, not model intelligence or production response time.
 
 Reference: [OpenAI latency guidance](https://developers.openai.com/api/docs/guides/latency-optimization), consulted 18 November 2026.
+
+## Leadership retrieval regression, 18 November 2026
+
+The reported sequence `hello → whats up → love you → who is the boss at india gully` exposed a gap: keyword-only retrieval could omit the leadership directory, and `job_title` was not part of Gullu's public evidence projection. Published people now have a separate retrieval group, their role is projected explicitly, and ordinary boss/founder/person-in-charge questions resolve to the applicable current published role. The response uses CMS data, with no hardcoded executive name. Ownership, CEO titles, external-company leaders, ambiguous roles and compound questions do not use that shortcut.
+
+Internal evidence/context commentary is rejected before display, and the independent verifier is instructed not to infer global absence from a limited set of passages. The exact user sequence was replayed locally against the current three published leadership profiles: all four replies required zero model calls, with the final answer identifying Arun Manikonda as Founder and Managing Director. Related English, Hinglish and Hindi phrasing, isolated public retrieval, role edits and incorrect role assumptions have dedicated regressions. This validates the code path and source mapping, not a live authenticated conversation benchmark.
