@@ -122,6 +122,27 @@ test("only public practice titles can be sent as ranked audience interests", asy
   assert.doesNotMatch(JSON.stringify(requests), /visitor@private|confidential note/);
 });
 
+test("held runs retain the independent review and public research, never provider credentials", async () => {
+  const held = run({verdict:'HOLD'});
+  await assert.rejects(held.promise, error => {
+    assert.equal(error.perspectiveDiagnostics.stage, 'independent verification');
+    assert.match(error.perspectiveDiagnostics.verificationReport, /^HOLD/);
+    assert.ok(error.perspectiveDiagnostics.researchReport);
+    assert.equal(error.perspectiveDiagnostics.draft.title, mockDraft.title);
+    assert.equal(error.perspectiveDiagnostics.providerResponseIds.length, 3);
+    assert.doesNotMatch(JSON.stringify(error.perspectiveDiagnostics), /api_key|secrets|Authorization/);
+    return true;
+  });
+});
+test("reasoning research reserves output capacity without changing ordinary model requests", async () => {
+  const reasoned = run({settings:{config:{...base.config, settings:{model:'gpt-6.2-astra',max_output_tokens:18000}}}});
+  await reasoned.promise;
+  assert.equal(reasoned.requests[0].reasoning.effort,'low');
+  assert.equal(reasoned.requests[0].max_output_tokens,16400);
+  assert.equal(reasoned.requests[2].max_output_tokens,14600);
+  const plain = run();await plain.promise;assert.equal(plain.requests[0].reasoning,undefined);
+});
+
 test("only one transient provider failure is retried, and client errors fail immediately", async () => {
   const once = run({ failures: [503] });
   await once.promise;
