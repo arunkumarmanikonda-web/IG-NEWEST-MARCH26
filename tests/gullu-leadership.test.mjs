@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {publicDocuments,terms,answerFromPassages} from '../lib/gullu.mjs';
+import {publicDocuments,terms,answerFromPassages,rankPassages} from '../lib/gullu.mjs';
 import {leadershipAnswer,hasInternalEvidenceLanguage} from '../lib/gullu-leadership.mjs';
 import {retrieveGulluRows} from '../lib/gullu-retrieval.mjs';
 import {gulluReply} from '../lib/gullu-engine.mjs';
@@ -22,6 +22,8 @@ test('everyday leadership questions use the published role, including role-only 
  assert.match(leadershipAnswer('who is your executive director',docs).answer,/Pavan Manikonda is our Executive Director/);
  assert.equal(leadershipAnswer('Tell me about your leadership',docs).sources.length,3);
  assert.ok(terms('who is your boss').includes('director'));
+ assert.ok(rankPassages(docs,'Who is your captain?',[],'/').some(p=>p.title==='Arun Manikonda'&&p.text==='Role · Founder & Managing Director'));
+ assert.ok(rankPassages(docs,'Who is your captain?',[],'/').every(p=>p.kind==='person'));
  assert.equal(terms('head office address').includes('director'),false);
  assert.doesNotMatch(JSON.stringify(docs),/private_notes|do not read/);
 });
