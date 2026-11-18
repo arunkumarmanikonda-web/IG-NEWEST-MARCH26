@@ -2,6 +2,7 @@ import {horecaCatalogue} from "../../../lib/horeca-catalogue";
 import {horecaCategories} from "../../../lib/horeca-categories.mjs";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
+import Rehearsal from "./rehearsal";
 import Schedule from "./schedule";
 import "./workspace.css";
 
@@ -82,6 +83,7 @@ export default async function IntelligencePage({searchParams}) {
       </details>)}
     </section>
     <section className="workspace-card"><h3>Daily guest workbook</h3><p>Guest summaries and full transcripts for conversations active on the selected date in India. The daily report is scheduled for 9:00 a.m. IST the next morning.</p><form action="/api/admin/intelligence/report" method="get"><label>Conversation date <input type="date" name="day" defaultValue={day} required/></label> <button type="submit">Download Excel report</button></form></section>
+    <Rehearsal />
     <ConversationHistory turns={conversations} />
     <section className="workspace-card"><h3>Gullu report delivery</h3>
       <p>Delivery history for the reports to Arun, Amit and Pavan.</p>

@@ -3,13 +3,13 @@ import {useEffect,useRef,useState} from "react";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
 import {contextualQuestions} from "../../lib/customer-experience.mjs";
+import {readGulluResponse} from "../../lib/gullu-stream.mjs";
 import Avatar from "./animated-avatar";
 import "./widget.css";
 
-async function post(payload){
-  const res=await fetch("/api/gullu",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-  const data=await res.json().catch(()=>({}));
-  if(!res.ok)throw new Error(data.error||"I couldn’t connect. Please try again.");return data;
+async function post(payload,onProgress){
+  const res=await fetch("/api/gullu",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json",...(onProgress?{Accept:"application/x-ndjson"}:{})},body:JSON.stringify(payload)});
+  return readGulluResponse(res,onProgress);
 }
 
 export default function Gullu(){
@@ -18,12 +18,16 @@ export default function Gullu(){
     [question,setQuestion]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),
     [language,setLanguage]=useState("auto"),[confirm,setConfirm]=useState(false),[receipt,setReceipt]=useState("");
   const [expression,setExpression]=useState("idle"),[restored,setRestored]=useState(false),[hasMore,setHasMore]=useState(false);
-  const timer=useRef(null),returnFocus=useRef(false);
+  const [progress,setProgress]=useState("");
+  const timer=useRef(null),returnFocus=useRef(false),readingEarlier=useRef(false),olderPosition=useRef(null);
   function animate(mood){clearTimeout(timer.current);setExpression(mood);timer.current=setTimeout(()=>setExpression("idle"),1800);}
   useEffect(()=>{return ()=>clearTimeout(timer.current);},[]);
   const mood=busy?"thinking":expression!=="idle"?expression:question?"listening":"idle";
   useEffect(()=>{if(open)(guest?input:first).current?.focus();},[open,guest]);
-  useEffect(()=>{const el=scroll.current;if(open&&el)el.scrollTop=el.scrollHeight;},[messages.length,busy,receipt,open]);
+  useEffect(()=>{const el=scroll.current;if(!open||!el)return;
+    if(olderPosition.current){el.scrollTop=el.scrollHeight-olderPosition.current.height+olderPosition.current.top;olderPosition.current=null;return;}
+    if(!readingEarlier.current)el.scrollTop=el.scrollHeight;
+  },[messages.length,busy,receipt,open]);
   function close(){returnFocus.current=true;setOpen(false);}
   useEffect(()=>{if(!open&&returnFocus.current){launcher.current?.focus();returnFocus.current=false;}},[open]);
   useEffect(()=>{
@@ -39,7 +43,7 @@ export default function Gullu(){
   async function older(){if(busy||!messages.length)return;setBusy(true);try{
     const r=await fetch('/api/gullu?before='+messages[0].turn_id,{cache:'no-store'});const d=await r.json();
     if(!d.session)throw new Error('This chat session expired. Start a new chat.');
-    setMessages(items=>[...d.session.messages,...items]);setHasMore(d.session.hasMore);
+    olderPosition.current={height:scroll.current?.scrollHeight||0,top:scroll.current?.scrollTop||0};setMessages(items=>[...d.session.messages,...items]);setHasMore(d.session.hasMore);
   }catch(e){setError(e.message);}finally{setBusy(false);}}
   async function end(){if(busy)return;setBusy(true);try{await post({action:'end'});reset();}catch(e){setError(e.message);}finally{setBusy(false);}}
   function reset(){setHasMore(false);setGuest(null);setMessages([]);setQuestion("");setError("");setReceipt("");setConfirm(false);pending.current=null;}
@@ -52,8 +56,8 @@ export default function Gullu(){
   async function ask(text){
     const value=text.trim();if(!guest||!value||busy)return;
     if(pending.current?.question!==value)pending.current={question:value,turn_id:crypto.randomUUID()};
-    setQuestion(value);setBusy(true);setError("");setConfirm(false);setReceipt("");
-    try{const result=await post({action:"ask",session_id:guest.session_id,token:guest.token,...pending.current,language,page});
+    readingEarlier.current=false;setProgress("On it…");setQuestion(value);setBusy(true);setError("");setConfirm(false);setReceipt("");
+    try{const result=await post({action:"ask",session_id:guest.session_id,token:guest.token,...pending.current,language,page},setProgress);
       animate("reply");setMessages(items=>[...items,result]);pending.current=null;setQuestion("");}
     catch(e){setError(e.message);}finally{setBusy(false);input.current?.focus();}
   }
@@ -78,7 +82,7 @@ export default function Gullu(){
           {error&&<p role="alert" className="g-error">{error}</p>}
           <button className="g-primary" disabled={busy}>{busy?"Opening your chat…":"Let’s chat"} <span aria-hidden="true">↗</span></button>
         </form></div>:<>
-        <div className="g-scroll" ref={scroll}>
+        <div className="g-scroll" ref={scroll} onScroll={e=>{const el=e.currentTarget;readingEarlier.current=el.scrollHeight-el.scrollTop-el.clientHeight>90;}}>
           {!messages.length&&<p className="g-greeting">Namaste, {guest.firstName}! What’s on your mind?</p>}
           {!messages.length&&!busy&&<div className="g-starters">{starters.map(t=><button key={t} onClick={()=>ask(t)}>{t} <span>↗</span></button>)}</div>}
           {hasMore&&<button disabled={busy} onClick={older}>Read earlier messages</button>}
@@ -88,7 +92,7 @@ export default function Gullu(){
             <div className="g-answer">{m.answer.split(/\n\s*\n/).map((p,i)=>p.startsWith("• ")?<ul key={i}>{p.split("\n").map(item=><li key={item}>{item.replace(/^• /,"")}</li>)}</ul>:<p key={i}>{p}</p>)}</div>
             {!!m.sources.length&&<details className="g-sources"><summary>Explore {m.sources.length===1?"this page":"these pages"} ({m.sources.length})</summary>{m.sources.map(s=><Link key={s.href} href={s.href} onClick={close}>{s.title} ↗</Link>)}</details>}
           </article>)}</div>
-          {busy&&pending.current&&<div role="status" className="g-pending"><p>{pending.current.question}</p><span className="g-writing"><i/><i/><i/> <small>Gullu is writing</small></span></div>}
+          {busy&&pending.current&&<div role="status" className="g-pending"><p>{pending.current.question}</p><span className="g-writing"><i/><i/><i/> <small>{progress||"On it…"}</small></span></div>}
           {!!messages.length&&(messages.at(-1).practice_interest!=="General enquiry"||/team|टीम/i.test(messages.at(-1).answer))&&!receipt&&!busy&&<div className="g-team">{confirm?<><p>May our advisory team contact you about this question?</p><button onClick={follow}>Yes, contact me</button> <button onClick={()=>setConfirm(false)}>Cancel</button></>:<button onClick={()=>setConfirm(true)}>Ask the team to follow up ↗</button>}</div>}
           {receipt&&<div className="g-receipt" role="status">Your follow-up is with our team.<details><summary>View reference</summary>{receipt}</details></div>}
         </div>

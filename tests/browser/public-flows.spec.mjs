@@ -88,3 +88,30 @@ test('public journeys reflow at 320 CSS pixels and Gullu remains keyboard dismis
  await expect(page.getByRole('dialog',{name:'Gullu'})).toHaveCount(0);
  await expect(page.getByRole('button',{name:'Ask Gullu',exact:true})).toBeFocused();
 });
+
+test('Gullu accepts verified streamed answers and retries an interrupted turn without duplicating it',async({page})=>{
+ let attempt=0,turnId;
+ await page.route('**/api/gullu',async route=>{
+  if(route.request().method()==='GET')return route.fulfill({json:{session:{session_id:'fixture-session',firstName:'Guest',messages:[],hasMore:false}}});
+  const body=route.request().postDataJSON();expect(body.action).toBe('ask');expect(route.request().headers().accept).toBe('application/x-ndjson');
+  attempt++;if(attempt===1)turnId=body.turn_id;else expect(body.turn_id).toBe(turnId);
+  const events=[{type:'progress',stage:'finding'},{type:'progress',stage:'checking'}];
+  if(attempt===2)events.push({type:'answer',turn:{turn_id:turnId,question:body.question,answer:'Our published brief lists 50 keys.',sources:[{title:'Published brief',href:'/opportunities'}],practice_interest:'Real estate'}});
+  return route.fulfill({contentType:'application/x-ndjson',body:events.map(e=>JSON.stringify(e)).join('\n')+'\n'});
+ });
+ await page.goto('/');await page.getByRole('button',{name:'Ask Gullu',exact:true}).click();
+ await page.getByRole('textbox',{name:'Message Gullu'}).fill('How many keys does Jaisalkot have?');
+ await page.getByRole('button',{name:'Send message',exact:true}).click();
+ await expect(page.locator('.g-error')).toContainText('interrupted');
+ await expect(page.locator('.g-log article')).toHaveCount(0);
+ await page.getByRole('button',{name:'Send message',exact:true}).click();
+ await expect(page.locator('.g-log article')).toHaveCount(1);
+ await expect(page.locator('.g-answer')).toContainText('50 keys');
+ await expect(page.getByRole('textbox',{name:'Message Gullu'})).toHaveValue('');
+});
+
+test('Gullu rehearsal rejects unauthenticated access before generating an answer',async({request})=>{
+ const response=await request.post('/api/admin/intelligence/rehearsal',{headers:{Origin:'http://127.0.0.1:3100'},data:{question:'Tell me about India Gully'}});
+ expect([403,503]).toContain(response.status());expect((await response.json()).error).toMatch(/staff|authentication/i);
+ expect(response.headers()['cache-control']).toContain('private, no-store');
+});
