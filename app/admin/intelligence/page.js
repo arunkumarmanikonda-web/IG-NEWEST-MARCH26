@@ -73,6 +73,9 @@ export default async function IntelligencePage({searchParams}) {
         <summary>{formatDate(run.started_at)} · {run.title || "Perspective research"} · {run.status}</summary>
         {run.selection_reason && <p>{run.selection_reason}</p>}
         {run.error && <p>{run.error}</p>}
+        {run.diagnostics?.stage && <p>Last stage: {run.diagnostics.stage} · {run.diagnostics.model}</p>}
+        {run.diagnostics?.verificationReport && <details><summary>Independent review</summary><p style={{whiteSpace:'pre-wrap'}}>{run.diagnostics.verificationReport}</p></details>}
+        {run.diagnostics?.researchReport && <details><summary>Research record</summary><p style={{whiteSpace:'pre-wrap'}}>{run.diagnostics.researchReport}</p></details>}
         {Boolean(run.candidates?.length) && <><h4>Topics considered</h4><ul>{run.candidates.map((item, i) =>
           <li key={i}><strong>{item.topic}</strong>{item.reason && <p>{item.reason}</p>}</li>)}</ul></>}
       </details>)}

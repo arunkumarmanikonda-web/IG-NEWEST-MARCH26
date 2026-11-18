@@ -12,7 +12,8 @@ begin
  if ack is distinct from public.ig_gullu_record(secret,t) or (select count(*) from public.ig_outbox where enquiry_id=(ack->>'enquiry_id')::uuid)<>3 then raise exception 'Lead delivery deduplication failed';end if;
  claim=public.ig_perspective_worker(secret,'{"action":"claim"}');
  if claim->>'run_id' is null or public.ig_perspective_worker(secret,'{"action":"claim"}') is not null then raise exception 'Research lease failed';end if;
- perform public.ig_perspective_worker(secret,claim||'{"action":"hold","error":"Insufficient evidence"}');
+ perform public.ig_perspective_worker(secret,claim||'{"action":"hold","error":"Insufficient evidence","diagnostics":{"stage":"independent verification","verificationReport":"HOLD: source date conflicts"}}');
+ if (select diagnostics#>>'{verificationReport}' from ig_private.perspective_runs where id=(claim->>'run_id')::uuid) is distinct from 'HOLD: source date conflicts' then raise exception 'Held review record lost';end if;
  if (select count(*) from public.ig_public_content where public_data->>'engine'='perspectives')<>0 then raise exception 'Held report published';end if;
  update ig_private.intelligence_settings set next_at=now();
  claim=public.ig_perspective_worker(secret,'{"action":"claim"}');
