@@ -12,6 +12,7 @@ begin
  assert (select processing_status='queued' from public.ig_room_files where id=file),'Ready insert must queue after row exists';
  assert public.ig_room_readiness(jsonb_build_object('room_id',room))->>'ready'='false';
  denied=false;begin perform public.ig_file_processing('wrong','{"action":"claim"}');exception when insufficient_privilege then denied=true;end;assert denied;
+ assert public.ig_file_processing(secret,'{"action":"claim","max_bytes":50}') is null,'Oversized job claimed near deadline';
  job=public.ig_file_processing(secret,'{"action":"claim"}');assert job->>'file_id'=file::text;assert (job->>'needs_preview')::boolean;
  assert public.ig_file_processing(secret,'{"action":"claim"}') is null,'Duplicate lease admitted';
  denied=false;begin perform public.ig_file_processing(secret,job||jsonb_build_object('action','source','lease',gen_random_uuid()));exception when insufficient_privilege then denied=true;end;assert denied;
