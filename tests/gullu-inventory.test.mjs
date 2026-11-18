@@ -25,13 +25,14 @@ const people=[
 test('location and property type search handles everyday wording and a trailing slash',()=>{
  for(const q of ['you have hotels in noida\\','Do you have hotels in Noida?','show me Noida hotels','Noida mein hotel hai?','नोएडा में होटल है?']){
   assert.equal(needsInventory(q),true);assert.deepEqual(inventoryRequest(q),{asset:'hotel',city:'Noida',purpose:null},q);
-  const reply=inventoryAnswer(q,snapshot);assert.match(reply.answer,/don’t see a current hotel listing in Noida on our public site/);assert.match(reply.answer,/buy\/invest, lease a hotel, or book a stay/);
-  assert.equal(reply.sources.length,0);assert.doesNotMatch(reply.answer,/Alphathum|Greater Noida|brand|Private|operator|standards/);
+  const reply=inventoryAnswer(q,snapshot);assert.match(reply.answer,/don’t see a current hotel listing in Noida on our public site/);assert.match(reply.answer,/acquire or invest in a hotel, lease one, or explore a development opportunity/);
+  assert.equal(reply.sources.length,0);assert.doesNotMatch(reply.answer,/Alphathum|Greater Noida|brand|Private|operator|standards|book|stay|reservation/i);
  }
  assert.equal(inventoryRequest('hotels in Mysuru for lease').city,'Mysuru');
  assert.equal(inventoryRequest('hotels in New York').city,'New York');
- assert.match(inventoryAnswer('Noida mein hotel hai?',snapshot,[],'Hinglish').answer,/Aap hotel kharidna/);
- assert.match(inventoryAnswer('नोएडा में होटल है?',snapshot,[],'Hindi').answer,/ठहरने की बुकिंग/);
+ assert.match(inventoryAnswer('Noida mein hotel hai?',snapshot,[],'Hinglish').answer,/hotel development opportunity/);
+ for(const language of ['English','Hinglish','Hindi'])assert.doesNotMatch(inventoryAnswer('hotels in Noida',snapshot,[],language).answer,/book|stay|reservation|बुकिंग|ठहरने/i);
+ assert.match(inventoryAnswer('नोएडा में होटल है?',snapshot,[],'Hindi').answer,/होटल विकास का अवसर/);
 });
 
 test('published matches distinguish offered space, room bookings, portfolio references and exact cities',()=>{
