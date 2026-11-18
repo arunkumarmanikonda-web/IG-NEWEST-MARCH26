@@ -2,6 +2,20 @@
 
 Authorised scope: all 17 findings in the 18 November 2026 audit. This register is updated with release evidence before completion. No confidential originals are made publicly downloadable as a workaround.
 
+## Release state
+
+- Pull request: https://github.com/arunkumarmanikonda-web/IG-NEWEST-MARCH26/pull/35
+- CI at `76ed06930979d82ac6158c64cde9323bdc629463`: 297 unit tests, 32 isolated SQL workflows, three Chromium browser journeys, production build and dependency audit passed. GitHub run: https://github.com/arunkumarmanikonda-web/IG-NEWEST-MARCH26/actions/runs/44192267080
+- Upload broker version 3 is deployed. It enforces bounded Office/ZIP structure inspection while retaining per-user file authorisation.
+- Production migration `20261118004405_audit_resource_guards` is applied: parser-related indexes/RLS, KYC byte limit/admission control and worker-health storage/functions. The new website must still be deployed to use the application-side controls.
+- Remaining database migration is prepared in `supabase/migrations/20261118032244_audit_remaining.sql`. Supabase returned an expired confirmation, so the remaining migration has **not** run. The changes replace existing chat/sharing functions, extend entity constraints, consolidate equivalent outbox read policies and add catalogue/recovery functions. No client file or content deletion is included.
+- The application PR remains unmerged; production application deployment and live outcome checks depend on the remaining database migration. The database migration split passed all 32 isolated SQL workflows again.
+- Use `node scripts/verify-release.mjs https://indiagully.com` after deployment, then verify database migration/function parity and one sourced autonomous Perspective cycle. The smoke script makes read-only requests and does not contact clients.
+
+## Content and service prerequisites
+
+Existing room originals still require faithful previews; download restrictions have not been relaxed. Exact approved photos are still missing for Ariane SKUs IG-ARIA-0000057 / IG-ARIA-0000058 and the legacy Jaipur property. Approved supplier data and signed brand mandates are needed for empty collections. Container inspection is not antivirus: a private malware-scanning service remains to be configured. These items are not marked closed.
+
 | Finding | Implementation | Verification / remaining work |
 |---|---|---|
 | F01 Archive dependency | fflate 0.8.3; isolated document extraction with time and memory limits | Dependency audit clean; malformed archive and deadline tests |
