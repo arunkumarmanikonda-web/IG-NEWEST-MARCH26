@@ -77,7 +77,7 @@ test("Arun’s Hinglish greeting, assent, unfinished message and pause stay conv
  assert.equal(acceptsFollowup("yes",{answer:"Would you like to see hotels?"}),false);
  assert.equal(conversationLanguage("who is your managing director",history,"Hinglish"),"Hinglish");
  const md=directAnswer("WHO IS YOU MANAGING DIRECTOR",[{kind:"person",title:"Arun Manikonda",href:"/leadership/arun-manikonda",chunks:["Founder and Managing Director."]}],history,"Hinglish");
- assert.equal(md.answer,"Arun Manikonda hamare Managing Director hain.");
+ assert.equal(md.answer,"Arun Manikonda hamare Founder and Managing Director hain.");
 });
 
 test("unrecognised conversational phrasing can be answered without fabricating a public source",async()=>{
