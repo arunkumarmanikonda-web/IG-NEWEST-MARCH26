@@ -1,3 +1,7 @@
+import ShortlistButton from "./shortlist/button";
+import AccessSteps from "./access-steps";
+import ReviewStatus from "./review-status";
+import {readableParagraphs} from "../lib/customer-experience.mjs";
 import { FeatureBriefOpen } from "./opportunities/featured-banner";
 import { listingHeading } from "../lib/listing-heading.mjs";
 import PropertyTags from "./property-tags";
@@ -12,7 +16,7 @@ import { Arrow, Eyebrow } from "./components";
 export default function PropertyDetail({ item, hasRoom = false, related = [], feature = null }) {
   const x = opportunityCard(item),
     d = item.public_data;
-  const contactParams = new URLSearchParams({ interest: item.title });
+  const contactParams = new URLSearchParams({ interest: "Real Estate Advisory", listing:item.slug, message:"I’d like to enquire about "+item.title+". Please share the current availability and next steps." });
   const roomParams = new URLSearchParams({ opportunity: item.slug });
   if (feature) {
     contactParams.set("feature", feature);
@@ -48,7 +52,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
         </div>
       </header>
       <section className="property-overview" aria-label="Property at a glance">
-        <PropertyPhotograph image={x.image} alt={d.image_alt} title={x.title} />
+        <PropertyPhotograph image={x.image} alt={x.imageAlt} title={x.title} />
         <div className="property-overview-panel">
           <Eyebrow>PROPERTY AT A GLANCE</Eyebrow>
           <h2>{listingHeading(x.assetClass || x.type)}</h2>
@@ -61,12 +65,13 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
           <Link className="text-link" href={"/opportunities/" + item.slug + "/brief.pdf"} prefetch={false} target="_blank">Download property brief <Arrow /></Link>
         </div>
       </section>
+      <ReviewStatus data={d}/><div className="property-breadcrumb"><ShortlistButton id={item.id}/></div>{hasRoom&&<AccessSteps current={0}/>}
       <div className="property-detail-layout">
         <article className="property-narrative">
           <Eyebrow>PROPERTY INFORMATION</Eyebrow>
           <h2>Overview</h2>
           <p className="property-summary">{item.summary}</p>
-          {narrativeParagraphs(item.body,item.summary)
+          {readableParagraphs(item.body).filter(p=>p.trim()!==item.summary.trim())
             .map((text, i) =>
               text.startsWith("## ") ? (
                 <h3 key={i}>{listingHeading(text.slice(3))}</h3>

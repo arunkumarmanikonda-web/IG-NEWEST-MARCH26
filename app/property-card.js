@@ -1,4 +1,5 @@
 "use client";
+import ShortlistButton from "./shortlist/button";
 import { useFeatureImpression } from "./opportunities/featured-banner";
 import {propertyPhotoURL} from '../lib/listing-images.mjs';
 import {listingHeading} from "../lib/listing-heading.mjs";
@@ -30,6 +31,7 @@ export default function PropertyCard({ item: x }) {
         <PropertyTags tags={x.tags} contexts={x.contexts} />
         {x.description && <p className="property-card-description">{x.description}</p>}
         {!!facts.length && <dl className="property-card-facts">{facts.map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl>}
+        <ShortlistButton id={x.id}/>
         <div className="property-card-foot">
           <div><span>{x.priceCaption || (x.price ? "Indicative price" : "Commercial details")}</span><strong>{x.price || "On request"}</strong></div>
           <Link href={href} aria-label={"View details for " + x.title}>View details <Arrow /></Link>

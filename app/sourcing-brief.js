@@ -1,0 +1,8 @@
+'use client';
+import {useState} from 'react';
+import Link from 'next/link';
+export default function SourcingBrief({kind='horeca',category=''}){
+ const [v,setV]=useState({location:'',quantity:'',budget:'',timing:'',details:''}),leasing=kind==='leasing';
+ const message=[category,...Object.entries(v).filter(([,x])=>x.trim()).map(([k,x])=>({location:'Location',quantity:leasing?'Area, floor and format':'Quantity and specifications',budget:'Budget',timing:'Required by',details:'Additional requirements'}[k])+': '+x.trim())].join('\n');
+ return <details className="sourcing-brief"><summary>{leasing?'Prepare a leasing brief':'Prepare a sourcing brief'}</summary><p>{leasing?'Share your requirements or available site.':'This collection is available through project sourcing. Tell us what you need and we will review suitable options.'} Continue to add your contact details before sending.</p><div className="form-grid">{[['location','City / catchment'],['quantity',leasing?'Area, floor and format':'Quantity, material and dimensions'],['budget','Indicative budget'],['timing',leasing?'Opening / possession timetable':'Delivery timetable']].map(([k,label])=><label key={k}>{label}<input value={v[k]} maxLength={180} onChange={e=>setV({...v,[k]:e.target.value})}/></label>)}<label className="full">Additional requirements<textarea maxLength={500} value={v.details} onChange={e=>setV({...v,details:e.target.value})}/></label></div><Link className="button" href={'/contact?interest='+encodeURIComponent(leasing?'Retail & Leasing':'HORECA procurement')+'&message='+encodeURIComponent(message)}>Continue with this brief →</Link></details>;
+}

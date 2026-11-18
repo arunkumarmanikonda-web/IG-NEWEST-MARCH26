@@ -7,6 +7,7 @@ import "./editorial.css";
 import "./brand.css";
 import "./property-collection.css";
 import "./leadership.css";
+import "./experience.css";
 import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
@@ -45,7 +46,7 @@ async function AccountLink() {
   }
   return (
     <Link className="utility-account" href={signedIn ? "/account" : "/login"} prefetch={false}>
-      {signedIn ? "My account" : "Sign in"}
+      {signedIn ? "Client workspace" : "Client sign in"}
     </Link>
   );
 }
@@ -64,7 +65,7 @@ export default async function Layout({ children }) {
           </span>
           <nav className="utility-links" aria-label="Quick links">
             <Link href="/valuation">Explore the valuation studio <Arrow /></Link>
-            <AccountLink />
+            <Link href="/shortlist">Shortlist</Link><AccountLink />
           </nav>
         </div>
         <Navigation groups={groups} practices={practices.map(({ slug, title, href }) => ({ slug, title, href }))} />

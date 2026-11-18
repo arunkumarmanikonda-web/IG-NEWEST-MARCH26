@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState} from 'react';
+import SourcingBrief from "../sourcing-brief";
 import Link from 'next/link';
 import {basketKey,normaliseBasket,addProduct} from '../../lib/procurement.mjs';
 import {catalogueResults} from '../../lib/catalogue-results.mjs';
@@ -76,7 +77,7 @@ export default function Catalogue({initial,priorities,initialCategory='',collect
           <div className="catalogue-links"><Link href={href}>View specification <Arrow/></Link><button type="button" onClick={()=>add(p)}>Add to quotation</button></div>
         </div></article>;})}</div>
       {results.length<data.total&&!failure&&<button type="button" disabled={loading} className="button catalogue-more" onClick={()=>setOffset(results.length)}>Show more SKUs ({data.total-results.length})</button>}
-      {!results.length&&!loading&&!failure&&<div className="sku-empty"><div className="eyebrow">SOURCING WITH INDIA GULLY</div><h3>{!query&&!brand&&!type?'Selected for your project.':'No matching SKUs.'}</h3><p>{!query&&!brand&&!type?'Share your '+(selected?.title.toLowerCase()||'procurement')+' requirements, quantities and delivery location. Our HORECA team will prepare the options.':'Try another product name or clear your filters.'}</p><Link className="button" href={'/contact?interest='+encodeURIComponent('HORECA: '+(selected?.title||query||'Procurement'))}>Discuss this requirement <Arrow/></Link></div>}
+      {!results.length&&!loading&&!failure&&<div className="sku-empty"><div className="eyebrow">SOURCING WITH INDIA GULLY</div><h3>{!query&&!brand&&!type?'Selected for your project.':'No matching SKUs.'}</h3><p>{!query&&!brand&&!type?'Share your '+(selected?.title.toLowerCase()||'procurement')+' requirements, quantities and delivery location. Our HORECA team will prepare the options.':'Try another product name or clear your filters.'}</p><SourcingBrief category={selected?.title||query||"Procurement"}/></div>}
     </>}
     <div className="horeca-practice-note"><div className="eyebrow">MORE THAN A PRODUCT CATALOGUE</div><p>India Gully’s HORECA practice connects specification planning, sourcing, vendor comparison and delivery coordination.</p><Link href="/contact?interest=HORECA%20procurement">Plan a complete procurement brief <Arrow/></Link></div>
   </section>;

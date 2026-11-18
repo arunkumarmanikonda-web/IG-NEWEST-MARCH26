@@ -1,4 +1,5 @@
 "use client";
+import {assetSectors,assetTypes,transactionRoutes,reviewFields,productDetailFields,publicationIssues} from "../../../../lib/customer-experience.mjs";
 import { suggestedClassifications } from "../../../../lib/classification.mjs";
 import {horecaCategories,horecaCategory} from "../../../../lib/horeca-categories.mjs";
 import ListingImages from "../../listing-images";
@@ -105,6 +106,7 @@ export default function Editor({
   async function saveDraft(f) {
     const public_data = {};
     [
+      ...Object.keys(reviewFields),...Object.keys(productDetailFields),
       "city",
       "region",
       "sector",
@@ -533,6 +535,8 @@ export default function Editor({
             ? "Product details become public only after publication. Verify the brand, manufacturer code, specifications and image match against your source."
             : "These fields are public when published. Do not enter exact addresses, personal contacts or restricted financial documents. Confidential listings need an opaque reference, a non-identifying title and approved imagery."}
         </p>
+        {kind==="opportunity"&&<p className="wide workspace-note">Asset sector describes the broad market. Asset class describes the property itself. Transaction type describes the route to a deal. Keep city and locality in the location fields; record the operator agreement separately from property tenure.</p>}
+        {!!publicationIssues(initial).length && <aside className="wide workspace-note"><h3>Publication quality checks</h3><ul>{publicationIssues(initial).map(x=><li key={x}>{x}</li>)}</ul><p>Dates must reflect a source check. A publication date alone does not confirm availability.</p></aside>}
         {isRetail(kind) && <RetailFields key={kind} kind={kind} record={item} data={data} sources={roomFiles || []} dirty={()=>setDirty(true)}/>}
         {kind === "product" && (
           <div className="sku-control wide">
@@ -600,6 +604,8 @@ export default function Editor({
                 ["location_source", "Location source / map reference"],
               ]
             : []),
+          ...(["opportunity","retail_space","retail_requirement"].includes(kind)?Object.entries(reviewFields):[]),
+          ...(kind==="product"?Object.entries(productDetailFields):[]),
           ["price_label", "Approved price label"],
           ["reference", "Public reference"],
           ["image", "Approved image path"],
@@ -616,11 +622,11 @@ export default function Editor({
               </select>
               <small>The public catalogue groups supplier subcategories automatically. Choose a category here to change the grouping.</small>
             </label>
-          ) : (
+          ) : kind==="opportunity" && ["sector","asset_class","transaction_type"].includes(k) ? <label key={k}>{label}<select name={k} defaultValue={data[k]||""} required><option value="">Choose {label.toLowerCase()}</option>{[...new Set([...(k==="sector"?assetSectors:k==="asset_class"?assetTypes:transactionRoutes),data[k]].filter(Boolean))].map(v=><option key={v}>{v}</option>)}</select></label> : (
             <label key={k}>
               {label}
               <input
-                name={k}
+                name={k} type={k.endsWith("_verified_at")?"date":"text"}
                 defaultValue={
                   ["image", "image_alt"].includes(k) ? undefined : data[k] || ""
                 }

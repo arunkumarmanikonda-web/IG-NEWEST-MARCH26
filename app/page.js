@@ -72,7 +72,7 @@ export default async function Home() {
             <em>{copy["connected-expertise"]}</em>
           </h1>
           <p>{copy["discover-real-estate-and-hospitality-assets-across"]}<br />{copy["find-the-right-property-shape-the-next"]}</p>
-          <div className="hero-actions">
+          <nav className="intent-paths" aria-label="What would you like to do?">{[["/opportunities","Invest / Buy"],["/retail-leasing","Lease / Expand"],["/practices/debt-special-situations","Raise Capital"],["/practices/hospitality","Plan a Hotel / Project"],["/horeca","Procure Supplies"]].map(([href,label])=><Link key={href} href={href}>{label} <Arrow/></Link>)}</nav><div className="hero-actions">
             <LinkButton href="/opportunities" light>{copy["browse-real-estate-listings"]}</LinkButton>
             <Link href="/practices" className="hero-secondary">{copy["our-practices"]} <Arrow />
             </Link>

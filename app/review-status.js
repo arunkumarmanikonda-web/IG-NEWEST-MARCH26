@@ -1,0 +1,2 @@
+import {dateLabel,reviewStatus} from '../lib/customer-experience.mjs';
+export default function ReviewStatus({data={}}){return <div className="record-review"><p>{reviewStatus(data)}</p><p>{data.last_verified_at?'Facts reviewed: '+dateLabel(data.last_verified_at):'Facts review: request the latest update'}{data.data_as_of?' · Information period: '+data.data_as_of:''}</p>{data.process_stage&&<p>Process: {data.process_stage}</p>}</div>;}
