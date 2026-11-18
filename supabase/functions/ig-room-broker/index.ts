@@ -1,3 +1,4 @@
+import {processingStorageRequest} from './process-worker.mjs';
 import { createClient } from "npm:@supabase/supabase-js@2.119.0";
 import {
   ROOM_FILE_TYPES,
@@ -46,6 +47,21 @@ Deno.serve(async (req) => {
     const publicKey =
       JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}").default ||
       Deno.env.get("SUPABASE_ANON_KEY")!;
+    if (String(p.action || '').startsWith('process_')) {
+      const workerSecret=req.headers.get('x-file-worker');
+      if(!workerSecret) return new Response('Worker authentication required',{status:403,headers});
+      const workerClient=createClient(url,publicKey,{auth:{persistSession:false,autoRefreshToken:false}});
+      const workerRpc=async(action:string,extra:Record<string,unknown>={})=>{
+        const {data,error}=await workerClient.rpc('ig_file_processing',{secret:workerSecret,p:{action,file_id:p.file_id,lease:p.lease,...extra}});
+        if(error)throw Object.assign(new Error('Worker request rejected'),{status:error.code==='42501'?403:400});
+        return data;
+      };
+      const result=await processingStorageRequest(p,workerRpc,()=>{
+        const serviceKey=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}').default||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+        return createClient(url,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}}).storage.from(bucket);
+      });
+      return Response.json(result,{headers});
+    }
     const user = createClient(url, publicKey, {
       auth: { persistSession: false, autoRefreshToken: false },
       global: { headers: { Authorization: "Bearer " + token } },

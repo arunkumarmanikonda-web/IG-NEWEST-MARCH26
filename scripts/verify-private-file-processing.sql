@@ -1,0 +1,37 @@
+begin;
+do $$
+declare secret text=repeat('q',64);room uuid;content uuid;file uuid;other uuid;job jsonb;result jsonb;denied boolean;owner_jwt text;preview uuid;
+begin
+ update ig_private.integration_root set secret_hash=encode(extensions.digest(secret,'sha256'),'hex');
+ select jsonb_build_object('sub',u.id,'session_id',s.id,'role','authenticated','aal','aal2')::text into owner_jwt from auth.users u join auth.sessions s on s.user_id=u.id where email='owner@example.invalid';
+ perform set_config('request.jwt.claims',owner_jwt,true);
+ update ig_private.file_processing_config set enabled=true;
+ insert into public.ig_content(kind,slug,title) values('project','processing-test','Synthetic processing') returning id into content;
+ insert into public.ig_data_rooms(content_id,title) values(content,'Processing room') returning id into room;
+ insert into public.ig_room_files(room_id,name,object_key,mime,bytes,status,download_enabled) values(room,'Spreadsheet.xlsx','synthetic/scan','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',100,'ready',false) returning id into file;
+ assert (select processing_status='queued' from public.ig_room_files where id=file),'Ready insert must queue after row exists';
+ assert public.ig_room_readiness(jsonb_build_object('room_id',room))->>'ready'='false';
+ denied=false;begin perform public.ig_file_processing('wrong','{"action":"claim"}');exception when insufficient_privilege then denied=true;end;assert denied;
+ job=public.ig_file_processing(secret,'{"action":"claim"}');assert job->>'file_id'=file::text;assert (job->>'needs_preview')::boolean;
+ assert public.ig_file_processing(secret,'{"action":"claim"}') is null,'Duplicate lease admitted';
+ denied=false;begin perform public.ig_file_processing(secret,job||jsonb_build_object('action','source','lease',gen_random_uuid()));exception when insufficient_privilege then denied=true;end;assert denied;
+ denied=false;begin perform public.ig_room_authorize(jsonb_build_object('action','preview_source','id',file));exception when insufficient_privilege then denied=true;end;assert denied,'Unscanned original accessible';
+ result=public.ig_file_processing(secret,job||'{"action":"preview_prepare","bytes":500}');preview=(result->>'id')::uuid;
+ assert (select preview_for=file and not download_enabled and status='pending' from public.ig_room_files where id=preview),'Preview must retain source permissions';
+ perform public.ig_file_processing(secret,job||jsonb_build_object('action','finish','report',jsonb_build_object('scan','clean','sha256',repeat('a',64),'engine','ClamAV test','preview',true,'preview_sha256',repeat('b',64),'preview_bytes',500,'pages',2)));
+ assert (select status='ready' and processing_status='clean' and not download_enabled from public.ig_room_files where id=preview);
+ assert public.ig_room_readiness(jsonb_build_object('room_id',room))->>'ready'='true';
+ assert (select not download_enabled from public.ig_room_files where id=file),'Original download grant changed';
+ insert into public.ig_room_files(room_id,name,object_key,mime,bytes,status,download_enabled) values(room,'Malware.pdf','synthetic/infected','application/pdf',100,'ready',true) returning id into other;
+ job=public.ig_file_processing(secret,'{"action":"claim"}');
+ perform public.ig_file_processing(secret,job||jsonb_build_object('action','finish','report',jsonb_build_object('scan','infected','sha256',repeat('c',64),'engine','ClamAV test','preview',false)));
+ denied=false;begin perform public.ig_room_authorize(jsonb_build_object('action','download','id',other));exception when insufficient_privilege then denied=true;end;assert denied,'Infected file downloadable';
+ denied=false;begin perform public.ig_room_manage(jsonb_build_object('action','processing_retry','id',other));exception when others then denied=true;end;assert denied,'Infected file requeued without replacement';
+ assert public.ig_room_readiness(jsonb_build_object('room_id',room,'download_mode','all'))->>'ready'='false';
+ update ig_private.file_processing_jobs set state='processing',attempts=3,started_at=now()-interval '10 minutes' where file_id=file;
+ perform public.ig_file_processing(secret,'{"action":"claim"}');
+ assert (select state='held' from ig_private.file_processing_jobs where file_id=file),'Expired attempts stuck in processing';
+ perform public.ig_room_manage(jsonb_build_object('action','processing_retry','id',file));
+ assert (select state='queued' and attempts=0 from ig_private.file_processing_jobs where file_id=file);
+end $$;
+rollback;
