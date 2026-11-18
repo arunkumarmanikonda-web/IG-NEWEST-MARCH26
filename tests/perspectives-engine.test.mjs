@@ -197,3 +197,13 @@ test("holds if removal leaves no substantive text, a dangling inference, or a he
   }
   await assert.rejects(run({ draft: changed(d => { d.sections[0].heading = "Coverage of 43 districts"; }) }).promise, /heading requires a rewrite/);
 });
+
+test('independent exchange-hosted issuer filings are not mistaken for one publisher', async () => {
+  const addresses = ['https://nsearchives.nseindia.com/corporate/SUBAHOTELS_16112026120051_Release.pdf',
+    'https://nsearchives.nseindia.com/corporate/LEMONTREE_05112026223353_Presentation.pdf'];
+  const article = await run({addresses, auditAddresses:addresses}).promise;
+  assert.equal(article.sources.length,2);
+  await assert.rejects(run({addresses:[addresses[0],addresses[0].replace('Release','Results')]}).promise,/independent publishers/);
+  await assert.rejects(run({addresses:addresses.map(url=>url.replace('nsearchives.nseindia.com','publisher.example.org'))}).promise,/independent publishers/);
+  await assert.rejects(run({addresses,auditAddresses:addresses,verdict:'HOLD'}).promise,/held the article/);
+});
