@@ -26,12 +26,13 @@ function result(text, addresses, citations = addresses || [], id = "resp_test") 
   const calls = addresses ? [{ type: "web_search_call", status: "completed", action: { type: "search", sources: addresses.map(url => ({ url })) } }] : [];
   return Response.json({ status: "completed", id, output: [...calls, { type: "message", content: [{ type: "output_text", text, annotations: citations.map(url => ({ type: "url_citation", url })) }] }] });
 }
-function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair, factualRevision, revisionVerdict="VERIFIED", revisionAddresses=auditAddresses } = {}) {
+function run({ draft = mockDraft, addresses = urls, auditAddresses = urls, auditCitations = auditAddresses, verdict = "VERIFIED", settings = {}, failures = [], repair, verificationRepair, factualRevision, revisionVerdict="VERIFIED", revisionAddresses=auditAddresses, correctionResearch={addresses:urls,citations:urls,text:"The full primary originals resolve the stated objections."} } = {}) {
   const steps = [
     result("3 districts, released November 15; sample note from August 1.", addresses),
     result(JSON.stringify(draft)),
     ...(repair ? [result(JSON.stringify(repair))] : []),
     result(verdict + "\nTwo independent originals were consulted.", auditAddresses, auditCitations, "resp_audit"),
+    ...(verdict === "HOLD" ? [result(correctionResearch.text,correctionResearch.addresses,correctionResearch.citations,"resp_correction_research")] : []),
     ...(factualRevision ? [result(JSON.stringify(factualRevision)), result(revisionVerdict + "\nEvery objection checked again.",revisionAddresses,revisionAddresses,"resp_recheck")] : []),
     result((verificationRepair?.verdict || verdict) + "\nSource-by-source review.",
       verificationRepair?.addresses || auditAddresses, verificationRepair?.citations || auditCitations, "resp_audit_retry"),
@@ -108,7 +109,7 @@ test("missing citations remain a hold after one retry and factual objections can
   assert.equal(missing.requests.length, 4);
   const negative = run({ verdict: "HOLD", verificationRepair: { verdict: "VERIFIED", citations: urls } });
   await assert.rejects(negative.promise, /held the article/);
-  assert.equal(negative.requests.length, 4);
+  assert.equal(negative.requests.length, 5);
   const newObjection = run({ auditCitations: [urls[0]], verificationRepair: { verdict: "HOLD", citations: urls } });
   await assert.rejects(newObjection.promise, /held the article/);
   assert.equal(newObjection.requests.length, 4);
@@ -130,7 +131,7 @@ test("held runs retain the independent review and public research, never provide
     assert.match(error.perspectiveDiagnostics.verificationReport, /^HOLD/);
     assert.ok(error.perspectiveDiagnostics.researchReport);
     assert.equal(error.perspectiveDiagnostics.draft.title, mockDraft.title);
-    assert.equal(error.perspectiveDiagnostics.providerResponseIds.length, 4);
+    assert.equal(error.perspectiveDiagnostics.providerResponseIds.length, 5);
     assert.doesNotMatch(JSON.stringify(error.perspectiveDiagnostics), /api_key|secrets|Authorization/);
     return true;
   });
@@ -213,10 +214,11 @@ test('independent exchange-hosted issuer filings are not mistaken for one publis
 test('a factual hold requires a changed sourced draft and a fresh independent VERIFIED verdict',async()=>{
  const corrected=changed(d=>{d.summary='The local survey supports a scoped comparison, subject to its sampling limits.';});
  const {promise,requests}=run({verdict:'HOLD',factualRevision:corrected});
- const article=await promise;assert.equal(requests.length,5);assert.equal(article.summary,corrected.summary);
+ const article=await promise;assert.equal(requests.length,6);assert.equal(article.summary,corrected.summary);
  assert.match(article.verification.initialReview,/^HOLD/);assert.match(article.verification.report,/^VERIFIED/);
- assert.equal(requests[4].tools[0].type,'web_search');
- assert.equal(JSON.parse(requests[4].input).summary,corrected.summary);
+ assert.equal(requests[3].tools[0].type,'web_search');
+ assert.equal(requests[5].tools[0].type,'web_search');
+ assert.equal(JSON.parse(requests[5].input).summary,corrected.summary);
  await assert.rejects(run({verdict:'HOLD',factualRevision:mockDraft}).promise,/no factual revision/);
  await assert.rejects(run({verdict:'HOLD',factualRevision:corrected,revisionVerdict:'HOLD'}).promise,/held the article/);
  await assert.rejects(run({verdict:'HOLD',factualRevision:changed(d=>{d.summary='A 99% increase.';})}).promise,/research report/);
@@ -229,4 +231,17 @@ test('a corrected original discovered by the live auditor must be independently 
  const {promise}=run({verdict:'HOLD',auditAddresses:[...urls,correctedURL],factualRevision:correction,revisionAddresses:[urls[0],correctedURL]});
  assert.equal((await promise).sources[1].url,correctedURL);
  await assert.rejects(run({verdict:'HOLD',factualRevision:correction}).promise,/traced/);
+});
+
+
+test('targeted correction research only adds opened or cited originals and still requires independent verification',async()=>{
+ const original='https://www.mospi.gov.in/revised-original';
+ const correction=changed(d=>{d.summary='The full original resolves the sampling question.';d.sources[1].researchId=3;});
+ const research={text:'The original clarifies the sample.',addresses:[original],citations:[original]};
+ const {promise,requests}=run({verdict:'HOLD',factualRevision:correction,correctionResearch:research,revisionAddresses:[urls[0],original]});
+ assert.equal((await promise).sources[1].url,original);
+ assert.match(requests[3].instructions,/actual issuer\/regulator originals/);
+ assert.match(JSON.parse(requests[4].input).report,/The original clarifies/);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:correction,correctionResearch:{...research,citations:[]}}).promise,/traced/);
+ await assert.rejects(run({verdict:'HOLD',factualRevision:correction,correctionResearch:research,revisionAddresses:[urls[0]]}).promise,/held|corroborate/);
 });

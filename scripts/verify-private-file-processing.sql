@@ -34,5 +34,9 @@ begin
  assert (select state='held' from ig_private.file_processing_jobs where file_id=file),'Expired attempts stuck in processing';
  perform public.ig_room_manage(jsonb_build_object('action','processing_retry','id',file));
  assert (select state='queued' and attempts=0 from ig_private.file_processing_jobs where file_id=file);
+ update public.ig_room_files set bytes=1073741825 where id=file;
+ assert public.ig_file_processing(secret,'{"action":"claim"}') is null;
+ assert (select state='held' from ig_private.file_processing_jobs where file_id=file),'Oversized original left queued forever';
+ assert (select processing_status='held' from public.ig_room_files where id=file);
 end $$;
 rollback;
