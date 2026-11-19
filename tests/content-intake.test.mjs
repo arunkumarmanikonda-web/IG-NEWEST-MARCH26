@@ -192,3 +192,8 @@ test("source classifications require supporting excerpts and remain editor choic
     assert.equal(suggestedClassifications([{...fact,excerpt}],terms).size,0);
   assert.equal(suggestedClassifications([fact],[{...terms[0],active:false}]).size,0);
 });
+
+test('account deletion return path survives sign-in without allowing arbitrary redirects',()=>{
+ assert.equal(portalReturn('/account/privacy?request=erasure'),'/account/privacy?request=erasure');
+ assert.equal(portalReturn('/account/privacy?request=erasure&next=/admin'),null);
+});

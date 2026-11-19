@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { canonicalUrl, deepLinkUrl, enquiryUrl, filterEntries, parseCatalogue, parseSaved, plainText, reconcileSaved } from '../src/domain.ts';
+import { STAFF_SIGN_IN_URL, canonicalUrl, deepLinkUrl, enquiryUrl, filterEntries, parseCatalogue, parseSaved, plainText, reconcileSaved } from '../src/domain.ts';
 
 const raw = {
   schema_version: 1, generated_at: '2026-11-19T10:00:00.000Z',
@@ -45,6 +45,15 @@ test('custom deep links cannot escape the first-party route allowlist', () => {
   assert.equal(deepLinkUrl('indiagully://admin'), null);
   assert.equal(deepLinkUrl('indiagully://user@opportunities/a'), null);
 });
+test('staff sign-in uses the fixed verified website flow without admitting admin catalogue or deep links', () => {
+  assert.equal(canonicalUrl(STAFF_SIGN_IN_URL), 'https://indiagully.com/login');
+  assert.equal(canonicalUrl('/admin'), null);
+  assert.equal(canonicalUrl('/admin/login'), null);
+  assert.equal(deepLinkUrl('indiagully://admin/login'), null);
+  assert.throws(() => parseCatalogue({ ...raw, listings: [{ id: 'admin', title: 'Injected admin entry', href: '/admin' }] }));
+  const feed = parseCatalogue({ ...raw, links: { staff: 'https://evil.example/login' } });
+  assert.ok(!JSON.stringify(feed).includes('evil.example'));
+});
 test('search combines text, location, mandate type and SKU collection correctly', () => {
   const feed = parseCatalogue(raw);
   assert.equal(filterEntries(feed.listings, 'office', 'promoter', 'Gurugram').length, 1);
@@ -80,4 +89,22 @@ test('enquiries carry the selected public item without an external destination',
   assert.equal(url.origin, 'https://indiagully.com'); assert.equal(url.pathname, '/contact');
   assert.equal(url.searchParams.get('interest'), 'Real Estate Advisory'); assert.equal(url.searchParams.get('message'), `I would like to enquire about ${entry.title}\n${entry.href}`);
   assert.equal(canonicalUrl(url.href), url.href);
+});
+
+test('incomplete collections and duplicate records never withdraw saved content', () => {
+  for (const key of ['listings','products','perspectives','practices','categories'] as const) {
+    assert.throws(() => parseCatalogue({...raw,[key]:null}));
+    assert.throws(() => parseCatalogue({...raw,[key]:[{}]}));
+    assert.throws(() => parseCatalogue({...raw,[key]:[raw[key][0],raw[key][0]]}));
+  }
+});
+test('withdrawn cache retains no stale commercial or location facts', () => {
+ const feed=parseCatalogue(raw), item={entry:feed.listings[0],saved_at:feed.generated_at,cached_at:feed.generated_at,withdrawn:false};
+ const withdrawn=reconcileSaved([item],{...feed,listings:[]})[0];
+ for(const key of ['city','region','asset_class','transaction_type','category','brand','published_at','image_alt'] as const)assert.equal(withdrawn.entry[key], '');
+ assert.equal(withdrawn.entry.title,item.entry.title);
+});
+test('native excerpts show truncation and decode common typographic entities', () => {
+ assert.equal(plainText('&#8377; 1 &ndash; 2 &#x2022; &copy;'), '₹ 1 – 2 • ©');
+ assert.equal(parseCatalogue({...raw,perspectives:[{...raw.perspectives[0],body:'x'.repeat(13000)}]}).perspectives[0].body_truncated,true);
 });
