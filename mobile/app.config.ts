@@ -22,7 +22,7 @@ const config: ExpoConfig = {
     allowBackup: false,
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#292821' },
     // Public browsing does not need camera, microphone, contacts, location or storage access.
-    blockedPermissions: ['android.permission.RECORD_AUDIO', 'android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.READ_EXTERNAL_STORAGE', 'android.permission.WRITE_EXTERNAL_STORAGE', 'android.permission.READ_MEDIA_IMAGES', 'android.permission.READ_MEDIA_VIDEO'],
+    blockedPermissions: ['android.permission.SYSTEM_ALERT_WINDOW', 'android.permission.VIBRATE', 'android.permission.RECORD_AUDIO', 'android.permission.CAMERA', 'android.permission.ACCESS_FINE_LOCATION', 'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.READ_EXTERNAL_STORAGE', 'android.permission.WRITE_EXTERNAL_STORAGE', 'android.permission.READ_MEDIA_IMAGES', 'android.permission.READ_MEDIA_VIDEO'],
   },
   web: { favicon: './assets/icon.png', name: 'India Gully', shortName: 'India Gully', description: 'Explore India Gully properties, HORECA collections and Perspectives.' },
   plugins: ['expo-web-browser'],
