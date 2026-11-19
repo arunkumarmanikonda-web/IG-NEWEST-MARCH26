@@ -1,9 +1,23 @@
 import {test,expect} from '@playwright/test';
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,access} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const feed=JSON.parse(await readFile(new URL('./fixtures/public-catalogue.json',import.meta.url),'utf8'));
 const feedPath='**/api/mobile/catalogue';
 async function ready(page, data=feed){
+ const localImages=new Map();
+ for(const entry of [...data.listings,...data.products,...data.categories]){
+  const image=entry.image;
+  if(typeof image==='string' && image.startsWith('/images/') && !image.includes('..')){
+   const path=resolve('public'+image);
+   if(await access(path).then(()=>true,()=>false))localImages.set(`https://indiagully.com${image}`,path);
+  }
+ }
+ // Use the repository's original published image bytes when available; this
+ // removes network timing from layout review without substituting mock artwork.
+ await page.route('https://indiagully.com/images/**',route=>{
+  const path=localImages.get(route.request().url());
+  return path?route.fulfill({path}):route.continue();
+ });
  await page.route(feedPath,r=>r.fulfill({json:data}));
  await page.goto('/');
  await expect(page.getByRole('button',{name:`Explore ${data.listings[0].title}`,exact:true})).toBeAttached();
@@ -12,8 +26,11 @@ async function ready(page, data=feed){
 }
 async function frame(page,testInfo,name){
  const dir=resolve('mobile/qa-output/frames',testInfo.project.name);await mkdir(dir,{recursive:true});
+ // React Native's modal entrance/exit continues after the element is visible.
+ // Let that finite transition settle before documenting the resulting screen.
+ await page.waitForTimeout(650);
  await page.evaluate(() => Promise.race([Promise.all(Array.from(document.images).map(i=>i.complete ? Promise.resolve() : new Promise(r=>{i.addEventListener('load',r,{once:true});i.addEventListener('error',r,{once:true});}))), new Promise(r=>setTimeout(r,5000))]));
- await page.screenshot({path:resolve(dir,name+'.png')});
+ await page.screenshot({path:resolve(dir,name+'.png'),animations:'disabled'});
 }
 test('actual app journeys and review frames',async({page},testInfo)=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));

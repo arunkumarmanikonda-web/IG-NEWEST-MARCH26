@@ -32,11 +32,11 @@ function Button({ label, onPress, secondary = false, icon = 'arrow-forward' }: {
 function Chip({ label, selected, onPress }: { label: string; selected?: boolean; onPress: () => void }) {
   return <Pressable accessibilityRole="button" accessibilityState={{ selected }} onPress={onPress} style={[styles.chip, selected && styles.chipSelected]}><Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text></Pressable>;
 }
-function Photo({ uri, alt, style }: { uri: string | null; alt: string; style?: object }) {
+function Photo({ uri, alt, style, fit = 'cover' }: { uri: string | null; alt: string; style?: object; fit?: 'cover' | 'contain' }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [uri]);
   if (!uri || failed) return <View accessibilityLabel="Image unavailable" style={[styles.photo, styles.photoEmpty, style]}><Image source={require('../assets/brand-mark.png')} style={styles.photoMark} resizeMode="contain" /><Text style={styles.photoEmptyText}>INDIA GULLY</Text></View>;
-  return <Image accessibilityLabel={alt} source={{ uri }} onError={() => setFailed(true)} style={[styles.photo, style]} resizeMode="cover" />;
+  return <Image accessibilityLabel={alt} source={{ uri }} onError={() => setFailed(true)} style={[styles.photo, fit === 'contain' && { backgroundColor: colors.white }, style]} resizeMode={fit} />;
 }
 function Eyebrow({ children, light = false }: { children: React.ReactNode; light?: boolean }) { return <Text style={[styles.eyebrow, light && { color: '#e1d5af' }]}>{children}</Text>; }
 function Heading({ title, subtitle, action, onPress }: { title: string; subtitle?: string; action?: string; onPress?: () => void }) {
@@ -48,7 +48,7 @@ function Empty({ title, text, icon = 'search-outline', action, onPress }: { titl
 function labelFor(entry: Entry): string { return entry.type === 'product' ? entry.category || 'HORECA' : entry.type === 'perspective' ? 'Perspective' : entry.type === 'practice' ? 'Our practice' : entry.kind === 'brand' ? 'Brand requirement' : entry.kind === 'promoter' ? 'Space for lease' : 'Investment opportunity'; }
 function Card({ entry, saved, onOpen, onSave }: { entry: Entry; saved: boolean; onOpen: () => void; onSave: () => void }) {
   return <View style={styles.card}><Pressable onPress={onOpen} accessibilityRole="button" accessibilityLabel={`Explore ${entry.title}`}>
-    <Photo uri={entry.image} alt={entry.image_alt || entry.title} />
+    <Photo uri={entry.image} alt={entry.image_alt || entry.title} fit={entry.type === 'product' ? 'contain' : 'cover'} />
     <View style={styles.cardBody}><Eyebrow>{labelFor(entry)}</Eyebrow><Text style={styles.cardTitle}>{entry.title}</Text>
       {!!entry.city && <Text style={styles.location}>{[entry.city, entry.region].filter(Boolean).join(', ')}</Text>}
       {!!entry.summary && <Text numberOfLines={3} style={styles.cardSummary}>{entry.summary}</Text>}
@@ -259,7 +259,7 @@ function AppContent() {
 
     <Modal visible={!!selected} onRequestClose={() => setSelected(null)} animationType="slide" presentationStyle="pageSheet">
       {selected && <SafeAreaView style={styles.shell} edges={['top', 'left', 'right', 'bottom']}><View style={styles.detailHeader}><IconButton name="chevron-down" label="Close details" onPress={() => setSelected(null)} /><Text numberOfLines={1} style={styles.detailHeaderTitle}>{labelFor(selected)}</Text><IconButton name="share-outline" label={`Share ${selected.title}`} onPress={() => { void Share.share({ title: selected.title, message: `${selected.title}\n${selected.href}`, ...(Platform.OS === 'ios' ? { url: selected.href } : {}) }).catch(() => Alert.alert('Could not share', 'Please try again.')); }} /><IconButton name={savedKeys.has(entryKey(selected)) ? 'bookmark' : 'bookmark-outline'} label={savedKeys.has(entryKey(selected)) ? 'Remove from shortlist' : 'Save to shortlist'} onPress={() => void toggleSave(selected)} /></View>
-        <ScrollView contentContainerStyle={styles.detailContent}><Photo uri={selected.image} alt={selected.image_alt || selected.title} style={styles.detailPhoto} /><View style={styles.detailBody}>
+        <ScrollView contentContainerStyle={styles.detailContent}><Photo uri={selected.image} alt={selected.image_alt || selected.title} style={styles.detailPhoto} fit={selected.type === 'product' ? 'contain' : 'cover'} /><View style={styles.detailBody}>
           <Eyebrow>{labelFor(selected)}</Eyebrow><Text accessibilityRole="header" style={styles.detailTitle}>{selected.title}</Text>{!!selected.city && <Text style={styles.location}>{[selected.city, selected.region].filter(Boolean).join(', ')}</Text>}
           {!fresh && <View style={styles.notice}><Text style={styles.noticeText}>Saved public brief · {formatDate(savedDetail?.cached_at || catalogue?.generated_at || '')}. Availability and terms may have changed.</Text></View>}
           <View style={styles.facts}>{[['Asset', selected.asset_class], ['Transaction', selected.transaction_type], ['Area', [selected.area, selected.area_unit].filter(Boolean).join(' ')], ['Keys', selected.keys], ['Indicative price', selected.price_label], ['SKU', selected.sku], ['Brand', selected.brand], ['Minimum order', selected.moq], ['Pack size', selected.pack_size]].filter(([, value]) => !!value).map(([label, value]) => <View key={label} style={styles.fact}><Text style={styles.factLabel}>{label}</Text><Text style={styles.factValue}>{value}</Text></View>)}</View>

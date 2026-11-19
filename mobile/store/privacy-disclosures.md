@@ -35,9 +35,11 @@ Google distinguishes processing by an instructed service provider from some form
 
 All first-party destinations in the mobile code use HTTPS. Do not claim that a user's chosen external sharing app has been audited by India Gully. No sale of user data is declared in the current public privacy notice; verify operating practice remains consistent.
 
-## Current account-deletion gap
+## Account-deletion changes and remaining verification
 
-At preparation, More → Account & data requests opens /account/privacy. That page redirects a signed-out visitor to /login without preserving the destination. The form defaults to “access” and exposes raw “closure” and “erasure” choices. The ig_privacy_request function records requests and review responses; no account-deletion execution workflow was identified in the inspected code. A “resolved” status by itself is not proof that account and associated data were deleted.
+Build 2 adds More → Delete account & data, preserves the deletion destination through sign-in, selects the full account-and-data deletion option, and pre-fills the request. The public /delete-account page explains the authenticated request, tracking and fallback contact path. These changes make initiation discoverable; they do not implement automatic deletion.
+
+The ig_privacy_request function records requests and review responses. A separate automated account-deletion execution workflow was not identified in the inspected code. The existing operational team must fulfil and verify the request, including associated data and any specific retained records. A “resolved” status by itself is not proof that deletion occurred. Test that fulfilment before store certification.
 
 Release acceptance should verify:
 

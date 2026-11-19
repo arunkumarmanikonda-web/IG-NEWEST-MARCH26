@@ -15,6 +15,7 @@ Prepared 19 November 2026. This is submission preparation, not evidence of an up
 | Website | https://indiagully.com |
 | Support URL | https://indiagully.com/contact |
 | Support email | hello@indiagully.com |
+| Deletion URL | https://indiagully.com/delete-account; release with the new account-deletion entry and return path |
 | Privacy URL | https://indiagully.com/privacy; publish the mobile/Gullu updates described in privacy-disclosures.md before submission |
 | Copyright | 2026 Vivacious Entertainment and Hospitality Private Limited |
 | Package / bundle ID | com.indiagully.app, provisional until ownership and availability are verified in the developer accounts |
@@ -76,15 +77,15 @@ The supported capture-size list can change. Check the active console against [Ap
 | --- | --- |
 | Android signed production AAB | Not supplied by the existing CI; its APK uses a development signing key |
 | iOS signed production IPA | Not supplied by the existing CI; its .app is an unsigned simulator build |
-| Play Console developer account, app record, verification and release access | Not verified |
-| Apple Developer membership, team, agreements, App Store Connect app record | Not verified |
+| Play Console developer account, app record, verification and release access | Current connected Google account opens developer registration; another existing developer account, if any, has not been verified |
+| Apple Developer membership, team, agreements, App Store Connect app record | App Store Connect requires sign-in; membership, team and app record are not yet verified |
 | Expo account/project and ownership | Not verified; no project ID is configured |
 | Android upload signing credentials and Play submission service account | Not verified |
 | Apple distribution provisioning/signing and upload credentials | Not verified |
 | Actual device acceptance | Record the tested build, device/OS, result and date after testing |
 | Account deletion and privacy declarations | See privacy-disclosures.md; resolve before production submission |
 | Content rating, audience and financial-features questionnaires | Complete from actual app/web flows; do not infer answers from the Business category |
-| Screenshot pack and reviewer access | Not yet produced or supplied |
+| Screenshot pack and reviewer access | App phone/tablet web review frames captured in CI; native store screenshot set and reviewer account remain pending |
 
 Expo can submit a signed Android AAB to an existing Play app with configured service-account credentials. The first release can use the internal-testing track; completing the listing and production requirements is separate. iOS submission requires a signed IPA and Apple account credentials; processing into TestFlight is separate from submitting the app for App Review. See [Android submission](https://docs.expo.dev/submit/android.md) and [iOS submission](https://docs.expo.dev/submit/ios.md).
 
