@@ -4,7 +4,7 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import { StatusBar } from 'expo-status-bar';
 import * as WebBrowser from 'expo-web-browser';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FEED_URL, ORIGIN, canonicalUrl, deepLinkUrl, enquiryUrl, entryKey, filterEntries, formatDate, parseCatalogue, reconcileSaved } from './domain';
+import { FEED_URL, ORIGIN, STAFF_SIGN_IN_URL, canonicalUrl, deepLinkUrl, enquiryUrl, entryKey, filterEntries, formatDate, parseCatalogue, reconcileSaved } from './domain';
 import type { Catalogue, Entry, SavedEntry } from './domain';
 import { clearPublicCache, readCache, readSaved, writeCache, writeSaved } from './storage';
 
@@ -65,6 +65,9 @@ function AppContent() {
   const [catalogue, setCatalogue] = useState<Catalogue | null>(null);
   const [saved, setSaved] = useState<SavedEntry[]>([]);
   const savedRef = useRef(saved);
+  const hydrated = useRef(false);
+  const savedReadable = useRef(false);
+  const [savedError, setSavedError] = useState(false);
   const savedQueue = useRef<Promise<void>>(Promise.resolve());
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -76,6 +79,8 @@ function AppContent() {
   const [city, setCity] = useState('all');
   const [productQuery, setProductQuery] = useState('');
   const [category, setCategory] = useState('all');
+  const [productLimit, setProductLimit] = useState(24);
+  useEffect(() => setProductLimit(24), [category, productQuery, catalogue]);
   const [moreSection, setMoreSection] = useState<'menu' | 'perspectives' | 'practices'>('menu');
   const [pendingLink, setPendingLink] = useState<string | null>(null);
   const busy = useRef(false);
@@ -84,6 +89,7 @@ function AppContent() {
   const setSavedState = (value: SavedEntry[]) => { savedRef.current = value; setSaved(value); };
   const mutateSaved = useCallback((update: (current: SavedEntry[]) => SavedEntry[]) => {
     const task = savedQueue.current.then(async () => {
+      if (!savedReadable.current) throw new Error('Shortlist must be loaded before saving');
       const next = update(savedRef.current);
       await writeSaved(next);
       setSavedState(next);
@@ -93,7 +99,7 @@ function AppContent() {
   }, []);
 
   const refresh = useCallback(async () => {
-    if (busy.current) return;
+    if (busy.current || !hydrated.current) return;
     busy.current = true; setRefreshing(true);
     const controller = new AbortController(); request.current = controller;
     const timer = setTimeout(() => controller.abort(), 15000);
@@ -104,9 +110,9 @@ function AppContent() {
       const feed = parseCatalogue(JSON.parse(raw));
       setCatalogue(feed); setNotice('');
       setSelected(previous => previous ? [...feed.listings, ...feed.products, ...feed.perspectives, ...feed.practices].find(entry => entryKey(entry) === entryKey(previous)) || null : null);
-      const persisted = await Promise.allSettled([writeCache(feed), mutateSaved(current => reconcileSaved(current, feed))]);
+      const persisted = await Promise.allSettled([writeCache(feed), ...(savedReadable.current ? [mutateSaved(current => reconcileSaved(current, feed))] : [])]);
       if (persisted.some(result => result.status === 'rejected')) {
-        setSavedState(reconcileSaved(savedRef.current, feed));
+        if (savedReadable.current) setSavedState(reconcileSaved(savedRef.current, feed));
         setNotice('Your catalogue is current, but this device could not save an offline copy.');
       }
       setFresh(true);
@@ -115,11 +121,19 @@ function AppContent() {
   }, [mutateSaved]);
   useEffect(() => {
     let mounted = true;
-    void (async () => { const [cache, shortlist] = await Promise.all([readCache(), readSaved()]); if (!mounted) return; setCatalogue(cache); setSavedState(shortlist); await refresh(); })();
+    void (async () => {
+      const [cache, shortlist] = await Promise.allSettled([readCache(), readSaved()]);
+      if (!mounted) return;
+      setCatalogue(cache.status === 'fulfilled' ? cache.value : null);
+      if (shortlist.status === 'fulfilled') { setSavedState(shortlist.value); savedReadable.current = true; }
+      else setSavedError(true);
+      hydrated.current = true;
+      await refresh();
+    })();
     return () => { mounted = false; request.current?.abort(); };
   }, [refresh]);
   useEffect(() => {
-    void Linking.getInitialURL().then(url => { if (url) setPendingLink(deepLinkUrl(url)); });
+    void Linking.getInitialURL().then(url => { if (url) setPendingLink(deepLinkUrl(url)); }).catch(() => {});
     const subscription = Linking.addEventListener('url', ({ url }) => setPendingLink(deepLinkUrl(url)));
     return () => subscription.remove();
   }, []);
@@ -143,8 +157,15 @@ function AppContent() {
   }, [refresh]);
 
   const changeTab = (next: Tab) => { setTab(next); scroll.current?.scrollTo({ y: 0, animated: false }); };
+  const explore = (nextKind = 'all') => { setQuery(''); setCity('all'); setKind(nextKind); changeTab('Explore'); };
+  useEffect(() => { scroll.current?.scrollTo({ y: 0, animated: false }); }, [moreSection]);
+  const retryShortlist = async () => {
+    try { const value = await readSaved(); setSavedState(catalogue && fresh ? reconcileSaved(value, catalogue) : value); savedReadable.current = true; setSavedError(false); }
+    catch { Alert.alert('Shortlist unavailable', 'Your stored shortlist has been preserved. Free some device storage and try again.'); }
+  };
   const savedKeys = new Set(saved.filter(s => !s.withdrawn).map(s => entryKey(s.entry)));
   const toggleSave = async (entry: Entry) => {
+    if (!savedReadable.current) { Alert.alert('Shortlist unavailable', 'Open Saved and retry loading your shortlist before making changes.'); return; }
     const key = entryKey(entry);
     const now = new Date().toISOString();
     try { await mutateSaved(old => {
@@ -172,10 +193,10 @@ function AppContent() {
       {loading && !catalogue && <View style={styles.loading}><ActivityIndicator size="large" color={colors.gold} /><Text style={styles.secondary}>Opening the gully…</Text></View>}
 
       {tab === 'Home' && <>
-        <View style={styles.hero}><Eyebrow light>Ideas. Opportunities. Possibilities.</Eyebrow><Text accessibilityRole="header" style={styles.heroTitle}>A world of opportunity.{`\n`}A personal connection.</Text><Text style={styles.heroText}>Explore properties, hospitality essentials and the people who help bring your ambitions to life.</Text><Button label="Explore opportunities" onPress={() => changeTab('Explore')} secondary /></View>
-        <View style={styles.quickRow}>{[{ label: 'Buy & invest', icon: 'business-outline' as Icon, run: () => { setKind('opportunity'); changeTab('Explore'); } }, { label: 'Leasing', icon: 'key-outline' as Icon, run: () => { setKind('promoter'); changeTab('Explore'); } }, { label: 'HORECA', icon: 'restaurant-outline' as Icon, run: () => changeTab('HORECA') }].map(item => <Pressable key={item.label} onPress={item.run} accessibilityRole="button" style={styles.quick}><Ionicons name={item.icon} color={colors.gold} size={25} /><Text style={styles.quickLabel}>{item.label}</Text></Pressable>)}</View>
+        <View style={styles.hero}><Eyebrow light>Ideas. Opportunities. Possibilities.</Eyebrow><Text accessibilityRole="header" style={styles.heroTitle}>A world of opportunity.{`\n`}A personal connection.</Text><Text style={styles.heroText}>Explore properties, hospitality essentials and the people who help bring your ambitions to life.</Text><Button label="Explore opportunities" onPress={() => explore()} secondary /></View>
+        <View style={styles.quickRow}>{[{ label: 'Buy & invest', icon: 'business-outline' as Icon, run: () => explore('opportunity') }, { label: 'Leasing', icon: 'key-outline' as Icon, run: () => explore('promoter') }, { label: 'HORECA', icon: 'restaurant-outline' as Icon, run: () => changeTab('HORECA') }].map(item => <Pressable key={item.label} onPress={item.run} accessibilityRole="button" style={styles.quick}><Ionicons name={item.icon} color={colors.gold} size={25} /><Text style={styles.quickLabel}>{item.label}</Text></Pressable>)}</View>
         {residences && <View style={styles.residence}><Photo uri={residences.image} alt={residences.image_alt || residences.title} style={styles.residencePhoto} /><View style={styles.residenceBody}><Eyebrow>Our signature residences</Eyebrow><Text style={styles.residenceTitle}>{residences.headline || residences.title}</Text><Text style={styles.location}>{residences.location}</Text><Text style={styles.paragraph}>{residences.description}</Text><Button label={residences.cta_label} onPress={() => void openWebsite(residences.cta_href)} /><Text style={styles.browserNote}>Opens our secure website</Text></View></View>}
-        <Heading title="Your next opportunity" subtitle="Discover our published property and leasing briefs." action="View all" onPress={() => { setKind('all'); changeTab('Explore'); }} />
+        <Heading title="Your next opportunity" subtitle="Discover our published property and leasing briefs." action="View all" onPress={() => explore()} />
         {catalogueUnavailable ? noCatalogue : cards((catalogue?.listings || []).slice(0, 3))}
         {catalogue && !catalogue.listings.length && <Empty title="More opportunities are on the way" text="Speak with our team about what you’re looking for." action="Contact our team" onPress={() => void openWebsite(links.contact)} />}
         <Heading title="A fresh perspective" subtitle="Ideas and insights from India Gully." action="Read all" onPress={() => { setMoreSection('perspectives'); changeTab('More'); }} />
@@ -199,14 +220,15 @@ function AppContent() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}><Chip label="All collections" selected={category === 'all'} onPress={() => setCategory('all')} />{productCategories.map(item => <Chip key={item} label={catalogue?.categories.find(c => c.id === item)?.title || item} selected={category === item} onPress={() => setCategory(item)} />)}</ScrollView>
         {category === 'all' && !productQuery && !!catalogue?.categories.length && <View style={styles.categoryGrid}>{catalogue.categories.map(item => <Pressable key={item.id} onPress={() => setCategory(item.id)} accessibilityRole="button" accessibilityLabel={`Explore ${item.title}`} style={styles.categoryCard}><Photo uri={item.image} alt={item.title} style={styles.categoryPhoto} /><Text style={styles.categoryTitle}>{item.title}</Text><Text style={styles.categoryCount}>{item.count ?? catalogue.products.filter(p => p.category === item.id).length} products →</Text></Pressable>)}</View>}
         <Text style={styles.resultCount}>{category === 'all' && !productQuery ? 'Choose a collection to explore its products.' : `${products.length} ${products.length === 1 ? 'product' : 'products'}${category !== 'all' ? ` · ${catalogue?.categories.find(c => c.id === category)?.title || category}` : ''}`}</Text>
-        {catalogueUnavailable ? noCatalogue : (category !== 'all' || !!productQuery) && cards(products.slice(0, 100))}
+        {catalogueUnavailable ? noCatalogue : (category !== 'all' || !!productQuery) && cards(products.slice(0, productLimit))}
         {!loading && catalogue && !products.length && <Empty title="No matching products yet" text="Try a different SKU or collection, or ask our team about sourcing for your project." action="Clear filters" onPress={() => { setProductQuery(''); setCategory('all'); }} />}
-        {products.length > 100 && <Text style={styles.footnote}>Showing the first 100 matches. Choose a collection or search by SKU to narrow your selection.</Text>}
+        {(category !== 'all' || !!productQuery) && products.length > productLimit && <Button label={`Show more products (${products.length - productLimit} remaining)`} secondary onPress={() => setProductLimit(n => n + 24)} />}
       </>}
 
       {tab === 'Saved' && <>
         <Eyebrow>Your personal shortlist</Eyebrow><Text accessibilityRole="header" style={styles.pageTitle}>Worth coming back to.</Text><Text style={styles.pageIntro}>Saved on this device for your next conversation. Public briefs are available offline; account and data-room information is never stored here.</Text>
-        {!saved.length && <Empty title="Make room for possibilities" text="Tap the bookmark on a property, product or Perspective to keep it here." icon="bookmark-outline" action="Explore opportunities" onPress={() => changeTab('Explore')} />}
+        {savedError && <Empty title="Your shortlist could not be loaded" text="Your stored shortlist has been preserved. Retry before adding or removing saved items." action="Retry shortlist" onPress={() => void retryShortlist()} />}
+        {!savedError && !saved.length && <Empty title="Make room for possibilities" text="Tap the bookmark on a property, product or Perspective to keep it here." icon="bookmark-outline" action="Explore opportunities" onPress={() => explore()} />}
         {saved.map(item => <View key={entryKey(item.entry)}>{item.withdrawn ? <View style={styles.withdrawn}><Eyebrow>No longer publicly listed</Eyebrow><Text style={styles.cardTitle}>{item.entry.title}</Text><Text style={styles.paragraph}>This item is no longer in our current public catalogue. Contact our team for an update.</Text><Button label="Remove from shortlist" secondary icon="trash-outline" onPress={() => void toggleSave(item.entry)} /></View> : <Card entry={item.entry} saved onOpen={() => setSelected(item.entry)} onSave={() => void toggleSave(item.entry)} />}<Text style={styles.savedDate}>Saved {formatDate(item.saved_at)} · Brief updated {formatDate(item.cached_at)}{!fresh ? '\nOffline copy — confirm availability and current terms.' : ''}</Text></View>)}
       </>}
 
@@ -217,9 +239,18 @@ function AppContent() {
         {moreSection === 'practices' && <>{catalogue?.practices.map(entry => <Pressable key={entry.id} accessibilityRole="button" onPress={() => setSelected(entry)} style={styles.practiceCard}><Eyebrow>Our practice</Eyebrow><Text style={styles.cardTitle}>{entry.title}</Text><Text numberOfLines={4} style={styles.paragraph}>{entry.summary}</Text><Text style={styles.exploreLink}>Explore this practice ↗</Text></Pressable>)}{catalogueUnavailable && noCatalogue}</>}
         {moreSection === 'menu' && <>
           <View style={styles.buddyCard}><View style={styles.buddyIcon}><Ionicons name="chatbubbles-outline" size={35} color={colors.gold} /></View><Text style={styles.sectionTitle}>A little help from Gullu.</Text><Text style={styles.paragraph}>Your India Gully buddy. Explore our published opportunities and practices, or get pointed in the right direction.</Text><Button label="Chat with Gullu" onPress={() => void openWebsite(links.gullu)} /><Text style={styles.browserNote}>Opens our secure website. Gullu’s sign-in and consent choices remain on the website.</Text></View>
-          {[{ title: 'Client workspace', detail: 'Sign in securely to your dashboard and data rooms.', icon: 'lock-closed-outline' as Icon, action: () => void openWebsite(links.portal), browser: true }, { title: 'Our practices', detail: 'Explore how we can help your business.', icon: 'business-outline' as Icon, action: () => setMoreSection('practices'), browser: false }, { title: 'Perspectives', detail: 'Read the ideas shaping our world.', icon: 'newspaper-outline' as Icon, action: () => setMoreSection('perspectives'), browser: false }, { title: 'Speak with our team', detail: 'Tell us what you have in mind.', icon: 'people-outline' as Icon, action: () => void openWebsite(links.contact), browser: true }, { title: 'Privacy and your data', detail: 'Read our privacy notice.', icon: 'shield-checkmark-outline' as Icon, action: () => void openWebsite(links.privacy), browser: true }, { title: 'Account & data requests', detail: 'Manage account privacy and request deletion.', icon: 'person-circle-outline' as Icon, action: () => void openWebsite(links.delete_account), browser: true }].map(item => <Pressable key={item.title} accessibilityRole="button" accessibilityLabel={`${item.title}${item.browser ? ', opens secure website' : ''}`} onPress={item.action} style={styles.menuItem}><Ionicons name={item.icon} size={25} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.menuTitle}>{item.title}</Text><Text style={styles.menuDetail}>{item.detail}</Text>{item.browser && <Text style={styles.browserTag}>SECURE WEBSITE ↗</Text>}</View><Ionicons name="chevron-forward" color={colors.muted} size={20} /></Pressable>)}
+          {[{ title: 'Client workspace', detail: 'Sign in securely to your dashboard and data rooms.', icon: 'lock-closed-outline' as Icon, action: () => void openWebsite(links.portal), browser: true }, { title: 'Our practices', detail: 'Explore how we can help your business.', icon: 'business-outline' as Icon, action: () => setMoreSection('practices'), browser: false }, { title: 'Perspectives', detail: 'Read the ideas shaping our world.', icon: 'newspaper-outline' as Icon, action: () => setMoreSection('perspectives'), browser: false }, { title: 'Speak with our team', detail: 'Tell us what you have in mind.', icon: 'people-outline' as Icon, action: () => void openWebsite(links.contact), browser: true }, { title: 'Privacy and your data', detail: 'Read our privacy notice.', icon: 'shield-checkmark-outline' as Icon, action: () => void openWebsite(links.privacy), browser: true }, { title: 'Delete account & data', detail: 'Request account deletion or manage your privacy rights.', icon: 'person-circle-outline' as Icon, action: () => void openWebsite(`${ORIGIN}/account/privacy?request=erasure`), browser: true }].map(item => <Pressable key={item.title} accessibilityRole="button" accessibilityLabel={`${item.title}${item.browser ? ', opens secure website' : ''}`} onPress={item.action} style={styles.menuItem}><Ionicons name={item.icon} size={25} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.menuTitle}>{item.title}</Text><Text style={styles.menuDetail}>{item.detail}</Text>{item.browser && <Text style={styles.browserTag}>SECURE WEBSITE ↗</Text>}</View><Ionicons name="chevron-forward" color={colors.muted} size={20} /></Pressable>)}
           <Pressable accessibilityRole="button" onPress={() => Alert.alert('Clear offline catalogue?', 'Your saved shortlist will stay on this device. The public catalogue will download again when you refresh.', [{ text: 'Cancel', style: 'cancel' }, { text: 'Clear catalogue', onPress: () => { void clearPublicCache().then(() => Alert.alert('Offline catalogue cleared')).catch(() => Alert.alert('Could not clear catalogue', 'Please try again.')); } }])} style={styles.clearLink}><Text style={styles.textActionText}>Clear offline catalogue</Text></Pressable>
-          <Text style={styles.about}>India Gully · Version 1.0.0{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. This app does not collect account details or chat messages; secure website services have their own privacy controls.</Text>
+          <Text style={styles.about}>India Gully · Version 1.0.0{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. Account, enquiry and Gullu services open our secure website and follow its privacy notice.</Text>
+          <View style={styles.staffAccess}>
+            <Text style={styles.staffCaption}>FOR THE INDIA GULLY TEAM</Text>
+            <Pressable accessibilityRole="button" accessibilityLabel="Staff workspace sign in, opens secure website" onPress={() => void openWebsite(STAFF_SIGN_IN_URL)} style={styles.staffLink}>
+              <Ionicons name="briefcase-outline" size={20} color={colors.gold} />
+              <Text style={styles.staffLinkText}>Staff workspace sign in</Text>
+              <Ionicons name="open-outline" size={16} color={colors.muted} />
+            </Pressable>
+            <Text style={styles.browserNote}>Opens our secure website. Staff permissions and sign-in verification apply.</Text>
+          </View>
         </>}
       </>}
       <View style={{ height: 24 }} />
@@ -258,6 +289,7 @@ const styles = StyleSheet.create({
   categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12, marginTop: 14 }, categoryCard: { width: '48%', backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, borderRadius: 4, overflow: 'hidden', paddingBottom: 14 }, categoryPhoto: { height: 115 }, categoryTitle: { fontFamily: serif, fontSize: 19, lineHeight: 24, color: colors.ink, paddingHorizontal: 12, marginTop: 12 }, categoryCount: { color: colors.gold, fontSize: 11, paddingHorizontal: 12, marginTop: 7 },
   notice: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#f0ead8', padding: 13, borderRadius: 3, marginBottom: 18 }, noticeText: { fontSize: 12, color: colors.ink, lineHeight: 20 }, loading: { alignItems: 'center', padding: 26, gap: 10 }, empty: { padding: 24, borderWidth: 1, borderColor: colors.border, alignItems: 'center', gap: 14, marginBottom: 22, backgroundColor: colors.white }, emptyTitle: { color: colors.ink, fontFamily: serif, fontSize: 25, textAlign: 'center' }, emptyText: { fontSize: 14, lineHeight: 23, color: colors.muted, textAlign: 'center' }, footnote: { color: colors.muted, fontSize: 11, lineHeight: 18, marginVertical: 20 }, savedDate: { color: colors.muted, fontSize: 10, lineHeight: 17, marginTop: -9, marginBottom: 23, paddingHorizontal: 4 }, withdrawn: { borderWidth: 1, borderColor: colors.border, padding: 20, marginBottom: 20, backgroundColor: colors.pale },
   practiceTeaser: { padding: 24, backgroundColor: colors.pale, gap: 12, marginTop: 12 }, practiceCard: { padding: 22, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, marginBottom: 14 }, buddyCard: { padding: 24, backgroundColor: colors.pale, marginVertical: 15, borderRadius: 5 }, buddyIcon: { paddingBottom: 18 }, menuItem: { flexDirection: 'row', alignItems: 'center', gap: 16, borderBottomWidth: 1, borderColor: colors.border, paddingVertical: 21 }, menuTitle: { fontSize: 15, fontWeight: '600', color: colors.ink }, menuDetail: { fontSize: 12, color: colors.muted, lineHeight: 19, marginTop: 5 }, browserTag: { fontSize: 8, letterSpacing: 1, color: colors.gold, marginTop: 7 }, backLink: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 15, marginBottom: 8 }, clearLink: { paddingVertical: 23, alignItems: 'center' }, about: { color: colors.muted, fontSize: 11, lineHeight: 19, textAlign: 'center', marginBottom: 16 },
+  staffAccess: { borderTopWidth: 1, borderColor: colors.border, marginTop: 12, paddingTop: 24, paddingBottom: 8, alignItems: 'center' }, staffCaption: { color: colors.muted, fontSize: 9, lineHeight: 15, letterSpacing: 1.2, textAlign: 'center' }, staffLink: { minHeight: 48, paddingHorizontal: 12, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }, staffLinkText: { color: colors.gold, fontSize: 13, fontWeight: '600', flexShrink: 1 },
   tabs: { flexDirection: 'row', borderTopWidth: 1, borderColor: colors.border, paddingTop: 9, backgroundColor: colors.white }, tab: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 50, gap: 5 }, tabLabel: { color: colors.muted, fontSize: 10 }, activeTab: { color: colors.gold, fontWeight: '700' }, badge: { position: 'absolute', top: 0, right: '23%', backgroundColor: colors.ink, minWidth: 15, height: 15, borderRadius: 8, paddingHorizontal: 3, justifyContent: 'center', alignItems: 'center' }, badgeText: { color: colors.white, fontSize: 8, fontWeight: '600' },
   detailHeader: { minHeight: 58, paddingHorizontal: 10, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderColor: colors.border, backgroundColor: colors.white }, detailHeaderTitle: { flex: 1, fontSize: 12, color: colors.gold, textTransform: 'uppercase', letterSpacing: 1 }, detailContent: { maxWidth: 800, width: '100%', alignSelf: 'center', paddingBottom: 20 }, detailPhoto: { height: 260 }, detailBody: { padding: 24 }, detailTitle: { fontFamily: serif, color: colors.ink, fontSize: 32, lineHeight: 40, marginTop: 14, marginBottom: 14 }, detailParagraph: { fontSize: 15, color: colors.ink, lineHeight: 27, marginBottom: 18, textAlign: 'justify' }, facts: { flexDirection: 'row', flexWrap: 'wrap', gap: 20, marginVertical: 18 }, fact: { width: '44%' }, factLabel: { fontSize: 10, color: colors.muted, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 5 }, factValue: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '600' }, detailFooter: { padding: 16, borderTopWidth: 1, borderColor: colors.border, backgroundColor: colors.white },
 });

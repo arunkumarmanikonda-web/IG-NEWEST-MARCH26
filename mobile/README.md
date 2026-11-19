@@ -11,6 +11,7 @@ This is a native Expo / React Native application sharing India Gully’s publish
 - A CMS-driven India Gully Residences launch card, shown only when the public feed supplies the active launch. No invented project facts or placeholder renders.
 - On-device public shortlists with saved/updated dates, offline text and native sharing. A successful catalogue refresh updates saved briefs and removes withdrawn content; a title-only withdrawal notice remains removable. Public cached media may require connectivity when it is not in the operating system’s image cache.
 - Contextual enquiries use the website’s existing `interest` and `message` query parameters.
+- Staff sign-in is separate at the bottom of More and uses existing staff verification and role permissions.
 - Gullu, the client workspace, account/data requests, privacy and enquiry forms open in the system’s secure in-app browser. Each transition is labeled. This version does not provide native account authentication, native private data rooms, native chat storage, push notifications, payments or offline private documents.
 
 ## Environment and local verification

@@ -12,13 +12,13 @@ const config: ExpoConfig = {
   userInterfaceStyle: 'light',
   ios: {
     bundleIdentifier: 'com.indiagully.app',
-    buildNumber: '1',
+    buildNumber: '2',
     supportsTablet: true,
     infoPlist: { ITSAppUsesNonExemptEncryption: false },
   },
   android: {
     package: 'com.indiagully.app',
-    versionCode: 1,
+    versionCode: 2,
     allowBackup: false,
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#292821' },
     // Public browsing does not need camera, microphone, contacts, location or storage access.

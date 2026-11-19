@@ -7,7 +7,13 @@ export async function readCache(): Promise<Catalogue | null> {
   try { const value = await AsyncStorage.getItem(CATALOGUE_KEY); return value ? parseCatalogue(JSON.parse(value)) : null; } catch { return null; }
 }
 export async function readSaved(): Promise<SavedEntry[]> {
-  try { const value = await AsyncStorage.getItem(SAVED_KEY); return value ? parseSaved(JSON.parse(value)) : []; } catch { return []; }
+  const value = await AsyncStorage.getItem(SAVED_KEY);
+  if (!value) return [];
+  const raw = JSON.parse(value);
+  if (!Array.isArray(raw)) throw new Error('Stored shortlist is invalid');
+  const parsed = parseSaved(raw);
+  if (parsed.length !== Math.min(raw.length, 250)) throw new Error('Stored shortlist is incomplete');
+  return parsed;
 }
 export async function writeCache(feed: Catalogue): Promise<void> { await AsyncStorage.setItem(CATALOGUE_KEY, JSON.stringify(feed)); }
 export async function writeSaved(saved: SavedEntry[]): Promise<void> { await AsyncStorage.setItem(SAVED_KEY, JSON.stringify(saved)); }
