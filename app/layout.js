@@ -12,6 +12,7 @@ import Link from "next/link";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
 import { siteSection, livePractices } from "../lib/website";
+import { publicResidences } from "../lib/residences.mjs";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: {
@@ -52,7 +53,8 @@ async function AccountLink() {
 }
 
 export default async function Layout({ children }) {
-  const [business, groups, practices] = await Promise.all([businessDetails(), siteSection("navigation"), livePractices()]);
+  const [business, groups, practices, launchConfig] = await Promise.all([businessDetails(), siteSection("navigation"), livePractices(), siteSection("residences-launch")]);
+  const residences = publicResidences(launchConfig);
   return (
     <html lang="en">
       <body>
@@ -68,7 +70,7 @@ export default async function Layout({ children }) {
             <Link href="/shortlist">Shortlist</Link><AccountLink />
           </nav>
         </div>
-        <Navigation groups={groups} practices={practices.map(({ slug, title, href }) => ({ slug, title, href }))} />
+        <Navigation groups={groups} residences={residences ? { href: residences.href, name: residences.name } : null} practices={practices.map(({ slug, title, href }) => ({ slug, title, href }))} />
         {children}
         <footer className="site-footer">
           <div className="footer-top">
@@ -102,6 +104,7 @@ export default async function Layout({ children }) {
             <div>
               <h2>Explore</h2>
               <Link href="/opportunities">Real Estate Listings</Link>
+              {residences && <Link href={residences.href}>{residences.name}</Link>}
               <Link href="/projects">Hospitality projects</Link>
               <Link href="/valuation">Valuation studio</Link>
               <Link href="/insights">Perspectives</Link>

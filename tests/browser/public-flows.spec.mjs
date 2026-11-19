@@ -115,3 +115,26 @@ test('Gullu rehearsal rejects unauthenticated access before generating an answer
  expect([403,503]).toContain(response.status());expect((await response.json()).error).toMatch(/staff|authentication/i);
  expect(response.headers()['cache-control']).toContain('private, no-store');
 });
+
+test('mobile Gullu destination opens one inline chat and retains explicit consent',async({page})=>{
+ await page.route('**/api/gullu',route=>route.fulfill({json:{session:null}}));
+ await page.setViewportSize({width:375,height:812});
+ await page.goto('/gullu');
+ await expect(page.locator('#gullu-chat')).toHaveCount(1);
+ await expect(page.getByRole('region',{name:'Gullu',exact:true})).toBeVisible();
+ await expect(page.getByLabel('Your name',{exact:true})).toBeVisible();
+ await expect(page.locator('input[name="consent"]')).not.toBeChecked();
+ await expect(page.getByRole('button',{name:'Ask Gullu',exact:true})).toHaveCount(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('unconfigured mobile catalogue fails clearly and default Residences stays hidden',async({request,page})=>{
+ const response=await request.get('/api/mobile/catalogue');
+ expect(response.status()).toBe(503);
+ expect(response.headers()['cache-control']).toContain('no-store');
+ expect((await response.json()).error).toContain('temporarily unavailable');
+ await page.goto('/');
+ await expect(page.getByRole('link',{name:'India Gully Residences',exact:true})).toHaveCount(0);
+ const launch=await request.get('/residences');
+ expect(launch.status()).toBe(404);
+});

@@ -1,4 +1,6 @@
 import LiveListings from "./live-listings";
+import ResidencesLaunch from "./residences/launch";
+import {publicResidences,residencesHomeLayout} from "../lib/residences.mjs";
 import { listingRevision } from "../lib/listing-revision.mjs";
 import { siteSection, renderSections } from "../lib/website";
 import { featuredProducts } from "../lib/featured-products";
@@ -32,7 +34,8 @@ import Seo from "./seo";
 export const dynamic = "force-dynamic";
 export const metadata = pageMeta("/");
 export default async function Home() {
-  const [copy, layout] = await Promise.all([siteSection("home"), siteSection("home-layout")]);
+  const [copy, layout, launchConfig] = await Promise.all([siteSection("home"), siteSection("home-layout"), siteSection("residences-launch")]);
+  const launch = publicResidences(launchConfig);
   const [articles, assets, { people, work }, features, priority, leasing] = await Promise.all([
     published("article"),
     published("opportunity"),
@@ -56,7 +59,8 @@ export default async function Home() {
   return (
     <main id="main">
       <Seo path="/" />
-      {renderSections(layout, {
+      {renderSections(residencesHomeLayout(layout,launch), {
+        "residences": <ResidencesLaunch config={launch} />,
         "hero": (<section className="editorial-hero home-editorial">
         <Image
           src={copy["src-images-city-jpg"]}

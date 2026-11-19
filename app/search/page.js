@@ -10,9 +10,9 @@ export const metadata = {
   alternates: { canonical: "/search" },
 };
 export default async function Search({ searchParams }) {
-  const copy = await siteSection("search");
+  const [copy, records, practices, launchConfig] = await Promise.all([siteSection("search"), publishedSearchRecords(), livePractices(), siteSection("residences-launch")]);
   const p = await searchParams;
-  const items = buildSearchIndex(await publishedSearchRecords(), await livePractices());
+  const items = buildSearchIndex(records, practices, launchConfig);
   return (
     <main id="main">
       <PageHero
