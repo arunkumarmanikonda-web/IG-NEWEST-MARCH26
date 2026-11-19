@@ -109,6 +109,7 @@ test("registration failure preserves the completed original for retry", async ()
   assert.equal(completeCount, 1);
 });
 test("portal return accepts only shared room or project NDA destinations", () => {
+  assert.equal(portalReturn("/account/data-rooms"), "/account/data-rooms");
   assert.equal(
     portalReturn("/account/nda?opportunity=ig-opp-123"),
     "/account/nda?opportunity=ig-opp-123",

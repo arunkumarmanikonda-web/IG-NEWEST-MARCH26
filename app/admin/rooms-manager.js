@@ -12,7 +12,7 @@ import {
   MAX_PREVIEW_BYTES,
   nativeRoomPreview,
 } from "../../lib/data-room-formats.mjs";
-const expiry = (x) => new Date(x).toISOString().slice(0, 10);
+const expiry = (x) => new Date(new Date(x).getTime() + 5.5 * 3600000).toISOString().slice(0, 10);
 const size = (n) => (n / 1024 / 1024).toFixed(2) + " MB";
 export default function RoomsManager({
   rooms,
@@ -24,6 +24,7 @@ export default function RoomsManager({
   opportunities,
   engagements = [],
   contacts = [],
+  clients = [],
   retailAccounts = [],
   initialRoom,
   initialContent,
@@ -317,13 +318,13 @@ export default function RoomsManager({
                   (g) => g.active && new Date(g.expires_at) > new Date(),
                 ).length
               }{" "}
-              active client grants
+              active recipient grants
             </p>
             <div className="workspace-actions">
               <a className="module-link" href="#room-files">
                 Files & uploads ↓
               </a>
-              {(engagement || ["opportunity","project"].includes(content?.kind)) && <a className="button primary" href="#room-permissions">Share room ↓</a>}
+              <a className="button primary" href="#room-permissions">Share room ↓</a>
               <button
                 type="button"
                 onClick={() => copyLink("/account/data-rooms/" + room.id)}
@@ -345,23 +346,12 @@ export default function RoomsManager({
               )}
               <Link href="/admin/nda">Review NDA requests ↗</Link>
             </div>
-            {engagement ? null : ["opportunity", "project"].includes(content?.kind) && (
-              <p>Recipients need an approved NDA for this project before you can share the room.</p>
-            )}
-            {content && !["opportunity","project"].includes(content.kind) && (
-              <p>
-                This is a private source room for {content.kind} content. Client
-                report circulation is managed through{" "}
-                <Link href="/admin/clients">Clients & engagements</Link>;
-                property NDA grants apply to real estate opportunities.
-              </p>
-            )}
+            <p>Share with approved recipients or authorise specific people by email, including before an NDA is signed. You control the expiry and download permissions for this room.</p>
           </section>
             {retailAccount && <section className="workspace-card"><h3>Retail mandate access</h3><p>Manage dashboard access, shared-room access and upload rights for both parties.</p><a className="button" href={"/admin/content/"+retailAccount.content_id+"#mandate-clients"}>Manage mandate contacts →</a></section>}
-          {(engagement || ["opportunity","project"].includes(content?.kind)) && (
-            <RoomSharing key={room.id} room={room} engagement={engagement} grants={roomGrants}
-              contacts={contacts} requests={requests} />
-          )}
+          <RoomSharing key={room.id} room={room} engagement={engagement} grants={roomGrants}
+            contacts={contacts} clients={clients} requests={requests}
+            supportsNda={["opportunity", "project"].includes(content?.kind)} />
           <form
             key={room.id + "-" + room.version}
             className="workspace-form"
@@ -669,17 +659,20 @@ export default function RoomsManager({
           <h3>Existing grants &amp; file permissions</h3>
           {roomGrants.map((g) => {
             const n = requests.find((x) => x.id === g.nda_request_id);
-            const contact = contacts.find((c) => c.id === g.contact_id);
+            const contact = contacts.find((c) => c.id === (g.recipient_contact_id || g.contact_id));
+            const direct = g.access_basis === "admin_authorised";
+            const expired = new Date(g.expires_at) <= new Date();
             return (
               <article className="workspace-card" key={g.id + "-" + g.version}>
-                <h3>{contact?.name || n?.signed_name || g.user_id}</h3>
+                <h3>{g.recipient_name || contact?.name || n?.signed_name || g.recipient_email || g.user_id}</h3>
                 <p>
-                  {contact?.email || n?.agreement_snapshot?.recipient_email} ·{" "}
-                  {g.active ? "Active" : "Revoked"} ·{" "}
-                  {contact
+                  {g.recipient_email || contact?.email || n?.agreement_snapshot?.recipient_email} ·{" "}
+                  {!g.active ? "Revoked" : expired ? "Expired" : "Active"} ·{" "}
+                  {direct ? "Admin-authorised access · NDA not required" : contact
                     ? "Engagement access"
                     : "NDA " + n?.agreement_snapshot?.version}
                 </p>
+                {direct && <p>Authorisation reason: {g.authorisation_reason}</p>}
                 <form
                   className="workspace-form"
                   onSubmit={(e) => {
@@ -723,9 +716,13 @@ export default function RoomsManager({
                     Access active
                   </label>
                   <button disabled={busy}>Update access</button>
+                  {g.active && <button type="button" disabled={busy} onClick={() => run({
+                    action: "grant_update", id: g.id, version: g.version, active: false,
+                    download_mode: g.download_mode, expires_at: g.expires_at,
+                  })}>Revoke this access</button>}
                 </form>
                 <details>
-                  <summary>Set this client’s file permissions</summary>
+                  <summary>Set this recipient’s file permissions</summary>
                   <p>
                     View-only mode blocks every original download. A file with
                     its original download setting disabled also remains blocked

@@ -224,6 +224,7 @@ export default async function Module({ params, searchParams }) {
       "ig_nda_requests",
       "ig_engagements",
       "ig_client_contacts",
+      "ig_clients",
     ];
     const results = await Promise.all(
       tables.map(t => t === "ig_room_file_rules"
@@ -250,6 +251,7 @@ export default async function Module({ params, searchParams }) {
         requests={results[5].data}
         engagements={results[6].data}
         contacts={results[7].data}
+        clients={results[8].data}
         initialRoom={
           roomSearch?.room ||
           results[0].data.find((r) => r.content_id === roomSearch?.content)

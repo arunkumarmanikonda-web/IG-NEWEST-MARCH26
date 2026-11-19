@@ -9,10 +9,10 @@ export const metadata = {
 };
 export default async function Page() {
   const { client, user, profile, policiesAccepted } = await accountContext();
-  if (!user || !profile) redirect("/login");
+  if (!user || !profile) redirect("/login?next=%2Faccount%2Fdata-rooms");
   if (profile.must_change_password) redirect("/account/security");
   if (profile.status !== "active" || !policiesAccepted)
-    redirect("/account");
+    redirect("/account?next=%2Faccount%2Fdata-rooms");
   const { data, error } = await client.rpc("ig_room_dashboard", { p: {} });
   return (
     <main id="main" className="auth-page">
@@ -20,8 +20,8 @@ export default async function Page() {
         <Link href="/account">← Your dashboard</Link>
         <h1>Your project data rooms.</h1>
         <p>
-          Your team shares engagement reports here after approving your access.
-          Opportunity rooms additionally require a reviewed, project-specific NDA.
+          Rooms shared with your verified email appear here. India Gully may
+          approve access directly or through the applicable NDA or engagement.
         </p>
         {error ? (
           <p role="alert">Data rooms are temporarily unavailable.</p>
