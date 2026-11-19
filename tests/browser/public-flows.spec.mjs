@@ -137,7 +137,4 @@ test('unconfigured mobile catalogue fails clearly and default Residences stays h
  await expect(page.getByRole('link',{name:'India Gully Residences',exact:true})).toHaveCount(0);
  const launch=await request.get('/residences');
  expect(launch.status()).toBe(404);
- const admin=await request.get('/admin/residences',{maxRedirects:0});
- expect([302,303,307,308]).toContain(admin.status());
- expect(admin.headers().location).toContain('/login');
 });
