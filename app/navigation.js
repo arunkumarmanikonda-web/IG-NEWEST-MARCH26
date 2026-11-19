@@ -6,7 +6,7 @@ import { Arrow } from "./components";
 import PracticeStrip from "./practice-strip";
 import Gullu from "./gullu/widget";
 
-export default function Navigation({ groups, practices }) {
+export default function Navigation({ groups, practices, residences = null }) {
   const path = usePathname();
   const showPractices = path === "/" || /^\/(practices|horeca|opportunities)(\/|$)/.test(path) && !path.endsWith("/teaser");
   const [open, setOpen] = useState(false);
@@ -90,13 +90,20 @@ export default function Navigation({ groups, practices }) {
             </div>
           </details>
         ))}
-        <Link
+        {residences ? <details className="nav-group">
+          <summary>Real Estate<span aria-hidden="true">⌄</span></summary>
+          <div className="nav-dropdown">
+            {[["/opportunities", "Real Estate Listings"], ["/retail-leasing", "Retail leasing"], [residences.href, residences.name]].map(([href, label]) => (
+              <Link key={href} href={href} onClick={close} aria-current={path === href || path.startsWith(href + "/") ? "page" : undefined}>{label}<Arrow /></Link>
+            ))}
+          </div>
+        </details> : <Link
           href="/opportunities"
           aria-current={path.startsWith("/opportunities") ? "page" : undefined}
           onClick={close}
         >
           Real Estate Listings
-        </Link>
+        </Link>}
         <Link
           href="/horeca"
           aria-current={path === "/horeca" ? "page" : undefined}
@@ -130,7 +137,7 @@ export default function Navigation({ groups, practices }) {
       </nav>
     </header>
     {showPractices && <PracticeStrip practices={practices} />}
-    {path && !/^\/(admin|account|login|auth|register|unsubscribe|pay|checkout)(\/|$)/.test(path) && !path.endsWith("/teaser") && <Gullu />}
+    {path && !/^\/(admin|account|login|auth|register|unsubscribe|pay|checkout|gullu)(\/|$)/.test(path) && !path.endsWith("/teaser") && <Gullu />}
     </>
   );
 }

@@ -1,0 +1,23 @@
+.residences-studio{max-width:1500px;margin:auto;min-width:0}
+.residences-studio .module-heading{margin-bottom:24px}
+.residence-status{display:flex;gap:12px 24px;flex-wrap:wrap;background:#eeebdf;border:1px solid #d1c9af;padding:18px 22px;font-size:13px;margin-bottom:24px;color:#575339}
+.residence-status strong{color:#30392c}
+.residence-form fieldset{border:0;padding:0 0 30px;margin:0 0 30px;border-bottom:1px solid #e1ddd0;min-width:0}
+.residence-form legend{font-family:Georgia,serif;font-size:24px;margin:0 0 20px;padding:0;color:#30372e}
+.residence-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.residence-field-grid>.wide{grid-column:1/-1}
+.residence-field-grid label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:600}
+.residence-field-grid label.check{flex-direction:row;align-items:center;gap:10px;font-weight:400}
+.residence-field-grid input:not([type=checkbox]),.residence-field-grid textarea,.residence-field-grid select{border:1px solid #bcb8a9;background:#fff;border-radius:2px;padding:12px;min-height:46px;width:100%;font:inherit;font-weight:400;color:#292e29}
+.residence-field-grid textarea{line-height:1.7;resize:vertical}
+.residence-field-grid small,.residence-field-note{font-size:12px;line-height:1.7;color:#676355;font-weight:400}
+.residence-field-grid .residence-field-note{align-self:center}
+.residence-review{display:flex;gap:12px;align-items:flex-start;margin:16px 0 24px;font-size:13px;line-height:1.7}
+.residence-review input{margin-top:4px}
+.residence-preview{margin:32px 0;border:1px solid #d1c9af;min-width:0}
+.residence-preview-heading{padding:24px;background:#f7f5ed;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.residence-preview-heading h3{margin:0 0 8px}
+.residence-preview-heading p{margin:0;font-size:13px}
+.residence-preview-heading [aria-pressed=true]{background:#30392c;color:#fff}
+.residence-preview .residences-copy{padding:38px}.residence-preview .residences-copy h1,.residence-preview .residences-copy h2{font-size:40px}.residence-preview .residences-detail{min-height:0}.residence-preview .residences-typography{padding:24px}
+@media(max-width:900px){.residence-field-grid{grid-template-columns:1fr}.residence-preview .residences-launch{grid-template-columns:1fr}.residence-preview .residences-copy{padding:28px}}

@@ -1,0 +1,30 @@
+.residences-launch{--residence-gold:#c8b778;display:grid;grid-template-columns:1.05fr 1fr;background:#292e29;color:#fffdf5;isolation:isolate;margin:0;min-width:0}
+.residences-copy{padding:clamp(36px,6vw,100px);align-self:center;min-width:0}
+.residences-signature{display:inline-flex;flex-direction:column;gap:7px;letter-spacing:.22em;font-size:11px;font-weight:600;color:var(--residence-gold);padding-bottom:30px}
+.residences-signature span{font-family:Georgia,serif;font-size:23px;letter-spacing:.12em;font-weight:400;color:#fffdf5}
+.residences-logo{display:block;max-width:240px;max-height:100px;object-fit:contain;object-position:left;margin:0 0 32px;padding:10px;background:#fffdf5;border-radius:2px}
+.residences-copy .residences-kicker{text-transform:uppercase;letter-spacing:.18em;font-size:10px;color:var(--residence-gold);font-weight:600;margin:0 0 16px}
+.residences-copy h1,.residences-copy h2{font-family:Georgia,serif;font-size:clamp(36px,4.2vw,68px);line-height:1.1;letter-spacing:-.035em;color:#fffdf5;margin:0 0 22px;font-weight:400;text-wrap:balance;text-align:left}
+.residences-copy .residences-location{font-size:13px;letter-spacing:.04em;color:var(--residence-gold);margin:0 0 24px}
+.residences-description p{font-size:15px;line-height:1.85;margin:0 0 18px;color:#edece4;text-align:justify;hyphens:auto;white-space:pre-line;overflow-wrap:anywhere}
+.residences-highlights{list-style:none;padding:0;margin:25px 0 30px;display:flex;flex-wrap:wrap;gap:12px 20px}
+.residences-highlights li{font-size:12px;color:#e9e5d8;padding-left:13px;position:relative;line-height:1.6}
+.residences-highlights li:before{content:"";position:absolute;left:0;top:7px;width:4px;height:4px;background:var(--residence-gold);border-radius:50%}
+.residences-actions{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin-top:32px}
+.residences-button{display:inline-flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 22px;background:#eee8d3;color:#292e29;border:1px solid #eee8d3;font-size:12px;font-weight:600;text-decoration:none;min-height:48px}
+.residences-button:hover{background:#fffdf5;color:#292e29}
+.residences-enquire{color:#fffdf5;font-size:12px;line-height:1.7;text-decoration:none;border-bottom:1px solid #a79e7c;padding:8px 0}
+.residences-button:focus-visible,.residences-enquire:focus-visible{outline:3px solid var(--residence-gold);outline-offset:5px}
+.residences-visual{min-height:420px;min-width:0;position:relative;background:#e7dfc9;display:grid;overflow:hidden}
+.residences-visual>img,.residences-visual>video{width:100%;height:100%;min-height:420px;max-height:840px;object-fit:cover;align-self:center}
+.residences-visual>video{object-fit:contain;background:#1b211c}
+.residences-typography{padding:48px;align-items:center;justify-items:center;background:#e8e2d0;background-image:radial-gradient(ellipse at 10% 5%,#f9f6ed 0,transparent 64%)}
+.residences-typography>div{border:1px solid #b9ae87;padding:64px 40px;min-height:360px;width:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:36px;text-align:center}
+.residences-typography img{width:38px;height:59px;object-fit:contain}
+.residences-typography span{font-family:Georgia,serif;font-size:clamp(28px,3.2vw,48px);line-height:1.25;color:#343c30;letter-spacing:-.025em}
+.residences-typography small{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#655b3b}
+.residences-detail{min-height:650px}
+.residences-breadcrumb{padding:24px clamp(24px,6vw,100px);font-size:12px;display:flex;gap:12px;color:#706a5b;background:#faf8f2}
+.residences-breadcrumb a{color:inherit}
+@media(max-width:800px){.residences-launch{grid-template-columns:1fr}.residences-copy{padding:38px 24px}.residences-visual{min-height:320px}.residences-visual>img,.residences-visual>video{min-height:260px;max-height:540px;aspect-ratio:4/3}.residences-typography{padding:24px}.residences-typography>div{min-height:300px;padding:36px 24px;gap:26px}.residences-detail{min-height:0}.residences-copy h1,.residences-copy h2{font-size:42px}}
+@media(prefers-reduced-motion:reduce){.residences-launch *{scroll-behavior:auto;transition:none}}

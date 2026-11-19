@@ -12,9 +12,9 @@ async function post(payload,onProgress){
   return readGulluResponse(res,onProgress);
 }
 
-export default function Gullu(){
+export default function Gullu({embedded=false}){
   const page=usePathname(),starters=contextualQuestions(page),launcher=useRef(null),first=useRef(null),input=useRef(null),scroll=useRef(null),pending=useRef(null);
-  const [open,setOpen]=useState(false),[guest,setGuest]=useState(null),[messages,setMessages]=useState([]),
+  const [open,setOpen]=useState(embedded),[guest,setGuest]=useState(null),[messages,setMessages]=useState([]),
     [question,setQuestion]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),
     [language,setLanguage]=useState("auto"),[confirm,setConfirm]=useState(false),[receipt,setReceipt]=useState("");
   const [expression,setExpression]=useState("idle"),[restored,setRestored]=useState(false),[hasMore,setHasMore]=useState(false);
@@ -28,7 +28,7 @@ export default function Gullu(){
     if(olderPosition.current){el.scrollTop=el.scrollHeight-olderPosition.current.height+olderPosition.current.top;olderPosition.current=null;return;}
     if(!readingEarlier.current)el.scrollTop=el.scrollHeight;
   },[messages.length,busy,receipt,open]);
-  function close(){returnFocus.current=true;setOpen(false);}
+  function close(){if(embedded)return;returnFocus.current=true;setOpen(false);}
   useEffect(()=>{if(!open&&returnFocus.current){launcher.current?.focus();returnFocus.current=false;}},[open]);
   useEffect(()=>{
     if(!open||restored)return;
@@ -67,10 +67,10 @@ export default function Gullu(){
       setReceipt(result.reference);setConfirm(false);}
     catch(e){setError(e.message);}finally{setBusy(false);}
   }
-  return <div className={"gullu"+(open?" g-open":"")}>
-    <button className="g-launch" aria-label={open?"Close Gullu":"Ask Gullu"} aria-controls="gullu-chat" aria-expanded={open} onClick={()=>{if(open)close();else{setOpen(true);animate("welcome");}}} ref={launcher}><Avatar size={38} mood={open?mood:"idle"}/>Ask Gullu</button>
-    {open&&<section id="gullu-chat" className="g-panel" role="dialog" aria-labelledby="g-title" onKeyDown={e=>{if(e.key==="Escape"){e.stopPropagation();close();}}}>
-      <header className="g-head"><button className="g-avatar-button" type="button" aria-label="Wave to Gullu" title="Wave to Gullu" onClick={()=>animate("wave")}><Avatar size={51} mood={mood}/></button><div><h2 id="g-title">Gullu</h2><p>Your India Gully buddy</p></div><button className="g-close" type="button" aria-label="Close chat" onClick={close}>×</button></header>
+  return <div className={"gullu"+(open?" g-open":"")+(embedded?" g-embedded":"")}>
+    {!embedded&&<button className="g-launch" aria-label={open?"Close Gullu":"Ask Gullu"} aria-controls="gullu-chat" aria-expanded={open} onClick={()=>{if(open)close();else{setOpen(true);animate("welcome");}}} ref={launcher}><Avatar size={38} mood={open?mood:"idle"}/>Ask Gullu</button>}
+    {open&&<section id="gullu-chat" className="g-panel" role={embedded?"region":"dialog"} aria-labelledby="g-title" onKeyDown={e=>{if(e.key==="Escape"&&!embedded){e.stopPropagation();close();}}}>
+      <header className="g-head"><button className="g-avatar-button" type="button" aria-label="Wave to Gullu" title="Wave to Gullu" onClick={()=>animate("wave")}><Avatar size={51} mood={mood}/></button><div><h2 id="g-title">Gullu</h2><p>Your India Gully buddy</p></div>{!embedded&&<button className="g-close" type="button" aria-label="Close chat" onClick={close}>×</button>}</header>
       {!guest?<div className="g-scroll g-welcome">
         <div className="g-hello"><Avatar size={72} mood={mood}/><h3>Namaste! I’m Gullu.</h3><p>Properties, hotel supplies, or a project on your mind? Let’s talk. English, Hindi or Hinglish works.</p></div>
         <div className="g-entry-context"><p>A few details help us keep your conversation together and connect you with the right India Gully colleague.</p><details><summary>Things we can explore together</summary><ul>{starters.map(t=><li key={t}>{t}</li>)}</ul></details></div>
