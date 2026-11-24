@@ -26,8 +26,10 @@ begin
  update ig_private.listing_features set starts_at=now()-interval '1 day',deadline=now()-interval '1 minute' where id=campaign;
  assert not exists(select 1 from public.ig_live_listing_features() where id=campaign),'Verified deadline ignored';
  update ig_private.listing_features set deadline=null where id=campaign;
- update public.ig_public_content set public_data=public_data||'{"availability":"Withdrawn"}' where id=a.id;
- update public.ig_public_content set public_data=public_data-'availability' where id=a.id;
+ perform public.ig_listing_lifecycle(jsonb_build_object('id',a.id,'action','save','status','withdrawn',
+   'lifecycle_version',(select listing_lifecycle_version from public.ig_content where id=a.id)));
+ perform public.ig_listing_lifecycle(jsonb_build_object('id',a.id,'action','save','status','available',
+   'lifecycle_version',(select listing_lifecycle_version from public.ig_content where id=a.id)));
  assert not exists(select 1 from public.ig_live_listing_features() where id=campaign),'Withdrawn campaign revived';
  delete from public.ig_public_content where id=b.id;
  assert (select stopped_at is not null from ig_private.listing_features where content_id=b.id),'Unpublication did not stop campaign';

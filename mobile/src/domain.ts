@@ -52,6 +52,7 @@ export interface Entry {
   id: string; type: EntryType; kind?: ListingKind; title: string; summary: string; body: string; href: string;
   image: string | null; image_alt: string; tags: string[]; city: string; region: string; asset_class: string;
   transaction_type: string; price_label: string; area: string; area_unit: string; keys: string;
+  listing_status: string; listing_status_text: string; listing_is_available: boolean; listing_archived: boolean; listing_archive_until: string;
   category: string; sku: string; brand: string; moq: string; pack_size: string; published_at: string; body_truncated: boolean;
 }
 export interface Category { id: string; title: string; description: string; image: string | null; href: string; count?: number }
@@ -71,14 +72,19 @@ export function parseEntry(value: unknown, type: EntryType): Entry | null {
   if (!href || !id || !title) return null;
   const kind = /brand|requirement/i.test(text(v.kind)) ? 'brand' : /promoter|lease|leasing|space/i.test(text(v.kind)) ? 'promoter' : 'opportunity';
   const sourceBody = v.body || v.intro;
+  const listing_status=text(v.listing_status,40), listing_archived=v.listing_archived===true;
+  const listing_is_available=type!=='listing'||(v.listing_is_available!==false&&!listing_archived&&(!listing_status||listing_status==='available'));
   return {
-    id, type, kind: type === 'listing' ? kind : undefined, title, summary: text(v.summary || v.intro, 1500), body: text(v.body || v.intro, 12000), href,
+    id, type, listing_status, listing_status_text:text(v.listing_status_text,120), listing_is_available, listing_archived, listing_archive_until:date(v.listing_archive_until), kind: type === 'listing' ? kind : undefined, title, summary: text(v.summary || v.intro, 1500), body: text(v.body || v.intro, 12000), href,
     image: canonicalUrl(v.image, true), image_alt: text(v.image_alt, 250), tags: items(v.tags).map(t => text(t, 100)).filter(Boolean).slice(0, 30),
     city: text(v.city), region: text(v.region), asset_class: text(v.asset_class), transaction_type: text(v.transaction_type), price_label: text(v.price_label),
     area: text(v.area), area_unit: text(v.area_unit), keys: text(v.keys), category: text(v.category), sku: text(v.sku), brand: text(v.brand),
     moq: text(v.moq), pack_size: text(v.pack_size), published_at: date(v.published_at),
     body_truncated: v.body_truncated === true || (typeof sourceBody === 'string' && sourceBody.length > 12000),
   };
+}
+export function listingExpired(entry: Entry, now=Date.now()): boolean {
+  return entry.type==='listing'&&entry.listing_archived&&(!entry.listing_archive_until||Date.parse(entry.listing_archive_until)<=now);
 }
 function entries(values: unknown, type: EntryType): Entry[] {
   const seen = new Set<string>();
@@ -90,7 +96,7 @@ function entries(values: unknown, type: EntryType): Entry[] {
     }
     seen.add(entry.id);
     return entry;
-  });
+  }).filter(entry=>!listingExpired(entry));
 }
 export function parseCatalogue(value: unknown): Catalogue {
   const v = obj(value); const generated_at = date(v.generated_at);
@@ -122,7 +128,7 @@ export function parseCatalogue(value: unknown): Catalogue {
 
 export function filterEntries(entries: Entry[], query: string, kind = 'all', city = 'all', category = 'all'): Entry[] {
   const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  return entries.filter(e => (kind === 'all' || e.kind === kind) && (city === 'all' || e.city === city) && (category === 'all' || e.category === category)
+  return entries.filter(e => !listingExpired(e) && (kind === 'all' || e.kind === kind) && (city === 'all' || e.city === city) && (category === 'all' || e.category === category)
     && words.every(word => [e.title, e.summary, e.city, e.region, e.sku, e.brand, e.asset_class, e.category, ...e.tags].join(' ').toLowerCase().includes(word)));
 }
 
@@ -133,14 +139,15 @@ function withdrawnEntry(entry: Entry): Entry {
   return { id: entry.id, type: entry.type, kind: entry.kind, title: entry.title, href: entry.href,
     summary: '', body: '', image: null, image_alt: '', tags: [], city: '', region: '', asset_class: '',
     transaction_type: '', price_label: '', area: '', area_unit: '', keys: '', category: '', sku: '', brand: '',
-    moq: '', pack_size: '', published_at: '', body_truncated: false };
+    moq: '', pack_size: '', published_at: '', body_truncated: false, listing_status:'', listing_status_text:'', listing_is_available:false, listing_archived:false, listing_archive_until:'' };
 }
 export function parseSaved(value: unknown): SavedEntry[] {
   return items(value).map(item => {
     const s = obj(item), e = obj(s.entry);
     if (!['listing', 'product', 'perspective', 'practice'].includes(String(e.type))) return null;
     const entry = parseEntry(e, e.type as EntryType), saved_at = date(s.saved_at), cached_at = date(s.cached_at);
-    return entry && saved_at && cached_at ? { entry: s.withdrawn === true ? withdrawnEntry(entry) : entry, saved_at, cached_at, withdrawn: s.withdrawn === true } : null;
+    const withdrawn=s.withdrawn===true||Boolean(entry&&listingExpired(entry));
+    return entry && saved_at && cached_at ? { entry: withdrawn ? withdrawnEntry(entry) : entry, saved_at, cached_at, withdrawn } : null;
   }).filter((v): v is SavedEntry => !!v).slice(0, 250);
 }
 export function reconcileSaved(saved: SavedEntry[], feed: Catalogue): SavedEntry[] {
@@ -157,10 +164,10 @@ export function deepLinkUrl(input: string): string | null {
   if (!rest || /[\\@]/.test(rest)) return null;
   return canonicalUrl(`${ORIGIN}/${rest.replace(/^\/+/, '')}`);
 }
-export function enquiryUrl(entry: Pick<Entry, 'title' | 'href' | 'type' | 'kind'>, base = `${ORIGIN}/contact`): string {
+export function enquiryUrl(entry: Pick<Entry, 'title' | 'href' | 'type' | 'kind'> & Partial<Pick<Entry,'listing_is_available'>>, base = `${ORIGIN}/contact`): string {
   const url = new URL(canonicalUrl(base) || `${ORIGIN}/contact`);
   url.searchParams.set('interest', entry.type === 'product' ? 'HORECA procurement' : entry.type === 'listing' ? entry.kind === 'opportunity' ? 'Real Estate Advisory' : 'Retail & Leasing' : entry.title.slice(0, 120));
-  url.searchParams.set('message', `I would like to enquire about ${entry.title}\n${entry.href}`.slice(0, 1400));
+  url.searchParams.set('message', (entry.type==='listing'&&entry.listing_is_available===false ? `I would like to explore available alternatives to ${entry.title}\n${entry.href}` : `I would like to enquire about ${entry.title}\n${entry.href}`).slice(0, 1400));
   return url.href;
 }
 export function formatDate(value: string): string {

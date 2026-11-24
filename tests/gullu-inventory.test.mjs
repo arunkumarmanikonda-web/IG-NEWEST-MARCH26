@@ -101,3 +101,18 @@ test('model answers cannot claim inventory-wide absence from practice or individ
  assert.ok(inventoryPassages(snapshot,'hotels in Noida').some(p=>/Brand requirement, not space offered/.test(p.text)));
  assert.ok(inventoryPassages(inventorySnapshot(Array.from({length:20},(_,i)=>({...rows[1],slug:'hotel-'+i}))),'hotel').length<=8);
 });
+
+test('retained sold, reserved and archived properties never become current inventory',()=>{
+ const unavailable=['sold','reserved','under_offer','withdrawn'].map((status,i)=>({...rows[1],id:'closed-'+i,slug:'closed-'+i,title:'Closed hotel '+i,public_data:{...rows[1].public_data,listing_status:status,listing_status_label:'Our success story',availability:'Available now'}}));
+ unavailable.push({...rows[1],id:'archive',slug:'archived-hotel',public_data:{...rows[1].public_data,listing_status:'available',listing_archived:true,listing_archive_until:'2040-01-01T00:00:00Z'}});
+ const inventory=inventorySnapshot(unavailable);
+ const reply=inventoryAnswer('hotels in Ludhiana for sale',inventory);
+ assert.match(reply.answer,/don’t see a current hotel listing/);assert.doesNotMatch(reply.answer,/I found/);
+ for(const passage of inventoryPassages(inventory,'hotels in Ludhiana'))assert.match(passage.text,/not a current available offer/i);
+ assert.match(reply.answer,/Our success story · Sold/);
+ const mixed=inventorySnapshot([...unavailable,rows[1]]);
+ assert.equal(inventoryAnswer('hotels in Ludhiana for sale',mixed).sources.length,1);
+ assert.equal(inventoryAnswer('hotels in Ludhiana for sale',mixed).sources[0].href,'/opportunities/park-plaza');
+ const expired={...unavailable.at(-1),public_data:{...unavailable.at(-1).public_data,listing_archive_until:'2020-01-01T00:00:00Z'}};
+ assert.equal(inventorySnapshot([expired]).items.length,0);
+});

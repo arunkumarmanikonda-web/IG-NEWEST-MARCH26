@@ -7,6 +7,7 @@ import BrandLogo from "../brand-logo";
 import PropertyTags from "../property-tags";
 import { Arrow } from "../components";
 import { propertyPhotoURL } from "../../lib/listing-images.mjs";
+import { listingLifecycle } from "../../lib/listing-lifecycle.mjs";
 import "./featured-banner.css";
 
 const eventRequests = new Map();
@@ -113,7 +114,7 @@ export default function FeaturedBanner({ items = [], preview = false }) {
   const [selectedSlug, setSelectedSlug] = useState("");
   const [previewWidth, setPreviewWidth] = useState("wide");
   const id = useId();
-  const visible = items.filter(item => item?.feature && item.slug)
+  const visible = items.filter(item => item?.feature && item.slug && (item.kind && item.kind !== "opportunity" || listingLifecycle(item).isAvailable))
     .sort((a, b) => Number(a.feature.slot) - Number(b.feature.slot)).slice(0, 3);
   if (!visible.length) return null;
   const index = Math.max(0, visible.findIndex(item => item.slug === selectedSlug));

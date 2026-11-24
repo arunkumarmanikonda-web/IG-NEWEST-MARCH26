@@ -1,4 +1,20 @@
 /* Real estate listings: consistent cards, restrained typography and readable facts. */
+.listing-status {display:inline-flex;align-items:center;width:fit-content;max-width:100%;padding:7px 12px;border:1px solid #c7c0a5;background:#fff;color:#383527;font-size:.875rem;font-weight:600;line-height:1.45;letter-spacing:.01em;text-align:left;overflow-wrap:anywhere;}
+.listing-status-reserved,.listing-status-under_offer {background:#f2eddc;border-color:#b8a869;color:#51471f;}
+.listing-status-sold,.listing-status-withdrawn,.listing-status-archived {background:#292823;border-color:#292823;color:#fff;}
+.property-card .property-card-status {position:absolute;top:16px;left:16px;right:16px;max-width:calc(100% - 32px);z-index:1;box-shadow:0 2px 8px #0001;}
+.property-card-image:has(.property-card-status) .property-image-label {top:auto;bottom:16px;max-width:calc(100% - 32px);}
+.property-card-image:has(.property-card-status):has(.generated-badge) .property-image-label {bottom:54px;}
+.property-card-unavailable {border-color:#c9c6bb;}
+.property-kicker > span:only-child {text-align:left;font-size:inherit;}
+.property-title-terms .listing-status {font-size:.875rem;text-transform:none;letter-spacing:.01em;}
+.property-title-terms .listing-status-sold,.property-title-terms .listing-status-withdrawn,.property-title-terms .listing-status-archived {color:#fff;}
+.listing-status-notice {margin:0 5% 28px;padding:22px 24px;border:1px solid #c8c0a5;border-left:4px solid #9c8a43;background:#faf9f5;display:grid;gap:12px;}
+.listing-status-notice p {font-size:1rem;line-height:1.7;margin:0;max-width:80ch;}
+.listing-status-notice a {font-size:1rem;width:fit-content;text-decoration:underline;text-underline-offset:4px;}
+.listing-availability-guide {font-size:1rem;line-height:1.65;color:#5b584f;margin:0 0 22px;max-width:80ch;}
+.shortlist-availability {font-size:.875rem;font-weight:600;color:#51471f;}
+.search-result .listing-status {display:table;margin:12px 0;}
 .home-property-collection {padding-block:64px;background:#f7f7f5;}
 .home-property-collection .section-heading {align-items:start;margin-bottom:32px;}
 .home-property-collection h2 {font-size:clamp(36px,3.7vw,54px);}

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { portalAction } from "../../../account/profile";
 import RetailFields from "../../retail-fields";
+import ListingLifecycle from "./listing-lifecycle";
 import {isRetail,retailKinds,retailFields} from "../../../../lib/retail-mandates.mjs";
 const kinds = [
   ...Object.keys(retailKinds),
@@ -598,7 +599,7 @@ export default function Editor({
                 ["area_unit", "Area unit"],
                 ["keys", "Hotel keys"],
                 ["tenure", "Tenure"],
-                ["availability", "Availability"],
+                ["availability", "Availability note"],
                 ["latitude", "Verified latitude"],
                 ["longitude", "Verified longitude"],
                 ["location_source", "Location source / map reference"],
@@ -874,6 +875,7 @@ export default function Editor({
       <p role="status" className="portal-message">
         {message}
       </p>
+      {item?.kind === "opportunity" && <ListingLifecycle item={item} disabled={dirty || busy} />}
       {item && (
         <>
           <form
@@ -903,7 +905,7 @@ export default function Editor({
               <button disabled={busy || dirty || !!item.deleted_at} className="primary">
                 Publish revision {item.version}
               </button>
-              <button
+              {kind === "opportunity" ? <a className="button" href="#listing-availability">Archive display settings</a> : <button
                 type="button"
                 disabled={busy || dirty}
                 onClick={() => {
@@ -912,11 +914,11 @@ export default function Editor({
                 }}
               >
                 Archive / unpublish
-              </button>
+              </button>}
               {!item.deleted_at && <button type="button" disabled={busy || dirty} onClick={() => {
                 if (confirm("Move this listing to Deleted and withdraw it from the website? Its files and history will remain available.")) action("trash");
               }}>Delete listing</button>}
-              {(item.status === "archived" || item.deleted_at) && (
+              {(item.status === "archived" || item.listing_archived || item.deleted_at) && (
                 <>
                   <button
                     type="button"

@@ -111,3 +111,19 @@ test('Justified property summary reaches the right margin and its last line stay
  assert.ok(lines.at(-1)<545);
  await loading.destroy();
 });
+
+test('archived sold property briefs show current status and direct the QR to available alternatives',async()=>{
+ const record={...item,public_data:{...item.public_data,listing_status:'sold',listing_status_label:'Successfully transacted',listing_archived:true,listing_archive_until:'2040-01-01T00:00:00Z'}};
+ const result=await createTeaserPDF(record,businessDefaults),loading=getDocument({data:result.bytes.slice()}),doc=await loading.promise;
+ let text='';
+ for(let i=1;i<=doc.numPages;i++){
+  const page=await doc.getPage(i),content=await page.getTextContent();text+=' '+content.items.map(x=>x.str).join(' ');
+  for(const part of content.items.filter(x=>x.str.trim()))assert.ok(part.transform[4]>=39&&part.transform[4]+part.width<=557,'Archived text overflows frame: '+part.str);
+ }
+ assert.match(text,/ARCHIVED PROPERTY BRIEF/);assert.match(text,/Successfully transacted/);assert.match(text,/Sold/);
+ assert.match(text,/not a current available offer/);assert.match(text,/EXPLORE AVAILABLE PROPERTIES/);
+ const document=await PDFDocument.load(result.bytes),links=document.getPage(document.getPageCount()-1).node.Annots().asArray().map(ref=>document.context.lookup(ref).lookup(PDFName.of('A')).lookup(PDFName.of('URI')).decodeText());
+ assert.ok(links.includes('https://indiagully.com/opportunities'));
+ assert.ok(!links.some(url=>url.includes('/contact?interest=')));
+ await loading.destroy();
+});

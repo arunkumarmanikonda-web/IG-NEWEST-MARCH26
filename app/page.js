@@ -16,6 +16,7 @@ import { livePractices } from "../lib/website";
 import { insights, opportunities } from "../lib/content.mjs";
 import { published, opportunityCard } from "../lib/cms";
 import {retailPromotionCard} from "../lib/retail-mandates.mjs";
+import { collectionItems } from "../lib/property-collection.mjs";
 import { companyContent } from "../lib/editorial";
 import {
   Arrow,
@@ -55,7 +56,7 @@ export default async function Home() {
   const cards = assets === null ? opportunities : assets.map(row => opportunityCard(row, features.find(f => f.content_id === row.id)));
   const leaseCards=(leasing || []).map(row=>retailPromotionCard(row,features.find(f=>f.content_id===row.id)));
   const selected = [...cards,...leaseCards].filter(card => card.feature);
-  const listings = cards.slice(0, 3);
+  const listings = collectionItems(cards, {sort:"featured"}).slice(0, 3);
   return (
     <main id="main">
       <Seo path="/" />

@@ -108,3 +108,16 @@ test('native excerpts show truncation and decode common typographic entities', (
  assert.equal(plainText('&#8377; 1 &ndash; 2 &#x2022; &copy;'), '₹ 1 – 2 • ©');
  assert.equal(parseCatalogue({...raw,perspectives:[{...raw.perspectives[0],body:'x'.repeat(13000)}]}).perspectives[0].body_truncated,true);
 });
+
+test('closed listing statuses persist in app caches and enquiries ask for alternatives',()=>{
+ const feed=parseCatalogue({...raw,listings:[{...raw.listings[0],listing_status:'sold',listing_status_text:'Successfully transacted · Sold',listing_is_available:false}]});
+ assert.equal(feed.listings[0].listing_is_available,false);
+ assert.equal(feed.listings[0].listing_status_text,'Successfully transacted · Sold');
+ const cached=parseCatalogue(JSON.parse(JSON.stringify(feed)));
+ assert.equal(cached.listings[0].listing_status,'sold');
+ assert.match(new URL(enquiryUrl(cached.listings[0])).searchParams.get('message')||'',/available alternatives/);
+ const expired={...feed.listings[0],listing_archived:true,listing_archive_until:'2020-01-01T00:00:00Z'};
+ assert.equal(parseCatalogue({...raw,listings:[expired]}).listings.length,0);
+ const saved=parseSaved([{entry:expired,saved_at:raw.generated_at,cached_at:raw.generated_at}]);
+ assert.equal(saved[0].withdrawn,true);assert.equal(saved[0].entry.body,'');
+});

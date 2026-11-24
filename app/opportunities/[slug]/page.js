@@ -6,6 +6,7 @@ import { pageMeta } from "../../../lib/seo.mjs";
 import Seo from "../../seo";
 import { published, cmsMetadata } from "../../../lib/cms";
 import PropertyDetail from "../../property-detail";
+import { listingLifecycle } from "../../../lib/listing-lifecycle.mjs";
 export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,7 +42,7 @@ export default async function Opportunity({ params, searchParams }) {
         feature={feature}
         hasRoom={room.data?.includes(slug) === true}
         related={records
-          .filter((x) => x.slug !== slug && x.public_data.image)
+          .filter((x) => x.slug !== slug && x.public_data.image && listingLifecycle(x).isAvailable)
           .slice(0, 2)}
       />
     );

@@ -41,3 +41,17 @@ test('native launch uses the same publication window and excludes admin settings
   assert.equal(Object.hasOwn(launch, 'startsAt'), false);
   assert.equal(mobileCatalogue({ residences, now: Date.parse(residences.endsAt) }).residences, null);
 });
+
+test('native catalogue carries status, retains bounded archives and removes them exactly at expiry',()=>{
+ const now=Date.parse('2032-01-01T00:00:00Z');
+ const sold={...record,id:'sold',slug:'sold',public_data:{...record.public_data,listing_status:'sold',listing_status_label:'Successfully transacted'}};
+ const archived={...record,id:'archive',slug:'archive',public_data:{...record.public_data,listing_status:'reserved',listing_archived:true,listing_archive_until:'2032-01-02T00:00:00Z'}};
+ const result=mobileCatalogue({records:[sold,archived,record],now});
+ assert.equal(result.listings[0].id,record.id);
+ assert.equal(result.listings[1].listing_status_text,'Successfully transacted · Sold');
+ assert.equal(result.listings[1].listing_is_available,false);
+ assert.match(result.listings[1].summary,/Sold.*not a current available offer/);
+ assert.equal(result.listings[2].listing_archived,true);
+ const after=mobileCatalogue({records:[sold,archived,record],now:Date.parse(archived.public_data.listing_archive_until)});
+ assert.deepEqual(after.listings.map(r=>r.id),[record.id,'sold']);
+});

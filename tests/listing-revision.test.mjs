@@ -20,3 +20,10 @@ test("Reordering terms leaves the revision stable while public taxonomy edits re
   assert.notEqual(revision([term, other]), revision([term]));
   assert.notEqual(revision([term]), revision([{ ...term, label: "Restructuring" }]));
 });
+
+test("availability and archive schedule refresh an open listing without an editorial revision",()=>{
+  const record={id:"a",version:3,public_data:{listing_status:"available"}};
+  for(const patch of [{listing_status:"sold"},{listing_status_label:"Successfully placed"},{listing_archived:true},{listing_archive_until:"2026-12-25T18:29:59.999Z"}]) {
+    assert.notEqual(listingRevision([record]),listingRevision([{...record,public_data:{...record.public_data,...patch}}]));
+  }
+});

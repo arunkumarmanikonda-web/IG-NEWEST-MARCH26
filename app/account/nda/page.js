@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { accountContext } from "../../../lib/supabase/server";
 import { published } from "../../../lib/cms";
+import { listingLifecycle } from "../../../lib/listing-lifecycle.mjs";
 import ProjectRequest from "./project";
 import AuthForm from "../../login/auth-form";
 import PolicyUnavailable from "../../policy-unavailable";
@@ -74,7 +75,7 @@ export default async function Page({ searchParams }) {
           <><h2>Request a Project Data Room</h2>{allRooms.map(x=><p key={x.id}><Link className="text-link" href={"/account/nda?"+x.kind+"="+x.slug}>{x.title} →</Link></p>)}<NdaAccount
             requests={requests || []}
             template={templates?.find(t=>!t.content_id) || null}
-            opportunities={(items || []).filter(x=>!options.data.includes(x.slug)).map((x) => ({
+            opportunities={(items || []).filter(x=>!options.data.includes(x.slug) && (x.kind !== "opportunity" || listingLifecycle(x).isAvailable)).map((x) => ({
               slug: x.slug,
               title: x.title,
             }))}

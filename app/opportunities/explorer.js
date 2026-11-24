@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { opportunityContexts } from "../../lib/taxonomy.mjs";
 import { collectionItems } from "../../lib/property-collection.mjs";
+import { listingStatuses, listingLifecycle } from "../../lib/listing-lifecycle.mjs";
 import PropertyCard from "../property-card";
 import { Arrow } from "../components";
 const empty = {
@@ -13,7 +14,7 @@ const empty = {
   context: "",
   sort: "featured",
   view: "grid",
-  inventory:"current", transaction:"",
+  inventory:"current", transaction:"", status:"",
 };
 export default function Explorer({
   items,
@@ -37,12 +38,13 @@ export default function Explorer({
       "/opportunities" + (params.size ? "?" + params.toString() : ""),
     );
   }
-  const inventoryItems=items.filter(x=>filters.inventory==="portfolio"?/portfolio reference/i.test(x.reference||""):!/portfolio reference/i.test(x.reference||""));
+  const inventoryItems=items.filter(x=>listingLifecycle(x).visible).filter(x=>filters.inventory==="portfolio"?/portfolio reference/i.test(x.reference||""):!/portfolio reference/i.test(x.reference||""));
   const filtered = collectionItems(items, { ...filters, query: filters.q });
   const active = Object.entries(filters).filter(([k, v]) => !["sort", "view", "inventory"].includes(k) && v);
   return (
     <>
-      <div className="inventory-switch" role="group" aria-label="Listing availability"><button aria-pressed={filters.inventory==="current"} onClick={()=>update({inventory:"current"})}>Current opportunities ({items.filter(x=>!/portfolio reference/i.test(x.reference||"")).length})</button><button aria-pressed={filters.inventory==="portfolio"} onClick={()=>update({inventory:"portfolio"})}>Portfolio references ({items.filter(x=>/portfolio reference/i.test(x.reference||"")).length})</button><Link href="/shortlist">My shortlist &amp; comparison →</Link></div>
+      <div className="inventory-switch" role="group" aria-label="Listing collections"><button aria-pressed={filters.inventory==="current"} onClick={()=>update({inventory:"current"})}>Property listings ({items.filter(x=>!/portfolio reference/i.test(x.reference||"") && listingLifecycle(x).visible).length})</button><button aria-pressed={filters.inventory==="portfolio"} onClick={()=>update({inventory:"portfolio",status:""})}>Portfolio references ({items.filter(x=>/portfolio reference/i.test(x.reference||"") && listingLifecycle(x).visible).length})</button><Link href="/shortlist">My shortlist &amp; comparison →</Link></div>
+      <p className="listing-availability-guide">Available properties appear first. Reserved, sold and archived records remain clearly labelled while they are on display.</p>
       <div className="listing-category-tabs" role="group" aria-label="Property sectors">
         {["", ...new Set(inventoryItems.map(x => x.sector).filter(Boolean))].map(sector => (
           <button key={sector} type="button" aria-pressed={filters.sector === sector} onClick={() => update({sector})}>
@@ -99,6 +101,14 @@ export default function Explorer({
             </select>
           </label>
         ))}
+        {filters.inventory !== "portfolio" && <label>
+          Availability
+          <select value={filters.status} onChange={e => update({status:e.target.value})}>
+            <option value="">All listing statuses</option>
+            {listingStatuses.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+            <option value="archived">Archived</option>
+          </select>
+        </label>}
         {!!availableContexts.length && (
           <label>
             Investment context
@@ -125,7 +135,7 @@ export default function Explorer({
               onClick={() => update({ [k]: "" })}
               aria-label={"Remove " + k + " filter: " + v}
             >
-              {k === "context"
+              {k === "status" ? listingStatuses.find(option => option.value === v)?.label || "Archived" : k === "context"
                 ? contexts.find((x) => x.id === v)?.label || v
                 : v}{" "}
               ×
