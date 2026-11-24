@@ -12,10 +12,17 @@ import { narrativeParagraphs } from "../lib/teaser.mjs";
 import PropertyPhotograph from "./property-photograph";
 import PropertyCard from "./property-card";
 import { Arrow, Eyebrow } from "./components";
+import { listingLifecycle } from "../lib/listing-lifecycle.mjs";
+import ListingStatus from "./listing-status";
 
 export default function PropertyDetail({ item, hasRoom = false, related = [], feature = null }) {
   const x = opportunityCard(item),
     d = item.public_data;
+  const lifecycle = listingLifecycle(item);
+  const available = lifecycle.isAvailable;
+  const similar = "/opportunities?status=available";
+  const briefLabel = lifecycle.isHistorical ? "Download property record" : "Download property brief";
+  const relatedAvailable = related.filter(record => listingLifecycle(record).isAvailable);
   const contactParams = new URLSearchParams({ interest: "Real Estate Advisory", listing:item.slug, message:"I’d like to enquire about "+item.title+". Please share the current availability and next steps." });
   const roomParams = new URLSearchParams({ opportunity: item.slug });
   if (feature) {
@@ -27,7 +34,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
   const roomLink = "/account/nda?" + roomParams;
   return (
     <main id="main" className="property-detail-page">
-      {feature && <FeatureBriefOpen campaignId={feature}/>}
+      {feature && available && <FeatureBriefOpen campaignId={feature}/>}
       <nav className="property-breadcrumb" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span>/</span>
@@ -44,13 +51,20 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
           <PropertyTags tags={x.tags} contexts={x.contexts} />
         </div>
         <div className="property-title-terms">
-          <span>{propertyStatus(x)}</span>
-          <strong>{x.price || "Details on enquiry"}</strong>
-          <Link className="text-link" href={contact}>
-            Enquire about this property <Arrow />
+          <ListingStatus item={x}/>
+          {available && <strong>{x.price || "Details on enquiry"}</strong>}
+          <Link className="text-link" href={available ? contact : similar}>
+            {available ? "Enquire about this property" : "Explore available properties"} <Arrow />
           </Link>
         </div>
       </header>
+      {!available && <aside className="listing-status-notice" aria-label="Property availability">
+        <ListingStatus item={x}/>
+        <p>{lifecycle.isHistorical
+          ? "This property record is retained for reference. It is not a current offer, and the information below describes the previously published listing."
+          : "This property is " + lifecycle.canonicalLabel.toLowerCase() + ". New property and data room requests are paused while our team confirms its next stage."}</p>
+        <Link href={similar}>Explore available opportunities</Link>
+      </aside>}
       <section className="property-overview" aria-label="Property at a glance">
         <PropertyPhotograph image={x.image} alt={x.imageAlt} title={x.title} />
         <div className="property-overview-panel">
@@ -61,11 +75,11 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
             <div><dt>Status</dt><dd>{propertyStatus(x)}</dd></div>
             {propertyFacts(x).filter(([key]) => key !== "Property type").map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}
           </dl>
-          <Link className="button" href={hasRoom ? roomLink : contact}>{hasRoom ? "Request Data Room Access" : "Request Property Details"} <Arrow /></Link>
-          <Link className="text-link" href={"/opportunities/" + item.slug + "/brief.pdf"} prefetch={false} target="_blank">Download property brief <Arrow /></Link>
+          <Link className="button" href={available ? hasRoom ? roomLink : contact : similar}>{available ? hasRoom ? "Request Data Room Access" : "Request Property Details" : "Explore available properties"} <Arrow /></Link>
+          <Link className="text-link" href={"/opportunities/" + item.slug + "/brief.pdf"} prefetch={false} target="_blank">{briefLabel} <Arrow /></Link>
         </div>
       </section>
-      <ReviewStatus data={d}/><div className="property-breadcrumb"><ShortlistButton id={item.id}/></div>{hasRoom&&<AccessSteps current={0}/>}
+      <ReviewStatus data={d}/><div className="property-breadcrumb"><ShortlistButton id={item.id} allowAdd={available}/></div>{hasRoom&&available&&<AccessSteps current={0}/>}
       <div className="property-detail-layout">
         <article className="property-narrative">
           <Eyebrow>PROPERTY INFORMATION</Eyebrow>
@@ -115,15 +129,15 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
             prefetch={false}
             href={"/opportunities/" + item.slug + "/brief.pdf"}
           >
-            Download property brief <Arrow />
+            {briefLabel} <Arrow />
           </Link>
-          {hasRoom && <>
+          {hasRoom && available && <>
             <Link className="button" href={roomLink}>Request Data Room Access <Arrow /></Link>
             <p className="fine-note">Register or sign in to select a legal name and request confidential documents for this property.</p>
           </>}
         </aside>
       </div>
-      {!!related.length && (
+      {!!relatedAvailable.length && (
         <section className="section-pad property-related">
           <div className="section-heading">
             <div>
@@ -135,7 +149,7 @@ export default function PropertyDetail({ item, hasRoom = false, related = [], fe
             </Link>
           </div>
           <div className="property-grid">
-            {related.map((record) => (
+            {relatedAvailable.map((record) => (
               <PropertyCard key={record.slug} item={opportunityCard(record)} />
             ))}
           </div>

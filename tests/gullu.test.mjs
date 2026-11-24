@@ -101,3 +101,15 @@ test("fundraising enquiries use the firm's voice and preserve the lender's role"
     return Response.json({status:"completed",output:[{content:[{type:"output_text",text:JSON.stringify({mode:"grounded",paragraphs:[{text:answer,ids:[0]}]})}]}]});}});
  assert.equal(reply.answer,answer);assert.equal(reply.sources[0].href,"/practices/debt-special-situations");
 });
+
+test('closed property evidence and factual replies preserve status even when old text says available',()=>{
+ const row={kind:'opportunity',slug:'closed-hotel',title:'Palace Hotel',summary:'Available for acquisition.',body:'The hotel has 50 keys.',tags:[{slug:'cirp'}],public_data:{listing_status:'sold',listing_status_label:'Successfully placed',availability:'Available',keys:50}};
+ const knowledge=publicDocuments({records:[row]}),doc=knowledge.find(d=>d.href==='/opportunities/closed-hotel');
+ assert.equal(doc.isAvailable,false);assert.equal(doc.facts.availability,'Successfully placed · Sold');
+ const ranked=rankPassages(knowledge,'Palace Hotel keys',[], '/');
+ assert.ok(ranked.length);for(const part of ranked.filter(p=>p.href===doc.href))assert.match(part.text,/Sold.*not a current available offer/);
+ assert.match(directAnswer('how many keys does Palace Hotel have',knowledge).answer,/Sold.*not a current available offer/s);
+ assert.equal(directAnswer('show me a distressed opportunity',knowledge).sources[0].href,'/opportunities');
+ const expired=publicDocuments({records:[{...row,public_data:{...row.public_data,listing_archived:true,listing_archive_until:'2020-01-01T00:00:00Z'}}]});
+ assert.ok(!expired.some(d=>d.href===doc.href));
+});

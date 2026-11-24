@@ -9,6 +9,8 @@ begin
  insert into public.ig_consents(user_id,purpose,granted,version,policy_hash) select buyer,'registration',true,version,sha256 from public.ig_policy_releases where current;
  update ig_private.integration_root set secret_hash=encode(extensions.digest(convert_to(session_secret,'UTF8'),'sha256'),'hex');
  select * into app from public.ig_public_content where kind='opportunity' order by slug limit 1;
+ -- Identity signing needs a current offer, rather than the seed portfolio reference.
+ update public.ig_public_content set public_data=public_data-'reference' where id=app.id;
  insert into public.ig_content(kind,slug,title) values('project','identity-test-project','Synthetic Project') returning * into other;
  insert into public.ig_public_content(id,kind,slug,title,summary,body,seo_title,seo_description,public_data,version)
  values(other.id,other.kind,other.slug,other.title,'','','','','{}',1);

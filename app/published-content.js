@@ -7,9 +7,12 @@ import {horecaCategory,categoryHref} from "../lib/horeca-categories.mjs";
 import AdviserContacts from "./adviser-contacts";
 import SourcedArticle from "./insights/sourced-article";
 import { PerspectiveDate } from "./insights/perspective-date";
+import { listingLifecycle } from "../lib/listing-lifecycle.mjs";
+import ListingStatus from "./listing-status";
 import "./insights/perspectives.css";
 export default function PublishedContent({ item,related=[] }) {
   const d = item.public_data;
+  const lifecycle = listingLifecycle(item);
   const topic=articlePractice(item);
   const sourcedArticle = item.kind === "article" && d.engine === "perspectives" && Array.isArray(d.sources)
     && Array.isArray(d.sections) && d.sections.length > 0 && d.sections.every(section =>
@@ -28,14 +31,15 @@ export default function PublishedContent({ item,related=[] }) {
       >
         {category&&<LinkButton href={categoryHref(category.id)}>Explore {category.label.toLowerCase()}</LinkButton>}
         {item.kind === "opportunity" && (
-          <LinkButton
-            href={"/account/nda?opportunity=" + encodeURIComponent(item.slug)}
+          <><ListingStatus item={item}/><LinkButton
+            href={lifecycle.isAvailable ? "/account/nda?opportunity=" + encodeURIComponent(item.slug) : "/opportunities?status=available"}
           >
-            Request confidential information
-          </LinkButton>
+            {lifecycle.isAvailable ? "Request confidential information" : "Explore available properties"}
+          </LinkButton></>
         )}
       </PageHero>
       <article className="prose-section">
+        {item.kind === "opportunity" && !lifecycle.isAvailable && <aside className="listing-status-notice"><p>{lifecycle.isHistorical ? "This property record is retained for reference and is not a current offer." : "This property is " + lifecycle.canonicalLabel.toLowerCase() + ". New property and data room requests are paused."}</p></aside>}
         {item.kind === "article" && <div className="perspective-article-meta">
           <Link className="text-link" href="/insights#archive">Perspectives archive</Link>
           <PerspectiveDate value={item.published_at} /><span>{readingMinutes(item)} min read</span>
@@ -78,7 +82,7 @@ export default function PublishedContent({ item,related=[] }) {
         )}
       </article>
       {item.kind === 'product' && <section className="section-pad procurement-contacts"><h2>Plan your requirement with Pavan.</h2><AdviserContacts kind="product" subject={item.title + ' | Procurement enquiry'} /></section>}
-      {item.kind==="article" ? <section className="section-pad article-next"><h2>{topic.cta}</h2><p>Bring this question to your own asset, business or project.</p><Link className="button" href={"/contact?interest="+encodeURIComponent(topic.label)+"&message="+encodeURIComponent("I would like to discuss “"+item.title+"” in relation to my project.")}>Discuss this Perspective →</Link> <Link className="text-link" href={topic.href}>Explore our practice →</Link>{!!related.length&&<><h3>Continue reading</h3>{related.map(r=><p key={r.slug}><Link href={"/insights/"+r.slug}>{r.title} →</Link></p>)}</>}</section>:<ContactBand interest={item.title} />}
+      {item.kind==="article" ? <section className="section-pad article-next"><h2>{topic.cta}</h2><p>Bring this question to your own asset, business or project.</p><Link className="button" href={"/contact?interest="+encodeURIComponent(topic.label)+"&message="+encodeURIComponent("I would like to discuss “"+item.title+"” in relation to my project.")}>Discuss this Perspective →</Link> <Link className="text-link" href={topic.href}>Explore our practice →</Link>{!!related.length&&<><h3>Continue reading</h3>{related.map(r=><p key={r.slug}><Link href={"/insights/"+r.slug}>{r.title} →</Link></p>)}</>}</section>:<ContactBand interest={item.kind === "opportunity" && !lifecycle.isAvailable ? "Similar real estate opportunities" : item.title} />}
     </main>
   );
 }

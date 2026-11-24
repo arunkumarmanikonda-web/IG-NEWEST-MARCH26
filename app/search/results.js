@@ -4,6 +4,7 @@ import Link from "next/link";
 import { filterSearch, searchTypes } from "../../lib/site-search.mjs";
 import { practiceOptions } from "../../lib/business.mjs";
 import { Arrow } from "../components";
+import ListingStatus from "../listing-status";
 export default function Results({ items, initialQuery = "" }) {
   const [q, setQ] = useState(initialQuery),
     [kind, setKind] = useState(""),
@@ -94,6 +95,7 @@ export default function Results({ items, initialQuery = "" }) {
                 {searchTypes[r.kind] || "Website"}
                 {r.location ? " / " + r.location : ""}
               </span>
+              {r.kind === "opportunity" && <ListingStatus item={r}/>}
               <h2>{r.title}</h2>
               <p>{r.summary}</p>
             </div>

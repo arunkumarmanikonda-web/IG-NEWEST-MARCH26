@@ -50,3 +50,14 @@ test("file permission paging carries both grant and file across a boundary", asy
   assert.deepEqual(data,rows);
   assert.equal(cursor,"grant_id.gt.grant-a,and(grant_id.eq.grant-a,file_id.gt.249)");
 });
+
+test("temporarily displayed archives appear in Live and Archived but never active bulk selection",()=>{
+  const row={status:"draft",listing_archived:true,live_version:2,archive_until:"2026-12-25T18:29:59.999Z"};
+  const now=Date.parse("2026-11-25T00:00:00Z");
+  assert.equal(visibleInRegister(row,"live",now),true);
+  assert.equal(visibleInRegister(row,"archived",now),true);
+  assert.equal(visibleInRegister(row,"active",now),false);
+  assert.equal(visibleInRegister(row,"draft",now),false);
+  assert.equal(visibleInRegister(row,"live",Date.parse(row.archive_until)),false);
+  assert.equal(visibleInRegister({...row,deleted_at:"2026-11-25"},"live",now),false);
+});

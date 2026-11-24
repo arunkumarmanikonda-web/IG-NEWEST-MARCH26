@@ -90,6 +90,17 @@ test("an interrupted batch has no false success and later batches remain unsubmi
   await assert.rejects(() => publishSelection([], "publish", () => {}), /Select/);
   await assert.rejects(() => publishSelection(rows, "delete", () => assert.fail()),/Invalid/);
 });
+test("bulk actions change retained archives rather than reporting their old snapshot as already published",async()=>{
+  const rows=[{id:"archive",version:2,live_version:2,listing_archived:true,status:"archived"},{id:"live",version:2,live_version:2,status:"published"}];
+  await publishSelection(rows,"publish",async payload=>{
+    assert.deepEqual(payload.rows,[{id:"archive",version:2},{id:"live",version:2,verify_only:true}]);
+    return payload.rows.map(row=>({...row,ok:true}));
+  });
+  await publishSelection([{...rows[0],live_version:null}],"archive",async payload=>{
+    assert.deepEqual(payload.rows,[{id:"archive",version:2}]);
+    return payload.rows.map(row=>({...row,ok:true}));
+  });
+});
 test("teasers bound long content and exclude unsafe image paths and unsupplied facts", () => {
   const d = teaserData({
     kind: "opportunity",

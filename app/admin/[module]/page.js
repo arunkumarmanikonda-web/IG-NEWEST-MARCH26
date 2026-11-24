@@ -88,7 +88,7 @@ export default async function Module({ params, searchParams }) {
     };
     const register = module === "content" ? "cms" : module;
     const { data, error } = await readRegister(() => client.from("ig_content").select(
-      "id,kind,slug,practice,title,status,version,public_data,updated_at,deleted_at,ig_public_content(version)"
+      "id,kind,slug,practice,title,status,version,public_data,updated_at,deleted_at,listing_status,listing_status_label,listing_archived,archive_until,listing_lifecycle_version,ig_public_content(version)"
     ).in("kind", kinds[register]), "updated_at");
     if (error) return <p role="alert">The publishing register could not be loaded. Refresh to retry.</p>;
     const items = data.filter(row => row.kind !== "page" || !siteRecordSlugs.includes(row.slug))

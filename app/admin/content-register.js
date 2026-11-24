@@ -14,6 +14,8 @@ import {
 import { portalAction } from "../account/profile";
 import CatalogueImport from "./catalogue-import";
 import {retailKinds} from "../../lib/retail-mandates.mjs";
+import {listingStatuses,listingStatusText} from "../../lib/listing-lifecycle.mjs";
+import {archiveDateLabel} from "../../lib/listing-schedule.mjs";
 const labels = {
   retail:["Retail leasing mandates","Publish promoter inventory and brand expansion requirements. Manage signed client mandates and room access from each record.","retail_space"],
   cms: [
@@ -43,6 +45,7 @@ export default function ContentRegister({ module, items }) {
     [state, setState] = useState("active"),
     [practice, setPractice] = useState(""),
     [side,setSide] = useState(""),
+    [availability,setAvailability] = useState(""),
     [selected, setSelected] = useState([]),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
@@ -51,7 +54,7 @@ export default function ContentRegister({ module, items }) {
   const [title, description, kind] = labels[module];
   const rows = items.filter(
     (r) =>
-      visibleInRegister(r, state) && (!side || r.kind===side) &&
+      visibleInRegister(r, state) && (!side || r.kind===side) && (!availability || r.listing_status===availability) &&
       (!practice || r.practice === practice) &&
       [
         r.title,
@@ -149,7 +152,7 @@ export default function ContentRegister({ module, items }) {
       <div className="metric-grid">
         {[
           ["Active records", items.filter(r => visibleInRegister(r, "active")).length],
-          ["Live", items.filter((r) => r.live_version).length],
+          ["Live", items.filter((r) => visibleInRegister(r,"live")).length],
           ["Not live", items.filter(r => visibleInRegister(r, "unlive")).length],
           ["Draft revisions", items.filter((r) => !r.deleted_at && r.status === "draft").length],
         ].map(([k, v]) => (
@@ -161,6 +164,7 @@ export default function ContentRegister({ module, items }) {
       </div>
       <section className="workspace-card">
         <div className="register-toolbar">
+          {module==="listings" && <label>Property status<select value={availability} disabled={busy} onChange={event=>{setAvailability(event.target.value);setSelected([]);}}><option value="">All statuses</option>{listingStatuses.map(option=><option key={option.value} value={option.value}>{option.label}</option>)}</select></label>}
           {module==="retail" && <label>Mandate side<select value={side} onChange={e=>{setSide(e.target.value);setSelected([])}}><option value="">Both sides</option>{Object.entries(retailKinds).map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>}
           <label>
             Search
@@ -320,6 +324,7 @@ export default function ContentRegister({ module, items }) {
                     <small>
                       {retailKinds[r.kind] || r.public_data.sku || r.public_data.city || r.kind}
                     </small>
+                    {r.kind==="opportunity" && <small>{listingStatusText({listing_status:r.listing_status,listing_status_label:r.listing_status_label,listing_archived:r.listing_archived,listing_archive_until:r.archive_until})}</small>}
                   </td>
                   <td>
                     {practiceOptions.find((p) => p[0] === r.practice)?.[1]}
@@ -328,11 +333,12 @@ export default function ContentRegister({ module, items }) {
                     <span
                       className={
                         "status-chip " +
-                        (r.live_version ? "published" : "draft")
+                        (visibleInRegister(r,"live") ? "published" : "draft")
                       }
                     >
-                      {r.live_version ? "Live" : "Not live"}
+                      {visibleInRegister(r,"live") ? r.listing_archived ? "Archive on display" : "Live" : "Not live"}
                     </span>
+                    {r.listing_archived && r.archive_until && <small>Display through {archiveDateLabel(r.archive_until)} IST</small>}
                   </td>
                   <td>
                     {r.version} · {r.status}
@@ -342,6 +348,7 @@ export default function ContentRegister({ module, items }) {
                   </td>
                   <td>
                     {!r.deleted_at && <Link href={"/admin/content/" + r.id}>Manage →</Link>}
+                    {!r.deleted_at && r.kind==="opportunity" && <><br/><Link href={"/admin/content/"+r.id+"#listing-availability"}>Status & archive display</Link></>}
                     <br />
                     {module!=="retail" && <Link href={"/admin/content/" + r.id + "/teaser"}>
                       Branded PDF brief ↗

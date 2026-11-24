@@ -11,7 +11,7 @@ export async function GET(request) {
   try {
     const client = anonymousServerClient();
     const [{ data, error }, features] = await Promise.all([
-      readRegister(() => publishedWithTags(client, new URL(request.url).searchParams.get("scope")==="home"?["opportunity","retail_space","retail_requirement"]:"opportunity", "id,version,published_at")),
+      readRegister(() => publishedWithTags(client, new URL(request.url).searchParams.get("scope")==="home"?["opportunity","retail_space","retail_requirement"]:"opportunity", "id,version,published_at,public_data")),
       liveFeatures(),
     ]);
     if (!error) return Response.json({ revision: listingRevision(data, features) }, { headers });

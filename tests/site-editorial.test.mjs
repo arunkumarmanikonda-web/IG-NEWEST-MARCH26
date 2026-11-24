@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {siteDefaults,validateSection} from "../lib/site-editorial.mjs";
 import {parseSiteRecords,sitePrefix} from "../lib/site-cms-records.mjs";
-import {practiceUpdate} from "../lib/practice-updates.mjs";
+import {practiceUpdate,recentUpdates} from "../lib/practice-updates.mjs";
 
 test("website sections, practice showcases and HORECA collections survive a stored JSON round trip", () => {
   assert.equal(Object.keys(siteDefaults).length,24);
@@ -26,6 +26,27 @@ test("published property and catalogue campaign drafts use their own practice an
     assert.ok(update.campaign.body.includes("https://indiagully.com"+update.path));
   }
   assert.equal(practiceUpdate({kind:"page",title:"Other page",slug:"page"}),null);
+});
+
+test("practice campaigns exclude closed, pending, portfolio and archived property records",async()=>{
+  const row={id:"offer",kind:"opportunity",title:"Test property",slug:"test-property",summary:"Approved public brief",published_at:"2026-11-25"};
+  const records=[{...row,public_data:{listing_status:"available"}}];
+  for(const public_data of [
+    ...["sold","reserved","under_offer","withdrawn"].map(listing_status=>({listing_status})),
+    {listing_status:"sold",listing_status_label:"Available"},
+    {listing_status:"available",listing_archived:true,listing_archive_until:"2099-01-01T00:00:00Z"},
+    {reference:"Portfolio reference"},{availability:"Sold"},
+  ]) {
+    assert.equal(practiceUpdate({...row,public_data}),null);
+    records.push({...row,id:"closed-"+records.length,public_data});
+  }
+  let columns;
+  const client={from(table){assert.equal(table,"ig_public_content");return {
+    select(value){columns=value;return this;},eq(){return this;},order(){return this;},limit(){return Promise.resolve({data:records});},
+  };}};
+  const updates=await recentUpdates(client,["real-estate"]);
+  assert.ok(columns.split(",").includes("public_data"));
+  assert.deepEqual(updates.map(update=>update.id),["offer"]);
 });
 
 import {advertisingEvent} from "../lib/advertising.mjs";

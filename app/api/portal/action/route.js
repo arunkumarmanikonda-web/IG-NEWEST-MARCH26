@@ -24,6 +24,7 @@ const methods = {
   retail_mandate: "ig_retail_manage",
   content: "ig_save_content",
   publication: "ig_content_action",
+  listing_lifecycle: "ig_listing_lifecycle",
   bulk_publication: "ig_bulk_publication",
   taxonomy: "ig_taxonomy_action",
   users: "ig_users_action",
