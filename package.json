@@ -20,7 +20,7 @@
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.119.0",
     "@tesseract.js-data/eng": "1.0.0",
-    "@vercel/sandbox": "4.0.0",
+    "@vercel/sandbox": "4.1.0",
     "@xmldom/xmldom": "0.9.12",
     "fflate": "0.8.3",
     "hash-wasm": "4.12.0",
