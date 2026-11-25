@@ -18,7 +18,7 @@
     "@napi-rs/canvas": "1.1.0",
     "@pdf-lib/fontkit": "1.1.1",
     "@supabase/ssr": "0.12.7",
-    "@supabase/supabase-js": "2.119.0",
+    "@supabase/supabase-js": "2.119.2",
     "@tesseract.js-data/eng": "1.0.0",
     "@vercel/sandbox": "4.0.0",
     "@xmldom/xmldom": "0.9.12",
