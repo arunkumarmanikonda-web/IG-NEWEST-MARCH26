@@ -1,6 +1,7 @@
 insert into auth.users(email,email_confirmed_at) values ('owner@example.invalid',now());
 insert into auth.sessions(user_id) select id from auth.users;
-update public.ig_policy_releases set current=true where version=(select max(version) from public.ig_policy_releases);
+-- Keep staged, unreviewed future drafts out of the active test baseline.
+update public.ig_policy_releases set current=true where version='2026-11-11.2';
 update public.ig_profiles set roles=array['owner'],must_change_password=false,policy_version=ig_private.current_policy();
 insert into public.ig_consents(user_id,purpose,granted,version,policy_hash)
 select id,'registration',true,policy_version,(select sha256 from public.ig_policy_releases where current) from public.ig_profiles;
