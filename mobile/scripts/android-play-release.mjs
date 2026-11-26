@@ -7,6 +7,30 @@ import { spawnSync } from 'node:child_process';
 const signingMarker = '// India Gully Play upload signing (generated; contains no credentials)';
 const requiredSecrets = ['ANDROID_UPLOAD_KEYSTORE_BASE64', 'ANDROID_UPLOAD_STORE_PASSWORD', 'ANDROID_UPLOAD_KEY_ALIAS', 'ANDROID_UPLOAD_KEY_PASSWORD'];
 
+export function signingEnvironment(env) {
+  const raw = env.ANDROID_UPLOAD_SIGNING_BUNDLE;
+  if (!raw) throw new Error('Missing atomic Android upload-signing bundle. Configure the protected release environment.');
+  let bundle;
+  try { bundle = JSON.parse(raw); } catch { throw new Error('The Android upload-signing bundle is invalid JSON.'); }
+  if (!bundle || typeof bundle !== 'object' || Array.isArray(bundle) || bundle.schemaVersion !== 1 || requiredSecrets.some((name) => typeof bundle[name] !== 'string' || !bundle[name].trim())) {
+    throw new Error('The Android upload-signing bundle has an invalid schema.');
+  }
+  const expected = fingerprint(env.ANDROID_UPLOAD_CERTIFICATE_SHA256);
+  if (fingerprint(bundle.ANDROID_UPLOAD_CERTIFICATE_SHA256) !== expected) throw new Error('Signing bundle does not match the independently configured upload-certificate pin.');
+  const result = { ...env };
+  for (const name of requiredSecrets) result[name] = bundle[name];
+  // The complete JSON is masked by GitHub, but its extracted values need their
+  // own masks before a subprocess such as Gradle can produce output.
+  if (env.GITHUB_ACTIONS === 'true') {
+    for (const value of new Set(requiredSecrets.map((name) => bundle[name]))) {
+      const escaped = value.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
+      console.log(`::add-mask::${escaped}`);
+    }
+  }
+  delete result.ANDROID_UPLOAD_SIGNING_BUNDLE;
+  return result;
+}
+
 export function fingerprint(value) {
   const normalized = String(value ?? '').replaceAll(':', '').trim().toUpperCase();
   if (!/^[A-F0-9]{64}$/.test(normalized)) throw new Error('Set ANDROID_UPLOAD_CERTIFICATE_SHA256 to the approved upload certificate SHA-256 fingerprint.');
@@ -53,7 +77,8 @@ function run(command, args, options = {}) {
   return result.stdout;
 }
 
-export function buildPlayBundle(env = process.env) {
+export function buildPlayBundle(inputEnv = process.env) {
+  const env = signingEnvironment(inputEnv);
   const expectedFingerprint = validateEnvironment(env);
   const mobileRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
   const nativeRoot = join(mobileRoot, 'android');

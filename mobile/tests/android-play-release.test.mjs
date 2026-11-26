@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { configureSigning, decodeKeystore, fingerprint, validateCertificate, validateEnvironment } from '../scripts/android-play-release.mjs';
+import { configureSigning, decodeKeystore, fingerprint, signingEnvironment, validateCertificate, validateEnvironment } from '../scripts/android-play-release.mjs';
 
 const sha = 'AB'.repeat(32);
 const env = { ANDROID_UPLOAD_KEYSTORE_BASE64: 'fixture', ANDROID_UPLOAD_STORE_PASSWORD: 'store-placeholder', ANDROID_UPLOAD_KEY_ALIAS: 'upload', ANDROID_UPLOAD_KEY_PASSWORD: 'key-placeholder', ANDROID_UPLOAD_CERTIFICATE_SHA256: sha, RUNNER_TEMP: '/tmp/play-release-test' };
@@ -42,4 +42,28 @@ test('production signing overrides the template without placing credentials in G
   assert.throws(() => configureSigning(result), /clean Expo prebuild/);
   assert.throws(() => configureSigning(template.replace('com.indiagully.app', 'com.other.app')), /Unexpected Android/);
   assert.throws(() => configureSigning('unrecognized template'), /Unexpected Android/);
+});
+
+
+test('atomic bundle is validated without exposing malformed JSON or accepting mismatched pins', () => {
+  const bundle = JSON.stringify({ schemaVersion: 1, ...env });
+  const resolved = signingEnvironment({ ANDROID_UPLOAD_SIGNING_BUNDLE: bundle, ANDROID_UPLOAD_CERTIFICATE_SHA256: sha });
+  assert.equal(resolved.ANDROID_UPLOAD_STORE_PASSWORD, env.ANDROID_UPLOAD_STORE_PASSWORD);
+  assert.equal(resolved.ANDROID_UPLOAD_SIGNING_BUNDLE, undefined);
+  assert.throws(() => signingEnvironment({}), /Missing atomic/);
+  assert.throws(() => signingEnvironment({ ANDROID_UPLOAD_SIGNING_BUNDLE: 'PRIVATE_SECRET_BAD_JSON' }), (error) => !error.message.includes('PRIVATE_SECRET'));
+  assert.throws(() => signingEnvironment({ ANDROID_UPLOAD_SIGNING_BUNDLE: bundle, ANDROID_UPLOAD_CERTIFICATE_SHA256: 'CD'.repeat(32) }), /does not match/);
+  assert.throws(() => signingEnvironment({ ANDROID_UPLOAD_SIGNING_BUNDLE: '{"schemaVersion":1}', ANDROID_UPLOAD_CERTIFICATE_SHA256: sha }), /invalid schema/);
+});
+
+test('all extracted credential fragments are masked before build output', () => {
+  const captured = [];
+  const original = console.log;
+  try {
+    console.log = (message) => captured.push(message);
+    signingEnvironment({ GITHUB_ACTIONS: 'true', ANDROID_UPLOAD_SIGNING_BUNDLE: JSON.stringify({ schemaVersion: 1, ...env }), ANDROID_UPLOAD_CERTIFICATE_SHA256: sha });
+  } finally { console.log = original; }
+  for (const name of ['ANDROID_UPLOAD_KEYSTORE_BASE64', 'ANDROID_UPLOAD_STORE_PASSWORD', 'ANDROID_UPLOAD_KEY_ALIAS', 'ANDROID_UPLOAD_KEY_PASSWORD']) {
+    assert.ok(captured.includes(`::add-mask::${env[name]}`));
+  }
 });

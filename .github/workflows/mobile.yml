@@ -48,6 +48,11 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run test:release
+      - name: Verify provisioning and Android manifest guards
+        run: |
+          for guard_test in tests/*.test.py; do
+            PYTHONDONTWRITEBYTECODE=1 python3 "$guard_test"
+          done
       - run: npm audit --omit=dev --audit-level=high
       - name: Bundle Android, iOS and browser preview
         run: npm run export
