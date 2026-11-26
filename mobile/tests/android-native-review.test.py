@@ -65,6 +65,22 @@ class NativeReviewTests(unittest.TestCase):
         self.assertFalse(review.staff_login_fields(xml.replace('password="true"', 'password="false"')))
         self.assertFalse(review.staff_login_heading(xml.replace('com.indiagully.app', 'com.android.chrome')))
 
+    def test_careers_heading_accepts_css_case_only_inside_visible_app_webview(self):
+        xml = '<hierarchy><node class="android.webkit.WebView" package="com.indiagully.app" bounds="[0,310][1080,1860]"><node text="CAREERS AT INDIA GULLY" package="com.indiagully.app" bounds="[63,753][1018,808]"/></node></hierarchy>'
+        self.assertTrue(review.careers_heading(xml))
+        self.assertTrue(review.careers_heading(xml.replace("CAREERS AT INDIA GULLY", "Careers at India Gully")))
+        for changed in (
+                xml.replace("android.webkit.WebView", "android.view.View"),
+                xml.replace("com.indiagully.app", "com.android.chrome"),
+                xml.replace("[63,753][1018,808]", "[63,1860][1018,1860]"),
+                xml.replace("CAREERS AT INDIA GULLY", "Careers"),
+                xml.replace("CAREERS AT INDIA GULLY", "Careers at India Gully unavailable"),
+                xml.replace("CAREERS AT INDIA GULLY", "indiagully.com · Careers at India Gully")):
+            with self.subTest(xml=changed):
+                self.assertFalse(review.careers_heading(changed))
+        outside = '<hierarchy><node package="com.indiagully.app" text="CAREERS AT INDIA GULLY" bounds="[10,100][1000,200]"/><node class="android.webkit.WebView" package="com.indiagully.app" bounds="[0,310][1080,1860]"/></hierarchy>'
+        self.assertFalse(review.careers_heading(outside))
+
     def test_successful_main_source_is_accepted(self):
         review.verify_run(RUN, SHA)
         self.assertEqual(review.select_artifact([ARTIFACT], SHA)["id"], 123)
