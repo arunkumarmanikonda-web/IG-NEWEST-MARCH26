@@ -1,5 +1,7 @@
 # India Gully store submission copy
 
+Current Android outcome: **1.0.0 (2) is available to the owner through internal testing**. The icon, feature graphic and eight genuine native screenshots are uploaded and saved in the Play listing draft. See [27 November release record](release-2026-11-27.md) for verified build, [internal tester access](https://play.google.com/apps/internaltest/4700795783250438794) and remaining public-release gates. The dated preparation inventory below is historical; internal testing is not a public production release or store-review approval.
+
 Prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The Play app record and listing are drafts, not evidence of a binary upload, store submission or approval. Reconcile the final build and release checklist before submitting.
 
 ## Google Play registration inventory · 26 November 2026
