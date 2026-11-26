@@ -34,6 +34,29 @@ class NativeReviewTests(unittest.TestCase):
             with self.assertRaises(review.ReviewError):
                 review.assert_app_foreground(value)
 
+    def test_actual_build3_inherits_application_name_for_launcher(self):
+        fixtures = Path(__file__).parent / 'fixtures'
+        badging = (fixtures / 'build3-label-badging.txt').read_text()
+        tree = (fixtures / 'build3-manifest-tree.txt').read_text()
+        self.assertEqual(review.apk_label(badging, tree), {"application": "India Gully", "launcher": "India Gully"})
+        with self.assertRaises(review.ReviewError):
+            review.apk_label(badging)
+
+    def test_empty_wrong_or_unproven_launcher_override_is_rejected(self):
+        fixtures = Path(__file__).parent / 'fixtures'
+        badging = (fixtures / 'build3-label-badging.txt').read_text()
+        tree = (fixtures / 'build3-manifest-tree.txt').read_text()
+        marker = '          E: activity (line=77)\n'
+        self.assertIn(marker, tree)
+        for value in ('""', '"Wrong name"', '@0x7f0e0001'):
+            changed = tree.replace(marker, marker + '            A: http://schemas.android.com/apk/res/android:label(0x01010001)=' + value + '\n')
+            with self.assertRaises(review.ReviewError):
+                review.apk_label(badging, changed)
+        for changed in (tree.replace('com.indiagully.app.MainActivity', 'other.MainActivity'),
+                        tree.replace('android.intent.category.LAUNCHER', 'other.CATEGORY'), ''):
+            with self.assertRaises(review.ReviewError):
+                review.apk_label(badging, changed)
+
     def test_login_must_be_actual_webview_content_with_live_form_fields(self):
         xml = '<hierarchy><node class="android.webkit.WebView" package="com.indiagully.app" bounds="[0,100][1080,1800]"><node text="Welcome back." package="com.indiagully.app" bounds="[10,120][1000,160]"/><node text="Email address" package="com.indiagully.app" bounds="[10,200][1000,240]"/><node class="android.widget.EditText" enabled="true" password="false" package="com.indiagully.app" bounds="[10,250][1000,300]"/><node class="android.widget.EditText" enabled="true" password="true" package="com.indiagully.app" bounds="[10,350][1000,400]"/></node></hierarchy>'
         self.assertTrue(review.staff_login_heading(xml))

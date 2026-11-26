@@ -118,18 +118,50 @@ def explore_card(node):
     return label.startswith("Explore ") and node.get("clickable") == "true"
 
 
-def apk_label(badging):
+def launcher_inherits_application_label(xmltree):
+    """Verify absence of a launcher/activity override in the actual APK tree."""
+    lines = xmltree.splitlines()
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)E: activity(?:\s|$)", line)
+        if not match:
+            continue
+        depth = len(match.group(1))
+        block = []
+        for child in lines[index + 1:]:
+            element = re.match(r"^(\s*)E:", child)
+            if element and len(element.group(1)) <= depth:
+                break
+            block.append(child)
+        direct = "\n".join(child for child in block if len(child) - len(child.lstrip()) == depth + 2)
+        if not re.search(r':name\(0x01010003\)="com\.indiagully\.app\.MainActivity"', direct):
+            continue
+        body = "\n".join(block)
+        return (not re.search(r':label\(0x01010001\)=', body)
+                and '"android.intent.action.MAIN"' in body
+                and '"android.intent.category.LAUNCHER"' in body)
+    return False
+
+
+def apk_label(badging, xmltree=""):
     package = re.search(r"^package: name='([^']+)'", badging, re.MULTILINE)
     label = re.search(r"^application-label:'([^']*)'$", badging, re.MULTILINE)
-    launcher = re.search(r"^launchable-activity: name='([^']+)' label='([^']*)'", badging, re.MULTILINE)
+    launcher = re.search(r"^launchable-activity:\s+name='([^']+)'\s+label='([^']*)'", badging, re.MULTILINE)
     if not package or package.group(1) != PACKAGE or not label or label.group(1) != APPLICATION_LABEL:
         raise ReviewError("Actual APK package/application label does not match India Gully.")
-    if not launcher or launcher.group(1) != PACKAGE + ".MainActivity" or launcher.group(2) != APPLICATION_LABEL:
+    if not launcher or launcher.group(1) != PACKAGE + ".MainActivity":
         raise ReviewError("Actual APK launcher label does not match India Gully.")
-    return {"application": label.group(1), "launcher": launcher.group(2)}
+    launcher_label = launcher.group(2)
+    # AAPT reports an empty launcher label when android:label is absent.
+    # Android then inherits the application label. Confirm absence in the
+    # compiled manifest rather than accepting an explicit empty/wrong override.
+    if not launcher_label and launcher_inherits_application_label(xmltree):
+        launcher_label = label.group(1)
+    if launcher_label != APPLICATION_LABEL:
+        raise ReviewError("Actual APK launcher label does not match India Gully.")
+    return {"application": label.group(1), "launcher": launcher_label}
 
 
-def inspect_apk_label(apk):
+def inspect_apk_label(apk, output=None):
     candidates = [Path(found) for name in ("aapt2", "aapt") if (found := shutil.which(name))]
     for name in ("ANDROID_SDK_ROOT", "ANDROID_HOME"):
         if os.environ.get(name):
@@ -141,7 +173,15 @@ def inspect_apk_label(apk):
     result = subprocess.run([str(tool), "dump", "badging", str(apk)], capture_output=True, text=True, timeout=40)
     if result.returncode:
         raise ReviewError("Android SDK could not inspect the actual APK application label.")
-    return apk_label(result.stdout)
+    tree_args = ([str(tool), "dump", "xmltree", str(apk), "--file", "AndroidManifest.xml"]
+                 if tool.name == "aapt2" else [str(tool), "dump", "xmltree", str(apk), "AndroidManifest.xml"])
+    tree = subprocess.run(tree_args, capture_output=True, text=True, timeout=40)
+    if tree.returncode:
+        raise ReviewError("Android SDK could not inspect the actual APK launcher manifest.")
+    if output:
+        (output / "apk-badging.txt").write_text(result.stdout)
+        (output / "apk-manifest-tree.txt").write_text(tree.stdout)
+    return apk_label(result.stdout, tree.stdout)
 
 
 def assert_app_foreground(activity_dump):
@@ -293,7 +333,7 @@ def capture(args):
         record["screenshots"].append(device.screenshot(name))
 
     try:
-        record["apkLabels"] = inspect_apk_label(apk)
+        record["apkLabels"] = inspect_apk_label(apk, args.output)
         record["checks"].append("Actual APK application and launcher labels are India Gully")
         device.adb("shell", "wm", "size", f"{WIDTH}x{HEIGHT}")
         device.adb("shell", "wm", "density", "420")
