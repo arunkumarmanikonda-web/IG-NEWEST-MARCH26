@@ -1,0 +1,70 @@
+name: Android native review screenshots
+
+# Reuses an existing main-branch APK. No rebuild, signing secret, or publication.
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Successful main Mobile app builds run containing the test APK
+        required: true
+        type: string
+      expected_commit:
+        description: Full 40-character source commit of that APK
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: android-native-review
+  cancel-in-progress: false
+
+jobs:
+  native-review:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check native review helpers
+        run: PYTHONDONTWRITEBYTECODE=1 python3 mobile/tests/android-native-review.test.py
+      - name: Verify APK source and artifact identity
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          EXPECTED_COMMIT: ${{ inputs.expected_commit }}
+        run: |
+          python3 mobile/qa/android-smoke.py verify-source \
+            --run-id "$SOURCE_RUN_ID" --expected-commit "$EXPECTED_COMMIT" \
+            --output mobile/qa-output/native-android
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ steps.source.outputs.artifact_id }}
+          path: ${{ runner.temp }}/india-gully-native-review-apk
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run_id }}
+          merge-multiple: true
+      - name: Enable emulator acceleration on this disposable runner
+        run: sudo chmod 666 /dev/kvm
+      # Pinned third-party runner for Google's official Android SDK emulator.
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: python3 mobile/qa/android-smoke.py capture --apk-directory "$RUNNER_TEMP/india-gully-native-review-apk" --output mobile/qa-output/native-android
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: india-gully-native-android-review-${{ inputs.expected_commit }}
+          path: mobile/qa-output/native-android/
+          if-no-files-found: error
+          retention-days: 14

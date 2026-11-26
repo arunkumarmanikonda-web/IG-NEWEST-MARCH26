@@ -1,0 +1,22 @@
+{
+  "feature_graphic": {
+    "file": "feature-graphic-1024x500.png",
+    "width": 1024,
+    "height": 500,
+    "opaque": true,
+    "mode": "RGB",
+    "bit_depth": 24,
+    "source": "feature-graphic.svg",
+    "sha256": "61e59ce44c3622ae26d95d2af6d077b877438dd93136c5976d2280381b4c705b"
+  },
+  "app_icon": {
+    "file": "app-icon-512.png",
+    "width": 512,
+    "height": 512,
+    "opaque": true,
+    "source": "public/icon-512.png",
+    "sha256": "2bb3bfd3bd99dd0efd95cde24047776d8f6a04e49314601774a8f8981a7c1603"
+  },
+  "branding_source": "public/brand/logo-white.svg",
+  "content": "Existing approved branding; vector typography; no fabricated UI or generated imagery."
+}
