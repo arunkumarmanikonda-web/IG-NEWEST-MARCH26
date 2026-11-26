@@ -202,6 +202,13 @@ def staff_login_heading(xml):
     return any(exact_label("Welcome back.")(node) for node in webview_nodes(xml))
 
 
+def careers_heading(xml):
+    # Android WebView exposes CSS text-transform in its accessibility text.
+    # Keep the full heading and embedded-app bounds checks; normalize case only.
+    return any(text_of(node).casefold() == "careers at india gully"
+               for node in webview_nodes(xml))
+
+
 def staff_login_fields(xml):
     nodes = webview_nodes(xml)
     inputs = [node for node in nodes if node.get("class") == "android.widget.EditText" and node.get("enabled") == "true"]
@@ -311,7 +318,7 @@ class Device:
         while time.monotonic() < deadline:
             assert_app_foreground(self.adb("shell", "dumpsys", "activity", "activities"))
             xml, _ = self.ui()
-            if any(exact_label("Careers at India Gully")(n) for n in webview_nodes(xml)):
+            if careers_heading(xml):
                 return
             time.sleep(1)
         raise ReviewError("Live Careers page did not render inside the native WebView.")
