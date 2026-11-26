@@ -1,6 +1,22 @@
 # India Gully store submission copy
 
-Prepared 19 November 2026. This is submission preparation, not evidence of an upload or store approval. Reconcile the final build and release checklist before copying these fields into either console.
+Prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The Play app record and listing are drafts, not evidence of a binary upload, store submission or approval. Reconcile the final build and release checklist before submitting.
+
+## Google Play registration inventory · 26 November 2026
+
+| Field | Observed console state |
+| --- | --- |
+| Organization | VIVACIOUS ENTERTAINMENT AND HOSPITALITY PRIVATE LIMITED, fully verified |
+| Developer account | India Gully; `5427201876355496625` |
+| D-U-N-S | `861292521` |
+| App record | India Gully; `4972470966544697358`, created as a draft |
+| Package | `com.indiagully.app`; availability checked and accepted |
+| Pricing, language and category | Free; English (United States), `en-US`; Business |
+| Contacts | Approved developer/support contacts saved; email and phone verification completed |
+| Store copy | Short and full descriptions saved as a draft |
+| Privacy policy | `https://indiagully.com/privacy` saved as a draft; full privacy/deletion review still required |
+| Release | No production AAB uploaded or release submitted; signing and native store assets remain pending |
+| Apple | Unchanged by this registration work; no Apple membership/app-record verification claimed |
 
 ## Listing fields
 
@@ -10,7 +26,7 @@ Prepared 19 November 2026. This is submission preparation, not evidence of an up
 | Apple subtitle | Properties, HORECA & insights |
 | Google short description | Explore properties, retail spaces, HORECA products and business insights. |
 | Primary category | Business |
-| Primary listing language | English (India), where available |
+| Primary listing language | Google Play: English (United States), en-US; Apple language selection pending |
 | Version | 1.0.0; use the final build's actual version |
 | Website | https://indiagully.com |
 | Support URL | https://indiagully.com/contact |
@@ -18,8 +34,8 @@ Prepared 19 November 2026. This is submission preparation, not evidence of an up
 | Deletion URL | https://indiagully.com/delete-account; release with the new account-deletion entry and return path |
 | Privacy URL | https://indiagully.com/privacy; publish the mobile/Gullu updates described in privacy-disclosures.md before submission |
 | Copyright | 2026 Vivacious Entertainment and Hospitality Private Limited |
-| Package / bundle ID | com.indiagully.app, provisional until ownership and availability are verified in the developer accounts |
-| Store seller / developer account | Verify the account's legal entity; do not substitute the brand for the registered seller |
+| Package / bundle ID | Android: com.indiagully.app accepted in the Play app record; iOS identifier remains provisional until checked in Apple's account |
+| Store seller / developer account | Google Play: VIVACIOUS ENTERTAINMENT AND HOSPITALITY PRIVATE LIMITED, developer name India Gully; Apple enrollment pending |
 | Distribution | Free download; no native in-app purchases or subscriptions in this release |
 
 ## Full description
@@ -75,12 +91,12 @@ The supported capture-size list can change. Check the active console against [Ap
 
 | Item | Status at preparation |
 | --- | --- |
-| Android signed production AAB | Not supplied by the existing CI; its APK uses a development signing key |
+| Android signed production AAB | Production workflow prepared; upload-key secrets and approved public certificate fingerprint must be provisioned before a signed AAB can be built. Existing review APK uses a development key |
 | iOS signed production IPA | Not supplied by the existing CI; its .app is an unsigned simulator build |
-| Play Console developer account, app record, verification and release access | Current connected Google account opens developer registration; another existing developer account, if any, has not been verified |
+| Play Console developer account, app record, verification and release access | Organization account fully verified and draft India Gully app created; account/app IDs above. No binary or release submitted |
 | Apple Developer membership, team, agreements, App Store Connect app record | App Store Connect requires sign-in; membership, team and app record are not yet verified |
 | Expo account/project and ownership | Not verified; no project ID is configured |
-| Android upload signing credentials and Play submission service account | Not verified |
+| Android upload signing credentials and Play submission service account | Upload key not provisioned in the production workflow. Manual Play upload does not require a service account; no submission service account has been configured |
 | Apple distribution provisioning/signing and upload credentials | Not verified |
 | Actual device acceptance | Record the tested build, device/OS, result and date after testing |
 | Account deletion and privacy declarations | See privacy-disclosures.md; resolve before production submission |

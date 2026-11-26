@@ -1,7 +1,8 @@
 import type { ExpoConfig } from 'expo/config';
 
-// These identifiers are provisional. Confirm ownership before the first store build;
-// changing them after publication creates a different app in both stores.
+// Android package accepted in India Gully's Play Console app on 26 November 2026.
+// The iOS identifier still needs Apple account confirmation before its first store build.
+// Changing a published identifier creates a different app.
 const config: ExpoConfig = {
   name: 'India Gully',
   slug: 'india-gully',

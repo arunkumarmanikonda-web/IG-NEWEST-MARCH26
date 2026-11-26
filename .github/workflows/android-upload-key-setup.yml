@@ -1,0 +1,87 @@
+name: Android upload key setup
+
+# One-time key setup only. Does not build, upload to Play, or publish an app.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Create the first key, or repair the public pin from the existing atomic bundle
+        required: true
+        default: create
+        type: choice
+        options:
+          - create
+          - repair
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-play-release
+  cancel-in-progress: false
+
+jobs:
+  setup:
+    if: github.ref == 'refs/heads/main' && github.actor == 'arunkumarmanikonda-web'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: android-production
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Verify provisioning guards
+        run: |
+          PYTHONDONTWRITEBYTECODE=1 python3 tests/provision-android-upload-key.test.py
+          PYTHONDONTWRITEBYTECODE=1 python3 tests/github-key-setup-auth.test.py
+      - name: Install the pinned official GitHub CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          cli_dir="$RUNNER_TEMP/india-gully-gh"
+          mkdir -m 700 "$cli_dir"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            https://github.com/cli/cli/releases/download/v2.106.0/gh_2.106.0_linux_amd64.tar.gz \
+            --output "$cli_dir/gh.tar.gz"
+          printf '%s  %s\n' 'a476449fa9625413c54a3734eded62e9e480e49f421ff08e7f3b3879c059a033' "$cli_dir/gh.tar.gz" | sha256sum --check --status
+          tar -xzf "$cli_dir/gh.tar.gz" -C "$cli_dir"
+          echo "$cli_dir/gh_2.106.0_linux_amd64/bin" >> "$GITHUB_PATH"
+          auth_dir="/dev/shm/india-gully-key-setup-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir -m 700 "$auth_dir"
+          echo "GH_CONFIG_DIR=$auth_dir" >> "$GITHUB_ENV"
+      - name: Authorize the owner through the official GitHub device flow
+        run: python3 scripts/github-key-setup-auth.py login
+      - name: Create the first atomic signing bundle
+        if: inputs.mode == 'create'
+        run: python3 scripts/provision-android-upload-key.py --create
+      - name: Repair the public pin using the existing key
+        if: inputs.mode == 'repair'
+        env:
+          ANDROID_UPLOAD_SIGNING_BUNDLE: ${{ secrets.ANDROID_UPLOAD_SIGNING_BUNDLE }}
+        run: python3 scripts/provision-android-upload-key.py --repair
+      - name: Revoke this setup session and remove temporary credentials
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          result=0
+          if [[ -n "${GH_CONFIG_DIR:-}" && -d "$GH_CONFIG_DIR" ]]; then
+            python3 scripts/github-key-setup-auth.py logout
+            result=$?
+          fi
+          # No secrets or private recovery directory are uploaded as artifacts.
+          # A successful atomic bundle is durable in the protected environment;
+          # the repair mode can restore its pin without generating another key.
+          find /tmp -maxdepth 1 -type d -name 'india-gully-upload-key-*' -user "$(id -u)" -exec rm -rf -- {} +
+          if [[ "${GH_CONFIG_DIR:-}" == /dev/shm/india-gully-key-setup-* ]]; then
+            rm -rf -- "$GH_CONFIG_DIR"
+          fi
+          rm -rf -- "$RUNNER_TEMP/india-gully-gh"
+          exit "$result"

@@ -63,6 +63,8 @@ cd android
 
 The repository CI deliberately uses the generated development key to sign its standalone release-mode APK, labels the artifact **debug-signed test**, and bundles JavaScript so it can run without Metro. This APK is installable for review, but is not signed for Google Play. Never upload the template debug key as a store release. A debug APK from `assembleDebug` ordinarily relies on Metro and is not the standalone review build.
 
+For Google Play, the separate **Android Play release bundle** workflow builds and verifies an upload-key-signed AAB directly with Gradle. It requires the owner's upload-key credentials in the `android-production` GitHub environment, a pinned public certificate fingerprint, and a reviewed `main` commit. It does not need an Expo account and never uploads or publishes the app automatically. See [Android release setup](store/android-release.md) for provisioning, outputs and release checks.
+
 iOS requires macOS with Xcode 26.4+ and the iOS simulator SDK. On that machine:
 
 ```sh
