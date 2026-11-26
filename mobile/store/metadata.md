@@ -4,6 +4,8 @@ Current Android outcome: **1.0.1 (3) is available to the owner through internal 
 
 Released update 1.0.1 (3): Staff access now stays inside the app with a fresh session-local login entry. Google Play published the internal update at 02:06 IST on 27 November 2026. Google may display the package-based temporary name before its first review; the configured display name and the actual APK's effective native launcher label are India Gully.
 
+Source update 1.0.2 (4): a persistent header **Sign in** button plus Home and More entries open client sign-in and registration inside the app. Staff workspace remains separate at the bottom of More. Careers opens the live public vacancy/application service inside both Android and iOS. The description below is prepared for that version; do not claim distribution until the signed release is verified.
+
 Historical preparation inventory: prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The following registration-stage entries predate the internal release recorded above.
 
 ## Google Play registration inventory · 26 November 2026
@@ -54,7 +56,9 @@ Build your own shortlist. Save public briefs on your device, revisit saved text 
 
 Read Perspectives and discover India Gully's practices across real estate, transactions, debt and special situations, hospitality, retail leasing, entertainment and HORECA procurement. Published India Gully Residences launch information appears when it is available.
 
-Meet Gullu, your India Gully buddy, through the secure website. Client accounts and authorised data rooms also open in the secure browser, with the website's sign-in and access controls.
+Meet Gullu, your India Gully buddy, through the secure website. Use Sign in at the top of the app to register or access your client dashboard and authorised data rooms within India Gully, with the website's sign-in and access controls.
+
+Explore Careers from Home or More, browse current roles and apply through our secure recruitment form inside the app.
 
 India Gully is a brand of Vivacious Entertainment and Hospitality Private Limited. Property and product availability may change. An enquiry does not reserve a property or confirm an order.
 
@@ -62,7 +66,7 @@ Authorised team members can open the separate Staff sign-in at the bottom of Mor
 
 ## Apple keywords
 
-property,real estate,retail,leasing,hospitality,HORECA,procurement,advisory,insights
+property,real estate,retail,leasing,hospitality,HORECA,procurement,advisory,insights,careers
 
 Do not add financial-return claims, hotel booking claims, native chat/data-room claims, unimplemented push notifications, or unsupported “best” rankings.
 
@@ -70,7 +74,7 @@ Do not add financial-return claims, hotel booking claims, native chat/data-room 
 
 This is a native catalogue and discovery app. Home, property/retail filters, HORECA collection and SKU search, native detail sheets, on-device shortlists, offline saved text and native sharing work without registration. Data is read from the published public catalogue at https://indiagully.com/api/mobile/catalogue.
 
-Gullu, contextual enquiries and client accounts open India Gully's HTTPS website in the system browser. Staff access uses the first-party site within a restricted embedded WebView. Each fresh staff entry completes a session-local reset before the normal login form; existing verification and permissions still apply. External connections and exports use an explicit browser choice. Private records are not copied into the native shortlist/cache; WebView authentication cookies and web storage are separate. Installing the app grants no staff permissions.
+Gullu and contextual enquiries open India Gully's HTTPS website in the system browser. Client sign-in, registration, Careers and staff access use the first-party site within a restricted embedded WebView. Each fresh client/staff entry completes a session-local reset before the normal login form; existing verification and permissions still apply. Careers applications require explicit recruitment consent and are not copied into the public native cache. External connections and exports use an explicit browser choice. Private records are not copied into the native shortlist/cache; WebView authentication cookies and web storage are separate. Installing the app grants no staff permissions.
 
 Suggested public review path: Home → Explore → open a listing → Save → Saved → Share; HORECA → choose a collection → search a SKU or brand; More → Perspectives. Pull to refresh retrieves the latest catalogue. Test offline Saved only after saving a published brief online.
 
@@ -78,7 +82,7 @@ Provide a dedicated reviewer account and a synthetic demonstration room if the s
 
 ## Screenshots and artwork
 
-Capture the actual final app on simulators/emulators. Do not fabricate UI or expose client/staff data. Use published content whose image rights are cleared. Recommended sequence: native Home, Explore filters, property detail, HORECA collection, SKU detail, Saved, Perspectives, and More and the separate staff sign-in footer.
+Capture the actual final app on simulators/emulators. Do not fabricate UI or expose client/staff data. Use published content whose image rights are cleared. Recommended sequence: native Home, Explore filters, property detail, HORECA collection, SKU detail, Saved, Perspectives, the prominent client Sign in entry, Careers, and More with the separate staff sign-in footer.
 
 | Asset | Production specification |
 | --- | --- |

@@ -110,6 +110,7 @@ export default async function Layout({ children }) {
               <Link href="/insights">Perspectives</Link>
               <Link href="/about">About India Gully</Link>
               <Link href="/leadership">Our leadership</Link>
+              <Link href="/careers">Careers</Link>
               <Link href="/our-work">Selected work</Link>
               <Link href="/nda">Confidentiality & NDA</Link>
               <Link href="/contact">Contact</Link>

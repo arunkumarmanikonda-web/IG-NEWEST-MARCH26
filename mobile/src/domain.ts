@@ -3,7 +3,7 @@ export const FEED_URL = `${ORIGIN}/api/mobile/catalogue`;
 // Staff authentication is a fixed app action. Catalogue links and deep links
 // cannot supply administrative URLs or bypass the website's role/verification checks.
 export const STAFF_SIGN_IN_URL = `${ORIGIN}/login`;
-const PUBLIC_PATHS = /^\/(?:$|opportunities(?:\/|$)|retail-leasing(?:\/|$)|horeca(?:\/|$)|insights(?:\/|$)|practices(?:\/|$)|residences(?:\/|$)|leadership(?:\/|$)|about(?:\/|$)|contact(?:\/|$)|privacy(?:\/|$)|account(?:\/|$)|login(?:\/|$)|gullu(?:\/|$))/;
+const PUBLIC_PATHS = /^\/(?:$|opportunities(?:\/|$)|retail-leasing(?:\/|$)|horeca(?:\/|$)|insights(?:\/|$)|practices(?:\/|$)|residences(?:\/|$)|leadership(?:\/|$)|about(?:\/|$)|contact(?:\/|$)|privacy(?:\/|$)|account(?:\/|$)|login(?:\/|$)|careers(?:\/|$)|gullu(?:\/|$))/;
 
 /** Every outbound link is HTTPS on our exact first-party origin. */
 export function canonicalUrl(value: unknown, image = false): string | null {

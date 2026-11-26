@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function SignInForm({ returnTo = null }) {
+export default function SignInForm({ returnTo = null, audience }) {
   const [email, setEmail] = useState("");
   const [mode, setMode] = useState("passcode");
   const [codeSent, setCodeSent] = useState(false);
@@ -59,8 +59,9 @@ export default function SignInForm({ returnTo = null }) {
       <div className="eyebrow">INDIA GULLY · PRIVATE ACCESS</div>
       <h1>Welcome back.</h1>
       <p>
-        Choose an email code or use your passcode. Staff can verify with an
-        authenticator or an email code before entering their workspace.
+        {audience === 'client'
+          ? 'Sign in with an email code or your passcode to reach your account and authorised data rooms. New here? Register below.'
+          : 'Choose an email code or use your passcode. Staff can verify with an authenticator or an email code before entering their workspace.'}
       </p>
       <div className="signin-methods" role="group" aria-label="Sign-in method">
         <button

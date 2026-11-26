@@ -188,7 +188,7 @@ def assert_app_foreground(activity_dump):
     activities = re.findall(r"(?:mResumedActivity|topResumedActivity|ResumedActivity)\s*[:=][^\n]*?\s([\w.]+)/(\S+)", activity_dump)
     if not activities or any(package != PACKAGE or component not in (".MainActivity", PACKAGE + ".MainActivity")
                              for package, component in activities):
-        raise ReviewError("Staff sign-in left the India Gully native activity or foreground could not be verified.")
+        raise ReviewError("The embedded page left the India Gully native activity or foreground could not be verified.")
 
 
 def webview_nodes(xml):
@@ -274,9 +274,9 @@ class Device:
             raise ReviewError("Native MainActivity did not launch.")
         self.wait(exact_label("Home"))
 
-    def staff_login(self):
-        self.tap(exact_label("Staff workspace sign in"))
-        self.wait(exact_label("Close staff workspace"))
+    def sign_in(self, entry_label, close_label):
+        self.tap(exact_label(entry_label))
+        self.wait(exact_label(close_label))
         # First prove the live login heading is inside this app's WebView. A
         # native loading label or a Chrome Custom Tab is not sufficient.
         deadline = time.monotonic() + 60
@@ -287,7 +287,7 @@ class Device:
                 break
             time.sleep(1)
         else:
-            raise ReviewError("Live staff login did not render inside the native WebView.")
+            raise ReviewError("Live login did not render inside the native WebView.")
         # The heading and complete form may span more than one viewport. Only
         # scroll; never type credentials, submit a form or request an OTP.
         for _ in range(6):
@@ -296,7 +296,25 @@ class Device:
             if staff_login_fields(xml):
                 return
             self.adb("shell", "input", "swipe", WIDTH // 2, 1450, WIDTH // 2, 950, 350)
-        raise ReviewError("Live staff email/passcode fields were not visible in the native WebView.")
+        raise ReviewError("Live email/passcode fields were not visible in the native WebView.")
+
+    def staff_login(self):
+        self.sign_in("Staff workspace sign in", "Close staff workspace")
+
+    def client_login(self):
+        self.sign_in("Sign in to your client account", "Close client account")
+
+    def careers(self):
+        self.tap(exact_label("Careers"))
+        self.wait(exact_label("Close careers"))
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            assert_app_foreground(self.adb("shell", "dumpsys", "activity", "activities"))
+            xml, _ = self.ui()
+            if any(exact_label("Careers at India Gully")(n) for n in webview_nodes(xml)):
+                return
+            time.sleep(1)
+        raise ReviewError("Live Careers page did not render inside the native WebView.")
 
     def screenshot(self, name):
         # Let the native modal transition and outstanding image paint settle.
@@ -356,7 +374,18 @@ def capture(args):
         device.wait(explore_card)
         record["checks"].append("Live public catalogue rendered in native Android UI")
         device.tab("Home")
+        device.wait(exact_label("Sign in to your client account"))
         frame("01-home")
+        device.client_login()
+        frame("13-client-in-app-login")
+        device.scroll_to(exact_label("Register here"))
+        xml, _ = device.ui()
+        if not any(exact_label("Register here")(n) for n in webview_nodes(xml)):
+            raise ReviewError("Client registration link is not inside the app login page.")
+        device.tap(exact_label("Close client account"))
+        device.client_login()
+        device.tap(exact_label("Close client account"))
+        record["checks"].append("Header client sign-in rendered live email/passcode fields and registration inside the native app and remained fresh after reopening; no credentials submitted")
         device.tab("Explore")
         frame("02-explore")
         device.scroll_to(explore_card)
@@ -387,8 +416,13 @@ def capture(args):
         record["checks"].append("HORECA collection opened actual native product cards and product detail")
         device.tab("More")
         frame("08-more")
-        device.scroll_to(exact_label("Client workspace, opens secure website"))
+        device.scroll_to(exact_label("Client sign in"))
         frame("09-client-entry")
+        device.scroll_to(exact_label("Careers"))
+        device.careers()
+        frame("14-careers-in-app")
+        device.tap(exact_label("Close careers"))
+        record["checks"].append("Careers opened the current public website inside the native app without sign-in or application submission")
         device.scroll_to(exact_label("Staff workspace sign in"))
         device.wait(exact_label("FOR THE INDIA GULLY TEAM"))
         frame("10-separate-staff-entry")

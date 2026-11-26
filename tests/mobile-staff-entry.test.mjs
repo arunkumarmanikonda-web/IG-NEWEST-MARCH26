@@ -1,9 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createMobileStaffEntry } from '../lib/mobile-staff-entry.mjs';
+import { createMobileStaffEntry, mobileEntryDetails } from '../lib/mobile-staff-entry.mjs';
 import { finishSignOut } from '../lib/sign-in.mjs';
+import { portalReturn } from '../lib/portal-return.mjs';
 
 const ok = () => ({ ok: true, redirected: false, json: async () => ({ ok: true }) });
+
+test('client entry resets its session before the fixed account sign-in route', async () => {
+  const calls = [];
+  const entry = createMobileStaffEntry(async (url, options) => {
+    calls.push(JSON.parse(options.body));
+    return { ...ok(), json: async () => ({ ok: true, next: '/admin' }) };
+  }, { audience: 'client' });
+  assert.equal(await entry.start(), '/login?next=%2Faccount&audience=client');
+  assert.deepEqual(calls, [{ action: 'signout_local' }]);
+  assert.equal(portalReturn('/account'), '/account');
+  for (const destination of ['/account?next=https://evil.example', '//evil.example/account', '/admin', '/account/../admin']) {
+    assert.equal(portalReturn(destination), null);
+  }
+});
+
+test('client entry fails closed and arbitrary audience values cannot select redirects', async () => {
+  await assert.rejects(createMobileStaffEntry(async () => ({ ...ok(), ok: false }), { audience: 'client' }).start(), /account has not been opened/);
+  for (const audience of ['https://evil.example', '/admin', ['client'], undefined]) {
+    assert.equal(mobileEntryDetails(audience).destination, '/login');
+  }
+});
 
 test('mobile entry resets only its own session and cannot choose a role or redirect', async () => {
   const calls = [];
