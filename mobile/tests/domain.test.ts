@@ -30,6 +30,8 @@ test('malformed or unknown schema fails rather than displaying incorrect data', 
 test('only exact HTTPS first-party public and account destinations are accepted', () => {
   assert.equal(canonicalUrl('/opportunities/sohna'), 'https://indiagully.com/opportunities/sohna');
   assert.equal(canonicalUrl('/account'), 'https://indiagully.com/account');
+  assert.equal(canonicalUrl('/careers'), 'https://indiagully.com/careers');
+  assert.equal(canonicalUrl('/careers/advisory-associate'), 'https://indiagully.com/careers/advisory-associate');
   for (const input of ['https://evil.example/one', '//evil.example/a', 'http://indiagully.com/opportunities/a', 'https://indiagully.com.evil.example/a', 'https://user:pass@indiagully.com/opportunities/a', 'javascript:alert(1)', '/admin', '/api/admin/records', '/account?next=https://evil.example', '/opportunities/%2e%2e/admin', '/opportunities\\..\\admin']) assert.equal(canonicalUrl(input), null, input);
 });
 test('images use a separate narrow first-party media allowlist', () => {
@@ -43,6 +45,7 @@ test('custom deep links cannot escape the first-party route allowlist', () => {
   assert.equal(deepLinkUrl('indiagully://retail-leasing/brand/cafe'), 'https://indiagully.com/retail-leasing/brand/cafe');
   assert.equal(deepLinkUrl('indiagully://evil.example/path'), null);
   assert.equal(deepLinkUrl('indiagully://admin'), null);
+  assert.equal(deepLinkUrl('indiagully://careers'), 'https://indiagully.com/careers');
   assert.equal(deepLinkUrl('indiagully://user@opportunities/a'), null);
 });
 test('staff sign-in uses the fixed verified website flow without admitting admin catalogue or deep links', () => {

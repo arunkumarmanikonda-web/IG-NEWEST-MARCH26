@@ -34,7 +34,16 @@ async function frame(page,testInfo,name){
 }
 test('actual app journeys and review frames',async({page},testInfo)=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await ready(page);await frame(page,testInfo,'01-home');
+ await ready(page);
+ await expect(page.getByRole('button',{name:'Sign in to your client account',exact:true})).toBeVisible();
+ await frame(page,testInfo,'01-home');
+ await page.getByRole('button',{name:'Sign in to your client account',exact:true}).click();
+ await expect(page.getByText('India Gully · Client account',{exact:true})).toBeVisible();
+ await frame(page,testInfo,'11-client-sign-in');
+ await page.getByRole('button',{name:'Close client account',exact:true}).click();
+ await page.getByRole('button',{name:'Client sign in or register',exact:true}).click();
+ await expect(page.getByText('India Gully · Client account',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Close client account',exact:true}).click();
  await page.getByRole('tab',{name:'Explore',exact:true}).click();
  await frame(page,testInfo,'02-opportunities');
  const first=feed.listings[0];
@@ -66,25 +75,39 @@ test('actual app journeys and review frames',async({page},testInfo)=>{
  await page.getByRole('button',{name:'Close details'}).click();
  await page.getByRole('tab',{name:'More',exact:true}).click();
  await frame(page,testInfo,'08-gullu-and-more');
- const client=page.getByRole('button',{name:'Client workspace, opens secure website',exact:true});
+ const client=page.getByRole('button',{name:'Client sign in',exact:true});
  await client.scrollIntoViewIfNeeded();await frame(page,testInfo,'09-client-workspace-entry');
  const staff=page.getByRole('button',{name:'Staff workspace sign in',exact:true});
- const separated=await page.evaluate(()=>{const c=document.querySelector('[aria-label="Client workspace, opens secure website"]'),s=document.querySelector('[aria-label="Staff workspace sign in"]');return c&&s&&(s.getBoundingClientRect().top-c.getBoundingClientRect().bottom)>300;});
+ const separated=await page.evaluate(()=>{const c=document.querySelector('[aria-label="Client sign in"]'),s=document.querySelector('[aria-label="Staff workspace sign in"]');return c&&s&&(s.getBoundingClientRect().top-c.getBoundingClientRect().bottom)>300;});
  expect(separated).toBe(true);
  await staff.scrollIntoViewIfNeeded();await frame(page,testInfo,'10-staff-sign-in-separate');
  await staff.click();
  await expect(page.getByText('India Gully · Staff workspace',{exact:true})).toBeVisible();
  const previewStaff=page.getByRole('button',{name:'Open staff sign-in',exact:true});
- for(const [button,path] of [[previewStaff,'/login'],[client,'/account']]){
+ async function previewDestination(button,path){
   const requested=page.context().waitForEvent('request',r=>r.url()===`https://indiagully.com${path}`);
   const popupPromise=page.waitForEvent('popup');await button.click();const popup=await popupPromise;
   expect((await requested).url()).toBe(`https://indiagully.com${path}`);await popup.close();
-  if(path==='/login')await page.getByRole('button',{name:'Close staff workspace',exact:true}).click();
  }
+ await previewDestination(previewStaff,'/login/mobile');
+ await page.getByRole('button',{name:'Close staff workspace',exact:true}).click();
+ await client.scrollIntoViewIfNeeded();await client.click();
+ await expect(page.getByText('India Gully · Client account',{exact:true})).toBeVisible();
+ await previewDestination(page.getByRole('button',{name:'Open client sign-in',exact:true}),'/login/mobile?audience=client');
+ await page.getByRole('button',{name:'Close client account',exact:true}).click();
+ await page.getByRole('button',{name:'Careers',exact:true}).click();
+ await expect(page.getByText('India Gully · Careers',{exact:true})).toBeVisible();
+ await frame(page,testInfo,'12-careers');
+ await previewDestination(page.getByRole('button',{name:'Open careers',exact:true}),'/careers');
+ await page.getByRole('button',{name:'Close careers',exact:true}).click();
+ await page.getByRole('tab',{name:'Home',exact:true}).click();
+ await page.getByRole('button',{name:'Explore careers',exact:true}).click();
+ await expect(page.getByText('India Gully · Careers',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Close careers',exact:true}).click();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  expect(errors).toEqual([]);
  const dir=resolve('mobile/qa-output/frames',testInfo.project.name);
- await writeFile(resolve(dir,'manifest.json'),JSON.stringify({kind:'Actual app web preview, not a native store screenshot',catalogue_date:feed.generated_at,viewport:testInfo.project.use.viewport,commit:process.env.GITHUB_SHA||'local',frames:10},null,2));
+ await writeFile(resolve(dir,'manifest.json'),JSON.stringify({kind:'Actual app web preview, not a native store screenshot',catalogue_date:feed.generated_at,viewport:testInfo.project.use.viewport,commit:process.env.GITHUB_SHA||'local',frames:12},null,2));
 });
 test('HORECA pagination can reach beyond the previous 100-product cap',async({page})=>{
  const products=Array.from({length:125},(_,i)=>({...feed.products[0],id:`qa-${i}`,title:`Synthetic pagination product ${i}`,sku:`QA${i}`,category:'lighting'}));
@@ -100,4 +123,22 @@ test('a shortlist read error does not overwrite stored data during refresh',asyn
  await ready(page);await page.getByRole('tab',{name:'Saved',exact:true}).click();
  await expect(page.getByText('Your shortlist could not be loaded',{exact:true})).toBeVisible();
  expect(await page.evaluate(()=>window.__readStored())).toBe('preserve-this-value');
+});
+
+
+test('client sign-in remains discoverable on a narrow phone',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='phone-web-preview','Narrow-phone regression runs once.');
+ await page.setViewportSize({width:320,height:740});
+ await ready(page);
+ const signIn=page.getByRole('button',{name:'Sign in to your client account',exact:true});
+ await expect(signIn).toBeVisible();
+ const bounds=await signIn.boundingBox();
+ expect(bounds).not.toBeNull();
+ expect(bounds.width).toBeGreaterThanOrEqual(44);
+ expect(bounds.height).toBeGreaterThanOrEqual(44);
+ expect(bounds.x).toBeGreaterThanOrEqual(0);
+ expect(bounds.x+bounds.width).toBeLessThanOrEqual(320);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ await signIn.click();
+ await expect(page.getByRole('button',{name:'Close client account',exact:true})).toBeVisible();
 });

@@ -1,6 +1,16 @@
 import { ORIGIN } from './domain.ts';
 
 export const STAFF_APP_ENTRY_URL = `${ORIGIN}/login/mobile`;
+export const CLIENT_APP_ENTRY_URL = `${ORIGIN}/login/mobile?audience=client`;
+export const CAREERS_APP_URL = `${ORIGIN}/careers`;
+export type WebsiteMode = 'staff' | 'client' | 'careers';
+
+// Entry URLs are built into the app, never supplied by catalogue content.
+export function websiteEntry(mode: WebsiteMode) {
+  if (mode === 'client') return { url: CLIENT_APP_ENTRY_URL, title: 'Client account', label: 'client account', caption: 'Client access', previewAction: 'Open client sign-in' };
+  if (mode === 'careers') return { url: CAREERS_APP_URL, title: 'Careers', label: 'careers', caption: 'Careers at India Gully', previewAction: 'Open careers' };
+  return { url: STAFF_APP_ENTRY_URL, title: 'Staff workspace', label: 'staff workspace', caption: 'Staff access', previewAction: 'Open staff sign-in' };
+}
 export type WorkspaceTarget =
   | { kind: 'internal'; url: string }
   | { kind: 'external'; url: string; host: string }
@@ -24,10 +34,13 @@ export function workspaceTarget(value: string): WorkspaceTarget {
   } catch { return { kind: 'blocked' }; }
 }
 
-export function workspaceBrowserPage(value: string): string {
+export function workspaceBrowserPage(value: string, mode: WebsiteMode = 'staff'): string {
+  const fallback = `${ORIGIN}/${mode === 'staff' ? 'admin' : mode === 'client' ? 'account' : 'careers'}`;
   const target = workspaceTarget(value);
-  if (target.kind !== 'internal') return `${ORIGIN}/admin`;
+  if (target.kind !== 'internal') return fallback;
   const url = new URL(target.url);
   // Do not pass private API requests or auth callbacks to a different session.
-  return /^\/(admin|account)(\/|$)/.test(url.pathname) ? url.href : `${ORIGIN}/admin`;
+  const allowed = mode === 'staff' ? /^\/(admin|account)(\/|$)/ : mode === 'client' ? /^\/account(\/|$)/ : /^\/careers(\/|$)/;
+  if ([...url.searchParams.keys()].some(key => /token|code|secret|callback|state|redirect|return|next/i.test(key))) return fallback;
+  return allowed.test(url.pathname) ? url.href : fallback;
 }

@@ -1,0 +1,68 @@
+begin;
+do $$
+declare own_jwt text; buyer_jwt text; owner_id uuid; buyer_id uuid; p jsonb; saved jsonb; first_id uuid; second_id uuid; application jsonb; application_id uuid; settings jsonb; blocked boolean; result jsonb; secret text=repeat('c',64); i int;
+begin
+ select u.id,jsonb_build_object('sub',u.id,'session_id',s.id,'role','authenticated','aal','aal2')::text into owner_id,own_jwt from auth.users u join auth.sessions s on s.user_id=u.id where u.email='owner@example.invalid';
+ select u.id,jsonb_build_object('sub',u.id,'session_id',s.id,'role','authenticated','aal','aal2')::text into buyer_id,buyer_jwt from auth.users u join auth.sessions s on s.user_id=u.id where u.email='buyer@example.invalid';
+ update ig_private.ingest_config set secret_hash=encode(extensions.digest(secret,'sha256'),'hex') where id=true;
+ assert not has_table_privilege('anon','ig_private.career_applications','SELECT');
+ assert not has_table_privilege('authenticated','ig_private.career_applications','SELECT');
+ assert not has_table_privilege('authenticated','ig_private.career_resumes','SELECT');
+ assert not has_function_privilege('anon','public.ig_careers_admin(jsonb)','EXECUTE');
+ assert (select relrowsecurity from pg_class where oid='ig_private.career_resumes'::regclass);
+ perform set_config('request.jwt.claims',own_jwt,true);
+ p=jsonb_build_object('slug','careers-fixture-role','title','Synthetic Careers Role','department','Hospitality','location','New Delhi','work_mode','onsite','employment_type','full-time','summary','A synthetic role for an isolated verification.','description','A synthetic role description with enough detail for this verification.','status','draft');
+ saved=public.ig_careers_admin(jsonb_build_object('action','save_job','job',p));first_id=(saved->'job'->>'id')::uuid;
+ assert not exists(select 1 from jsonb_array_elements(public.ig_careers_public()->'jobs') x where x->>'id'=first_id::text),'Draft leaked publicly';
+ p=saved->'job'||'{"status":"published"}'::jsonb;
+ saved=public.ig_careers_admin(jsonb_build_object('action','save_job','job',p));
+ assert exists(select 1 from jsonb_array_elements(public.ig_careers_public()->'jobs') x where x->>'id'=first_id::text),'Published role missing';
+ blocked=false;begin perform public.ig_careers_admin(jsonb_build_object('action','save_job','job',p));exception when serialization_failure then blocked=true;end;assert blocked,'Stale role update accepted';
+ application=jsonb_build_object('request_id',gen_random_uuid(),'job_id',first_id,'name','Synthetic Applicant','email','applicant@example.invalid','message','A synthetic introduction for the recruitment verification.','portfolio_url','https://example.com/profile','privacy',true,'rate_key',repeat('1',64));
+ perform set_config('request.jwt.claims','{}',true);
+ blocked=false;begin perform public.ig_careers_apply('wrong',application);exception when insufficient_privilege then blocked=true;end;assert blocked,'Ingest secret bypass';
+ result=public.ig_careers_apply(secret,application);application_id=(result->>'id')::uuid;
+ assert public.ig_careers_apply(secret,application)->>'id'=application_id::text,'Retry duplicated an application';
+ assert (select count(*) from ig_private.career_applications where request_id=(application->>'request_id')::uuid)=1;
+ blocked=false;begin perform public.ig_careers_apply(secret,application||'{"name":"Changed Applicant"}'::jsonb);exception when unique_violation then blocked=true;end;assert blocked,'Reference reused for different payload';
+ assert public.ig_careers_public()::text not like '%applicant@example.invalid%' and not(public.ig_careers_public() ? 'applications'),'Applicant data leaked publicly';
+ perform set_config('request.jwt.claims',buyer_jwt,true);
+ blocked=false;begin perform public.ig_careers_admin('{"action":"status"}');exception when insufficient_privilege then blocked=true;end;assert blocked,'Client read recruitment records';
+ update public.ig_profiles set roles=array['sales'],policy_version=ig_private.current_policy() where id=buyer_id;
+ insert into public.ig_consents(user_id,purpose,granted,version,policy_hash) select buyer_id,'registration',true,version,sha256 from public.ig_policy_releases where current;
+ blocked=false;begin perform public.ig_careers_admin('{"action":"status"}');exception when insufficient_privilege then blocked=true;end;assert blocked,'Ordinary staff read recruitment records';
+ perform set_config('request.jwt.claims',own_jwt,true);
+ result=public.ig_careers_admin('{"action":"status"}');
+ assert exists(select 1 from jsonb_array_elements(result->'applications') x where x->>'id'=application_id::text and x->>'name'='Synthetic Applicant');
+ assert not exists(select 1 from jsonb_array_elements(result->'applications') x where x ? 'payload_hash' or x ? 'request_id' or x ? 'resume_sha256');
+ result=public.ig_careers_admin(jsonb_build_object('action','update_application','id',application_id,'version',1,'status','reviewing','notes','Synthetic internal review note'));
+ assert result->'application'->>'status'='reviewing';
+ blocked=false;begin perform public.ig_careers_admin(jsonb_build_object('action','update_application','id',application_id,'version',1,'status','declined','notes','Stale note'));exception when serialization_failure then blocked=true;end;assert blocked,'Stale candidate update accepted';
+ -- Closing dates, explicit closed/archived state and the page switch all stop ingestion.
+ foreach p in array array[saved->'job'||jsonb_build_object('closes_at',now()-interval '1 hour'),saved->'job'||'{"status":"closed"}'::jsonb,saved->'job'||'{"status":"archived"}'::jsonb] loop
+  p=p||jsonb_build_object('version',(select version from ig_private.career_jobs where id=first_id));
+  perform public.ig_careers_admin(jsonb_build_object('action','save_job','job',p));
+  assert not exists(select 1 from jsonb_array_elements(public.ig_careers_public()->'jobs') x where x->>'id'=first_id::text);
+  blocked=false;begin perform public.ig_careers_apply(secret,application||jsonb_build_object('request_id',gen_random_uuid()));exception when no_data_found then blocked=true;end;assert blocked,'Closed/expired role accepted an application';
+ end loop;
+ p=saved->'job'||jsonb_build_object('version',(select version from ig_private.career_jobs where id=first_id));
+ saved=public.ig_careers_admin(jsonb_build_object('action','save_job','job',p));
+ settings=public.ig_careers_admin('{"action":"status"}')->'settings';
+ perform public.ig_careers_admin(jsonb_build_object('action','save_settings','settings',settings||'{"enabled":false}'));
+ assert public.ig_careers_public()->'jobs'='[]'::jsonb;
+ blocked=false;begin perform public.ig_careers_apply(secret,application||jsonb_build_object('request_id',gen_random_uuid()));exception when no_data_found then blocked=true;end;assert blocked,'Disabled careers accepted an application';
+ settings=public.ig_careers_admin('{"action":"status"}')->'settings';
+ perform public.ig_careers_admin(jsonb_build_object('action','save_settings','settings',settings||'{"enabled":true}'));
+ -- Private CV returned only through an audited administrator call.
+ application=application||jsonb_build_object('request_id',gen_random_uuid(),'portfolio_url','','resume',jsonb_build_object('name','Synthetic CV.pdf','type','application/pdf','base64',encode(convert_to('%PDF-1.7 Synthetic %%EOF','UTF8'),'base64'),'bytes',24,'sha256',encode(extensions.digest(convert_to('%PDF-1.7 Synthetic %%EOF','UTF8'),'sha256'),'hex')));
+ result=public.ig_careers_apply(secret,application);second_id=(result->>'id')::uuid;
+ assert public.ig_careers_admin(jsonb_build_object('action','resume','id',second_id))->>'name'='Synthetic CV.pdf';
+ assert exists(select 1 from public.ig_audit where action='careers.resume_downloaded' and entity_id=second_id::text);
+ perform set_config('request.jwt.claims',buyer_jwt,true);
+ blocked=false;begin perform public.ig_careers_admin(jsonb_build_object('action','resume','id',second_id));exception when insufficient_privilege then blocked=true;end;assert blocked,'Non-admin downloaded a CV';
+ for i in 1..3 loop perform public.ig_careers_apply(secret,application||jsonb_build_object('request_id',gen_random_uuid()));end loop;
+ blocked=false;begin perform public.ig_careers_apply(secret,application||jsonb_build_object('request_id',gen_random_uuid()));exception when sqlstate 'P0429' then blocked=true;end;assert blocked,'Application rate limit not enforced';
+ perform set_config('request.jwt.claims',(own_jwt::jsonb||'{"aal":"aal1"}')::text,true);
+ blocked=false;begin perform public.ig_careers_admin('{"action":"status"}');exception when insufficient_privilege then blocked=true;end;assert blocked,'Unverified administrator read recruitment data';
+end $$;
+rollback;

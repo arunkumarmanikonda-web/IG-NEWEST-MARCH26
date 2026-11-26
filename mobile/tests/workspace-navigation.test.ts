@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STAFF_APP_ENTRY_URL, workspaceBrowserPage, workspaceTarget } from '../src/workspace-navigation.ts';
+import { STAFF_APP_ENTRY_URL, CLIENT_APP_ENTRY_URL, CAREERS_APP_URL, websiteEntry, workspaceBrowserPage, workspaceTarget } from '../src/workspace-navigation.ts';
 
 test('staff entry is a fixed first-party session reset, independent of feed links', () => {
   assert.equal(STAFF_APP_ENTRY_URL, 'https://indiagully.com/login/mobile');
@@ -38,4 +38,27 @@ test('signed storage redirects require external confirmation and cannot become a
   const url = 'https://storage.example/storage/v1/object/sign/test.pdf?token=example';
   assert.deepEqual(workspaceTarget(url), { kind: 'external', url, host: 'storage.example' });
   assert.equal(workspaceBrowserPage(url), 'https://indiagully.com/admin');
+});
+
+
+test('client and careers entries use fixed first-party destinations with distinct surfaces', () => {
+  assert.equal(CLIENT_APP_ENTRY_URL, 'https://indiagully.com/login/mobile?audience=client');
+  assert.equal(CAREERS_APP_URL, 'https://indiagully.com/careers');
+  assert.equal(websiteEntry('client').url, CLIENT_APP_ENTRY_URL);
+  assert.equal(websiteEntry('careers').url, CAREERS_APP_URL);
+  assert.equal(websiteEntry('staff').url, STAFF_APP_ENTRY_URL);
+  assert.notEqual(websiteEntry('client').label, websiteEntry('staff').label);
+});
+
+test('browser fallbacks preserve the selected surface without moving callback or private request state', () => {
+  assert.equal(workspaceBrowserPage('https://indiagully.com/account/data-rooms', 'client'), 'https://indiagully.com/account/data-rooms');
+  assert.equal(workspaceBrowserPage('https://indiagully.com/admin', 'client'), 'https://indiagully.com/account');
+  assert.equal(workspaceBrowserPage('https://indiagully.com/careers/business-development', 'careers'), 'https://indiagully.com/careers/business-development');
+  assert.equal(workspaceBrowserPage('https://indiagully.com/account', 'careers'), 'https://indiagully.com/careers');
+  for (const mode of ['staff', 'client', 'careers'] as const) {
+    const fallback = `https://indiagully.com/${mode === 'staff' ? 'admin' : mode === 'client' ? 'account' : 'careers'}`;
+    for (const value of ['https://indiagully.com/api/careers/apply', 'https://indiagully.com/account?token=private', 'https://indiagully.com/careers?next=https://evil.example', 'https://evil.example/account', 'data:text/html,test']) {
+      assert.equal(workspaceBrowserPage(value, mode), fallback);
+    }
+  }
 });

@@ -11,7 +11,9 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 export default async function Login({ searchParams }) {
   const { user, profile, signInStatus } = await accountContext();
-  const returnTo = portalReturn((await searchParams)?.next);
+  const parameters = await searchParams;
+  const returnTo = portalReturn(parameters?.next);
+  const audience = parameters?.audience === 'client' ? 'client' : undefined;
   if (user && profile) {
     const destination = accountDestination(profile, signInStatus);
     redirect(
@@ -24,7 +26,7 @@ export default async function Login({ searchParams }) {
   }
   return (
     <main id="main" className="auth-page">
-      <SignInForm returnTo={returnTo} />
+      <SignInForm returnTo={returnTo} audience={audience} />
     </main>
   );
 }
