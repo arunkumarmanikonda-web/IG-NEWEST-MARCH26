@@ -1,10 +1,10 @@
 # India Gully store submission copy
 
-Current Android outcome: **1.0.1 (3) is available to the owner through internal testing**. The icon, feature graphic and eight genuine native screenshots are uploaded and saved in the Play listing draft, including the new in-app staff login frame. See [27 November release record](release-2026-11-27.md) for verified build, [internal tester access](https://play.google.com/apps/internaltest/4700795783250438794) and remaining public-release gates. The dated preparation inventory below is historical; internal testing is not a public production release or store-review approval.
+Current Android outcome: **1.0.2 (4) is available to internal testers**. Google Play published release 3, **1.0.2 (4) - Sign in and Careers**, at **03:56 IST on 27 November 2026** and shows **Not reviewed**. The updated description and eight new native screenshots are saved in the Play listing draft, ordered Home, client sign-in, Careers, Explore, property detail, product detail, HORECA and staff sign-in. See the [Careers and sign-in release record](../../docs/careers-release-2026-11-27.md) for verified source/build and native QA evidence. The existing [internal tester invitation](https://play.google.com/apps/internaltest/4700795783250438794) is unchanged; installation of this update on the owner's device has not been verified. Internal testing is not a public production release or store-review approval.
 
-Released update 1.0.1 (3): Staff access now stays inside the app with a fresh session-local login entry. Google Play published the internal update at 02:06 IST on 27 November 2026. Google may display the package-based temporary name before its first review; the configured display name and the actual APK's effective native launcher label are India Gully.
+Released Android update 1.0.2 (4): a persistent header **Sign in** button plus Home and More entries open client sign-in and registration inside the app. Staff workspace remains separate at the bottom of More. Careers opens the live public vacancy/application service within the app. The shared changes also passed the iOS simulator build and native Home capture; Apple organisation enrolment **AKA28L843M** remains **Pending**, so no iOS TestFlight or App Store release is claimed.
 
-Source update 1.0.2 (4): a persistent header **Sign in** button plus Home and More entries open client sign-in and registration inside the app. Staff workspace remains separate at the bottom of More. Careers opens the live public vacancy/application service inside both Android and iOS. The description below is prepared for that version; do not claim distribution until the signed release is verified.
+Earlier release 1.0.1 (3), 27 November 2026 at 02:06 IST: Staff access moved inside the app with a fresh session-local login entry. See the [earlier release history](release-2026-11-27.md). Google may display the package-based temporary name before its first review; the configured display name and the actual APK's effective native launcher label are India Gully.
 
 Historical preparation inventory: prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The following registration-stage entries predate the internal release recorded above.
 
@@ -33,7 +33,7 @@ Historical preparation inventory: prepared 19 November 2026; Google Play registr
 | Google short description | Explore properties, retail spaces, HORECA products and business insights. |
 | Primary category | Business |
 | Primary listing language | Google Play: English (United States), en-US; Apple language selection pending |
-| Version | 1.0.1 (3), published to internal testing |
+| Version | Android 1.0.2 (4), published to internal testing; iOS 1.0.2 (4), unsigned simulator build only |
 | Website | https://indiagully.com |
 | Support URL | https://indiagully.com/contact |
 | Support email | hello@indiagully.com |
