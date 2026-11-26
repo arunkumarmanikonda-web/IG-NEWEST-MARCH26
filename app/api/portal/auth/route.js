@@ -1,7 +1,7 @@
 import {currentPolicies} from '../../../../lib/policies';
 import { serverClient } from "../../../../lib/supabase/server";
 import { verifyEmailCode } from "../../../../lib/email-auth.mjs";
-import { finishSignIn } from "../../../../lib/sign-in.mjs";
+import { finishSignIn, finishSignOut } from "../../../../lib/sign-in.mjs";
 import { anonymousServerClient } from "../../../../lib/runtime-config";
 import {
   readJson,
@@ -14,10 +14,8 @@ export async function POST(request) {
   try {
     const p = await readJson(request, 8192),
       client = await serverClient();
-    if (p.action === "signout") {
-      await client.auth.signOut({ scope: "global" });
-      return privateJson({ ok: true });
-    }
+    if (p.action === "signout" || p.action === "signout_local")
+      return privateJson(await finishSignOut(client, p.action));
     if (p.action === "continue") return privateJson(await finishSignIn(client));
     if (["staff_email_code", "staff_email_verify", "staff_totp_verify"].includes(p.action)) {
       const { data: identity, error: identityError } = await client.auth.getUser();

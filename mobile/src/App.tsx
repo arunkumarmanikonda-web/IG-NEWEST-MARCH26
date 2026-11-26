@@ -4,7 +4,8 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 import { StatusBar } from 'expo-status-bar';
 import * as WebBrowser from 'expo-web-browser';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FEED_URL, ORIGIN, STAFF_SIGN_IN_URL, canonicalUrl, deepLinkUrl, enquiryUrl, entryKey, filterEntries, formatDate, parseCatalogue, reconcileSaved } from './domain';
+import { FEED_URL, ORIGIN, canonicalUrl, deepLinkUrl, enquiryUrl, entryKey, filterEntries, formatDate, parseCatalogue, reconcileSaved } from './domain';
+import StaffWorkspace from './StaffWorkspace';
 import type { Catalogue, Entry, SavedEntry } from './domain';
 import { clearPublicCache, readCache, readSaved, writeCache, writeSaved } from './storage';
 
@@ -74,6 +75,7 @@ function AppContent() {
   const [fresh, setFresh] = useState(false);
   const [notice, setNotice] = useState('');
   const [selected, setSelected] = useState<Entry | null>(null);
+  const [staffOpen, setStaffOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [kind, setKind] = useState('all');
   const [city, setCity] = useState('all');
@@ -241,15 +243,15 @@ function AppContent() {
           <View style={styles.buddyCard}><View style={styles.buddyIcon}><Ionicons name="chatbubbles-outline" size={35} color={colors.gold} /></View><Text style={styles.sectionTitle}>A little help from Gullu.</Text><Text style={styles.paragraph}>Your India Gully buddy. Explore our published opportunities and practices, or get pointed in the right direction.</Text><Button label="Chat with Gullu" onPress={() => void openWebsite(links.gullu)} /><Text style={styles.browserNote}>Opens our secure website. Gullu’s sign-in and consent choices remain on the website.</Text></View>
           {[{ title: 'Client workspace', detail: 'Sign in securely to your dashboard and data rooms.', icon: 'lock-closed-outline' as Icon, action: () => void openWebsite(links.portal), browser: true }, { title: 'Our practices', detail: 'Explore how we can help your business.', icon: 'business-outline' as Icon, action: () => setMoreSection('practices'), browser: false }, { title: 'Perspectives', detail: 'Read the ideas shaping our world.', icon: 'newspaper-outline' as Icon, action: () => setMoreSection('perspectives'), browser: false }, { title: 'Speak with our team', detail: 'Tell us what you have in mind.', icon: 'people-outline' as Icon, action: () => void openWebsite(links.contact), browser: true }, { title: 'Privacy and your data', detail: 'Read our privacy notice.', icon: 'shield-checkmark-outline' as Icon, action: () => void openWebsite(links.privacy), browser: true }, { title: 'Delete account & data', detail: 'Request account deletion or manage your privacy rights.', icon: 'person-circle-outline' as Icon, action: () => void openWebsite(`${ORIGIN}/account/privacy?request=erasure`), browser: true }].map(item => <Pressable key={item.title} accessibilityRole="button" accessibilityLabel={`${item.title}${item.browser ? ', opens secure website' : ''}`} onPress={item.action} style={styles.menuItem}><Ionicons name={item.icon} size={25} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.menuTitle}>{item.title}</Text><Text style={styles.menuDetail}>{item.detail}</Text>{item.browser && <Text style={styles.browserTag}>SECURE WEBSITE ↗</Text>}</View><Ionicons name="chevron-forward" color={colors.muted} size={20} /></Pressable>)}
           <Pressable accessibilityRole="button" onPress={() => Alert.alert('Clear offline catalogue?', 'Your saved shortlist will stay on this device. The public catalogue will download again when you refresh.', [{ text: 'Cancel', style: 'cancel' }, { text: 'Clear catalogue', onPress: () => { void clearPublicCache().then(() => Alert.alert('Offline catalogue cleared')).catch(() => Alert.alert('Could not clear catalogue', 'Please try again.')); } }])} style={styles.clearLink}><Text style={styles.textActionText}>Clear offline catalogue</Text></Pressable>
-          <Text style={styles.about}>India Gully · Version 1.0.0{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. Account, enquiry and Gullu services open our secure website and follow its privacy notice.</Text>
+          <Text style={styles.about}>India Gully · Version 1.0.1{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. Client, enquiry and Gullu services open our secure website. Staff sign-in stays inside the app.</Text>
           <View style={styles.staffAccess}>
             <Text style={styles.staffCaption}>FOR THE INDIA GULLY TEAM</Text>
-            <Pressable accessibilityRole="button" accessibilityLabel="Staff workspace sign in, opens secure website" onPress={() => void openWebsite(STAFF_SIGN_IN_URL)} style={styles.staffLink}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Staff workspace sign in" onPress={() => setStaffOpen(true)} style={styles.staffLink}>
               <Ionicons name="briefcase-outline" size={20} color={colors.gold} />
               <Text style={styles.staffLinkText}>Staff workspace sign in</Text>
-              <Ionicons name="open-outline" size={16} color={colors.muted} />
+              <Ionicons name="chevron-forward" size={16} color={colors.muted} />
             </Pressable>
-            <Text style={styles.browserNote}>Opens our secure website. Staff permissions and sign-in verification apply.</Text>
+            <Text style={styles.browserNote}>Sign in here with your staff account. Your browser sign-in is separate.</Text>
           </View>
         </>}
       </>}
@@ -257,6 +259,7 @@ function AppContent() {
     </ScrollView>
     <View style={[styles.tabs, { paddingBottom: Math.max(insets.bottom, 8) }]}>{tabs.map(item => <Pressable key={item.label} onPress={() => changeTab(item.label)} accessibilityRole="tab" accessibilityLabel={item.label} accessibilityState={{ selected: tab === item.label }} style={styles.tab}><Ionicons name={tab === item.label ? item.selected : item.icon} size={23} color={tab === item.label ? colors.gold : colors.muted} /><Text style={[styles.tabLabel, tab === item.label && styles.activeTab]}>{item.label}</Text>{item.label === 'Saved' && !!saved.length && <View style={styles.badge}><Text style={styles.badgeText}>{saved.length > 99 ? '99+' : saved.length}</Text></View>}</Pressable>)}</View>
 
+    {staffOpen && <StaffWorkspace onClose={() => setStaffOpen(false)} />}
     <Modal visible={!!selected} onRequestClose={() => setSelected(null)} animationType="slide" presentationStyle="pageSheet">
       {selected && <SafeAreaView style={styles.shell} edges={['top', 'left', 'right', 'bottom']}><View style={styles.detailHeader}><IconButton name="chevron-down" label="Close details" onPress={() => setSelected(null)} /><Text numberOfLines={1} style={styles.detailHeaderTitle}>{labelFor(selected)}</Text><IconButton name="share-outline" label={`Share ${selected.title}`} onPress={() => { void Share.share({ title: selected.title, message: `${selected.title}\n${selected.href}`, ...(Platform.OS === 'ios' ? { url: selected.href } : {}) }).catch(() => Alert.alert('Could not share', 'Please try again.')); }} /><IconButton name={savedKeys.has(entryKey(selected)) ? 'bookmark' : 'bookmark-outline'} label={savedKeys.has(entryKey(selected)) ? 'Remove from shortlist' : 'Save to shortlist'} onPress={() => void toggleSave(selected)} /></View>
         <ScrollView contentContainerStyle={styles.detailContent}><Photo uri={selected.image} alt={selected.image_alt || selected.title} style={styles.detailPhoto} fit={selected.type === 'product' ? 'contain' : 'cover'} /><View style={styles.detailBody}>

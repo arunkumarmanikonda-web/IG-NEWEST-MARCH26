@@ -68,14 +68,18 @@ test('actual app journeys and review frames',async({page},testInfo)=>{
  await frame(page,testInfo,'08-gullu-and-more');
  const client=page.getByRole('button',{name:'Client workspace, opens secure website',exact:true});
  await client.scrollIntoViewIfNeeded();await frame(page,testInfo,'09-client-workspace-entry');
- const staff=page.getByRole('button',{name:'Staff workspace sign in, opens secure website',exact:true});
- const separated=await page.evaluate(()=>{const c=document.querySelector('[aria-label="Client workspace, opens secure website"]'),s=document.querySelector('[aria-label="Staff workspace sign in, opens secure website"]');return c&&s&&(s.getBoundingClientRect().top-c.getBoundingClientRect().bottom)>300;});
+ const staff=page.getByRole('button',{name:'Staff workspace sign in',exact:true});
+ const separated=await page.evaluate(()=>{const c=document.querySelector('[aria-label="Client workspace, opens secure website"]'),s=document.querySelector('[aria-label="Staff workspace sign in"]');return c&&s&&(s.getBoundingClientRect().top-c.getBoundingClientRect().bottom)>300;});
  expect(separated).toBe(true);
  await staff.scrollIntoViewIfNeeded();await frame(page,testInfo,'10-staff-sign-in-separate');
- for(const [button,path] of [[staff,'/login'],[client,'/account']]){
+ await staff.click();
+ await expect(page.getByText('India Gully · Staff workspace',{exact:true})).toBeVisible();
+ const previewStaff=page.getByRole('button',{name:'Open staff sign-in',exact:true});
+ for(const [button,path] of [[previewStaff,'/login'],[client,'/account']]){
   const requested=page.context().waitForEvent('request',r=>r.url()===`https://indiagully.com${path}`);
   const popupPromise=page.waitForEvent('popup');await button.click();const popup=await popupPromise;
   expect((await requested).url()).toBe(`https://indiagully.com${path}`);await popup.close();
+  if(path==='/login')await page.getByRole('button',{name:'Close staff workspace',exact:true}).click();
  }
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  expect(errors).toEqual([]);

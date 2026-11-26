@@ -6,20 +6,20 @@ import type { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'India Gully',
   slug: 'india-gully',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'default',
   icon: './assets/icon.png',
   scheme: 'indiagully',
   userInterfaceStyle: 'light',
   ios: {
     bundleIdentifier: 'com.indiagully.app',
-    buildNumber: '2',
+    buildNumber: '3',
     supportsTablet: true,
     infoPlist: { ITSAppUsesNonExemptEncryption: false },
   },
   android: {
     package: 'com.indiagully.app',
-    versionCode: 2,
+    versionCode: 3,
     allowBackup: false,
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#292821' },
     // Public browsing does not need camera, microphone, contacts, location or storage access.
