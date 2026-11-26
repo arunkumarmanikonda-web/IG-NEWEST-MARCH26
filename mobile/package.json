@@ -12,6 +12,7 @@
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:release": "node --test tests/android-play-release.test.mjs",
     "export": "expo export --platform all --output-dir dist",
     "prebuild": "expo prebuild --no-install",
     "check": "npm run typecheck && npm test && expo install --check"

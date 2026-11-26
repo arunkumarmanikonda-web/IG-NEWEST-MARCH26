@@ -54,7 +54,9 @@ Apple allows a direct website completion link and requires a straightforward ini
 
 ## Published-policy changes to prepare
 
-The live /privacy and /data-usage pages inspected on 19 November still reported version 2026-11-11.2. They do not clearly cover the mobile apps and Gullu's guest-contact/transcript/report processing; /data-usage also says every project requires an approved NDA, which no longer describes the admin-authorised access option. These are concrete disclosure inconsistencies to address in a newly versioned policy release. Do not rewrite an immutable prior acceptance or report this draft as already published.
+The live /privacy and /data-usage pages rechecked on 26 November still reported version 2026-11-11.2. The current privacy page includes a separate “Chatting with Gullu” section covering guest contacts, transcripts, OpenAI processing, staff review and leadership reports. Explicit native-app and on-device cache coverage remains to be added. The /data-usage page also says every project requires an approved NDA, which no longer describes the admin-authorised access option. Address these inconsistencies in a newly versioned policy release; do not rewrite an immutable prior acceptance or report this draft as already published.
+
+The Android app uses Chrome Custom Tabs through expo-web-browser, not a native WebView. The final store disclosure review must account for the actual native and owned-service flows without treating external-browser navigation as proof that no data is collected. Provider retention, active advertising configuration, and end-to-end account-deletion fulfilment still need verification. The public statutory address also differs from the Rohini address in the verified D-U-N-S record; obtain owner reconciliation before changing published corporate details.
 
 Suggested mobile coverage, to merge with the applicable current notice:
 

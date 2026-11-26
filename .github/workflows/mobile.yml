@@ -47,6 +47,7 @@ jobs:
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
       - run: npm run check
+      - run: npm run test:release
       - run: npm audit --omit=dev --audit-level=high
       - name: Bundle Android, iOS and browser preview
         run: npm run export
