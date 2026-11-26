@@ -29,7 +29,7 @@ function IconButton({ name, label, onPress, light = false }: { name: Icon; label
   return <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}><Ionicons name={name} size={24} color={light ? colors.white : colors.ink} /></Pressable>;
 }
 function Button({ label, onPress, secondary = false, icon = 'arrow-forward' }: { label: string; onPress: () => void; secondary?: boolean; icon?: Icon }) {
-  return <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [styles.button, secondary && styles.secondaryButton, pressed && styles.pressed]}><Text style={[styles.buttonText, secondary && styles.secondaryText]}>{label}</Text><Ionicons name={icon} size={19} color={secondary ? colors.ink : colors.white} /></Pressable>;
+  return <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={({ pressed }) => [styles.button, secondary && styles.secondaryButton, pressed && styles.pressed]}><Text style={[styles.buttonText, secondary && styles.secondaryText]}>{label}</Text><Ionicons name={icon} size={19} color={secondary ? colors.ink : colors.white} /></Pressable>;
 }
 function Chip({ label, selected, onPress }: { label: string; selected?: boolean; onPress: () => void }) {
   return <Pressable accessibilityRole="button" accessibilityState={{ selected }} onPress={onPress} style={[styles.chip, selected && styles.chipSelected]}><Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text></Pressable>;
