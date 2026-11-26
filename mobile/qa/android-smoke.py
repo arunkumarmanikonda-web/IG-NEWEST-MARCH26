@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import sys
@@ -21,6 +22,7 @@ import xml.etree.ElementTree as ET
 REPOSITORY = "arunkumarmanikonda-web/IG-NEWEST-MARCH26"
 PACKAGE = "com.indiagully.app"
 ARTIFACT_NAME = "india-gully-android-test-debug-signed-apk"
+APPLICATION_LABEL = "India Gully"
 WIDTH, HEIGHT = 1080, 1920
 
 
@@ -116,6 +118,58 @@ def explore_card(node):
     return label.startswith("Explore ") and node.get("clickable") == "true"
 
 
+def apk_label(badging):
+    package = re.search(r"^package: name='([^']+)'", badging, re.MULTILINE)
+    label = re.search(r"^application-label:'([^']*)'$", badging, re.MULTILINE)
+    launcher = re.search(r"^launchable-activity: name='([^']+)' label='([^']*)'", badging, re.MULTILINE)
+    if not package or package.group(1) != PACKAGE or not label or label.group(1) != APPLICATION_LABEL:
+        raise ReviewError("Actual APK package/application label does not match India Gully.")
+    if not launcher or launcher.group(1) != PACKAGE + ".MainActivity" or launcher.group(2) != APPLICATION_LABEL:
+        raise ReviewError("Actual APK launcher label does not match India Gully.")
+    return {"application": label.group(1), "launcher": launcher.group(2)}
+
+
+def inspect_apk_label(apk):
+    candidates = [Path(found) for name in ("aapt2", "aapt") if (found := shutil.which(name))]
+    for name in ("ANDROID_SDK_ROOT", "ANDROID_HOME"):
+        if os.environ.get(name):
+            for binary in ("aapt2", "aapt"):
+                candidates.extend(sorted((Path(os.environ[name]) / "build-tools").glob("*/" + binary), reverse=True))
+    tool = next((path for path in candidates if path.is_file() and os.access(path, os.X_OK)), None)
+    if not tool:
+        raise ReviewError("Android SDK aapt2/aapt is required to inspect the actual APK launcher label.")
+    result = subprocess.run([str(tool), "dump", "badging", str(apk)], capture_output=True, text=True, timeout=40)
+    if result.returncode:
+        raise ReviewError("Android SDK could not inspect the actual APK application label.")
+    return apk_label(result.stdout)
+
+
+def assert_app_foreground(activity_dump):
+    activities = re.findall(r"(?:mResumedActivity|topResumedActivity|ResumedActivity)\s*[:=][^\n]*?\s([\w.]+)/(\S+)", activity_dump)
+    if not activities or any(package != PACKAGE or component not in (".MainActivity", PACKAGE + ".MainActivity")
+                             for package, component in activities):
+        raise ReviewError("Staff sign-in left the India Gully native activity or foreground could not be verified.")
+
+
+def webview_nodes(xml):
+    root = ET.fromstring(xml)
+    return [node for web in root.iter("node")
+            if web.get("class") == "android.webkit.WebView" and web.get("package") == PACKAGE and bounds(web)
+            for node in web.iter("node") if node.get("package") == PACKAGE and bounds(node)]
+
+
+def staff_login_heading(xml):
+    return any(exact_label("Welcome back.")(node) for node in webview_nodes(xml))
+
+
+def staff_login_fields(xml):
+    nodes = webview_nodes(xml)
+    inputs = [node for node in nodes if node.get("class") == "android.widget.EditText" and node.get("enabled") == "true"]
+    return (any(exact_label("Email address")(node) for node in nodes)
+            and any(node.get("password") == "true" for node in inputs)
+            and any(node.get("password") != "true" for node in inputs))
+
+
 class Device:
     def __init__(self, output):
         result = subprocess.run(["adb", "devices"], capture_output=True, text=True, check=True)
@@ -180,6 +234,30 @@ class Device:
             raise ReviewError("Native MainActivity did not launch.")
         self.wait(exact_label("Home"))
 
+    def staff_login(self):
+        self.tap(exact_label("Staff workspace sign in"))
+        self.wait(exact_label("Close staff workspace"))
+        # First prove the live login heading is inside this app's WebView. A
+        # native loading label or a Chrome Custom Tab is not sufficient.
+        deadline = time.monotonic() + 60
+        while time.monotonic() < deadline:
+            assert_app_foreground(self.adb("shell", "dumpsys", "activity", "activities"))
+            xml, _ = self.ui()
+            if staff_login_heading(xml):
+                break
+            time.sleep(1)
+        else:
+            raise ReviewError("Live staff login did not render inside the native WebView.")
+        # The heading and complete form may span more than one viewport. Only
+        # scroll; never type credentials, submit a form or request an OTP.
+        for _ in range(6):
+            xml, _ = self.ui()
+            assert_app_foreground(self.adb("shell", "dumpsys", "activity", "activities"))
+            if staff_login_fields(xml):
+                return
+            self.adb("shell", "input", "swipe", WIDTH // 2, 1450, WIDTH // 2, 950, 350)
+        raise ReviewError("Live staff email/passcode fields were not visible in the native WebView.")
+
     def screenshot(self, name):
         # Let the native modal transition and outstanding image paint settle.
         time.sleep(2)
@@ -215,6 +293,8 @@ def capture(args):
         record["screenshots"].append(device.screenshot(name))
 
     try:
+        record["apkLabels"] = inspect_apk_label(apk)
+        record["checks"].append("Actual APK application and launcher labels are India Gully")
         device.adb("shell", "wm", "size", f"{WIDTH}x{HEIGHT}")
         device.adb("shell", "wm", "density", "420")
         device.adb("shell", "settings", "put", "system", "font_scale", "1.0")
@@ -269,10 +349,18 @@ def capture(args):
         frame("08-more")
         device.scroll_to(exact_label("Client workspace, opens secure website"))
         frame("09-client-entry")
-        device.scroll_to(exact_label("Staff workspace sign in, opens secure website"))
+        device.scroll_to(exact_label("Staff workspace sign in"))
         device.wait(exact_label("FOR THE INDIA GULLY TEAM"))
         frame("10-separate-staff-entry")
-        record["checks"].append("Client and staff entry controls are separately presented; no account or external browser opened")
+        record["checks"].append("Client and staff entry controls are separately presented")
+        device.staff_login()
+        frame("12-staff-in-app-login")
+        device.tap(exact_label("Close staff workspace"))
+        device.wait(exact_label("Staff workspace sign in"))
+        device.staff_login()
+        device.tap(exact_label("Close staff workspace"))
+        device.wait(exact_label("Staff workspace sign in"))
+        record["checks"].append("Staff login rendered live email/passcode fields inside the native app, including after close and reopen; no credentials or OTP requests submitted")
         device.adb("shell", "svc", "wifi", "disable")
         device.adb("shell", "svc", "data", "disable")
         device.launch()

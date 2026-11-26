@@ -1,6 +1,10 @@
 # India Gully store submission copy
 
-Prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The Play app record and listing are drafts, not evidence of a binary upload, store submission or approval. Reconcile the final build and release checklist before submitting.
+Current Android outcome: **1.0.0 (2) is available to the owner through internal testing**. The icon, feature graphic and eight genuine native screenshots are uploaded and saved in the Play listing draft. See [27 November release record](release-2026-11-27.md) for verified build, [internal tester access](https://play.google.com/apps/internaltest/4700795783250438794) and remaining public-release gates. The dated preparation inventory below is historical; internal testing is not a public production release or store-review approval.
+
+Source update for 1.0.1 (3): Staff access now stays inside the app with a fresh session-local login entry. The copy below is updated for that version; do not describe it as distributed until the new signed build is accepted on Play. Google may display the package-based temporary name before its first review; the configured display name and native launcher label are India Gully.
+
+Historical preparation inventory: prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The following registration-stage entries predate the internal release recorded above.
 
 ## Google Play registration inventory · 26 November 2026
 
@@ -27,7 +31,7 @@ Prepared 19 November 2026; Google Play registration inventory updated 26 Novembe
 | Google short description | Explore properties, retail spaces, HORECA products and business insights. |
 | Primary category | Business |
 | Primary listing language | Google Play: English (United States), en-US; Apple language selection pending |
-| Version | 1.0.0; use the final build's actual version |
+| Version | 1.0.1 (3) source; use the final uploaded build's actual version |
 | Website | https://indiagully.com |
 | Support URL | https://indiagully.com/contact |
 | Support email | hello@indiagully.com |
@@ -54,7 +58,7 @@ Meet Gullu, your India Gully buddy, through the secure website. Client accounts 
 
 India Gully is a brand of Vivacious Entertainment and Hospitality Private Limited. Property and product availability may change. An enquiry does not reserve a property or confirm an order.
 
-Authorised team members can open the separate Staff sign-in at the bottom of More and use their existing staff verification.
+Authorised team members can open the separate Staff sign-in at the bottom of More and sign in within the app, using their existing staff verification. Browser-only connections and exports open externally when requested.
 
 ## Apple keywords
 
@@ -66,7 +70,7 @@ Do not add financial-return claims, hotel booking claims, native chat/data-room 
 
 This is a native catalogue and discovery app. Home, property/retail filters, HORECA collection and SKU search, native detail sheets, on-device shortlists, offline saved text and native sharing work without registration. Data is read from the published public catalogue at https://indiagully.com/api/mobile/catalogue.
 
-Gullu, contextual enquiries, client accounts and staff workspace intentionally open India Gully's HTTPS website in the system browser. The user is told when this transition occurs. Private records are not copied into the native shortlist/cache. Staff permissions are granted by India Gully and do not arise from installing the app.
+Gullu, contextual enquiries and client accounts open India Gully's HTTPS website in the system browser. Staff access uses the first-party site within a restricted embedded WebView. Each fresh staff entry completes a session-local reset before the normal login form; existing verification and permissions still apply. External connections and exports use an explicit browser choice. Private records are not copied into the native shortlist/cache; WebView authentication cookies and web storage are separate. Installing the app grants no staff permissions.
 
 Suggested public review path: Home → Explore → open a listing → Save → Saved → Share; HORECA → choose a collection → search a SKU or brand; More → Perspectives. Pull to refresh retrieves the latest catalogue. Test offline Saved only after saving a published brief online.
 
@@ -87,7 +91,9 @@ Capture the actual final app on simulators/emulators. Do not fabricate UI or exp
 
 The supported capture-size list can change. Check the active console against [Apple screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/) and [Google preview-asset specifications](https://support.google.com/googleplay/android-developer/answer/9866151) when uploading. Website screenshots or the browser-exported app are not substitutes for final native-build screenshots.
 
-## Upload prerequisites and remaining evidence
+## Historical upload prerequisites at preparation
+
+This table preserves the preparation snapshot. Signing, the internal Android release and native screenshot uploads have since completed; the current [27 November release record](release-2026-11-27.md) supersedes those rows and lists the remaining public-release gates.
 
 | Item | Status at preparation |
 | --- | --- |

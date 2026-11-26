@@ -1,6 +1,6 @@
 # India Gully for Android and iOS
 
-This is a native Expo / React Native application sharing India Gully’s published website catalogue. It is implemented source code, not an App Store or Google Play release. Store accounts, signing, reviewer access and physical-device acceptance checks remain release requirements.
+This is a native Expo / React Native application sharing India Gully’s published website catalogue. Android 1.0.0 (2) is available through internal testing. Source version 1.0.1 (3) adds in-app staff access; its build and release must be verified separately. Public store review and physical-device acceptance remain release requirements.
 
 ## What is implemented
 
@@ -11,7 +11,7 @@ This is a native Expo / React Native application sharing India Gully’s publish
 - A CMS-driven India Gully Residences launch card, shown only when the public feed supplies the active launch. No invented project facts or placeholder renders.
 - On-device public shortlists with saved/updated dates, offline text and native sharing. A successful catalogue refresh updates saved briefs and removes withdrawn content; a title-only withdrawal notice remains removable. Public cached media may require connectivity when it is not in the operating system’s image cache.
 - Contextual enquiries use the website’s existing `interest` and `message` query parameters.
-- Staff sign-in is separate at the bottom of More and uses existing staff verification and role permissions.
+- Staff sign-in is separate at the bottom of More. Version 1.0.1 opens the first-party staff website inside a restricted WebView, independent of the normal browser session. The `/login/mobile` entry confirms a session-local sign-out by POST before showing the existing login and staff verification flow; failures stay on a retry screen. Existing role and verification checks remain authoritative.
 - Gullu, the client workspace, account/data requests, privacy and enquiry forms open in the system’s secure in-app browser. Each transition is labeled. This version does not provide native account authentication, native private data rooms, native chat storage, push notifications, payments or offline private documents.
 
 ## Environment and local verification
@@ -110,7 +110,9 @@ All navigation destinations use canonical HTTPS `indiagully.com` routes; admin/A
 
 The `indiagully://` custom scheme supports routes such as `indiagully://opportunities/<slug>`. Custom schemes are not a verified authentication mechanism. No tokens or private data are accepted in them. Verified HTTPS Universal Links / Android App Links require the owner’s signing identity and domain association files and are intentionally not claimed or enabled yet.
 
-Only public catalogue and shortlist snapshots are stored in AsyncStorage. No passwords, account tokens, client records or conversation history are stored by this native app. Website sessions live in the system browser. On iOS, `openBrowserAsync` does not share Safari’s cookie jar; the user may need to sign in to that browser session. If native authentication is added later, use a deliberate `openAuthSessionAsync` callback flow with server-side authorization and secure token storage, not the existing general browser helper.
+Only public catalogue and shortlist snapshots are stored in AsyncStorage. The native JavaScript layer does not copy passwords, account tokens, client records or conversation history into that cache. Staff authentication cookies and web storage belong to the embedded WebView; client/Gullu sessions remain in the system browser. The two browser stores are separate. WebView incognito/cache settings are not a promise that all device data is erased on close. Closing the workspace is not a server logout; every fresh entry first resets that app session using `scope: local`, preserving separately authenticated devices. The ordinary website Sign out action retains its existing global behavior.
+
+Staff navigation and popups are restricted to the exact HTTPS India Gully origin. External destinations require an explicit browser choice. Google mailbox connection restarts from `/admin/mailbox` in that browser rather than forwarding an OAuth URL whose state is tied to WebView cookies. Browser-only exports and some document downloads have an explicit browser fallback and may require sign-in again. Standard file selection and rendered previews need device acceptance; mobile folder upload is not claimed. No authentication token bridge or native credential injection is used.
 
 ## Acceptance checks before release
 

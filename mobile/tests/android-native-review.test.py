@@ -21,6 +21,27 @@ ARTIFACT = {"id": 123, "size_in_bytes": 400, "name": review.ARTIFACT_NAME,
 
 
 class NativeReviewTests(unittest.TestCase):
+    def test_actual_apk_brand_and_package_are_verified(self):
+        good = "package: name='com.indiagully.app' versionCode='3'\napplication-label:'India Gully'\nlaunchable-activity: name='com.indiagully.app.MainActivity' label='India Gully' icon=''\n"
+        self.assertEqual(review.apk_label(good), {"application": "India Gully", "launcher": "India Gully"})
+        for bad in (good.replace("India Gully", "com.indiagully.app"), good.replace("com.indiagully.app", "other.app"), ""):
+            with self.assertRaises(review.ReviewError):
+                review.apk_label(bad)
+
+    def test_chrome_and_unverified_foreground_are_rejected(self):
+        review.assert_app_foreground("mResumedActivity: ActivityRecord{1 u0 com.indiagully.app/.MainActivity t1}")
+        for value in ("mResumedActivity: ActivityRecord{1 u0 com.android.chrome/.Main t1}", "", "mResumedActivity: ActivityRecord{1 u0 com.indiagully.app/.BrowserProxyActivity t1}"):
+            with self.assertRaises(review.ReviewError):
+                review.assert_app_foreground(value)
+
+    def test_login_must_be_actual_webview_content_with_live_form_fields(self):
+        xml = '<hierarchy><node class="android.webkit.WebView" package="com.indiagully.app" bounds="[0,100][1080,1800]"><node text="Welcome back." package="com.indiagully.app" bounds="[10,120][1000,160]"/><node text="Email address" package="com.indiagully.app" bounds="[10,200][1000,240]"/><node class="android.widget.EditText" enabled="true" password="false" package="com.indiagully.app" bounds="[10,250][1000,300]"/><node class="android.widget.EditText" enabled="true" password="true" package="com.indiagully.app" bounds="[10,350][1000,400]"/></node></hierarchy>'
+        self.assertTrue(review.staff_login_heading(xml))
+        self.assertTrue(review.staff_login_fields(xml))
+        self.assertFalse(review.staff_login_heading(xml.replace('android.webkit.WebView', 'android.view.View')))
+        self.assertFalse(review.staff_login_fields(xml.replace('password="true"', 'password="false"')))
+        self.assertFalse(review.staff_login_heading(xml.replace('com.indiagully.app', 'com.android.chrome')))
+
     def test_successful_main_source_is_accepted(self):
         review.verify_run(RUN, SHA)
         self.assertEqual(review.select_artifact([ARTIFACT], SHA)["id"], 123)
