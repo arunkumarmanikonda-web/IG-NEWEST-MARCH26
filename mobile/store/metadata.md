@@ -1,8 +1,8 @@
 # India Gully store submission copy
 
-Current Android outcome: **1.0.0 (2) is available to the owner through internal testing**. The icon, feature graphic and eight genuine native screenshots are uploaded and saved in the Play listing draft. See [27 November release record](release-2026-11-27.md) for verified build, [internal tester access](https://play.google.com/apps/internaltest/4700795783250438794) and remaining public-release gates. The dated preparation inventory below is historical; internal testing is not a public production release or store-review approval.
+Current Android outcome: **1.0.1 (3) is available to the owner through internal testing**. The icon, feature graphic and eight genuine native screenshots are uploaded and saved in the Play listing draft, including the new in-app staff login frame. See [27 November release record](release-2026-11-27.md) for verified build, [internal tester access](https://play.google.com/apps/internaltest/4700795783250438794) and remaining public-release gates. The dated preparation inventory below is historical; internal testing is not a public production release or store-review approval.
 
-Source update for 1.0.1 (3): Staff access now stays inside the app with a fresh session-local login entry. The copy below is updated for that version; do not describe it as distributed until the new signed build is accepted on Play. Google may display the package-based temporary name before its first review; the configured display name and native launcher label are India Gully.
+Released update 1.0.1 (3): Staff access now stays inside the app with a fresh session-local login entry. Google Play published the internal update at 02:06 IST on 27 November 2026. Google may display the package-based temporary name before its first review; the configured display name and the actual APK's effective native launcher label are India Gully.
 
 Historical preparation inventory: prepared 19 November 2026; Google Play registration inventory updated 26 November 2026. The following registration-stage entries predate the internal release recorded above.
 
@@ -31,7 +31,7 @@ Historical preparation inventory: prepared 19 November 2026; Google Play registr
 | Google short description | Explore properties, retail spaces, HORECA products and business insights. |
 | Primary category | Business |
 | Primary listing language | Google Play: English (United States), en-US; Apple language selection pending |
-| Version | 1.0.1 (3) source; use the final uploaded build's actual version |
+| Version | 1.0.1 (3), published to internal testing |
 | Website | https://indiagully.com |
 | Support URL | https://indiagully.com/contact |
 | Support email | hello@indiagully.com |
