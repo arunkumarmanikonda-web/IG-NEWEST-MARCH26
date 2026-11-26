@@ -89,7 +89,9 @@ Capture the actual final app on simulators/emulators. Do not fabricate UI or exp
 
 The supported capture-size list can change. Check the active console against [Apple screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/) and [Google preview-asset specifications](https://support.google.com/googleplay/android-developer/answer/9866151) when uploading. Website screenshots or the browser-exported app are not substitutes for final native-build screenshots.
 
-## Upload prerequisites and remaining evidence
+## Historical upload prerequisites at preparation
+
+This table preserves the preparation snapshot. Signing, the internal Android release and native screenshot uploads have since completed; the current [27 November release record](release-2026-11-27.md) supersedes those rows and lists the remaining public-release gates.
 
 | Item | Status at preparation |
 | --- | --- |
