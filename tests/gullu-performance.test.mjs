@@ -76,3 +76,20 @@ test('a visitor budget is attributed and independently checked rather than treat
   return Response.json({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(verifier?{checks:[{index:0,supported:true,evidence:[{id:0,quote:candidates[0].text}]}]}:{mode:'grounded',paragraphs:[{text:answer,ids:[0]}]})}]}]});
  }});assert.equal(checked,true);assert.equal(result.answer,answer);
 });
+
+test('published compound facts remain on one record and return while configuration is pending', async () => {
+ let release;
+ const config=new Promise(resolve=>{release=resolve;});
+ try {
+  const result=await gulluReply({question:'Jaisalkot city and keys?', loadDocuments:async()=>docs,loadConfig:()=>config,fetcher:()=>assert.fail('model call')});
+  assert.match(result.reply.answer,/50 keys/);
+  assert.match(result.reply.answer,/Jaisalmer, Rajasthan/);
+  assert.deepEqual(result.reply.sources.map(s=>s.href),['/opportunities/jaisalkot']);
+  assert.equal(factAnswer('Jaisalkot keys and area?',docs),null);
+ } finally {release(null);}
+});
+test('Gullu writes an unsent RFQ from the named published SKU, without inventing quote terms', async () => {
+ const result=await gulluReply({question:'Draft an RFQ for Cloud Linen',loadDocuments:async()=>docs,loadConfig:async()=>null,fetcher:()=>assert.fail('model call')});
+ assert.match(result.reply.answer,/Draft quote request/);assert.match(result.reply.answer,/CL-001/);
+ assert.match(result.reply.answer,/\[quantity\]/);assert.equal(result.reply.sources.length,1);
+});

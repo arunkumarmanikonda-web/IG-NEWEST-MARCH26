@@ -1,3 +1,5 @@
+import {headers} from 'next/headers';
+import {hasInAppNavigation} from '../../lib/mobile-workspace.mjs';
 import Link from 'next/link';
 import Module from '../admin/[module]/page';
 import { DraftEditor, DraftRegister } from './drafts';
@@ -17,6 +19,7 @@ export default async function StaffWorkspace({ searchParams }) {
   const query = await searchParams;
   const view = query?.view;
   const simulated = process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://ehcqhoxiwmydipwfujuf.supabase.co';
+  const fullDashboard = !simulated && hasInAppNavigation((await headers()).get('user-agent'));
   let panel;
   if (query?.record) panel = <DraftEditor client={client} id={query.record} result={query.result}/>;
   else if (view === 'listings' || view === 'catalogue') panel = <DraftRegister client={client} view={view}/>;
@@ -24,10 +27,10 @@ export default async function StaffWorkspace({ searchParams }) {
   else if (view === 'collections') {
     panel = <MobilePaymentStatus client={client}/>;
   } else if (view === 'website') panel = <section className="workspace-card"><h2>Website administration</h2>
-    <p>For company administration, open the India Gully website in your browser and sign in with your authorised staff account.</p></section>;
+    <p>Choose an available staff task above.</p></section>;
   return <main id="main" className="auth-page account-dashboard"><div>
     <section className="portal-form"><h1>Staff workspace</h1><p>{user.email}</p>
-      <nav className="module-tabs" aria-label="Staff tasks">{tabs.map(([key,label]) =>
+      <nav className="module-tabs" aria-label="Staff tasks">{fullDashboard && <Link href="/admin">Management suite</Link>}{tabs.map(([key,label]) =>
         <Link key={key} href={'/staff-workspace?view=' + key} aria-current={view === key ? 'page' : undefined}>{label}</Link>)}
         <Link href="/account/data-rooms">Assigned data rooms</Link><Link href="/account?profile=1">My account</Link>
         {simulated && <Link href="/account?samples=1">Sample files and payment records</Link>}

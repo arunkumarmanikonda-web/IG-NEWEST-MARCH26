@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server.js";
 import {randomBytes} from 'node:crypto';
 import {contentSecurityPolicy} from './lib/content-security.mjs';
-import { mobileStaffDestination, isMobileShell } from './lib/mobile-workspace.mjs';
+import { mobileStaffDestination, isMobileShell, hasInAppNavigation } from './lib/mobile-workspace.mjs';
 export async function proxy(request) {
   // Malformed crawled links can contain an encoded backslash. Reject them
   // before Vercel's page launcher attempts to resolve a nonexistent module.
@@ -26,7 +26,9 @@ export async function proxy(request) {
       status: 403, headers: { 'Cache-Control': 'private, no-store', 'Vary': 'Cookie, User-Agent' },
     });
   }
-  const destination = mobile && (clean === '/account/payments' ? '/account/payment-status' : mobileStaffDestination(path));
+  const fullDashboard = hasInAppNavigation(request.headers.get('user-agent')) &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://ehcqhoxiwmydipwfujuf.supabase.co';
+  const destination = mobile && (clean === '/account/payments' ? '/account/payment-status' : mobileStaffDestination(path, fullDashboard));
   if (destination) {
     const result = NextResponse.redirect(new URL(destination, request.url), 303);
     result.headers.set('Cache-Control', 'private, no-store');

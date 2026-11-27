@@ -1,44 +1,32 @@
-import React, { useRef, useState } from 'react';
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import * as WebBrowser from 'expo-web-browser';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { websiteEntry, workspaceBrowserPage, workspaceTarget } from './workspace-navigation';
-import type { WebsiteMode } from './workspace-navigation';
+import { websiteEntry, workspaceTarget } from './workspace-navigation';
+import type { WebsiteProps } from './SecureWebsite';
 
 const ink = '#292821', gold = '#8a7333', paper = '#faf9f5';
 
-export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; onClose: () => void }) {
-  const entry = websiteEntry(mode);
-  // Changing workspaces must destroy the previous incognito WebView and its
-  // navigation state, even if a caller changes mode without unmounting us.
-  return <WorkspaceSession key={`${entry.origin}:${mode}`} mode={mode} onClose={onClose} />;
+export default function SecureWebsite(props: WebsiteProps) {
+  const entry = websiteEntry(props.mode, undefined, props.publicUrl);
+  return <WorkspaceSession key={entry.url} {...props} />;
 }
 
-function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () => void }) {
-  const entry = websiteEntry(mode);
+function WorkspaceSession({ mode, publicUrl, backRef, onClose }: WebsiteProps) {
+  const entry = websiteEntry(mode, undefined, publicUrl);
   const web = useRef<WebView<object>>(null);
   const [source, setSource] = useState(entry.url);
   const [canGoBack, setCanGoBack] = useState(false);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const current = useRef(entry.url);
-  const currentPage = useRef(entry.url);
   const showingPrompt = useRef(false);
-
-  const openBrowser = async (url: string) => {
-    try { await WebBrowser.openBrowserAsync(url, { toolbarColor: ink, controlsColor: '#e5d7a8' }); }
-    catch { Alert.alert('Could not open this page', 'Please try again when your connection is available.'); }
-  };
-  const offerBrowser = (title: string, message: string, url: string) => {
+  const explain = (message: string) => {
     if (showingPrompt.current) return;
     showingPrompt.current = true;
     const done = () => { showingPrompt.current = false; };
-    Alert.alert(title, message, [
-      { text: 'Stay here', style: 'cancel', onPress: done },
-      { text: 'Open browser', onPress: () => { done(); void openBrowser(url); } },
-    ], { cancelable: true, onDismiss: done });
+    Alert.alert('India Gully', message, [{ text: 'OK', onPress: done }], { cancelable: true, onDismiss: done });
   };
   const navigate = (url: string, popup = false): boolean => {
     const target = workspaceTarget(url, mode);
@@ -46,30 +34,22 @@ function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () =>
       if (popup) setSource(target.url);
       return true;
     }
-    setLoading(false);
-    if (target.kind === 'mailbox') {
-      if (entry.surface === 'staff') offerBrowser('Connect your mailbox', 'Google mailbox connections need the browser. Open My business mailbox there and choose Connect. You may need to sign in again.', target.url);
-      else offerBrowser('Continue in browser', 'This connection needs the browser. Open this page there and start the connection again. You may need to sign in.', workspaceBrowserPage(currentPage.current, mode));
-    }
-    else if (target.kind === 'external') offerBrowser('Open an external page?', `This link opens ${target.host} in your browser. India Gully will stay open here.`, target.url);
-    else if (target.kind === 'export') offerBrowser('Download this export', 'This export needs the browser. Open this workspace page there and choose the export again. You may need to sign in.', workspaceBrowserPage(currentPage.current, mode));
-    else if (!showingPrompt.current) {
-      showingPrompt.current = true;
-      Alert.alert('This link cannot open here', 'Continue here, or use the browser option for supported external services.', [{ text: 'OK', onPress: () => { showingPrompt.current = false; } }], { cancelable: true, onDismiss: () => { showingPrompt.current = false; } });
-    }
+    if (target.kind === 'mailbox') explain('Google requires a separate approval for a new mailbox connection. Previously connected mailboxes work here.');
+    else if (/^(mailto:|tel:)/i.test(url)) explain(url.split('?')[0].replace(/^(mailto:|tel:)/i, ''));
+    else explain('This destination is outside your India Gully workspace.');
     return false;
   };
   const back = () => { if (canGoBack) web.current?.goBack(); else onClose(); };
 
-  return <Modal visible animationType="slide" onRequestClose={back} presentationStyle="fullScreen">
+  useImperativeHandle(backRef, () => back, [canGoBack, onClose]);
+  const screen = (
     <SafeAreaView style={styles.shell} edges={['top', 'left', 'right', 'bottom']}>
       <View style={styles.header}>
         <Pressable accessibilityRole="button" accessibilityLabel={`Back in ${entry.label}`} onPress={back} style={styles.control}><Ionicons name="arrow-back" size={23} color={ink} /></Pressable>
         <View style={styles.titleBlock}><Text style={styles.brand}>INDIA GULLY</Text><Text style={styles.title}>{entry.title}</Text></View>
-        <Pressable accessibilityRole="button" accessibilityLabel={`Open ${entry.label} in browser`} onPress={() => offerBrowser('Open this page in browser?', 'Use this option for browser-only connections or downloads. Browser sign-in is separate from this app.', workspaceBrowserPage(currentPage.current, mode))} style={styles.control}><Ionicons name="open-outline" size={21} color={gold} /></Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel={`Close ${entry.label}`} onPress={onClose} style={styles.control}><Ionicons name="close" size={25} color={ink} /></Pressable>
       </View>
-      <View style={styles.address}><Ionicons name="lock-closed-outline" size={12} color={gold} /><Text style={styles.addressText}>{entry.host} · {entry.caption}</Text></View>
+      {mode !== 'gullu' && <View style={styles.address}><Ionicons name="lock-closed-outline" size={12} color={gold} /><Text style={styles.addressText}>{entry.host} · {entry.caption}</Text></View>}
       {entry.demo && <View style={styles.demoNotice}><Text style={styles.demoText}>DEMO · SAMPLE DATA ONLY</Text><Text style={styles.demoCopy}>Use demo credentials. Please do not upload personal or client information.</Text></View>}
       {loading && <View style={styles.progress} accessibilityRole="progressbar"><ActivityIndicator size="small" color={gold} /><Text style={styles.progressText}>Opening {entry.title.toLowerCase()}…</Text></View>}
       {failed && <View style={styles.error} accessibilityLiveRegion="polite"><Text style={styles.errorText}>We could not load this page. Check your connection and try again.</Text><Pressable accessibilityRole="button" onPress={() => { setFailed(false); web.current?.reload(); }} style={styles.retry}><Text style={styles.retryText}>Try again</Text></Pressable></View>}
@@ -81,6 +61,8 @@ function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () =>
         // reset the app session at /login/mobile before showing login. Careers
         // opens public content directly and never requires account creation.
         incognito
+        applicationNameForUserAgent="IndiaGullyApp/1.0.4"
+        dataDetectorTypes="none"
         sharedCookiesEnabled={false}
         thirdPartyCookiesEnabled={false}
         cacheEnabled={false}
@@ -104,7 +86,6 @@ function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () =>
         onNavigationStateChange={state => {
           if (workspaceTarget(state.url, mode).kind !== 'internal') return;
           current.current = state.url;
-          if (workspaceBrowserPage(state.url, mode) === state.url) currentPage.current = state.url;
           setCanGoBack(state.canGoBack);
         }}
         onLoadStart={() => { setLoading(true); setFailed(false); }}
@@ -113,14 +94,11 @@ function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () =>
         onHttpError={event => { if (event.nativeEvent.url === current.current && event.nativeEvent.statusCode >= 400) { setLoading(false); setFailed(true); } }}
         onContentProcessDidTerminate={() => { setLoading(false); setFailed(true); }}
         onRenderProcessGone={() => { setLoading(false); setFailed(true); }}
-        onFileDownload={event => {
-          if (workspaceTarget(event.nativeEvent.downloadUrl, mode).kind === 'internal') {
-            offerBrowser('Download this file', 'Open this workspace page in the browser and choose the download again. You may need to sign in.', workspaceBrowserPage(currentPage.current, mode));
-          } else navigate(event.nativeEvent.downloadUrl);
-        }}
+        onFileDownload={() => explain('Use the document preview in this workspace to read this file.')}
       />
     </SafeAreaView>
-  </Modal>;
+  );
+  return backRef ? screen : <Modal visible animationType="slide" onRequestClose={back} presentationStyle="fullScreen">{screen}</Modal>;
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,5 @@
 "use client";
+import {offerAppFile} from "../../lib/app-download.mjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { browserClient } from "../../lib/supabase/browser";
@@ -61,18 +62,8 @@ export default function IdentityReviews({ records }) {
                         .download(permission.path);
                       if (error)
                         throw new Error("Evidence could not be retrieved.");
-                      const url = URL.createObjectURL(data),
-                        a = document.createElement("a");
-                      a.href = url;
-                      a.download =
-                        slot +
-                        ({
-                          "application/pdf": ".pdf",
-                          "image/jpeg": ".jpg",
-                          "image/png": ".png",
-                        }[data.type] || "");
-                      a.click();
-                      setTimeout(() => URL.revokeObjectURL(url), 3000);
+                      const extension = {"application/pdf": ".pdf", "image/jpeg": ".jpg", "image/png": ".png"}[data.type] || "";
+                      offerAppFile(data, slot + extension);
                     })
                   }
                 >

@@ -16,3 +16,9 @@
 @media(prefers-reduced-motion:reduce){.g-writing i{animation:none}}
 .gullu-page{padding:28px 16px;background:#f5f2e9}.gullu-page>h1{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.gullu.g-embedded{position:relative;inset:auto;margin:0 auto;width:min(100%,640px);z-index:1}.g-embedded .g-panel{position:relative;inset:auto;width:100%;height:min(800px,calc(100dvh - 100px));min-height:440px}.g-embedded .g-scroll{overscroll-behavior:contain}
 @media(max-width:520px){.gullu-page{padding:12px 10px}.g-embedded .g-panel{height:calc(100dvh - 100px);border-radius:16px}}
+
+/* The native app supplies the navigation and safe-area insets for this screen. */
+body:has(> .gullu-in-app) > :is(.utility-bar, .site-header, .site-footer) { display: none; }
+.gullu-in-app { padding: 0; }
+.gullu-in-app .g-embedded { width: 100%; }
+.gullu-in-app .g-panel { height: 100dvh; min-height: 0; border: 0; border-radius: 0; box-shadow: none; }

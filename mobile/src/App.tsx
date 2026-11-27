@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, AppState, BackHandler, Image, Linking, Modal, Platform, Pressable, RefreshControl, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, AppState, BackHandler, Image, Linking, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import * as WebBrowser from 'expo-web-browser';
+import * as Clipboard from 'expo-clipboard';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FEED_URL, ORIGIN, canonicalUrl, deepLinkUrl, enquiryUrl, entryKey, filterEntries, formatDate, parseCatalogue, reconcileSaved } from './domain';
 import SecureWebsite from './SecureWebsite';
@@ -20,12 +20,6 @@ const tabs: { label: Tab; icon: Icon; selected: Icon }[] = [
   { label: 'HORECA', icon: 'restaurant-outline', selected: 'restaurant' }, { label: 'Saved', icon: 'bookmark-outline', selected: 'bookmark' }, { label: 'More', icon: 'grid-outline', selected: 'grid' },
 ];
 
-async function openWebsite(href: string): Promise<void> {
-  const url = canonicalUrl(href);
-  if (!url) { Alert.alert('Link unavailable', 'Please explore this item on indiagully.com.'); return; }
-  try { await WebBrowser.openBrowserAsync(url, { toolbarColor: colors.ink, controlsColor: '#e5d7a8', presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET }); }
-  catch { Alert.alert('Could not open the website', 'Please try again when your connection is available.'); }
-}
 function IconButton({ name, label, onPress, light = false }: { name: Icon; label: string; onPress: () => void; light?: boolean }) {
   return <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} style={({ pressed }) => [styles.iconButton, pressed && styles.pressed]}><Ionicons name={name} size={24} color={light ? colors.white : colors.ink} /></Pressable>;
 }
@@ -80,6 +74,15 @@ function AppContent() {
   // Only one embedded workspace can exist at a time. Every entry gets its own
   // remounted incognito WebView; no native credentials or cookies are copied.
   const [publicWebsite, setPublicWebsite] = useState<WebsiteMode | null>(null);
+  const [pageUrl, setPageUrl] = useState<string>();
+  const workspaceBack = useRef<(() => void) | null>(null);
+  const openWebsite = useCallback((href: string) => {
+    const url = canonicalUrl(href);
+    if (!url) { Alert.alert('Link unavailable', 'This page could not be opened.'); return; }
+    setPageUrl(url);
+    setPublicWebsite('public');
+  }, []);
+
   const [query, setQuery] = useState('');
   const [kind, setKind] = useState('all');
   const [city, setCity] = useState('all');
@@ -144,11 +147,18 @@ function AppContent() {
     return () => subscription.remove();
   }, []);
   useEffect(() => {
-    if (!pendingLink || loading) return;
+    if (!pendingLink) return;
+    if (/^\/gullu(?:\/app)?\/?$/.test(new URL(pendingLink).pathname)) {
+      setSelected(null);
+      setPublicWebsite('gullu');
+      setPendingLink(null);
+      return;
+    }
+    if (loading) return;
     const entry = catalogue && [...catalogue.listings, ...catalogue.products, ...catalogue.perspectives, ...catalogue.practices].find(item => new URL(item.href).pathname === new URL(pendingLink).pathname);
     if (entry) setSelected(entry); else void openWebsite(pendingLink);
     setPendingLink(null);
-  }, [pendingLink, catalogue, loading]);
+  }, [pendingLink, catalogue, loading, openWebsite]);
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
       if (selected) { setSelected(null); return true; }
@@ -193,7 +203,7 @@ function AppContent() {
 
   return <SafeAreaView style={styles.shell} edges={['top', 'left', 'right']}>
     <StatusBar style="dark" />
-    <View style={styles.header}><Image source={require('../assets/logo-dark.png')} style={styles.headerLogo} resizeMode="contain" accessibilityLabel="India Gully — Celebrating Desiness" /><View style={styles.headerActions}><Pressable accessibilityRole="button" accessibilityLabel="Ask Gullu, opens the secure website" onPress={() => void openWebsite(links.gullu)} style={styles.gulluButton}><Ionicons name="chatbubble-ellipses-outline" size={21} color={colors.ink} /></Pressable><Pressable accessibilityRole="button" accessibilityLabel="Sign in to your client account" onPress={() => setPublicWebsite('client')} style={styles.signInButton}><Ionicons name="person-circle-outline" size={20} color={colors.white} /><Text style={styles.signInText}>Sign in</Text></Pressable></View></View>
+    <View style={styles.header}><Image source={require('../assets/logo-dark.png')} style={styles.headerLogo} resizeMode="contain" accessibilityLabel="India Gully — Celebrating Desiness" /><View style={styles.headerActions}><Pressable accessibilityRole="button" accessibilityLabel="Ask Gullu" onPress={() => setPublicWebsite('gullu')} style={styles.gulluButton}><Image source={require('../assets/gullu.png')} style={{ width: 34, height: 34 }} accessible={false} /><Text style={styles.gulluText}>Gullu</Text></Pressable><Pressable accessibilityRole="button" accessibilityLabel="Sign in to your client account" onPress={() => setPublicWebsite('client')} style={styles.signInButton}><Ionicons name="person-circle-outline" size={20} color={colors.white} /><Text style={styles.signInText}>Sign in</Text></Pressable></View></View>
     <ScrollView ref={scroll} style={styles.content} contentContainerStyle={styles.contentInner} keyboardShouldPersistTaps="handled" refreshControl={<RefreshControl refreshing={refreshing && !loading} onRefresh={() => void refresh()} tintColor={colors.gold} colors={[colors.gold]} />}>
       {!!notice && <View style={styles.notice} accessibilityLiveRegion="polite"><Ionicons name="cloud-offline-outline" size={20} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.noticeText}>{notice}</Text>{catalogue && !fresh && <Text style={styles.meta}>Saved catalogue: {formatDate(catalogue.generated_at)}. Availability may have changed.</Text>}</View><Pressable onPress={() => void refresh()} accessibilityRole="button" accessibilityLabel="Refresh catalogue" style={styles.iconButton}><Ionicons name="refresh" size={21} color={colors.ink} /></Pressable></View>}
       {loading && !catalogue && <View style={styles.loading}><ActivityIndicator size="large" color={colors.gold} /><Text style={styles.secondary}>Opening the gully…</Text></View>}
@@ -202,7 +212,7 @@ function AppContent() {
         <View style={styles.hero}><Eyebrow light>Ideas. Opportunities. Possibilities.</Eyebrow><Text accessibilityRole="header" style={styles.heroTitle}>A world of opportunity.{`\n`}A personal connection.</Text><Text style={styles.heroText}>Explore properties, hospitality essentials and the people who help bring your ambitions to life.</Text><Button label="Explore opportunities" onPress={() => explore()} secondary /></View>
         <View style={styles.clientWelcome}><View style={styles.clientWelcomeCopy}><Text style={styles.clientWelcomeTitle}>Your India Gully account</Text><Text style={styles.clientWelcomeText}>Sign in or register to access your dashboard and shared data rooms.</Text></View><Pressable accessibilityRole="button" accessibilityLabel="Client sign in or register" onPress={() => setPublicWebsite('client')} style={styles.clientWelcomeAction}><Ionicons name="person-outline" size={22} color={colors.gold} /><Text style={styles.textActionText}>Sign in</Text></Pressable></View>
         <View style={styles.quickRow}>{[{ label: 'Buy & invest', icon: 'business-outline' as Icon, run: () => explore('opportunity') }, { label: 'Leasing', icon: 'key-outline' as Icon, run: () => explore('promoter') }, { label: 'HORECA', icon: 'restaurant-outline' as Icon, run: () => changeTab('HORECA') }].map(item => <Pressable key={item.label} onPress={item.run} accessibilityRole="button" style={styles.quick}><Ionicons name={item.icon} color={colors.gold} size={25} /><Text style={styles.quickLabel}>{item.label}</Text></Pressable>)}</View>
-        {residences && <View style={styles.residence}><Photo uri={residences.image} alt={residences.image_alt || residences.title} style={styles.residencePhoto} /><View style={styles.residenceBody}><Eyebrow>Our signature residences</Eyebrow><Text style={styles.residenceTitle}>{residences.headline || residences.title}</Text><Text style={styles.location}>{residences.location}</Text><Text style={styles.paragraph}>{residences.description}</Text><Button label={residences.cta_label} onPress={() => void openWebsite(residences.cta_href)} /><Text style={styles.browserNote}>Opens our secure website</Text></View></View>}
+        {residences && <View style={styles.residence}><Photo uri={residences.image} alt={residences.image_alt || residences.title} style={styles.residencePhoto} /><View style={styles.residenceBody}><Eyebrow>Our signature residences</Eyebrow><Text style={styles.residenceTitle}>{residences.headline || residences.title}</Text><Text style={styles.location}>{residences.location}</Text><Text style={styles.paragraph}>{residences.description}</Text><Button label={residences.cta_label} onPress={() => void openWebsite(residences.cta_href)} /></View></View>}
         <Heading title="Your next opportunity" subtitle="Discover our published property and leasing briefs." action="View all" onPress={() => explore()} />
         {catalogueUnavailable ? noCatalogue : cards(filterEntries(catalogue?.listings || [], '').slice(0, 3))}
         {catalogue && !catalogue.listings.length && <Empty title="More opportunities are on the way" text="Speak with our team about what you’re looking for." action="Contact our team" onPress={() => void openWebsite(links.contact)} />}
@@ -246,8 +256,8 @@ function AppContent() {
         {moreSection === 'perspectives' && <>{cards(catalogue?.perspectives || [])}{!loading && !catalogue?.perspectives.length && <Empty title="A new perspective is coming" text="Refresh to see the latest published insights." action="Refresh" onPress={() => void refresh()} />}</>}
         {moreSection === 'practices' && <>{catalogue?.practices.map(entry => <Pressable key={entry.id} accessibilityRole="button" onPress={() => setSelected(entry)} style={styles.practiceCard}><Eyebrow>Our practice</Eyebrow><Text style={styles.cardTitle}>{entry.title}</Text><Text numberOfLines={4} style={styles.paragraph}>{entry.summary}</Text><Text style={styles.exploreLink}>Explore this practice ↗</Text></Pressable>)}{catalogueUnavailable && noCatalogue}</>}
         {moreSection === 'menu' && <>
-          <View style={styles.buddyCard}><View style={styles.buddyIcon}><Ionicons name="chatbubbles-outline" size={35} color={colors.gold} /></View><Text style={styles.sectionTitle}>A little help from Gullu.</Text><Text style={styles.paragraph}>Your India Gully buddy. Explore our published opportunities and practices, or get pointed in the right direction.</Text><Button label="Chat with Gullu" onPress={() => void openWebsite(links.gullu)} /><Text style={styles.browserNote}>Opens our secure website. Gullu’s sign-in and consent choices remain on the website.</Text></View>
-          {[{ title: 'Client sign in', detail: 'Sign in or register for your dashboard and shared data rooms.', icon: 'person-circle-outline' as Icon, action: () => setPublicWebsite('client'), browser: false }, { title: 'Our practices', detail: 'Explore how we can help your business.', icon: 'business-outline' as Icon, action: () => setMoreSection('practices'), browser: false }, { title: 'Perspectives', detail: 'Read the ideas shaping our world.', icon: 'newspaper-outline' as Icon, action: () => setMoreSection('perspectives'), browser: false }, { title: 'Careers', detail: 'Explore open roles and apply to join India Gully.', icon: 'briefcase-outline' as Icon, action: () => setPublicWebsite('careers'), browser: false }, { title: 'Speak with our team', detail: 'Tell us what you have in mind.', icon: 'people-outline' as Icon, action: () => void openWebsite(links.contact), browser: true }, { title: 'Privacy and your data', detail: 'Read our privacy notice.', icon: 'shield-checkmark-outline' as Icon, action: () => void openWebsite(links.privacy), browser: true }, { title: 'Delete account & data', detail: 'Request account deletion or manage your privacy rights.', icon: 'person-circle-outline' as Icon, action: () => void openWebsite(`${ORIGIN}/account/privacy?request=erasure`), browser: true }].map(item => <Pressable key={item.title} accessibilityRole="button" accessibilityLabel={`${item.title}${item.browser ? ', opens secure website' : ''}`} onPress={item.action} style={styles.menuItem}><Ionicons name={item.icon} size={25} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.menuTitle}>{item.title}</Text><Text style={styles.menuDetail}>{item.detail}</Text>{item.browser && <Text style={styles.browserTag}>SECURE WEBSITE ↗</Text>}</View><Ionicons name="chevron-forward" color={colors.muted} size={20} /></Pressable>)}
+          <View style={styles.buddyCard}><View style={styles.buddyIcon}><Image source={require('../assets/gullu.png')} style={{ width: 72, height: 72 }} accessible={false} /></View><Text style={styles.sectionTitle}>Meet Gullu.</Text><Text style={styles.paragraph}>Your India Gully buddy. Ask me about a property, compare hotel supplies, or tell me what you’re looking for.</Text><Button label="Chat with Gullu" onPress={() => setPublicWebsite('gullu')} /></View>
+          {[{ title: 'Client sign in', detail: 'Sign in or register for your dashboard and shared data rooms.', icon: 'person-circle-outline' as Icon, action: () => setPublicWebsite('client') }, { title: 'Our practices', detail: 'Explore how we can help your business.', icon: 'business-outline' as Icon, action: () => setMoreSection('practices') }, { title: 'Perspectives', detail: 'Read the ideas shaping our world.', icon: 'newspaper-outline' as Icon, action: () => setMoreSection('perspectives') }, { title: 'Careers', detail: 'Explore open roles and apply to join India Gully.', icon: 'briefcase-outline' as Icon, action: () => setPublicWebsite('careers') }, { title: 'Speak with our team', detail: 'Tell us what you have in mind.', icon: 'people-outline' as Icon, action: () => void openWebsite(links.contact) }, { title: 'Privacy and your data', detail: 'Read our privacy notice.', icon: 'shield-checkmark-outline' as Icon, action: () => void openWebsite(links.privacy) }, { title: 'Delete account & data', detail: 'Request account deletion or manage your privacy rights.', icon: 'person-circle-outline' as Icon, action: () => void openWebsite(`${ORIGIN}/account/privacy?request=erasure`) }].map(item => <Pressable key={item.title} accessibilityRole="button" accessibilityLabel={item.title} onPress={item.action} style={styles.menuItem}><Ionicons name={item.icon} size={25} color={colors.gold} /><View style={{ flex: 1 }}><Text style={styles.menuTitle}>{item.title}</Text><Text style={styles.menuDetail}>{item.detail}</Text></View><Ionicons name="chevron-forward" color={colors.muted} size={20} /></Pressable>)}
           <Pressable accessibilityRole="button" onPress={() => Alert.alert('Clear offline catalogue?', 'Your saved shortlist will stay on this device. The public catalogue will download again when you refresh.', [{ text: 'Cancel', style: 'cancel' }, { text: 'Clear catalogue', onPress: () => { void clearPublicCache().then(() => Alert.alert('Offline catalogue cleared')).catch(() => Alert.alert('Could not clear catalogue', 'Please try again.')); } }])} style={styles.clearLink}><Text style={styles.textActionText}>Clear offline catalogue</Text></Pressable>
           {REVIEW_ORIGIN && <View style={styles.demoWorkspaces}>
             <Eyebrow>Demo · Sample data only</Eyebrow>
@@ -256,7 +266,7 @@ function AppContent() {
             <Button label="Demo client sign in" secondary icon="person-circle-outline" onPress={() => setPublicWebsite('demo-client')} />
             <Button label="Demo staff sign in" secondary icon="briefcase-outline" onPress={() => setPublicWebsite('demo-staff')} />
           </View>}
-          <Text style={styles.about}>India Gully · Version 1.0.3{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. Client sign-in, Careers and Staff workspace open inside India Gully. Enquiries and Gullu open our secure website.</Text>
+          <Text style={styles.about}>India Gully · Version 1.0.4{`\n`}Celebrating Desiness.{`\n\n`}Your shortlist stays on this device. Client sign-in, Careers and Staff workspace open inside India Gully. Chat with Gullu or send an enquiry here.</Text>
           <View style={styles.staffAccess}>
             <Text style={styles.staffCaption}>FOR THE INDIA GULLY TEAM</Text>
             <Pressable accessibilityRole="button" accessibilityLabel="Staff workspace sign in" onPress={() => setPublicWebsite('staff')} style={styles.staffLink}>
@@ -264,7 +274,7 @@ function AppContent() {
               <Text style={styles.staffLinkText}>Staff workspace sign in</Text>
               <Ionicons name="chevron-forward" size={16} color={colors.muted} />
             </Pressable>
-            <Text style={styles.browserNote}>Sign in here with your staff account. Your browser sign-in is separate.</Text>
+            <Text style={styles.browserNote}>Sign in with your staff account to open your workspace.</Text>
           </View>
         </>}
       </>}
@@ -272,9 +282,12 @@ function AppContent() {
     </ScrollView>
     <View style={[styles.tabs, { paddingBottom: Math.max(insets.bottom, 8) }]}>{tabs.map(item => <Pressable key={item.label} onPress={() => changeTab(item.label)} accessibilityRole="tab" accessibilityLabel={item.label} accessibilityState={{ selected: tab === item.label }} style={styles.tab}><Ionicons name={tab === item.label ? item.selected : item.icon} size={23} color={tab === item.label ? colors.gold : colors.muted} /><Text style={[styles.tabLabel, tab === item.label && styles.activeTab]}>{item.label}</Text>{item.label === 'Saved' && !!saved.length && <View style={styles.badge}><Text style={styles.badgeText}>{saved.length > 99 ? '99+' : saved.length}</Text></View>}</Pressable>)}</View>
 
-    {publicWebsite && <SecureWebsite key={publicWebsite} mode={publicWebsite} onClose={() => setPublicWebsite(null)} />}
-    <Modal visible={!!selected} onRequestClose={() => setSelected(null)} animationType="slide" presentationStyle="pageSheet">
-      {selected && <SafeAreaView style={styles.shell} edges={['top', 'left', 'right', 'bottom']}><View style={styles.detailHeader}><IconButton name="chevron-down" label="Close details" onPress={() => setSelected(null)} /><Text numberOfLines={1} style={styles.detailHeaderTitle}>{labelFor(selected)}</Text><IconButton name="share-outline" label={`Share ${selected.title}`} onPress={() => { void Share.share({ title: selected.title, message: `${selected.title}\n${selected.href}`, ...(Platform.OS === 'ios' ? { url: selected.href } : {}) }).catch(() => Alert.alert('Could not share', 'Please try again.')); }} /><IconButton name={savedKeys.has(entryKey(selected)) ? 'bookmark' : 'bookmark-outline'} label={savedKeys.has(entryKey(selected)) ? 'Remove from shortlist' : 'Save to shortlist'} onPress={() => void toggleSave(selected)} /></View>
+    <Modal visible={!!selected || !!publicWebsite} onRequestClose={() => {
+      if (publicWebsite) { if (workspaceBack.current) workspaceBack.current(); else setPublicWebsite(null); }
+      else setSelected(null);
+    }} animationType="slide" presentationStyle="fullScreen">
+      {publicWebsite && <SecureWebsite key={publicWebsite === 'public' ? pageUrl : publicWebsite} mode={publicWebsite} publicUrl={pageUrl} backRef={workspaceBack} onClose={() => setPublicWebsite(null)} />}
+      {!publicWebsite && selected && <SafeAreaView style={styles.shell} edges={['top', 'left', 'right', 'bottom']}><View style={styles.detailHeader}><IconButton name="chevron-down" label="Close details" onPress={() => setSelected(null)} /><Text numberOfLines={1} style={styles.detailHeaderTitle}>{labelFor(selected)}</Text><IconButton name="copy-outline" label={`Copy link to ${selected.title}`} onPress={() => { void Clipboard.setStringAsync(selected.href).then(() => Alert.alert('Link copied')).catch(() => Alert.alert('Could not copy link')); }} /><IconButton name={savedKeys.has(entryKey(selected)) ? 'bookmark' : 'bookmark-outline'} label={savedKeys.has(entryKey(selected)) ? 'Remove from shortlist' : 'Save to shortlist'} onPress={() => void toggleSave(selected)} /></View>
         <ScrollView contentContainerStyle={styles.detailContent}><Photo uri={selected.image} alt={selected.image_alt || selected.title} style={styles.detailPhoto} fit={selected.type === 'product' ? 'contain' : 'cover'} /><View style={styles.detailBody}>
           <Eyebrow>{labelFor(selected)}</Eyebrow>{selected.type==='listing'&&!!selected.listing_status_text&&<Text style={styles.listingStatus}>{selected.listing_status_text}</Text>}<Text accessibilityRole="header" style={styles.detailTitle}>{selected.title}</Text>{!!selected.city && <Text style={styles.location}>{[selected.city, selected.region].filter(Boolean).join(', ')}</Text>}
           {!fresh && <View style={styles.notice}><Text style={styles.noticeText}>Saved public brief · {formatDate(savedDetail?.cached_at || catalogue?.generated_at || '')}. Availability and terms may have changed.</Text></View>}
@@ -284,9 +297,9 @@ function AppContent() {
           {!!selected.tags.length && <View style={styles.tagRow}>{selected.tags.map(tag => <Text key={tag} style={styles.tag}>{tag}</Text>)}</View>}
           {selected.body_truncated && <Text style={styles.footnote}>This is an excerpt. Open the full website brief for complete published information.</Text>}
           {(selected.type === 'listing' || selected.type === 'product') && <Text style={styles.footnote}>Please confirm current availability, specifications and terms with our team before making a decision.</Text>}
-          <Button label="Read full website brief" secondary icon="open-outline" onPress={() => void openWebsite(selected.href)} /><Text style={styles.browserNote}>Opens our secure website</Text>
+          <Button label="Read full brief" secondary icon="document-text-outline" onPress={() => void openWebsite(selected.href)} />
         </View></ScrollView>
-        <View style={styles.detailFooter}><Button label={selected.type === 'product' ? 'Enquire about this product' : selected.type === 'listing' ? selected.listing_is_available ? 'Discuss this opportunity' : 'Explore available alternatives' : 'Speak with our team'} icon="chatbubble-outline" onPress={() => void openWebsite(enquiryUrl(selected, links.contact))} /><Text style={styles.browserNote}>Your enquiry opens on our secure website.</Text></View>
+        <View style={styles.detailFooter}><Button label={selected.type === 'product' ? 'Enquire about this product' : selected.type === 'listing' ? selected.listing_is_available ? 'Discuss this opportunity' : 'Explore available alternatives' : 'Speak with our team'} icon="chatbubble-outline" onPress={() => void openWebsite(enquiryUrl(selected, links.contact))} /></View>
       </SafeAreaView>}
     </Modal>
   </SafeAreaView>;
@@ -296,7 +309,7 @@ export default function App() { return <SafeAreaProvider><AppContent /></SafeAre
 
 const styles = StyleSheet.create({
   listingStatus:{color:colors.ink,backgroundColor:colors.pale,paddingHorizontal:10,paddingVertical:7,marginTop:8,marginBottom:4,alignSelf:'flex-start',fontSize:13,fontWeight:'600'},
-  shell: { flex: 1, backgroundColor: colors.paper }, header: { minHeight: 76, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderColor: colors.border, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }, headerLogo: { width: 132, height: 40, flexShrink: 1 }, headerActions: { flexDirection: 'row', alignItems: 'center', gap: 8 }, gulluButton: { justifyContent: 'center', alignItems: 'center', width: 44, minHeight: 44, paddingHorizontal: 9, backgroundColor: colors.pale, borderRadius: 24 }, gulluText: { fontSize: 12, fontWeight: '600', color: colors.ink }, content: { flex: 1 }, contentInner: { padding: 20, width: '100%', maxWidth: 800, alignSelf: 'center' },
+  shell: { flex: 1, backgroundColor: colors.paper }, header: { minHeight: 76, paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderColor: colors.border, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }, headerLogo: { width: 132, height: 40, flexShrink: 1 }, headerActions: { flexDirection: 'row', alignItems: 'center', gap: 8 }, gulluButton: { justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 3, minHeight: 44, paddingHorizontal: 8, backgroundColor: colors.pale, borderRadius: 24 }, gulluText: { fontSize: 12, fontWeight: '600', color: colors.ink }, content: { flex: 1 }, contentInner: { padding: 20, width: '100%', maxWidth: 800, alignSelf: 'center' },
   signInButton: { minHeight: 44, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: 22, backgroundColor: colors.ink }, signInText: { color: colors.white, fontSize: 13, fontWeight: '600' },
   clientWelcome: { flexDirection: 'row', gap: 14, padding: 18, borderWidth: 1, borderColor: colors.border, borderRadius: 5, backgroundColor: colors.white, marginBottom: 18, alignItems: 'center' }, clientWelcomeCopy: { flex: 1 }, clientWelcomeTitle: { color: colors.ink, fontSize: 16, fontWeight: '600', marginBottom: 7 }, clientWelcomeText: { color: colors.muted, fontSize: 13, lineHeight: 21 }, clientWelcomeAction: { minHeight: 48, paddingHorizontal: 8, gap: 5, alignItems: 'center', justifyContent: 'center' }, careersCard: { padding: 24, gap: 10, borderWidth: 1, borderColor: colors.border, marginTop: 20, backgroundColor: colors.white },
   hero: { backgroundColor: colors.ink, borderRadius: 5, padding: 25, paddingVertical: 32, marginBottom: 18 }, heroTitle: { color: colors.white, fontFamily: serif, fontSize: 36, lineHeight: 43, marginTop: 18, marginBottom: 18 }, heroText: { color: '#e3e0d4', fontSize: 15, lineHeight: 24, marginBottom: 25 }, eyebrow: { color: colors.gold, fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1.7, lineHeight: 17 },

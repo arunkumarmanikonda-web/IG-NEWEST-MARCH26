@@ -383,6 +383,13 @@ def capture(args):
         device.tab("Home")
         device.wait(exact_label("Sign in to your client account"))
         frame("01-home")
+        device.tap(exact_label("Ask Gullu"))
+        device.wait(exact_label("Close Gullu"))
+        device.scroll_to(exact_label("Your name"))
+        xml, _ = device.ui()
+        if not any(exact_label("Your name")(n) for n in webview_nodes(xml)):
+            raise ReviewError("Gullu did not open inside the app WebView.")
+        device.tap(exact_label("Close Gullu"))
         device.client_login()
         frame("13-client-in-app-login")
         device.scroll_to(exact_label("Register here"))

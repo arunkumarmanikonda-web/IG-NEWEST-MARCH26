@@ -189,6 +189,7 @@ jobs:
       - name: Match the distribution identity to the Apple-issued profile
         env:
           SIGNING_SECRET: ${{ secrets.IG_APP_STORE_SIGNING }}
+          ASC_UPLOAD_KEY_PEM: ${{ secrets.IG_APP_STORE_UPLOAD_KEY }}
           SIGNING_DIRECTORY: ${{ runner.temp }}/ig-sign
         run: node mobile/qa/prepare-store-signing.mjs
       - name: Sign and verify the IPA

@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+import { hasInAppNavigation } from "../../lib/mobile-workspace.mjs";
 import AdminNavigation from "./navigation";
 import CollectPaymentLink from './collect-payment-link';
 import Link from "next/link";
@@ -30,17 +32,18 @@ export default async function AdminLayout({ children }) {
         </div>
       </main>
     );
+  const inApp = hasInAppNavigation((await headers()).get("user-agent"));
   return (
     <main id="main" className="workspace staff-workspace">
       <div className="workspace-shell">
-        <AdminNavigation />
+        <AdminNavigation inApp={inApp} />
         <div className="workspace-main">
       <div className="workspace-header">
         <div>
           <div className="eyebrow">PRIVATE WORKSPACE</div>
           <h1>Management suite</h1>
         </div>
-        <div className="workspace-header-actions"><CollectPaymentLink/><Link href="/account?profile=1" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link></div>
+        <div className="workspace-header-actions">{!inApp && <CollectPaymentLink/>}<Link href="/account?profile=1" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link></div>
       </div>
         {children}</div>
       </div>
