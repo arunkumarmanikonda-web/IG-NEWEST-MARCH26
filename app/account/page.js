@@ -6,6 +6,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { accountContext } from "../../lib/supabase/server";
 import Account from "./profile";
+import SampleStaffWorkspace from "./sample-staff-workspace";
 import { accountDestination } from "../../lib/sign-in.mjs";
 import "../portal.css";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,11 @@ export const metadata = {
 export default async function AccountPage({ searchParams }) {
   const { client, user, profile, signInStatus, policiesAccepted } = await accountContext();
   if (!user || !profile) redirect("/login");
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL === "https://ehcqhoxiwmydipwfujuf.supabase.co" && user.email === "play.staff@example.invalid") {
+    const { data, error } = await client.rpc("ig_review_hospitality_workspace");
+    if (error || !data) return <main id="main" className="auth-page"><section className="portal-form"><h1>Sample workspace unavailable</h1><p>Please sign in again with the staff review account.</p><Link href="/login/mobile">Return to staff sign-in</Link></section></main>;
+    return <SampleStaffWorkspace record={data} />;
+  }
   const returnTo=portalReturn((await searchParams)?.next);
   const release=await currentPolicies();
   if (!release && !policiesAccepted) return <PolicyUnavailable/>;
