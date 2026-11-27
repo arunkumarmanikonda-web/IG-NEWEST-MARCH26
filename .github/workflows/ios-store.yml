@@ -65,7 +65,7 @@ jobs:
           print("Verified iPhone and iPad", info["CFBundleShortVersionString"], "build", info["CFBundleVersion"])
           PY
           executable=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")
-          lipo -verify_arch arm64 "$app/$executable"
+          lipo "$app/$executable" -verify_arch arm64
           ditto -c -k --sequesterRsrc --keepParent "$archive" "$RUNNER_TEMP/IndiaGully-device-archive.zip"
       - uses: actions/upload-artifact@v4
         with:
