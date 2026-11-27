@@ -10,8 +10,8 @@ function Pdf({blob}) {
   useEffect(() => {
     let task, closed = false;
     (async () => {
-      const pdf = await import('pdfjs-dist/build/pdf.mjs');
-      pdf.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+      const pdf = await import('pdfjs-dist/legacy/build/pdf.mjs');
+      pdf.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString();
       const data = await blob.arrayBuffer();
       if (closed) return;
       task = pdf.getDocument({data, isEvalSupported:false, useSystemFonts:true, maxImageSize:16000000});
