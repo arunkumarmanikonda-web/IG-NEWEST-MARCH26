@@ -1,0 +1,144 @@
+name: iOS App Store device archive
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ios-store.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    name: Archive for iPhone and iPad
+    runs-on: macos-26
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_PUBLIC_REVIEW_ORIGIN: https://india-gully-play-review.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
+      - run: npm ci
+      - run: npm run test:release
+      - name: Generate the native project and install its pods
+        run: |
+          npx expo prebuild --platform ios --no-install
+          pod install --project-directory=ios
+      - name: Archive the Release build for physical devices
+        shell: bash
+        run: |
+          set -euo pipefail
+          workspaces=(ios/*.xcworkspace)
+          test "${#workspaces[@]}" -eq 1 && test -d "${workspaces[0]}"
+          scheme=$(basename "${workspaces[0]}" .xcworkspace)
+          xcodebuild archive -workspace "${workspaces[0]}" -scheme "$scheme" \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/IndiaGully.xcarchive" CODE_SIGNING_ALLOWED=NO
+      - name: Verify the device archive and package it for distribution signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/IndiaGully.xcarchive"
+          apps=("$archive"/Products/Applications/*.app)
+          test "${#apps[@]}" -eq 1 && test -d "${apps[0]}"
+          app="${apps[0]}"
+          test -s "$app/main.jsbundle"
+          python3 - "$app/Info.plist" <<'PY'
+          import plistlib, sys
+          with open(sys.argv[1], "rb") as file:
+              info = plistlib.load(file)
+          assert info["CFBundleIdentifier"] == "com.indiagully.app"
+          assert info["CFBundleSupportedPlatforms"] == ["iPhoneOS"]
+          assert {1, 2} <= set(info["UIDeviceFamily"])
+          print("Verified iPhone and iPad", info["CFBundleShortVersionString"], "build", info["CFBundleVersion"])
+          PY
+          executable=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")
+          lipo "$app/$executable" -verify_arch arm64
+          ditto -c -k --sequesterRsrc --keepParent "$archive" "$RUNNER_TEMP/IndiaGully-device-archive.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: india-gully-ios-device-archive-for-signing
+          path: ${{ runner.temp }}/IndiaGully-device-archive.zip
+          if-no-files-found: error
+          retention-days: 14
+
+
+  screenshots:
+    name: Capture App Store screenshots on iPhone and iPad
+    runs-on: macos-26
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mobile
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_PUBLIC_REVIEW_ORIGIN: https://india-gully-play-review.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
+      - run: npm ci
+      - run: npx expo run:ios --configuration Release --device generic --output ./build --no-bundler
+      - name: Capture native Home in Apple listing dimensions
+        run: |
+          python3 - <<'PY'
+          import json, re, subprocess, time
+          from pathlib import Path
+
+          def sim(*args):
+              return subprocess.check_output(["xcrun", "simctl", *args], text=True).strip()
+
+          app, = Path("build").glob("*.app")
+          devices = json.loads(sim("list", "devices", "available", "--json"))["devices"]
+          runtimes = sorted((r for r in devices if ".iOS-" in r),
+                            key=lambda r: tuple(map(int, re.findall(r"\d+", r))), reverse=True)
+          out = Path("qa-output/app-store")
+          out.mkdir(parents=True, exist_ok=True)
+          for family, match, sizes in [
+              ("iPhone", r"iPhone (?:16|17|18) Pro Max", {(1320, 2868), (1290, 2796)}),
+              ("iPad", r"iPad Pro 13-inch", {(2064, 2752), (2048, 2732)}),
+          ]:
+              runtime, device = next((r, d) for r in runtimes for d in devices[r]
+                                     if d.get("isAvailable") and re.match(match, d["name"]))
+              udid = sim("create", "India Gully " + family, device["deviceTypeIdentifier"], runtime)
+              try:
+                  sim("boot", udid)
+                  sim("bootstatus", udid, "-b")
+                  sim("install", udid, str(app.resolve()))
+                  sim("status_bar", udid, "override", "--time", "9:41", "--batteryState", "charged", "--batteryLevel", "100")
+                  sim("launch", udid, "com.indiagully.app")
+                  time.sleep(30)
+                  image = out / (family + "-Home.jpg")
+                  sim("io", udid, "screenshot", "--type=jpeg", str(image.resolve()))
+                  props = subprocess.check_output(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(image)], text=True)
+                  dims = tuple(map(int, re.findall(r"pixel(?:Width|Height):\s*(\d+)", props)))
+                  if dims not in sizes:
+                      raise ValueError(f"Unexpected {family} dimensions {dims}")
+                  print(f"{family}: {dims} captured on {device['name']}")
+              finally:
+                  subprocess.run(["xcrun", "simctl", "shutdown", udid], check=False)
+                  subprocess.run(["xcrun", "simctl", "delete", udid], check=False)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: india-gully-app-store-screenshots
+          path: mobile/qa-output/app-store/
+          if-no-files-found: error
+          retention-days: 14
