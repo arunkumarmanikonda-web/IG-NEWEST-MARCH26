@@ -17,7 +17,16 @@ export async function proxy(request) {
   }
   const path = request.nextUrl.pathname;
   const mobile = isMobileShell(path, request.cookies.get('ig_mobile_workspace')?.value, request.headers.get('user-agent'));
-  const destination = mobile && mobileStaffDestination(path);
+  const clean = path.replace(/\/$/, '');
+  if (mobile && clean === '/api/advertising/event') {
+    return new NextResponse(null, { status: 204, headers: { 'Cache-Control': 'private, no-store' } });
+  }
+  if (mobile && ['/api/payments', '/api/admin/payments', '/api/admin/collections'].includes(clean)) {
+    return NextResponse.json({error: 'Payment processing is available on the India Gully website.'}, {
+      status: 403, headers: { 'Cache-Control': 'private, no-store', 'Vary': 'Cookie, User-Agent' },
+    });
+  }
+  const destination = mobile && (clean === '/account/payments' ? '/account/payment-status' : mobileStaffDestination(path));
   if (destination) {
     const result = NextResponse.redirect(new URL(destination, request.url), 303);
     result.headers.set('Cache-Control', 'private, no-store');
@@ -26,7 +35,7 @@ export async function proxy(request) {
   }
   const privatePath=/^\/(admin|staff-workspace|account|login|register|auth)(\/|$)|^\/api\/portal(\/|$)/.test(request.nextUrl.pathname);
   const nonce=randomBytes(24).toString('base64');
-  const csp=contentSecurityPolicy(nonce,{development:process.env.NODE_ENV==='development',supabaseUrl:process.env.NEXT_PUBLIC_SUPABASE_URL});
+  const csp=contentSecurityPolicy(nonce,{mobile,development:process.env.NODE_ENV==='development',supabaseUrl:process.env.NEXT_PUBLIC_SUPABASE_URL});
   const requestHeaders=new Headers(request.headers);
   requestHeaders.set('x-nonce',nonce);
   requestHeaders.set('Content-Security-Policy',csp);
@@ -76,5 +85,9 @@ export const config = {
     "/register",
     "/auth/:path*",
     "/api/portal/:path*",
+    "/api/payments",
+    "/api/admin/payments",
+    "/api/admin/collections",
+    "/api/advertising/event",
   ],
 };
