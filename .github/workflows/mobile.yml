@@ -30,6 +30,7 @@ defaults:
     working-directory: mobile
 
 env:
+  EXPO_PUBLIC_REVIEW_ORIGIN: https://india-gully-play-review.vercel.app
   CI: '1'
   EXPO_NO_TELEMETRY: '1'
 

@@ -8,6 +8,8 @@ export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; on
   const entry = websiteEntry(mode);
   return <Modal visible onRequestClose={onClose}><View style={styles.page}>
     <Text accessibilityRole="header" style={styles.title}>India Gully · {entry.title}</Text>
+    <Text style={styles.copy}>{entry.host}{entry.demo ? ' · DEMO · SAMPLE DATA ONLY' : ''}</Text>
+    {entry.demo && <Text style={styles.copy}>Use demo credentials. Please do not upload personal or client information.</Text>}
     <Text style={styles.copy}>The Android and iOS apps keep {entry.label} inside India Gully. This browser preview opens our secure website.</Text>
     <Pressable accessibilityRole="button" onPress={() => { void Linking.openURL(entry.url); }} style={styles.button}><Text style={styles.buttonText}>{entry.previewAction}</Text></Pressable>
     <Pressable accessibilityRole="button" accessibilityLabel={`Close ${entry.label}`} onPress={onClose} style={styles.button}><Text style={styles.buttonText}>Close</Text></Pressable>

@@ -18,6 +18,40 @@ This is a native Expo / React Native application sharing India Gully’s publish
 
 ## Environment and local verification
 
+### Optional isolated demo workspace
+
+`EXPO_PUBLIC_REVIEW_ORIGIN` is an optional **build-time** HTTPS origin. Leave it
+unset to omit demo access. When configured, More shows a separate **Demo · Sample
+data only** section with client and staff sign-in. The normal client and staff
+entries continue to use `https://indiagully.com`; the production staff entry
+stays at the bottom of More. No demo host or credentials are bundled by default.
+
+Set this variable only after the separate deployment, database and synthetic
+fixtures have been verified. It must be a canonical HTTPS DNS origin, without
+credentials, explicit port, path, query or fragment, and cannot be the production
+origin. Invalid values fail Expo configuration and native navigation validation.
+Expo embeds this public value in the JavaScript bundle; changing it needs a new
+build. Do not put a password, token or secret in it, or populate it from remote
+catalogue content. CI/store build jobs must explicitly receive the approved
+value; adding a website environment variable does not configure a native build.
+
+Demo entries use the real `/login/mobile` client/staff login and the existing
+`SecureWebsite` component. The native header displays the selected hostname and
+a persistent sample-data notice. Only one workspace is mounted at a time;
+switching modes remounts its incognito WebView. Document navigation, popups,
+downloads and browser fallbacks use the selected origin. Production and the
+configured demo origin cannot navigate into each other. They must be opened
+through their separate app entries. No native password, session-token bridge or
+canned dashboard is introduced. The isolated server must independently enforce
+database/provider isolation; document navigation controls do not intercept every
+network request made by web-page JavaScript.
+
+Before release, verify both demo accounts and actual create/read/update/file
+flows on Android and iOS, confirm no production data or outbound delivery, check
+close/reopen and switching back to production, and supply reusable demo access
+instructions in the store consoles. These source changes alone do not provision
+an environment or make a review account available.
+
 Use Node.js 22.13+ (Node 24 LTS recommended), npm, and a clean checkout. The independent `mobile/package-lock.json` does not change the website dependencies.
 
 ```sh
