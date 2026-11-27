@@ -15,6 +15,23 @@ try {
     // The isolated runner has no scheduler or outbound HTTP.
     await db.exec(sql.replace(/^create extension if not exists pg_(?:cron|net) with schema [a-z_]+;/gim, ""));
   }
+  stage = "Scheduled Gullu reports on a quiet day";
+  // Migrations enqueue the first real report. Validate it in the in-memory database
+  // before the independent queue-lease tests introduce their own report dates.
+  await db.exec(`
+    do $quiet_day$
+    declare
+      local_day date := (now() at time zone 'Asia/Kolkata')::date;
+      recipients integer;
+    begin
+      perform ig_private.queue_gullu_daily();
+      perform ig_private.queue_gullu_daily();
+      select count(distinct recipient) into recipients from ig_private.gullu_reports
+      where cadence='daily' and period_start=local_day-1 and next_at=(local_day+time '09:00') at time zone 'Asia/Kolkata';
+      if recipients<>3 then raise exception 'Missing quiet-day reports or incorrect India delivery time'; end if;
+      delete from ig_private.gullu_reports where cadence='daily' and period_start=local_day-1;
+    end $quiet_day$;
+  `);
   stage = "Business fixtures";
   await db.exec(await read("tests/fixtures/local-business-data.sql"));
   await db.exec(await read("supabase/seed.sql"));
