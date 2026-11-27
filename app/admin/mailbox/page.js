@@ -1,3 +1,5 @@
+import {headers} from 'next/headers';
+import {hasInAppNavigation} from '../../../lib/mobile-workspace.mjs';
 import Mailbox from './workspace';
 import {companyMailboxConfig, mailboxContext, mailboxRpc, openMailbox} from '../../../lib/mailbox-server';
 
@@ -7,7 +9,7 @@ export default async function Page() {
     companyMailboxConfig().catch(() => null),
     mailboxRpc(c.client, {action:'dashboard'}),
   ]);
-  return <Mailbox
+  return <Mailbox inApp={hasInAppNavigation((await headers()).get('user-agent'))}
     enabled={Boolean(config?.enabled)}
     settingsUnavailable={!config}
     canConfigure={c.profile.roles.includes('owner')}

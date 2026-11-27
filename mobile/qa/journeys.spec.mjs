@@ -37,6 +37,9 @@ test('actual app journeys and review frames',async({page},testInfo)=>{
  await ready(page);
  await expect(page.getByRole('button',{name:'Sign in to your client account',exact:true})).toBeVisible();
  await frame(page,testInfo,'01-home');
+ await page.getByRole('button',{name:'Ask Gullu',exact:true}).click();
+ await previewDestination(page.getByRole('link',{name:'Open Gullu',exact:true}),'/gullu/app');
+ await page.getByRole('button',{name:'Close Gullu',exact:true}).click();
  await page.getByRole('button',{name:'Sign in to your client account',exact:true}).click();
  await expect(page.getByText('India Gully · Client account',{exact:true})).toBeVisible();
  await frame(page,testInfo,'11-client-sign-in');
@@ -83,22 +86,20 @@ test('actual app journeys and review frames',async({page},testInfo)=>{
  await staff.scrollIntoViewIfNeeded();await frame(page,testInfo,'10-staff-sign-in-separate');
  await staff.click();
  await expect(page.getByText('India Gully · Staff workspace',{exact:true})).toBeVisible();
- const previewStaff=page.getByRole('button',{name:'Open staff sign-in',exact:true});
- async function previewDestination(button,path){
-  const requested=page.context().waitForEvent('request',r=>r.url()===`https://indiagully.com${path}`);
-  const popupPromise=page.waitForEvent('popup');await button.click();const popup=await popupPromise;
-  expect((await requested).url()).toBe(`https://indiagully.com${path}`);await popup.close();
+ async function previewDestination(link,path){
+   await expect(link).toHaveAttribute('href',`https://indiagully.com${path}`);
+   await expect(link).toHaveAttribute('target','_self');
  }
- await previewDestination(previewStaff,'/login/mobile');
+ await previewDestination(page.getByRole('link',{name:'Open staff sign-in',exact:true}),'/login/mobile');
  await page.getByRole('button',{name:'Close staff workspace',exact:true}).click();
  await client.scrollIntoViewIfNeeded();await client.click();
  await expect(page.getByText('India Gully · Client account',{exact:true})).toBeVisible();
- await previewDestination(page.getByRole('button',{name:'Open client sign-in',exact:true}),'/login/mobile?audience=client');
+ await previewDestination(page.getByRole('link',{name:'Open client sign-in',exact:true}),'/login/mobile?audience=client');
  await page.getByRole('button',{name:'Close client account',exact:true}).click();
  await page.getByRole('button',{name:'Careers',exact:true}).click();
  await expect(page.getByText('India Gully · Careers',{exact:true})).toBeVisible();
  await frame(page,testInfo,'12-careers');
- await previewDestination(page.getByRole('button',{name:'Open careers',exact:true}),'/careers');
+ await previewDestination(page.getByRole('link',{name:'Open careers',exact:true}),'/careers');
  await page.getByRole('button',{name:'Close careers',exact:true}).click();
  await page.getByRole('tab',{name:'Home',exact:true}).click();
  await page.getByRole('button',{name:'Explore careers',exact:true}).click();

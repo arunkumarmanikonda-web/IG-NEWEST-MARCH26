@@ -8,7 +8,7 @@ const statusLabels = {
 export default async function MobilePaymentStatus({client}) {
   const {data: items, error} = await client.rpc('ig_collection_manage', {p: {action: 'list'}});
   return <section className="workspace-card"><h2>Collection status</h2>
-    <p>Manage payment links on the India Gully website.</p>
+    <p>View invoices and collection status for your assigned practices.</p>
     {error ? <p role="alert">Collections could not be loaded for this workspace.</p> :
       items?.length ? items.map(item => {
         const status = item.status === 'active' && Date.parse(item.expires_at) <= Date.now() ? 'expired' : item.status;

@@ -105,6 +105,7 @@ export default function RoomViewer({ room, email }) {
                   {f.can_download && !f.security_pending && (
                     <a
                       className="primary"
+                      data-filename={f.name}
                       href={"/api/data-room/file?id=" + f.id + "&mode=download"}
                     >
                       Download original
@@ -168,6 +169,7 @@ export default function RoomViewer({ room, email }) {
             />
             {file.can_download && (
               <a
+                data-filename={file.name}
                 href={"/api/data-room/file?id=" + file.id + "&mode=download"}
                 className="text-link"
               >

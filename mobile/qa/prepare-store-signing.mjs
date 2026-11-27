@@ -9,7 +9,8 @@ if (!SIGNING_SECRET || !/^[A-Z0-9]{10}$/.test(ASC_KEY_ID || '') ||
 }
 const secret = JSON.parse(SIGNING_SECRET);
 const fromDer = value => createPrivateKey({ key: Buffer.from(value, 'base64'), type: 'pkcs8', format: 'der' });
-const apiKey = fromDer(secret.p8);
+// Rotate the App Store API key without exporting the existing distribution identity.
+const apiKey = process.env.ASC_UPLOAD_KEY_PEM ? createPrivateKey(process.env.ASC_UPLOAD_KEY_PEM) : fromDer(secret.p8);
 const distributionKey = fromDer(secret.distribution);
 const encode = object => Buffer.from(JSON.stringify(object)).toString('base64url');
 const now = Math.floor(Date.now() / 1000);

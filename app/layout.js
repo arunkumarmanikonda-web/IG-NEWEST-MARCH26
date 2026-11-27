@@ -9,6 +9,7 @@ import "./property-collection.css";
 import "./leadership.css";
 import "./experience.css";
 import Link from "next/link";
+import AppFileReader from "./app-file-reader";
 import Navigation from "./navigation";
 import { Arrow } from "./components";
 import { siteSection, livePractices } from "../lib/website";
@@ -72,6 +73,7 @@ export default async function Layout({ children }) {
         </div>
         <Navigation groups={groups} residences={residences ? { href: residences.href, name: residences.name } : null} practices={practices.map(({ slug, title, href }) => ({ slug, title, href }))} />
         {children}
+        <AppFileReader />
         <footer className="site-footer">
           <div className="footer-top">
             <div className="footer-brand">

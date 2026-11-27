@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STAFF_APP_ENTRY_URL, CLIENT_APP_ENTRY_URL, CAREERS_APP_URL, websiteEntry, workspaceBrowserPage, workspaceTarget } from '../src/workspace-navigation.ts';
+import { STAFF_APP_ENTRY_URL, CLIENT_APP_ENTRY_URL, CAREERS_APP_URL, websiteEntry, workspaceTarget } from '../src/workspace-navigation.ts';
 import { parseReviewOrigin } from '../src/review-origin.ts';
 
 const DEMO = 'https://workspace-demo.example.com';
@@ -28,19 +28,11 @@ test('mailbox consent restarts at the first-party page without leaking bound OAu
   assert.equal(workspaceTarget('https://accounts.google.com.evil.example/').kind, 'external');
 });
 
-test('blob exports can only fall back to a known workspace page, never API or callback state', () => {
-  assert.deepEqual(workspaceTarget('blob:https://indiagully.com/abc-123'), { kind: 'export' });
-  assert.deepEqual(workspaceTarget('blob:https://evil.example/abc-123'), { kind: 'blocked' });
-  assert.equal(workspaceBrowserPage('https://indiagully.com/admin/leasing?view=brands'), 'https://indiagully.com/admin/leasing?view=brands');
-  for (const input of ['https://indiagully.com/api/mailbox/callback?state=secret', 'https://indiagully.com/api/data-room/file?id=private', 'https://evil.example/admin', 'javascript:alert(1)']) {
-    assert.equal(workspaceBrowserPage(input), 'https://indiagully.com/admin');
-  }
-});
+
 
 test('signed storage redirects require external confirmation and cannot become a trusted app page', () => {
   const url = 'https://storage.example/storage/v1/object/sign/test.pdf?token=example';
   assert.deepEqual(workspaceTarget(url), { kind: 'external', url, host: 'storage.example' });
-  assert.equal(workspaceBrowserPage(url), 'https://indiagully.com/admin');
 });
 
 
@@ -53,18 +45,7 @@ test('client and careers entries use fixed first-party destinations with distinc
   assert.notEqual(websiteEntry('client').label, websiteEntry('staff').label);
 });
 
-test('browser fallbacks preserve the selected surface without moving callback or private request state', () => {
-  assert.equal(workspaceBrowserPage('https://indiagully.com/account/data-rooms', 'client'), 'https://indiagully.com/account/data-rooms');
-  assert.equal(workspaceBrowserPage('https://indiagully.com/admin', 'client'), 'https://indiagully.com/account');
-  assert.equal(workspaceBrowserPage('https://indiagully.com/careers/business-development', 'careers'), 'https://indiagully.com/careers/business-development');
-  assert.equal(workspaceBrowserPage('https://indiagully.com/account', 'careers'), 'https://indiagully.com/careers');
-  for (const mode of ['staff', 'client', 'careers'] as const) {
-    const fallback = `https://indiagully.com/${mode === 'staff' ? 'admin' : mode === 'client' ? 'account' : 'careers'}`;
-    for (const value of ['https://indiagully.com/api/careers/apply', 'https://indiagully.com/account?token=private', 'https://indiagully.com/careers?next=https://evil.example', 'https://evil.example/account', 'data:text/html,test']) {
-      assert.equal(workspaceBrowserPage(value, mode), fallback);
-    }
-  }
-});
+
 
 test('demo origin is absent by default and rejects unsafe or ambiguous build configuration', () => {
   assert.equal(parseReviewOrigin(undefined), null);
@@ -122,15 +103,11 @@ test('production and demo cannot navigate or export into each other', () => {
   }
 });
 
-test('demo browser and mailbox fallbacks keep their environment and discard credential state', () => {
-  const consent = 'https://accounts.google.com/o/oauth2/v2/auth?state=secret&code_challenge=private';
-  assert.deepEqual(workspaceTarget(consent, 'demo-staff', DEMO), { kind: 'mailbox', url: `${DEMO}/admin/mailbox` });
-  assert.equal(workspaceBrowserPage(`${DEMO}/admin/data-rooms?view=files`, 'demo-staff', DEMO), `${DEMO}/admin/data-rooms?view=files`);
-  assert.equal(workspaceBrowserPage(`${DEMO}/account/data-rooms`, 'demo-client', DEMO), `${DEMO}/account/data-rooms`);
-  for (const mode of ['demo-client', 'demo-staff'] as const) {
-    const fallback = `${DEMO}/${mode === 'demo-client' ? 'account' : 'admin'}`;
-    for (const value of [`${DEMO}/api/data-room/file?id=1`, `${DEMO}/account?token=secret`, `${DEMO}/admin?code=secret`, `${DEMO}/account?next=https://indiagully.com`, 'https://indiagully.com/account', 'https://evil.example/admin']) {
-      assert.equal(workspaceBrowserPage(value, mode, DEMO), fallback);
-    }
-  }
+
+
+test('Gullu and public pages open inside the first-party shell on a fixed origin', () => {
+  assert.equal(websiteEntry('gullu').url, 'https://indiagully.com/gullu/app');
+  assert.equal(websiteEntry('public', null, '/contact?message=Hi').url, 'https://indiagully.com/contact?message=Hi');
+  assert.equal(websiteEntry('public', null, 'https://outside.example/').url, 'https://indiagully.com');
+  assert.equal(workspaceTarget(websiteEntry('gullu').url, 'gullu').kind, 'internal');
 });

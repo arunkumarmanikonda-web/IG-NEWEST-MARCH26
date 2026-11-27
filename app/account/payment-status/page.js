@@ -18,7 +18,7 @@ export default async function PaymentStatusPage() {
   return <main id="main" className="auth-page"><div className="nda-account">
     <Link href="/account">← Your account</Link>
     <section className="workspace-card"><h1>Invoices and payment status</h1>
-      <p>To pay an invoice, visit indiagully.com separately and sign in to your account.</p>
+      <p>View amounts, payments and refunds for your account.</p>
       {error ? <p role="alert">Invoices could not be loaded.</p> :
         invoices?.length ? invoices.map(invoice => <article className="enquiry-record" key={invoice.id}>
           <h2>{invoice.invoice_ref}</h2><p>{invoice.description}</p>
