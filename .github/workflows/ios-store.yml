@@ -5,6 +5,19 @@ on:
     paths:
       - '.github/workflows/ios-store.yml'
   workflow_dispatch:
+    inputs:
+      upload:
+        description: Sign and upload the verified device build to Apple
+        type: boolean
+        default: false
+      apple_key_id:
+        description: App Store Connect key ID for this release
+        type: string
+        required: false
+      apple_issuer:
+        description: App Store Connect issuer ID
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -113,6 +126,7 @@ jobs:
           out.mkdir(parents=True, exist_ok=True)
           for family, match, sizes in [
               ("iPhone", r"iPhone (?:16|17|18) Pro Max", {(1320, 2868), (1290, 2796)}),
+              ("iPhone-medium", r"iPhone (?:16|17|18) Pro$", {(1206, 2622), (1179, 2556)}),
               ("iPad", r"iPad Pro 13-inch", {(2064, 2752), (2048, 2732)}),
           ]:
               runtime, device = next((r, d) for r in runtimes for d in devices[r]
@@ -142,3 +156,93 @@ jobs:
           path: mobile/qa-output/app-store/
           if-no-files-found: error
           retention-days: 14
+
+  upload:
+    name: Sign and upload to App Store Connect
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.upload
+    needs: archive
+    environment: ios-production
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    env:
+      ASC_KEY_ID: ${{ inputs.apple_key_id }}
+      ASC_ISSUER_ID: ${{ inputs.apple_issuer }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: india-gully-ios-device-archive-for-signing
+          path: ${{ runner.temp }}/ig-archive
+      - name: Select Xcode and unpack the trusted archive
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
+          ditto -x -k "$RUNNER_TEMP/ig-archive/IndiaGully-device-archive.zip" "$RUNNER_TEMP/ig-archive"
+          install -d -m 700 "$RUNNER_TEMP/ig-sign"
+      - name: Match the distribution identity to the Apple-issued profile
+        env:
+          SIGNING_SECRET: ${{ secrets.IG_APP_STORE_SIGNING }}
+          SIGNING_DIRECTORY: ${{ runner.temp }}/ig-sign
+        run: node mobile/qa/prepare-store-signing.mjs
+      - name: Sign and verify the IPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          cd "$RUNNER_TEMP/ig-sign"
+          signing_pass=$(openssl rand -hex 32)
+          keychain="$RUNNER_TEMP/ig-sign/release.keychain-db"
+          security create-keychain -p "$signing_pass" "$keychain"
+          security set-keychain-settings -lut 1800 "$keychain"
+          security unlock-keychain -p "$signing_pass" "$keychain"
+          security list-keychains -d user -s "$keychain" "$HOME/Library/Keychains/login.keychain-db"
+          openssl x509 -inform DER -in distribution.cer -out distribution.pem
+          openssl pkcs12 -export -inkey distribution.key -in distribution.pem -out identity.p12 -passout "pass:$signing_pass"
+          security import identity.p12 -k "$keychain" -P "$signing_pass" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$signing_pass" "$keychain" >/dev/null
+          security cms -D -i IndiaGully.mobileprovision > profile.plist
+          uuid=$(/usr/libexec/PlistBuddy -c 'Print UUID' profile.plist)
+          test "$(/usr/libexec/PlistBuddy -c 'Print Entitlements:application-identifier' profile.plist)" = 'KA479TFG3P.com.indiagully.app'
+          profiles="$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles"
+          mkdir -p "$profiles"
+          install -m 600 IndiaGully.mobileprovision "$profiles/$uuid.mobileprovision"
+          python3 - <<'PY'
+          import plistlib
+          options = dict(method="app-store-connect", destination="export", teamID="KA479TFG3P",
+                         signingStyle="manual", signingCertificate="Apple Distribution",
+                         manageAppVersionAndBuildNumber=False, provisioningProfiles={"com.indiagully.app":"India Gully App Store"})
+          with open("export.plist","wb") as f:
+              plistlib.dump(options, f)
+          PY
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/ig-archive/IndiaGully.xcarchive" \
+            -exportOptionsPlist export.plist -exportPath "$RUNNER_TEMP/ig-upload"
+          ipa=("$RUNNER_TEMP"/ig-upload/*.ipa)
+          test "${#ipa[@]}" -eq 1 && test -s "${ipa[0]}"
+          ditto -x -k "${ipa[0]}" "$RUNNER_TEMP/ig-verify"
+          apps=("$RUNNER_TEMP"/ig-verify/Payload/*.app)
+          test "${#apps[@]}" -eq 1
+          codesign --verify --deep --strict "${apps[0]}"
+          test "$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "${apps[0]}/Info.plist")" = 'com.indiagully.app'
+      - name: Upload verified IPA to Apple
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="$HOME/.appstoreconnect/private_keys"
+          install -d -m 700 "$dir"
+          install -m 600 "$RUNNER_TEMP/ig-sign/AuthKey_${ASC_KEY_ID}.p8" "$dir/AuthKey_${ASC_KEY_ID}.p8"
+          ipa=("$RUNNER_TEMP"/ig-upload/*.ipa)
+          xcrun altool --upload-app -f "${ipa[0]}" --type ios --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
+      - name: Remove temporary signing material from the runner
+        if: always()
+        shell: bash
+        run: |
+          security delete-keychain "$RUNNER_TEMP/ig-sign/release.keychain-db" || true
+          rm -f "$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          rm -rf "$RUNNER_TEMP/ig-sign" "$RUNNER_TEMP/ig-upload" "$RUNNER_TEMP/ig-verify"
