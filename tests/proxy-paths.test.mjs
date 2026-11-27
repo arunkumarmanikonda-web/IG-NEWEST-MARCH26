@@ -36,3 +36,26 @@ test('existing private routes still match the authentication proxy', () => {
     assert.equal(matches(path), true, path);
   }
 });
+
+test('mobile clients can read invoice status without contacting checkout or advertising services', async () => {
+  const ios = 'Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148';
+  const ipad = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15';
+  const android = 'Mozilla/5.0 (Linux; Android 15; Pixel; wv) AppleWebKit/537.36 Chrome/131.0 Mobile Safari/537.36';
+  for (const headers of [{'user-agent': ios}, {'user-agent': ipad}, {'user-agent': android}, {cookie: 'ig_mobile_workspace=1'}]) {
+    const send = path => proxy(new NextRequest('https://indiagully.com' + path, {headers}));
+    const response = await send('/account/payments?invoice=private');
+    assert.equal(response.headers.get('location'), 'https://indiagully.com/account/payment-status');
+    for (const path of ['/api/payments', '/api/admin/payments', '/api/admin/collections']) {
+      assert.ok(matches(path));
+      assert.equal((await send(path)).status, 403);
+    }
+    assert.ok(matches('/api/advertising/event'));
+    assert.equal((await send('/api/advertising/event')).status, 204);
+    assert.doesNotMatch((await send('/careers')).headers.get('content-security-policy'), /razorpay/i);
+  }
+  const safari = ios + ' Version/26.0 Safari/605.1.15';
+  for (const path of ['/api/payments', '/api/admin/collections', '/api/webhooks/razorpay']) {
+    const res = await proxy(new NextRequest('https://indiagully.com'+path, {headers:{'user-agent': safari}}));
+    assert.equal(res.headers.get('x-middleware-next'), '1');
+  }
+});
