@@ -30,6 +30,8 @@ export default async function AdminLayout({ children }) {
         </div>
       </main>
     );
+  const sampleManager = process.env.NEXT_PUBLIC_SUPABASE_URL === "https://ehcqhoxiwmydipwfujuf.supabase.co" &&
+    user.email === "play.staff@example.invalid" && profile.roles?.includes("property_manager");
   return (
     <main id="main" className="workspace staff-workspace">
       <div className="workspace-shell">
@@ -40,7 +42,10 @@ export default async function AdminLayout({ children }) {
           <div className="eyebrow">PRIVATE WORKSPACE</div>
           <h1>Management suite</h1>
         </div>
-        <div className="workspace-header-actions"><CollectPaymentLink/><Link href="/account?profile=1" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link></div>
+        <div className="workspace-header-actions">
+          {sampleManager
+            ? <Link href="/account?samples=1" className="collect-payment-link">Sample files and payment links</Link>
+            : <CollectPaymentLink/>}<Link href="/account?profile=1" className="workspace-profile"><img src="/brand/mark.svg" alt="" width="18" height="28"/>{profile.display_name || user.email}<span aria-hidden="true"></span></Link></div>
       </div>
         {children}</div>
       </div>
