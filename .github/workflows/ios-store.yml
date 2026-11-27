@@ -204,7 +204,9 @@ jobs:
           security unlock-keychain -p "$signing_pass" "$keychain"
           security list-keychains -d user -s "$keychain" "$HOME/Library/Keychains/login.keychain-db"
           openssl x509 -inform DER -in distribution.cer -out distribution.pem
-          openssl pkcs12 -export -inkey distribution.key -in distribution.pem -out identity.p12 -passout "pass:$signing_pass"
+          # Use Apple's system OpenSSL for a PKCS#12 file readable by Security.framework.
+          /usr/bin/openssl pkcs12 -export -inkey distribution.key -in distribution.pem -out identity.p12 \
+            -keypbe PBE-SHA1-3DES -certpbe PBE-SHA1-3DES -macalg sha1 -passout "pass:$signing_pass"
           security import identity.p12 -k "$keychain" -P "$signing_pass" -T /usr/bin/codesign -T /usr/bin/security
           security set-key-partition-list -S apple-tool:,apple: -s -k "$signing_pass" "$keychain" >/dev/null
           security cms -D -i IndiaGully.mobileprovision > profile.plist
