@@ -26,7 +26,7 @@ begin
  select * into strict room from public.ig_data_rooms d where d.title='Sample hotel documents' and d.id='fbf63d2d-98a0-4ad7-be37-1dac19b5c341' and d.active;
  if op='overview' then
  return jsonb_build_object('items',(select jsonb_agg(jsonb_build_object('item',case when c.kind='opportunity' then 'listing' else 'catalogue' end,'title',c.title,'summary',c.summary,'version',c.version) order by c.kind) from public.ig_content c where (c.kind,c.slug,c.practice) in (('opportunity','sample-lotus-hotel','hospitality'),('product','sample-lotus-service-tray','horeca')) and c.status='draft'),
- 'files',(select coalesce(jsonb_agg(jsonb_build_object('id',f.id,'name',f.name,'shared',f.status='ready','purpose',coalesce(u.purpose,'document')) order by f.created_at desc),'[]'::jsonb) from public.ig_room_files f left join ig_review_guard.sample_uploads u on u.id=f.id where f.room_id=room.id and (f.status='ready' or u.validated)),
+ 'files',(select coalesce(jsonb_agg(jsonb_build_object('id',f.id,'name',f.name,'shared',f.status='ready','uploaded',u.id is not null,'purpose',coalesce(u.purpose,'document')) order by f.created_at desc),'[]'::jsonb) from public.ig_room_files f left join ig_review_guard.sample_uploads u on u.id=f.id where f.room_id=room.id and (f.status='ready' or u.validated)),
  'links',(select coalesce(jsonb_agg(to_jsonb(t) order by t.created_at desc),'[]'::jsonb) from (select id,amount,purpose,created_at from ig_review_guard.sample_links order by created_at desc limit 25)t));
  elsif op='edit' then
  if choice is null or choice not in ('listing','catalogue') or nullif(trim(p->>'title'),'') is null or length(p->>'title')>180 or length(coalesce(p->>'summary',''))>500 then raise exception 'Enter a title and a summary of up to 500 characters';end if;
@@ -56,12 +56,13 @@ begin
  end if;
  if not exists(select from ig_review_guard.sample_uploads where id=file.id and purpose=choice) or file.name<>pdf_name or file.bytes<>(p->>'bytes')::bigint or file.mime<>p->>'mime' or file.status<>'pending' then raise exception 'Upload request already used';end if;
  return jsonb_build_object('id',file.id,'object_key',file.object_key,'version',file.version);
- elsif op in ('upload_inspect','upload_validated','share') then
+ elsif op in ('upload_inspect','upload_validated','upload_preview','share') then
  select f.* into file from public.ig_room_files f join ig_review_guard.sample_uploads u on u.id=f.id where f.id=(p->>'id')::uuid and f.room_id=room.id and f.created_by=auth.uid() for update of f;
  if not found then raise exception 'Sample upload unavailable' using errcode='42501';end if;
- if op in ('upload_inspect','upload_validated') then
+ if op in ('upload_inspect','upload_validated','upload_preview') then
  if not ig_private.room_broker_valid(p->>'broker_secret') then raise exception 'File service required' using errcode='42501';end if;
- if op='upload_inspect' then return jsonb_build_object('id',file.id,'name',file.name,'mime',file.mime,'bytes',file.bytes,'object_key',file.object_key);end if;
+ if op='upload_preview' and not exists(select from ig_review_guard.sample_uploads where id=file.id and validated) then raise exception 'Complete validation first' using errcode='42501';end if;
+ if op in ('upload_inspect','upload_preview') then return jsonb_build_object('id',file.id,'name',file.name,'mime',file.mime,'bytes',file.bytes,'object_key',file.object_key);end if;
  update ig_review_guard.sample_uploads set validated=true where id=file.id;
  else
  if not exists(select from ig_review_guard.sample_uploads where id=file.id and validated) or not exists(select from public.ig_room_grants g join public.ig_client_contacts ct on ct.id=g.contact_id where g.room_id=room.id and g.active and g.expires_at>now() and g.download_mode='none' and ct.active and ct.email='play.client@example.invalid') then raise exception 'Validated sample and assigned client required';end if;

@@ -28,6 +28,7 @@ export async function GET(request) {
       throw new HttpError("Verified sign-in required", 401);
     const res = await roomBroker(client, {
       id,
+      ...(q.get("review") === "assigned" && mode !== "download" ? {workspace: "assigned-sample"} : {}),
       action: mode === "download" ? "download" : "preview_source",
     });
     if (mode === "download") {

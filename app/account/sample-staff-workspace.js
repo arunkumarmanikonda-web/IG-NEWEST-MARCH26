@@ -67,7 +67,7 @@ export default function SampleStaffWorkspace({ initial }) {
         <label>File, up to 20 MB<input name="file" type="file" accept="application/pdf,image/png,image/jpeg,image/webp" required/></label>
         <button className="button" disabled={busy}>Upload private file</button>
       </form>
-      <ul>{data.files.map(f => <li key={f.id}>{f.name} · {f.purpose === "image" ? "Catalogue image" : "Hotel document"} · {f.shared ? "Shared with sample client" : <button type="button" disabled={busy} onClick={() => execute(() => records({ action: "share", id: f.id }), "Shared in the sample client’s hotel room.")}>Share with sample client</button>}</li>)}</ul>
+      <ul>{data.files.map(f => <li key={f.id}>{f.uploaded ? <a href={"/api/data-room/file?review=assigned&mode=preview&page=1&id=" + f.id} target="_blank" rel="noreferrer">{f.name}</a> : f.name} · {f.purpose === "image" ? "Catalogue image" : "Hotel document"} · {f.shared ? "Shared with sample client" : <button type="button" disabled={busy} onClick={() => execute(() => records({ action: "share", id: f.id }), "Shared in the sample client’s hotel room.")}>Share with sample client</button>}</li>)}</ul>
     </section>
     <section className="portal-form"><h2>Simulated payment links</h2>
       <form onSubmit={e => {

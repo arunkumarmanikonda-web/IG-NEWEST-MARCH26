@@ -129,8 +129,8 @@ Deno.serve(async (req) => {
       });
       return Response.json({ ok: true }, { headers });
     }
-    const file = await rpc("ig_room_authorize", {
-      action: "preview_source", id: p.id, broker_secret: broker,
+    const file = await rpc(sample ? "ig_review_sample_workflows" : "ig_room_authorize", {
+      action: sample ? "upload_preview" : "preview_source", id: p.id, broker_secret: broker,
     });
     if (file.bytes > MAX_PREVIEW_BYTES) throw Object.assign(new Error("Ask the administrator to attach an optimised PDF preview. The original remains available to authorised downloaders."), {status:400});
     const { data, error } = await admin.storage
