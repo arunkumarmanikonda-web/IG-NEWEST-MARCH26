@@ -29,16 +29,17 @@ begin
  'files',(select coalesce(jsonb_agg(jsonb_build_object('id',f.id,'name',f.name,'shared',f.status='ready','purpose',coalesce(u.purpose,'document')) order by f.created_at desc),'[]'::jsonb) from public.ig_room_files f left join ig_review_guard.sample_uploads u on u.id=f.id where f.room_id=room.id and (f.status='ready' or u.validated)),
  'links',(select coalesce(jsonb_agg(to_jsonb(t) order by t.created_at desc),'[]'::jsonb) from (select id,amount,purpose,created_at from ig_review_guard.sample_links order by created_at desc limit 25)t));
  elsif op='edit' then
- if choice not in ('listing','catalogue') or nullif(trim(p->>'title'),'') is null or length(p->>'title')>180 or length(coalesce(p->>'summary',''))>500 then raise exception 'Enter a title and a summary of up to 500 characters';end if;
+ if choice is null or choice not in ('listing','catalogue') or nullif(trim(p->>'title'),'') is null or length(p->>'title')>180 or length(coalesce(p->>'summary',''))>500 then raise exception 'Enter a title and a summary of up to 500 characters';end if;
  update public.ig_content c set title=trim(p->>'title'),summary=trim(coalesce(p->>'summary','')),version=version+1,updated_at=now(),updated_by=auth.uid()
  where (c.kind,c.slug,c.practice) in (('opportunity','sample-lotus-hotel','hospitality'),('product','sample-lotus-service-tray','horeca'))
  and c.kind=case choice when 'listing' then 'opportunity' else 'product' end and c.status='draft' and c.version=(p->>'version')::int returning * into item;
  if not found then raise exception 'Record changed. Reload before editing.' using errcode='40001';end if;
  return jsonb_build_object('version',item.version);
  elsif op='payment' then
- if nullif(trim(p->>'purpose'),'') is null or length(p->>'purpose')>100 or (p->>'amount')::numeric not between 0.01 and 100000 then raise exception 'Choose an amount and a purpose for the sample link';end if;
+ if nullif(trim(p->>'purpose'),'') is null or length(p->>'purpose')>100 or (p->>'amount')::numeric not between 0.01 and 100000 or nullif(p->>'amount','') is null or nullif(p->>'request','') is null then raise exception 'Choose an amount and a purpose for the sample link';end if;
  insert into ig_review_guard.sample_links(request_id,amount,purpose) values((p->>'request')::uuid,(p->>'amount')::numeric,trim(p->>'purpose')) on conflict(request_id) do nothing returning * into link;
  if not found then select * into strict link from ig_review_guard.sample_links where request_id=(p->>'request')::uuid; end if;
+ if link.amount<>round((p->>'amount')::numeric,2) or link.purpose<>trim(p->>'purpose') then raise exception 'This request already produced a different sample payment link' using errcode='40001';end if;
  return jsonb_build_object('id',link.id);
  elsif op='upload_prepare' then
  if not ig_private.room_broker_valid(p->>'broker_secret') then raise exception 'File service required' using errcode='42501';end if;
@@ -53,7 +54,7 @@ begin
  values(room.id,pdf_name,room.id::text||'/'||gen_random_uuid()::text,p->>'mime',(p->>'bytes')::bigint,auth.uid(),false) returning * into file;
  insert into ig_review_guard.sample_uploads(id,purpose,request_id) values(file.id,choice,request_key);
  end if;
- if file.name<>pdf_name or file.bytes<>(p->>'bytes')::bigint or file.mime<>p->>'mime' or file.status<>'pending' then raise exception 'Upload request already used';end if;
+ if not exists(select from ig_review_guard.sample_uploads where id=file.id and purpose=choice) or file.name<>pdf_name or file.bytes<>(p->>'bytes')::bigint or file.mime<>p->>'mime' or file.status<>'pending' then raise exception 'Upload request already used';end if;
  return jsonb_build_object('id',file.id,'object_key',file.object_key,'version',file.version);
  elsif op in ('upload_inspect','upload_validated','share') then
  select f.* into file from public.ig_room_files f join ig_review_guard.sample_uploads u on u.id=f.id where f.id=(p->>'id')::uuid and f.room_id=room.id and f.created_by=auth.uid() for update of f;
