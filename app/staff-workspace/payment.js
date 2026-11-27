@@ -22,7 +22,7 @@ export default function MobilePayment({ practices, simulated, limit }) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Could not create this payment request.');
       if (simulated) {
-        setLink('/account?samples=1');
+        setLink('/staff-workspace/samples');
         setMessage('Sample payment request recorded. Open the sample workspace to view the link.');
       } else {
         setLink(result.item?.status === 'active' && /^https:\/\//.test(result.item?.short_url || '') ? result.item.short_url : '');

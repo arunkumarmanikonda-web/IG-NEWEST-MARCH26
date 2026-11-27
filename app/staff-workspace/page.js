@@ -16,7 +16,8 @@ export default async function StaffWorkspace({ searchParams }) {
   if (error) return <main className="auth-page"><section className="portal-form"><h1>Staff access required</h1><Link href="/account?profile=1">Return to account</Link></section></main>;
   const query = await searchParams;
   const view = query?.view;
-  const simulated = process.env.NEXT_PUBLIC_SUPABASE_URL === 'https://ehcqhoxiwmydipwfujuf.supabase.co';
+  // This deployment is the isolated sample project. Its payment form can only simulate links.
+  const simulated = true;
   let panel;
   if (query?.record) panel = <DraftEditor client={client} id={query.record} result={query.result}/>;
   else if (view === 'listings' || view === 'catalogue') panel = <DraftRegister client={client} view={view}/>;
@@ -34,7 +35,7 @@ export default async function StaffWorkspace({ searchParams }) {
       <nav className="module-tabs" aria-label="Staff tasks">{tabs.map(([key,label]) =>
         <Link key={key} href={'/staff-workspace?view=' + key} aria-current={view === key ? 'page' : undefined}>{label}</Link>)}
         <Link href="/account/data-rooms">Assigned data rooms</Link><Link href="/account?profile=1">My account</Link>
-        {simulated && <Link href="/account?samples=1">Sample files and payment records</Link>}
+        {simulated && <Link href="/staff-workspace/samples">Sample files and payment records</Link>}
       </nav></section>{panel}
   </div></main>;
 }
