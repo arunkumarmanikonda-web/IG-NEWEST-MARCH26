@@ -19,7 +19,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: 'com.indiagully.app',
-    versionCode: 6,
+    versionCode: 7,
     allowBackup: false,
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#292821' },
     // Public browsing does not need camera, microphone, contacts, location or storage access.

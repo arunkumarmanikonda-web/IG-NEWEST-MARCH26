@@ -354,6 +354,8 @@ def capture(args):
               "publicFeed": "https://indiagully.com/api/mobile/catalogue", "fixturesInjected": False,
               "checks": [], "screenshots": []}
 
+    app_pid = []
+
     def frame(name):
         record["screenshots"].append(device.screenshot(name))
 
@@ -382,6 +384,7 @@ def capture(args):
         record["checks"].append("Live public catalogue rendered in native Android UI")
         device.tab("Home")
         device.wait(exact_label("Sign in to your client account"))
+        app_pid = device.adb("shell", "pidof", PACKAGE, check=False).strip().split()
         frame("01-home")
         device.tap(exact_label("Ask Gullu"))
         device.wait(exact_label("Close Gullu"))
@@ -389,6 +392,8 @@ def capture(args):
         xml, _ = device.ui()
         if not any(exact_label("Your name")(n) for n in webview_nodes(xml)):
             raise ReviewError("Gullu did not open inside the app WebView.")
+        frame("14-gullu-in-app")
+        record["checks"].append("Gullu opened inside the India Gully WebView")
         device.tap(exact_label("Close Gullu"))
         device.client_login()
         frame("13-client-in-app-login")
@@ -472,8 +477,12 @@ def capture(args):
         record["completedAt"] = now()
         (args.output / "manifest.json").write_text(json.dumps(record, indent=2) + "\n")
         pid = device.adb("shell", "pidof", PACKAGE, check=False).strip().split()
+        pid = pid or app_pid
         if pid and pid[0].isdigit():
             (args.output / "app-logcat.txt").write_text(device.adb("logcat", "-d", f"--pid={pid[0]}", "-t", "600", check=False))
+            if record["status"] == "failed":
+                crash = device.adb("logcat", "-b", "crash", "-d", f"--pid={pid[0]}", "-t", "200", check=False)
+                (args.output / "app-crash.txt").write_text(crash)
     print(f"Native Android review passed with {len(record['screenshots'])} real screenshots. No app was published.")
 
 

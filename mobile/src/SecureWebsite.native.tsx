@@ -1,5 +1,5 @@
 import React, { useImperativeHandle, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -62,7 +62,7 @@ function WorkspaceSession({ mode, publicUrl, backRef, onClose }: WebsiteProps) {
         // opens public content directly and never requires account creation.
         incognito
         applicationNameForUserAgent="IndiaGullyApp/1.0.4"
-        dataDetectorTypes="none"
+        dataDetectorTypes={Platform.OS === 'ios' ? ['none'] : undefined}
         sharedCookiesEnabled={false}
         thirdPartyCookiesEnabled={false}
         cacheEnabled={false}
