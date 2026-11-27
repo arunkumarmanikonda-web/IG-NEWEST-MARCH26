@@ -18,9 +18,9 @@ export default async function AccountPage({ searchParams }) {
   const { client, user, profile, signInStatus, policiesAccepted } = await accountContext();
   if (!user || !profile) redirect("/login");
   if (process.env.NEXT_PUBLIC_SUPABASE_URL === "https://ehcqhoxiwmydipwfujuf.supabase.co" && user.email === "play.staff@example.invalid") {
-    const { data, error } = await client.rpc("ig_review_hospitality_workspace");
+    const { data, error } = await client.rpc("ig_review_sample_workflows", { p: {action: "overview"} });
     if (error || !data) return <main id="main" className="auth-page"><section className="portal-form"><h1>Sample workspace unavailable</h1><p>Please sign in again with the staff review account.</p><Link href="/login/mobile">Return to staff sign-in</Link></section></main>;
-    return <SampleStaffWorkspace record={data} />;
+    return <SampleStaffWorkspace initial={data} />;
   }
   const returnTo=portalReturn((await searchParams)?.next);
   const release=await currentPolicies();

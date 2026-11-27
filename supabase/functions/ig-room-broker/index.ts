@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
       return data;
     };
     const broker = req.headers.get("x-room-broker") || "";
+    const sample = p.workspace === "assigned-sample";
     if (p.action === "prepare") {
       const type = roomFileType(p.name);
       if (
@@ -85,9 +86,10 @@ Deno.serve(async (req) => {
         throw Object.assign(new Error("Unsupported file type or size"), {
           status: 400,
         });
-      const file = await rpc("ig_room_manage", {
+      const file = await rpc(sample ? "ig_review_sample_workflows" : "ig_room_manage", {
         ...p,
         action: "upload_prepare",
+        ...(sample ? { broker_secret: broker } : {}),
       });
       const { data: existing, error: bucketError } =
         await admin.storage.getBucket(bucket);
@@ -109,17 +111,18 @@ Deno.serve(async (req) => {
       );
     }
     if (p.action === "complete") {
-      const file = await rpc("ig_room_authorize", {
-        action: "upload",
+      const file = await rpc(sample ? "ig_review_sample_workflows" : "ig_room_authorize", {
+        action: sample ? "upload_inspect" : "upload",
         id: p.id,
+        ...(sample ? { broker_secret: broker } : {}),
       });
       try {
         await inspectStoredRoomFile(admin.storage.from(bucket), file);
       } catch (e) {
         throw Object.assign(new Error(e.message), {status:400});
       }
-      await rpc("ig_room_manage", {
-        action: "upload_complete",
+      await rpc(sample ? "ig_review_sample_workflows" : "ig_room_manage", {
+        action: sample ? "upload_validated" : "upload_complete",
         id: p.id,
         version: p.version,
         broker_secret: broker,
