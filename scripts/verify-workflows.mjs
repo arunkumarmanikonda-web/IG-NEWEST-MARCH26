@@ -19,7 +19,7 @@ try {
   // Migrations enqueue the first real report. Validate it in the in-memory database
   // before the independent queue-lease tests introduce their own report dates.
   await db.exec(`
-    do $
+    do $quiet_day$
     declare
       local_day date := (now() at time zone 'Asia/Kolkata')::date;
       recipients integer;
@@ -30,7 +30,7 @@ try {
       where cadence='daily' and period_start=local_day-1 and next_at=(local_day+time '09:00') at time zone 'Asia/Kolkata';
       if recipients<>3 then raise exception 'Missing quiet-day reports or incorrect India delivery time'; end if;
       delete from ig_private.gullu_reports where cadence='daily' and period_start=local_day-1;
-    end $;
+    end $quiet_day$;
   `);
   stage = "Business fixtures";
   await db.exec(await read("tests/fixtures/local-business-data.sql"));
