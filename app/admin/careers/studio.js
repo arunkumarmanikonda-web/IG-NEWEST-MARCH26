@@ -13,12 +13,31 @@ const roleOpen = job => job.status === "published" && (!job.closes_at || Date.pa
 
 function JobEditor({ job, busy, onSave, onCancel }) {
   const [value, setValue] = useState(job), [manualSlug, setManualSlug] = useState(Boolean(job.id));
+  const [expectations, setExpectations] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [draftNotice, setDraftNotice] = useState("");
+  async function generate() {
+    setGenerating(true);
+    setDraftNotice("");
+    try {
+      const response = await fetch("/api/admin/careers/draft", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({title:value.title,expectations}) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Vacancy generation failed.");
+      setValue({...result.job, slug:manualSlug ? value.slug : result.job.slug});
+      setDraftNotice("Draft ready. Review the details, including work mode and employment type, before publishing.");
+    } catch (error) { setDraftNotice(error.message || "Please try again."); }
+    finally { setGenerating(false); }
+  }
   const edit = patch => setValue(previous => ({ ...previous, ...patch }));
   function titleChanged(title) { edit({ title, ...(!manualSlug && !job.id ? { slug: slugOf(title) } : {}) }); }
-  return <form className="workspace-card career-admin-form" onSubmit={event => { event.preventDefault(); onSave(value); }}>
-    <div className="career-admin-panel-heading"><div><h3>{job.id ? "Edit vacancy" : "Create a vacancy"}</h3><p>Drafts remain private. Publishing makes this role visible on the website and through the apps.</p></div><button type="button" onClick={onCancel} disabled={busy}>Close editor</button></div>
-    <fieldset disabled={busy}><legend>Role details</legend><div className="career-admin-grid">
+  return <form className="workspace-card career-admin-form" onSubmit={event => { event.preventDefault(); if (!generating) onSave(event.nativeEvent.submitter?.value === "publish" ? {...value, status:"published"} : value); }}>
+    <div className="career-admin-panel-heading"><div><h3>{job.id ? "Edit vacancy" : "Create a vacancy"}</h3><p>Drafts remain private. Publishing makes this role visible on the website and through the apps.</p></div><button type="button" onClick={onCancel} disabled={busy || generating}>Close editor</button></div>
+    <fieldset disabled={busy || generating}><legend>Role details</legend><div className="career-admin-grid">
       <label className="career-admin-wide">Role title<input value={value.title} onChange={event => titleChanged(event.target.value)} required minLength={3} maxLength={160} /></label>
+      {!job.id && <div className="career-admin-wide"><label>Key expectations from the candidate (optional)<textarea rows={3} maxLength={2500} value={expectations} onChange={event => setExpectations(event.target.value)} placeholder="Skills, outcomes or experience to emphasise"/></label>
+        <button type="button" disabled={generating || value.title.trim().length < 3} onClick={generate}>{generating ? "Generating vacancy…" : "Generate vacancy from role"}</button>
+        {draftNotice && <p role="status">{draftNotice}</p>}
+      </div>}
       <label>Department or practice<input value={value.department} onChange={event => edit({ department: event.target.value })} required minLength={2} maxLength={120} placeholder="For example, Retail Leasing" /></label>
       <label>Work location<input value={value.location} onChange={event => edit({ location: event.target.value })} required minLength={2} maxLength={160} placeholder="City or approved remote location" /></label>
       <label>Work mode<select value={value.work_mode} onChange={event => edit({ work_mode: event.target.value })}>{Object.entries(workModes).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
@@ -29,13 +48,13 @@ function JobEditor({ job, busy, onSave, onCancel }) {
       <label className="career-admin-wide">Experience and requirements <span>(optional)</span><textarea rows={5} value={value.requirements} onChange={event => edit({ requirements: event.target.value })} maxLength={10000} /><small>One requirement per line. Include only criteria relevant to the role.</small></label>
       <label className="career-admin-wide">Compensation information <span>(optional)</span><input value={value.salary_text} onChange={event => edit({ salary_text: event.target.value })} maxLength={250} /><small>Leave blank if compensation should not appear publicly.</small></label>
     </div></fieldset>
-    <fieldset disabled={busy}><legend>Publication</legend><div className="career-admin-grid">
+    <fieldset disabled={busy || generating}><legend>Publication</legend><div className="career-admin-grid">
       <label>Role URL<input value={value.slug} onChange={event => { setManualSlug(true); edit({ slug: event.target.value }); }} pattern="[a-z0-9]+(-[a-z0-9]+)*" required minLength={2} maxLength={100} /><small>/careers/{value.slug || "role-name"}. Keep the URL unchanged after sharing it.</small></label>
       <label>Applications close <span>(optional)</span><input type="date" value={dateInput(value.closes_at)} onChange={event => edit({ closes_at: endOfIndiaDay(event.target.value) })} /><small>Applications close at 11:59 p.m. India time on this date. Leave blank for no closing date.</small></label>
       <label>Status<select value={value.status} onChange={event => edit({ status: event.target.value })}>{Object.entries(jobStatuses).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
       <p className="career-admin-field-note">Closed and archived roles stop accepting applications and disappear from the public list. Existing applications remain in this workspace.</p>
     </div></fieldset>
-    <div className="workspace-actions"><button className="primary" disabled={busy} type="submit">{busy ? "Saving…" : value.status === "published" ? "Save and publish vacancy" : "Save vacancy"}</button><button type="button" disabled={busy} onClick={onCancel}>Cancel</button></div>
+    <div className="workspace-actions"><button className="primary" disabled={busy || generating} type="submit">{busy ? "Saving…" : value.status === "published" ? "Save and publish vacancy" : "Save vacancy"}</button>{!job.id && value.status==="draft" && <button type="submit" value="publish" disabled={busy || generating}>Publish vacancy</button>}<button type="button" disabled={busy || generating} onClick={onCancel}>Cancel</button></div>
   </form>;
 }
 
