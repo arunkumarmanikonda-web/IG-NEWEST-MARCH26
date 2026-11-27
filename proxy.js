@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server.js";
 import {randomBytes} from 'node:crypto';
 import {contentSecurityPolicy} from './lib/content-security.mjs';
+import { mobileStaffDestination, isMobileShell } from './lib/mobile-workspace.mjs';
 export async function proxy(request) {
   // Malformed crawled links can contain an encoded backslash. Reject them
   // before Vercel's page launcher attempts to resolve a nonexistent module.
@@ -14,7 +15,16 @@ export async function proxy(request) {
       },
     });
   }
-  const privatePath=/^\/(admin|account|login|register|auth)(\/|$)|^\/api\/portal(\/|$)/.test(request.nextUrl.pathname);
+  const path = request.nextUrl.pathname;
+  const mobile = isMobileShell(path, request.cookies.get('ig_mobile_workspace')?.value, request.headers.get('user-agent'));
+  const destination = mobile && mobileStaffDestination(path);
+  if (destination) {
+    const result = NextResponse.redirect(new URL(destination, request.url), 303);
+    result.headers.set('Cache-Control', 'private, no-store');
+    result.headers.set('Vary', 'Cookie, User-Agent');
+    return result;
+  }
+  const privatePath=/^\/(admin|staff-workspace|account|login|register|auth)(\/|$)|^\/api\/portal(\/|$)/.test(request.nextUrl.pathname);
   const nonce=randomBytes(24).toString('base64');
   const csp=contentSecurityPolicy(nonce,{development:process.env.NODE_ENV==='development',supabaseUrl:process.env.NEXT_PUBLIC_SUPABASE_URL});
   const requestHeaders=new Headers(request.headers);
@@ -51,6 +61,9 @@ export async function proxy(request) {
   response.headers.set('Content-Security-Policy',csp);
   response.headers.set("Cache-Control", "private, no-store");
   if(privatePath) response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  if (mobile && request.cookies.get('ig_mobile_workspace')?.value !== '1') {
+    response.cookies.set('ig_mobile_workspace', '1', { path: '/', sameSite: 'lax', httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  }
   return response;
 }
 export const config = {
