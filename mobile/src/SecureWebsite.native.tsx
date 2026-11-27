@@ -11,6 +11,13 @@ const ink = '#292821', gold = '#8a7333', paper = '#faf9f5';
 
 export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; onClose: () => void }) {
   const entry = websiteEntry(mode);
+  // Changing workspaces must destroy the previous incognito WebView and its
+  // navigation state, even if a caller changes mode without unmounting us.
+  return <WorkspaceSession key={`${entry.origin}:${mode}`} mode={mode} onClose={onClose} />;
+}
+
+function WorkspaceSession({ mode, onClose }: { mode: WebsiteMode; onClose: () => void }) {
+  const entry = websiteEntry(mode);
   const web = useRef<WebView<object>>(null);
   const [source, setSource] = useState(entry.url);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -34,14 +41,14 @@ export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; on
     ], { cancelable: true, onDismiss: done });
   };
   const navigate = (url: string, popup = false): boolean => {
-    const target = workspaceTarget(url);
+    const target = workspaceTarget(url, mode);
     if (target.kind === 'internal') {
       if (popup) setSource(target.url);
       return true;
     }
     setLoading(false);
     if (target.kind === 'mailbox') {
-      if (mode === 'staff') offerBrowser('Connect your mailbox', 'Google mailbox connections need the browser. Open My business mailbox there and choose Connect. You may need to sign in again.', target.url);
+      if (entry.surface === 'staff') offerBrowser('Connect your mailbox', 'Google mailbox connections need the browser. Open My business mailbox there and choose Connect. You may need to sign in again.', target.url);
       else offerBrowser('Continue in browser', 'This connection needs the browser. Open this page there and start the connection again. You may need to sign in.', workspaceBrowserPage(currentPage.current, mode));
     }
     else if (target.kind === 'external') offerBrowser('Open an external page?', `This link opens ${target.host} in your browser. India Gully will stay open here.`, target.url);
@@ -62,7 +69,8 @@ export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; on
         <Pressable accessibilityRole="button" accessibilityLabel={`Open ${entry.label} in browser`} onPress={() => offerBrowser('Open this page in browser?', 'Use this option for browser-only connections or downloads. Browser sign-in is separate from this app.', workspaceBrowserPage(currentPage.current, mode))} style={styles.control}><Ionicons name="open-outline" size={21} color={gold} /></Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel={`Close ${entry.label}`} onPress={onClose} style={styles.control}><Ionicons name="close" size={25} color={ink} /></Pressable>
       </View>
-      <View style={styles.address}><Ionicons name="lock-closed-outline" size={12} color={gold} /><Text style={styles.addressText}>indiagully.com · {entry.caption}</Text></View>
+      <View style={styles.address}><Ionicons name="lock-closed-outline" size={12} color={gold} /><Text style={styles.addressText}>{entry.host} · {entry.caption}</Text></View>
+      {entry.demo && <View style={styles.demoNotice}><Text style={styles.demoText}>DEMO · SAMPLE DATA ONLY</Text><Text style={styles.demoCopy}>Use demo credentials. Please do not upload personal or client information.</Text></View>}
       {loading && <View style={styles.progress} accessibilityRole="progressbar"><ActivityIndicator size="small" color={gold} /><Text style={styles.progressText}>Opening {entry.title.toLowerCase()}…</Text></View>}
       {failed && <View style={styles.error} accessibilityLiveRegion="polite"><Text style={styles.errorText}>We could not load this page. Check your connection and try again.</Text><Pressable accessibilityRole="button" onPress={() => { setFailed(false); web.current?.reload(); }} style={styles.retry}><Text style={styles.retryText}>Try again</Text></Pressable></View>}
       <WebView<object>
@@ -94,7 +102,7 @@ export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; on
         allowsLinkPreview={false}
         mediaPlaybackRequiresUserAction
         onNavigationStateChange={state => {
-          if (workspaceTarget(state.url).kind !== 'internal') return;
+          if (workspaceTarget(state.url, mode).kind !== 'internal') return;
           current.current = state.url;
           if (workspaceBrowserPage(state.url, mode) === state.url) currentPage.current = state.url;
           setCanGoBack(state.canGoBack);
@@ -106,7 +114,7 @@ export default function SecureWebsite({ mode, onClose }: { mode: WebsiteMode; on
         onContentProcessDidTerminate={() => { setLoading(false); setFailed(true); }}
         onRenderProcessGone={() => { setLoading(false); setFailed(true); }}
         onFileDownload={event => {
-          if (workspaceTarget(event.nativeEvent.downloadUrl).kind === 'internal') {
+          if (workspaceTarget(event.nativeEvent.downloadUrl, mode).kind === 'internal') {
             offerBrowser('Download this file', 'Open this workspace page in the browser and choose the download again. You may need to sign in.', workspaceBrowserPage(currentPage.current, mode));
           } else navigate(event.nativeEvent.downloadUrl);
         }}
@@ -123,7 +131,10 @@ const styles = StyleSheet.create({
   brand: { fontSize: 9, letterSpacing: 1.6, color: gold, marginBottom: 4 },
   title: { fontSize: 16, fontWeight: '600', color: ink },
   address: { flexDirection: 'row', gap: 6, justifyContent: 'center', alignItems: 'center', padding: 7, backgroundColor: '#efe9d9' },
-  addressText: { fontSize: 10, color: '#65645c' },
+  addressText: { fontSize: 10, color: '#65645c', flexShrink: 1, textAlign: 'center' },
+  demoNotice: { paddingHorizontal: 16, paddingVertical: 9, backgroundColor: '#efe9d9', borderBottomWidth: 1, borderColor: '#dedacf' },
+  demoText: { fontSize: 10, fontWeight: '700', letterSpacing: 1, color: ink, textAlign: 'center' },
+  demoCopy: { fontSize: 11, lineHeight: 17, color: '#65645c', textAlign: 'center', marginTop: 3 },
   web: { flex: 1, backgroundColor: paper },
   progress: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 10 },
   progressText: { fontSize: 12, color: '#65645c' },

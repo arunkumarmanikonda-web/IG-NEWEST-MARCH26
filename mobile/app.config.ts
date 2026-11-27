@@ -6,7 +6,7 @@ import type { ExpoConfig } from 'expo/config';
 const config: ExpoConfig = {
   name: 'India Gully',
   slug: 'india-gully',
-  version: '1.0.2',
+  version: '1.0.3',
   orientation: 'default',
   icon: './assets/icon.png',
   scheme: 'indiagully',
@@ -19,7 +19,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: 'com.indiagully.app',
-    versionCode: 4,
+    versionCode: 5,
     allowBackup: false,
     adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#292821' },
     // Public browsing does not need camera, microphone, contacts, location or storage access.
