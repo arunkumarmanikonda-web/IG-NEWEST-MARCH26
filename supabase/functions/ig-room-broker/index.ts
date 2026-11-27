@@ -1,7 +1,5 @@
-import {processingStorageRequest} from './process-worker.mjs';
 import { createClient } from "npm:@supabase/supabase-js@2.119.0";
 import {
-  ROOM_FILE_TYPES,
   MAX_PREVIEW_BYTES,
   roomFileType,
 } from "./formats.mjs";
@@ -47,20 +45,9 @@ Deno.serve(async (req) => {
     const publicKey =
       JSON.parse(Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}").default ||
       Deno.env.get("SUPABASE_ANON_KEY")!;
-    if (String(p.action || '').startsWith('process_')) {
-      const workerSecret=req.headers.get('x-file-worker');
-      if(!workerSecret) return new Response('Worker authentication required',{status:403,headers});
-      const workerClient=createClient(url,publicKey,{auth:{persistSession:false,autoRefreshToken:false}});
-      const workerRpc=async(action:string,extra:Record<string,unknown>={})=>{
-        const {data,error}=await workerClient.rpc('ig_file_processing',{secret:workerSecret,p:{action,file_id:p.file_id,lease:p.lease,...extra}});
-        if(error)throw Object.assign(new Error('Worker request rejected'),{status:error.code==='42501'?403:400});
-        return data;
-      };
-      const result=await processingStorageRequest(p,workerRpc,()=>{
-        const serviceKey=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}').default||Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-        return createClient(url,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}}).storage.from(bucket);
-      });
-      return Response.json(result,{headers});
+    if (url !== "https://ehcqhoxiwmydipwfujuf.supabase.co" ||
+        !["prepare", "complete", "preview_source"].includes(p.action)) {
+      return Response.json({error: "Unavailable in this review workspace."}, {status: 403, headers});
     }
     const user = createClient(url, publicKey, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -93,7 +80,7 @@ Deno.serve(async (req) => {
         !type ||
         type.mime !== p.mime ||
         !Number.isSafeInteger(p.bytes) ||
-        p.bytes < 1
+        p.bytes < 1 || p.bytes > 20 * 1024 * 1024
       )
         throw Object.assign(new Error("Unsupported file type or size"), {
           status: 400,
@@ -104,17 +91,9 @@ Deno.serve(async (req) => {
       });
       const { data: existing, error: bucketError } =
         await admin.storage.getBucket(bucket);
-      if (!existing) {
-        const { error } = await admin.storage.createBucket(bucket, {
-          public: false,
-          fileSizeLimit: null,
-          allowedMimeTypes: [
-            ...new Set(Object.values(ROOM_FILE_TYPES).map((x) => x.mime)),
-          ],
-        });
-        if (error) throw new Error("Private storage unavailable");
-      } else if (existing.public)
-        throw new Error("Private storage configuration required");
+      if (bucketError || !existing || existing.public || !existing.file_size_limit ||
+          existing.file_size_limit > 20 * 1024 * 1024)
+        throw new Error("Private review storage limit required");
       const { data, error } = await admin.storage
         .from(bucket)
         .createSignedUploadUrl(file.object_key, { upsert: false });
@@ -147,24 +126,9 @@ Deno.serve(async (req) => {
       });
       return Response.json({ ok: true }, { headers });
     }
-    const action =
-      p.action === "preview_source"
-        ? "preview_source"
-        : p.action === "download"
-          ? "download"
-          : "invalid";
     const file = await rpc("ig_room_authorize", {
-      action,
-      id: p.id,
-      broker_secret: broker,
+      action: "preview_source", id: p.id, broker_secret: broker,
     });
-    if (action === "download") {
-      const { data, error } = await admin.storage
-        .from(bucket)
-        .createSignedUrl(file.object_key, 60, { download: file.name });
-      if (error) throw new Error("Download unavailable");
-      return Response.json({ url: data.signedUrl }, { headers });
-    }
     if (file.bytes > MAX_PREVIEW_BYTES) throw Object.assign(new Error("Ask the administrator to attach an optimised PDF preview. The original remains available to authorised downloaders."), {status:400});
     const { data, error } = await admin.storage
       .from(bucket)
